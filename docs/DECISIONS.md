@@ -158,16 +158,36 @@ All decisions below were extracted from the original PRISM master source documen
 
 The following were found while cross-referencing the five source sections (Product Bible, Technical Bible, Screen Bible, Design System, Master Build Specification) against each other. They are **not** silently resolved — a product owner should make an explicit call before or during MVP implementation.
 
-### OPEN — MVP scope conflict: Labs, Procedures, and Legal Journey
+### RESOLVED — MVP scope conflict: Labs, Procedures, and Legal Journey
 **Date flagged:** 2026-09-01
-**Status:** Open — requires product decision
-**Conflict:**
-- The source Master Build Specification's P0/MVP list (its §57, reflected loosely in `MASTER_BUILD_SPEC.md` §24) includes **"basic labs"** and **"procedures"** under CARE, and **"basic legal journey"** under an "Additional" heading — implying all three are part of the MVP.
-- The source Screen Bible's explicit screen-by-screen MVP priority (its §99, preserved verbatim in `SCREEN_BIBLE.md` §14) puts the **entire Labs, Procedures, and Legal Journey feature sets in P1 ("shortly after MVP")** — not P0.
-- The source Product Bible's own MVP list (its §53) includes "Basic labs" under Care but does **not** mention Procedures or Legal Journey at all in its P0 description — partially agreeing with each side.
-**Reason this matters:** This determines real build sequencing. Building three additional feature areas (with their own screens, database interactions, and tests) into "MVP" versus deferring them to P1 is a meaningful scope and timeline difference, not a copy-editing nuance.
-**Recommended resolution (not yet adopted — flagged for the product owner):** Treat Labs, Procedures, and Legal Journey as **P1** for the purposes of the initial build, per the Screen Bible's explicit screen-level breakdown, which is the most granular and implementation-facing of the three sources. `SCREEN_BIBLE.md` §14 and `MASTER_BUILD_SPEC.md` §24 currently preserve their respective source wording rather than pre-resolving this in one direction; treat `SCREEN_BIBLE.md` §14 as the tie-breaker until the product owner confirms.
-**Implications once resolved:** Whichever direction is chosen, update `MASTER_BUILD_SPEC.md` §24 and §29 (Acceptance Criteria items 13–14, which currently assume lab/procedure creation is part of MVP) and `SCREEN_BIBLE.md` §14 to agree exactly, and remove this entry's "Open" status.
+**Date resolved:** 2026-09-01
+**Status:** Resolved — explicit product-owner decision
+**Conflict (as originally found):**
+- The source Master Build Specification's P0/MVP list (its §57, reflected loosely in `MASTER_BUILD_SPEC.md` §24) included **"basic labs"** and **"procedures"** under CARE, and **"basic legal journey"** under an "Additional" heading — implying all three were part of the MVP.
+- The source Screen Bible's explicit screen-by-screen MVP priority (its §99, preserved verbatim in `SCREEN_BIBLE.md` §14) put the **entire Labs, Procedures, and Legal Journey feature sets in P1 ("shortly after MVP")** — not P0.
+- The source Product Bible's own MVP list (its §53) included "Basic labs" under Care but did **not** mention Procedures or Legal Journey at all in its P0 description — partially agreeing with each side.
+**Resolution (product-owner decision, 2026-09-01):** Labs, Procedures, and Legal Journey are **P1** — not part of MVP. This confirms the Screen Bible's screen-level breakdown as correct and supersedes the narrative "basic labs / procedures / basic legal journey" wording that appeared under MVP in the source Master Build Specification and Product Bible. The full, explicit P0/P1 split adopted is recorded in the next entry below.
+**Implications:** `MASTER_BUILD_SPEC.md` §24, §25, and §29, `SCREEN_BIBLE.md` §14, and `PRODUCT_BIBLE.md` §13 have been updated to agree exactly with this resolution. See `docs/BUILD_STATUS.md` for the current build-tracking view of P0 vs. P1.
+
+### RESOLVED — Full MVP (P0) / next-release (P1) scope, adopted 2026-09-01
+**Date:** 2026-09-01
+**Status:** Active
+**Reason:** Following the resolution above, the product owner set the complete MVP boundary explicitly, rather than leaving it to be inferred from inconsistent narrative text across source sections.
+**Decision — MVP / P0:** Authentication; Onboarding; Personalization; TODAY; Medications; Medication reminders/logging; Injections; Appointments; Timeline; Milestones; Journal; Customize PRISM; Privacy; Notifications; App lock; Accessibility; Data export; Account deletion.
+**Decision — P1 (next release):** Labs; Procedures; Legal Journey; Memories; Documents; Universal Search; Advanced recurring schedules; Supply tracking; Enhanced journal functionality.
+**Implications:**
+- Timeline, Milestones, and Journal are P0 even though Memories (the fourth JOURNEY sub-feature) is P1 — JOURNEY ships in MVP with three of its four sub-areas.
+- The `modules` table, full 15-table schema, and Timeline's architecture (§`MASTER_BUILD_SPEC.md` §18, §09) are **not** reduced to match P0 — the schema and storage architecture continue to anticipate all P1 features (per explicit instruction: do not remove P1 features from the architecture). Only the *user-facing surface* (screens, module toggles, Quick Add options) is scoped to P0 for the initial build.
+- "Advanced recurring schedules" being P1 implies MVP's `medications.frequency_type` supports `daily`, `weekly`, and `every_x_days` fully; `custom` recurrence patterns beyond those are a P1 refinement, not blocked from existing as a schema value.
+- "Enhanced journal functionality" being P1 means the P0 Journal is the version already specified (title, content, mood, tags, photo) — richer functionality (e.g. prompts, advanced formatting) is deferred, not the base feature.
+- This decision supersedes the "Version 1.1 Scope" section of `MASTER_BUILD_SPEC.md` as previously written where the two lists diverged; `MASTER_BUILD_SPEC.md` §25 has been updated to match this entry exactly.
+
+### RESOLVED — Customize PRISM and Quick Add expose only P0 modules until P1 ships
+**Date:** 2026-09-01
+**Status:** Active
+**Reason:** The P0/P1 split above creates a scoping question the source material never had to answer: Customize PRISM (§`SCREEN_BIBLE.md` Screen 56) and the Quick Add sheet (Screen 21) both enumerate all ten module keys, including the five now deferred to P1 (labs, procedures, legal, documents, memories). Shipping MVP with visible toggles or Quick Add options for modules that have no corresponding screens would dead-end the user — a real implementation-blocking ambiguity if left unresolved, not just a cosmetic detail.
+**Decision:** In the MVP build, Customize PRISM and Quick Add present only the five P0 module keys (`medications`, `injections`, `appointments`, `milestones`, `journal`). The remaining five module keys (`labs`, `procedures`, `legal`, `documents`, `memories`) still exist in the `modules` table schema and are still valid `module_key` values — the architecture anticipates them — but the UI simply does not yet offer them, consistent with progressive disclosure (`TECHNICAL_BIBLE.md` §3, Principle 5) and "do not overbuild" (`MASTER_BUILD_SPEC.md` Appendix A, Rule G). No "coming soon" placeholders are shown; the module is added to the toggle list and Quick Add sheet in the same release its screens ship.
+**Implications:** Timeline (P0) aggregates only P0 record types (medications, injections, appointments, milestones, journal entries) until P1 ships, since a module with no data source contributes nothing to the unified view — this requires no special-casing, since Timeline already pulls only from enabled modules. `SCREEN_BIBLE.md` Screen 56 and Screen 21, and `MASTER_BUILD_SPEC.md` §10 and §13, have been updated with this clarification.
 
 ### RESOLVED — `settings` table primary key
 **Date flagged:** 2026-09-01

@@ -70,7 +70,7 @@ PRISM has exactly four primary destinations: **TODAY · CARE · JOURNEY · YOU**
 
 Architecture: `USER → Preferences → Enabled Modules → Current Data → Relevant Events → TODAY`. The dashboard is **dynamically generated**, never hard-coded.
 
-**Initial module keys:** `medications`, `injections`, `appointments`, `labs`, `procedures`, `milestones`, `journal`, `memories`, `legal`, `documents`. Users enable or disable modules independently.
+**Initial module keys:** `medications`, `injections`, `appointments`, `labs`, `procedures`, `milestones`, `journal`, `memories`, `legal`, `documents`. Users enable or disable modules independently. Of these, `medications`, `injections`, `appointments`, `milestones`, and `journal` are P0 (toggleable in the MVP build); `labs`, `procedures`, `memories`, `legal`, and `documents` are P1 (§25) — the schema supports all ten keys from Foundation onward, but the MVP UI only offers the five P0 keys (see [`DECISIONS.md`](./DECISIONS.md)).
 
 **Critical rule:** disabling a module **hides it** — it does **not** delete its data. Re-enabling a module restores its existing information exactly as it was. This is a non-negotiable rule (see [`DECISIONS.md`](./DECISIONS.md)); implement it at the query layer (filter by enabled modules), not by ever issuing a delete.
 
@@ -120,18 +120,18 @@ Optional — not the identity of PRISM. Fields: `id, user_id, medication_id, inj
 ### Appointments
 Fields: `id, user_id, title, provider, category, starts_at, ends_at, location, notes, reminder_enabled, created_at, updated_at`. Categories: Primary care, Gender-affirming care, Endocrinology, Surgery, Mental health, Lab, Other — users may add custom categories.
 
-### Labs
-PRISM tracks lab records; **it does not interpret them.** Fields: `id, user_id, title, date, provider, status, notes, attachment_id, created_at, updated_at`. Statuses: Scheduled, Completed, Results received, Follow-up needed.
+### Labs (P1)
+PRISM tracks lab records; **it does not interpret them.** Fields: `id, user_id, title, date, provider, status, notes, attachment_id, created_at, updated_at`. Statuses: Scheduled, Completed, Results received, Follow-up needed. Not part of MVP (§25) — the schema and rules here apply once built.
 
-### Procedures
-Fields: `id, user_id, title, date, provider, category, notes, created_at, updated_at`. PRISM records procedures; it does not determine eligibility or readiness.
+### Procedures (P1)
+Fields: `id, user_id, title, date, provider, category, notes, created_at, updated_at`. PRISM records procedures; it does not determine eligibility or readiness. Not part of MVP (§25) — the schema and rules here apply once built.
 
 ## 09. JOURNEY
 
 More expressive than CARE (see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) §20, §27 Personal mode).
 
 ### Timeline
-Unifies medications, injections, appointments, labs, procedures, milestones, journal entries, and memories into one chronological view — visual metaphor: **path of light.** Timeline events **reference** their source records; the timeline is a view, never a second independent copy of the data. Selecting an event opens the original record.
+Unifies medications, injections, appointments, labs, procedures, milestones, journal entries, and memories into one chronological view — visual metaphor: **path of light.** Timeline events **reference** their source records; the timeline is a view, never a second independent copy of the data. Selecting an event opens the original record. In MVP, Timeline surfaces only P0 record types (medications, injections, appointments, milestones, journal entries) — this requires no special-casing, since it already pulls only from enabled modules, and labs/procedures/memories automatically appear once their P1 modules ship.
 
 ### Milestones
 Suggested (always optional, always paired with **"Create your own milestone"**): Came out, Started HRT, First appointment, First injection, Name change, Pronoun change, Legal gender marker change, Surgery consultation, Surgery, One month, Six months, One year.
@@ -139,28 +139,30 @@ Suggested (always optional, always paired with **"Create your own milestone"**):
 ### Journal
 Fields: `id, user_id, title, content, mood, date, tags, created_at, updated_at`. Mood is optional; no clinical scoring. **Journal content must never be included in analytics** (see [`SECURITY.md`](./SECURITY.md)).
 
-### Memories
-Personal documentation — first Pride, favorite selfie, haircut, ID, birthday, a meaningful conversation, a special outfit, a trip, a personal achievement. Primary philosophy: **"Not progress. Memories."** Never frame photographs as proof of physical transition.
+### Memories (P1)
+Personal documentation — first Pride, favorite selfie, haircut, ID, birthday, a meaningful conversation, a special outfit, a trip, a personal achievement. Primary philosophy: **"Not progress. Memories."** Never frame photographs as proof of physical transition. Not part of MVP (§25); JOURNEY ships with Timeline, Milestones, and Journal only.
 
 ## 10. YOU
 
-The user's control center. Sections: **Personal** (Profile, Edit Profile) · **PRISM** (Customize PRISM, Module Configuration) · **Experience** (Notifications, Appearance, Accessibility) · **Privacy** (Privacy, App Lock) · **Journey** (Legal Journey, Documents) · **Data** (Data & Export, Delete Account) · **Support** (Support, About).
+The user's control center. Sections: **Personal** (Profile, Edit Profile) · **PRISM** (Customize PRISM, Module Configuration) · **Experience** (Notifications, Appearance, Accessibility) · **Privacy** (Privacy, App Lock) · **Journey** (Legal Journey, Documents) · **Data** (Data & Export, Delete Account) · **Support** (Support, About). The Legal Journey and Documents sections themselves are P1 (§25) and are not present in the MVP build of YOU.
 
-## 11. Legal Journey
+**Customize PRISM in MVP** exposes toggles for the five P0 modules only (`medications`, `injections`, `appointments`, `milestones`, `journal`). The `modules` table schema and its full set of module keys are unchanged — labs/procedures/legal/documents/memories remain valid keys the architecture supports — but the MVP UI simply does not yet offer them; each is added to the toggle list in the release its screens ship (see [`DECISIONS.md`](./DECISIONS.md)).
 
-Initial items: Name change, Gender marker, Driver's license, Passport, Birth certificate, Social Security, Custom. Statuses: Not started, Preparing, Filed, In progress, Approved, Complete. Legal information is user-managed tracking only — **PRISM does not provide legal advice**, and wording must never imply legal transition is required.
+## 11. Legal Journey (P1)
 
-## 12. Documents
+Initial items: Name change, Gender marker, Driver's license, Passport, Birth certificate, Social Security, Custom. Statuses: Not started, Preparing, Filed, In progress, Approved, Complete. Legal information is user-managed tracking only — **PRISM does not provide legal advice**, and wording must never imply legal transition is required. Not part of MVP (§25).
 
-Categories: Medical records, Lab results, Letters, Insurance, Surgery documents, Legal documents. **Documents require high security** — use private storage buckets, never expose public URLs, use short-lived signed URLs where a temporary link is genuinely necessary. Document functionality may be phased after MVP (it's P1, see §23 MVP Scope), but the storage architecture must anticipate it from the start rather than being bolted on later.
+## 12. Documents (P1)
+
+Categories: Medical records, Lab results, Letters, Insurance, Surgery documents, Legal documents. **Documents require high security** — use private storage buckets, never expose public URLs, use short-lived signed URLs where a temporary link is genuinely necessary. Document functionality is P1 (see §25), but the storage architecture must anticipate it from the start rather than being bolted on later.
 
 ## 13. Quick Add
 
-Global **+** action, "Add to PRISM": Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only options relevant to the user's enabled modules are shown.**
+Global **+** action, "Add to PRISM": Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only options relevant to the user's enabled modules are shown.** In the MVP build this means only Medication, Injection, Appointment, Milestone, and Journal ever appear, since the Lab/Procedure/Memory/Document modules are P1 (§25) and are not enabled-able until their screens ship.
 
-## 14. Search
+## 14. Search (P1)
 
-Universal search covers timeline, medications, appointments, labs, milestones, journal, memories, legal records, and documents. **Search must respect RLS and user ownership** — implemented as a query scoped like any other read, never a separately-privileged index. Search is a P1 (post-MVP) feature; see [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md) §Search for the implementation approach (Postgres full-text search, not a third-party indexing service).
+Universal search covers timeline, medications, appointments, labs, milestones, journal, memories, legal records, and documents. **Search must respect RLS and user ownership** — implemented as a query scoped like any other read, never a separately-privileged index. Search is a P1 (post-MVP) feature (§25); see [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md) §Search for the implementation approach (Postgres full-text search, not a third-party indexing service).
 
 ## 15. Notifications
 
@@ -178,27 +180,27 @@ Support Face ID, Touch ID, Android biometrics, and PIN fallback where appropriat
 
 PostgreSQL via Supabase. All user-owned data has enforced ownership boundaries via `user_id` + RLS (§19). UUID primary keys; `created_at`/`updated_at` on mutable records; UTC timestamps internally, local timezone for display; `DATE` (not `TIMESTAMPTZ`) for date-only concepts like birthdays and milestones.
 
-**Core MVP tables** — `profiles`, `modules`, `medications`, `medication_logs`, `injections`, `appointments`, `labs`, `procedures`, `milestones`, `journal_entries`, `memories`, `legal_items`, `documents`, `reminders`, `settings`.
+**Full schema** — `profiles`, `modules`, `medications`, `medication_logs`, `injections`, `appointments`, `labs`, `procedures`, `milestones`, `journal_entries`, `memories`, `legal_items`, `documents`, `reminders`, `settings`. **All 15 tables are built as part of Foundation/CARE/JOURNEY migrations regardless of P0/P1 UI scope** — per [`DECISIONS.md`](./DECISIONS.md), the schema anticipates P1 features (Labs, Procedures, Legal Journey, Memories, Documents); only the corresponding screens are deferred. The "Scope" column below indicates which release surfaces each table's data in the UI, not whether the table itself is created.
 
 Canonical columns:
 
-| Table | Columns |
-|---|---|
-| `profiles` | `id` UUID PK, `user_id` UUID UNIQUE NOT NULL, `display_name`, `pronouns`, `gender`, `birthday` DATE, `journey_start_date` DATE, `profile_photo_url`, `onboarding_completed` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` — everything except `user_id` is nullable |
-| `modules` | `id` UUID PK, `user_id` NOT NULL, `module_key` TEXT NOT NULL, `enabled` BOOLEAN DEFAULT FALSE, `configuration` JSONB DEFAULT `'{}'`, `created_at`, `updated_at` — `UNIQUE(user_id, module_key)` |
-| `medications` | `id` UUID PK, `user_id` NOT NULL, `name` NOT NULL, `form`, `dosage_text`, `frequency_type`, `frequency_config` JSONB, `start_date`, `end_date`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `notes`, `created_at`, `updated_at` |
-| `medication_logs` | `id` UUID PK, `user_id` NOT NULL, `medication_id` NOT NULL, `scheduled_at`, `completed_at`, `status`, `notes`, `created_at`, `updated_at` |
-| `injections` | `id` UUID PK, `user_id` NOT NULL, `medication_id` (nullable), `injected_at` NOT NULL, `site`, `notes`, `created_at`, `updated_at` |
-| `appointments` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `provider`, `category`, `starts_at` NOT NULL, `ends_at`, `location`, `notes`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` |
-| `labs` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `status`, `notes`, `attachment_id`, `created_at`, `updated_at` |
-| `procedures` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `category`, `notes`, `created_at`, `updated_at` |
-| `milestones` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date` NOT NULL, `category`, `icon`, `created_at`, `updated_at` |
-| `journal_entries` | `id` UUID PK, `user_id` NOT NULL, `title`, `content` NOT NULL, `mood`, `date` NOT NULL, `tags` TEXT[], `created_at`, `updated_at` |
-| `memories` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date`, `media_id`, `created_at`, `updated_at` |
-| `legal_items` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `status` NOT NULL, `date`, `notes`, `created_at`, `updated_at` |
-| `documents` | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `storage_path` NOT NULL, `mime_type`, `file_size` BIGINT, `uploaded_at`, `created_at`, `updated_at` |
-| `reminders` | `id` UUID PK, `user_id` NOT NULL, `type` NOT NULL, `reference_id`, `scheduled_time` NOT NULL, `recurrence` JSONB, `notification_style` NOT NULL, `enabled` BOOLEAN DEFAULT TRUE, `created_at`, `updated_at` |
-| `settings` | `user_id` UUID PK, `theme` DEFAULT `'system'`, `biometric_lock` BOOLEAN DEFAULT FALSE, `notification_privacy` BOOLEAN DEFAULT TRUE, `reduced_motion` BOOLEAN DEFAULT FALSE, `accessibility_preferences` JSONB, `created_at`, `updated_at` |
+| Table | Scope | Columns |
+|---|---|---|
+| `profiles` | P0 | `id` UUID PK, `user_id` UUID UNIQUE NOT NULL, `display_name`, `pronouns`, `gender`, `birthday` DATE, `journey_start_date` DATE, `profile_photo_url`, `onboarding_completed` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` — everything except `user_id` is nullable |
+| `modules` | P0 | `id` UUID PK, `user_id` NOT NULL, `module_key` TEXT NOT NULL, `enabled` BOOLEAN DEFAULT FALSE, `configuration` JSONB DEFAULT `'{}'`, `created_at`, `updated_at` — `UNIQUE(user_id, module_key)`. Rows may exist for any of the 10 module keys; MVP's UI only lets the user toggle the 5 P0 keys (§10) |
+| `medications` | P0 | `id` UUID PK, `user_id` NOT NULL, `name` NOT NULL, `form`, `dosage_text`, `frequency_type`, `frequency_config` JSONB, `start_date`, `end_date`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `notes`, `created_at`, `updated_at` |
+| `medication_logs` | P0 | `id` UUID PK, `user_id` NOT NULL, `medication_id` NOT NULL, `scheduled_at`, `completed_at`, `status`, `notes`, `created_at`, `updated_at` |
+| `injections` | P0 | `id` UUID PK, `user_id` NOT NULL, `medication_id` (nullable), `injected_at` NOT NULL, `site`, `notes`, `created_at`, `updated_at` |
+| `appointments` | P0 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `provider`, `category`, `starts_at` NOT NULL, `ends_at`, `location`, `notes`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` |
+| `labs` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `status`, `notes`, `attachment_id`, `created_at`, `updated_at` |
+| `procedures` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `category`, `notes`, `created_at`, `updated_at` |
+| `milestones` | P0 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date` NOT NULL, `category`, `icon`, `created_at`, `updated_at` |
+| `journal_entries` | P0 | `id` UUID PK, `user_id` NOT NULL, `title`, `content` NOT NULL, `mood`, `date` NOT NULL, `tags` TEXT[], `created_at`, `updated_at` |
+| `memories` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date`, `media_id`, `created_at`, `updated_at` |
+| `legal_items` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `status` NOT NULL, `date`, `notes`, `created_at`, `updated_at` |
+| `documents` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `storage_path` NOT NULL, `mime_type`, `file_size` BIGINT, `uploaded_at`, `created_at`, `updated_at` |
+| `reminders` | P0 | `id` UUID PK, `user_id` NOT NULL, `type` NOT NULL, `reference_id`, `scheduled_time` NOT NULL, `recurrence` JSONB, `notification_style` NOT NULL, `enabled` BOOLEAN DEFAULT TRUE, `created_at`, `updated_at` |
+| `settings` | P0 | `user_id` UUID PK, `theme` DEFAULT `'system'`, `biometric_lock` BOOLEAN DEFAULT FALSE, `notification_privacy` BOOLEAN DEFAULT TRUE, `reduced_motion` BOOLEAN DEFAULT FALSE, `accessibility_preferences` JSONB, `created_at`, `updated_at` |
 
 > **Note on `settings`:** the source material states `user_id` as the table's primary key in one place; treat `settings.user_id` as the sole primary key (one settings row per user) — do not add a separate surrogate `id` column, since that would allow a user to accumulate multiple settings rows and break the "one settings row per user" invariant the rest of the spec assumes.
 
@@ -249,21 +251,40 @@ Full detail: [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
 
 ## 24. MVP Scope (P0)
 
-- **Foundation:** repository, navigation, Supabase, authentication, database, RLS, design system, theme system.
-- **Identity:** onboarding, profile, personalization, modules.
-- **TODAY:** personalized dashboard, reminders, relevant records.
-- **CARE:** medications, medication reminders, injections, appointments, basic labs, procedures.
+**This scope is final** — adopted by explicit product-owner decision on 2026-09-01, recorded in [`DECISIONS.md`](./DECISIONS.md) §Full MVP (P0) / next-release (P1) scope. It supersedes the narrative MVP wording that appeared in earlier drafts of this document and of `PRODUCT_BIBLE.md`.
+
+- **Authentication:** sign up, sign in, email verification, password recovery, session handling.
+- **Onboarding:** the full sequential flow (Philosophy → What Brings You Here? → Journey Stage → Identity → Care Setup → Medication/Injection/Appointment Setup → Journey Date → Privacy Setup → Building PRISM → Ready).
+- **Personalization:** the module-driven configuration model, module selection, and the personalization engine that drives TODAY.
+- **TODAY:** personalized dashboard, dynamic cards, Quick Add.
+- **CARE:** medications, medication reminders and logging, injections, appointments.
 - **JOURNEY:** timeline, milestones, journal.
-- **YOU:** customization, privacy, notifications, app lock, appearance, accessibility, data export, account deletion.
-- **Additional:** basic legal journey.
+- **YOU:** customize PRISM, privacy, notifications, app lock, accessibility, data export, account deletion.
+- **Foundation (cross-cutting, required to build any of the above):** repository, navigation, Supabase, database, RLS, design system, theme system.
+
+Labs, Procedures, and Legal Journey are **not** part of MVP (see §25). Foundation, Identity/Personalization, and cross-cutting requirements (Accessibility, Privacy, Security) are prerequisites for every P0 feature area above, not separate optional scope.
 
 P0/P1/P2 screen-level breakdown: [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §14.
 
-> **Open scope question:** the source material is internally inconsistent about whether Labs, Procedures, and Legal Journey belong in P0 (as narrative "MVP" text implies here) or P1 (as the Screen Bible's explicit screen-by-screen priority states). See [`DECISIONS.md`](./DECISIONS.md) §Contradictions Requiring a Product Decision before committing engineering time to these three areas as part of the initial build.
+> **Module toggle scoping:** Customize PRISM and Quick Add expose only the five P0 module keys (`medications`, `injections`, `appointments`, `milestones`, `journal`) in the MVP build. See §10 and §13 below, and [`DECISIONS.md`](./DECISIONS.md) §Customize PRISM and Quick Add expose only P0 modules until P1 ships.
 
-## 25. Version 1.1 Scope
+## 25. P1 Scope (Next Release)
 
-Widgets, improved recurring schedules, supply tracking, photo memories, enhanced journal, advanced timeline, improved customization, universal search.
+**Adopted by explicit product-owner decision on 2026-09-01** (see [`DECISIONS.md`](./DECISIONS.md)). This is the release immediately after MVP — it supersedes and absorbs what earlier drafts of this document called "Version 1.1":
+
+- **Labs** — full feature (list, add, detail), deferred from MVP in its entirety.
+- **Procedures** — full feature (list, add, detail), deferred from MVP in its entirety.
+- **Legal Journey** — full feature, deferred from MVP in its entirety.
+- **Memories** — the fourth JOURNEY sub-feature; JOURNEY ships in MVP with Timeline, Milestones, and Journal only.
+- **Documents** — the secure document feature; the storage architecture anticipates it (§12) but no Documents UI ships in MVP.
+- **Universal Search** — cross-record search (§14); MVP ships without a Search screen.
+- **Advanced recurring schedules** — `medications.frequency_type` values beyond `daily` / `weekly` / `every_x_days` (i.e. richer `custom` recurrence patterns).
+- **Supply tracking** — remaining-quantity/refill tracking for medications; not part of the P0 `medications` schema.
+- **Enhanced journal functionality** — beyond the P0 Journal's title/content/mood/tags/photo fields (e.g. prompts, richer formatting).
+
+**Architecture must anticipate all of the above without building their UI now** — the full 15-table database schema (§18), the `modules` table's complete set of module keys, and Timeline's multi-source design already account for every P1 feature. Do not remove or simplify any of this to "match" P0; P0 is a scoping decision about what ships first, not about what the architecture supports.
+
+Also still applicable from the original Version 1.1 candidate list, timed at the team's discretion alongside or after the above: home-screen widgets, advanced timeline visualization, additional customization.
 
 ## 26. Version 2 Scope
 
@@ -337,26 +358,22 @@ PRISM MVP is complete when a new user can:
 10. Create a reminder
 11. Record an injection
 12. Create an appointment
-13. Create a lab record
-14. Create a procedure
-15. Create a milestone
-16. Create a journal entry
-17. View their timeline
-18. Customize enabled modules
-19. Use private notifications
-20. Enable app lock
-21. Export their data
-22. Delete their account
-23. Use the application **without** providing gender
-24. Use the application **without** providing pronouns
-25. Use the application **without** HRT
-26. Use the application **without** injections
-27. Use the application **without** surgery
-28. Use the application **without** a journey start date
+13. Create a milestone
+14. Create a journal entry
+15. View their timeline
+16. Customize enabled (P0) modules
+17. Use private notifications
+18. Enable app lock
+19. Export their data
+20. Delete their account
+21. Use the application **without** providing gender
+22. Use the application **without** providing pronouns
+23. Use the application **without** HRT
+24. Use the application **without** injections
+25. Use the application **without** surgery
+26. Use the application **without** a journey start date
 
-Items 23–28 are as load-bearing as 1–22 — an MVP that only satisfies the first 22 has not met this specification.
-
-> Items 13–14 (lab record, procedure) assume Labs and Procedures ship in MVP, which is exactly the scope question flagged in §24 above and in [`DECISIONS.md`](./DECISIONS.md). If the product owner resolves that question toward P1, remove items 13–14 from the MVP acceptance bar rather than leaving them as an unmet criterion.
+Items 21–26 are as load-bearing as 1–20 — an MVP that only satisfies the first 20 has not met this specification. Lab and procedure record creation are intentionally **not** on this list — Labs and Procedures are P1 (§25), per the resolved decision in [`DECISIONS.md`](./DECISIONS.md).
 
 ## 30. Quality Gates
 

@@ -72,6 +72,7 @@ All product, technical, and design documentation lives in [`docs/`](./docs):
 | [`MASTER_BUILD_SPEC.md`](./docs/MASTER_BUILD_SPEC.md) | **The authoritative implementation specification** — synthesizes the above into an executable build plan |
 | [`SECURITY.md`](./docs/SECURITY.md) | Security and privacy posture: RLS, storage, secrets, logging, analytics, incident response |
 | [`DECISIONS.md`](./docs/DECISIONS.md) | Dated log of explicit product decisions, and any unresolved contradictions in the source material |
+| [`BUILD_STATUS.md`](./docs/BUILD_STATUS.md) | Current build status, MVP/P1 scope, milestone tracking, and the implementation checklist |
 | [`archive/PRISM_MASTER_SOURCE.docx`](./docs/archive/PRISM_MASTER_SOURCE.docx) | The original PRISM master document this documentation system was built from |
 
 ### **`docs/MASTER_BUILD_SPEC.md` is the authoritative implementation specification.**
@@ -81,7 +82,7 @@ When any other document appears to conflict with it on an implementation detail,
 ## How Claude Code Should Use This Documentation
 
 1. **Read [`docs/MASTER_BUILD_SPEC.md`](./docs/MASTER_BUILD_SPEC.md) first.** It is written as a direct build directive and links out to the other documents for full detail on any given area.
-2. **Check [`docs/DECISIONS.md`](./docs/DECISIONS.md) before making a scope call** — it records what's already decided and flags the one open MVP-scope question (Labs/Procedures/Legal Journey) that still needs a product decision.
+2. **Check [`docs/DECISIONS.md`](./docs/DECISIONS.md) before making a scope call** — it records every explicit product decision, including the finalized MVP (P0) / next-release (P1) boundary. See [`docs/BUILD_STATUS.md`](./docs/BUILD_STATUS.md) for the current build-tracking view.
 3. **Do not re-litigate settled product principles.** The five principles in `PRODUCT_BIBLE.md` (Person First, No Assumptions, Private by Default, No Judgment, No Finish Line) and the fifteen Non-Negotiable Rules in `MASTER_BUILD_SPEC.md` §31 override convenience — when an implementation detail is unspecified, choose the option that best preserves them, in this order: privacy, accessibility, security, maintainability, personalization, PRISM's design language.
 4. **Build incrementally, in vertical slices**, per `MASTER_BUILD_SPEC.md` Appendix A (Rule B) — UI → validation → database → RLS → persistence → loading/error states → tests, one feature at a time, not fifty screens of mock data.
 5. **Security and RLS come before UI exposure**, per Appendix A (Rule D). Never expose a table through the UI before its Row Level Security policies exist and are tested.

@@ -162,9 +162,9 @@ Authentication → Load Profile → Load Module Configuration → Load Relevant 
 - Mutable records carry `created_at` and `updated_at`.
 - Store timestamps in UTC internally; display in the user's local timezone.
 
-### Core tables (MVP)
+### Core tables
 
-`profiles`, `modules`, `medications`, `medication_logs`, `injections`, `appointments`, `labs`, `procedures`, `milestones`, `journal_entries`, `memories`, `legal_items`, `documents`, `reminders`, `settings`.
+`profiles`, `modules`, `medications`, `medication_logs`, `injections`, `appointments`, `labs`, `procedures`, `milestones`, `journal_entries`, `memories`, `legal_items`, `documents`, `reminders`, `settings`. All 15 tables are created during Foundation/CARE/JOURNEY migrations regardless of P0/P1 UI scope — the architecture anticipates P1 features (Labs, Procedures, Legal Journey, Memories, Documents) even though their screens ship later; see [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §18 and §24–25 for exactly which tables' data is exposed in the MVP UI.
 
 Full column-level schema for each table is defined in [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §Database, which is the canonical schema reference for implementation. Summary of key modeling decisions:
 

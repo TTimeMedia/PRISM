@@ -158,7 +158,7 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 
 ### Screen 21 — Quick Add
 **Type:** bottom sheet, accessible from anywhere via the global **+**. **Heading:** "Add to PRISM."
-**Content:** Medication · Injection · Appointment · Lab · Procedure · Milestone · Journal · Memory · Document — **filtered to only the user's enabled modules.**
+**Content:** Medication · Injection · Appointment · Lab · Procedure · Milestone · Journal · Memory · Document — **filtered to only the user's enabled modules.** In MVP this means only Medication, Injection, Appointment, Milestone, and Journal appear, since Lab/Procedure/Memory/Document are P1 modules (§14) not yet enable-able.
 
 ### Screen 22 — Notifications
 **Content:** Today's reminders, Upcoming reminders, Completed reminders, each with status (Scheduled/Completed/Skipped/Missed) in neutral, non-shame language.
@@ -203,22 +203,22 @@ Same fields as Add Medication. **Constraint:** changing configuration must not r
 ### Screen 34 — Edit Appointment
 Editable version of Appointment Detail.
 
-### Screen 35 — Labs
+### Screen 35 — Labs (P1)
 **Content:** sections **Upcoming** and **Completed**; each row shows Lab title, Date, Provider, Status. **Action:** **Add lab** → Screen 36.
 
-### Screen 36 — Add Lab
+### Screen 36 — Add Lab (P1)
 **Fields:** Title, Date, Provider, Status, Notes, Attachment. **Action:** **Save lab.**
 
-### Screen 37 — Lab Detail
+### Screen 37 — Lab Detail (P1)
 **Content:** all lab fields. **Actions:** **Edit**, **Delete**, **Open attachment.** PRISM provides no medical interpretation of results.
 
-### Screen 38 — Procedures
+### Screen 38 — Procedures (P1)
 **Content:** Procedure, Date, Provider, Category. **Action:** **Add procedure** → Screen 39.
 
-### Screen 39 — Add Procedure
+### Screen 39 — Add Procedure (P1)
 **Fields:** Title, Date, Provider, Category, Notes. **Action:** **Save procedure.**
 
-### Screen 40 — Procedure Detail
+### Screen 40 — Procedure Detail (P1)
 **Content:** all procedure fields. **Actions:** **Edit**, **Delete.**
 
 ---
@@ -229,7 +229,7 @@ Editable version of Appointment Detail.
 **Heading:** "Your journey." **Content:** subsections Timeline, Milestones, Journal, Memories, with an optional contextual summary phrased as *"24 moments recorded"* — never *"24 achievements."*
 
 ### Screen 42 — Timeline
-**Purpose:** a unified, chronological view across all record types (Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory). **Visual concept:** a subtle "path of light" connecting events (see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) §Timeline), explicitly not a conventional medical timeline.
+**Purpose:** a unified, chronological view across all record types (Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory). In MVP, only P0 record types (Medication, Injection, Appointment, Milestone, Journal) can appear, since Lab/Procedure/Memory don't exist as data sources until P1 ships. **Visual concept:** a subtle "path of light" connecting events (see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) §Timeline), explicitly not a conventional medical timeline.
 
 ### Screen 43 — Timeline Event
 **Behavior:** tapping an event opens its original record (e.g. Timeline → Injection → Injection Detail). Timeline never duplicates records — it is a view, not a separate data store.
@@ -253,13 +253,13 @@ Editable version of Appointment Detail.
 ### Screen 49 — Journal Entry Detail
 **Content:** Title, Date, Content, Mood, Tags, Photo. **Actions:** **Edit**, **Delete.** Journal content must remain private (never sent to analytics — see [`SECURITY.md`](./SECURITY.md)).
 
-### Screen 50 — Memories
+### Screen 50 — Memories (P1)
 **Type:** visual-first grid or timeline. **Heading:** "Memories." **Subheading:** "Not progress. Memories." **Action:** **Add memory** → Screen 51.
 
-### Screen 51 — Add Memory
+### Screen 51 — Add Memory (P1)
 **Fields:** Photo (optional), Title, Description, Date. **Action:** **Save memory.**
 
-### Screen 52 — Memory Detail
+### Screen 52 — Memory Detail (P1)
 **Content:** Image, Title, Description, Date. **Actions:** **Edit**, **Delete.**
 
 ---
@@ -276,7 +276,7 @@ Editable version of Appointment Detail.
 All fields optional; saves changes.
 
 ### Screen 56 — Customize PRISM
-**Heading:** "Make PRISM yours." **Content:** module toggles — Medications, Injections, Appointments, Labs, Procedures, Milestones, Journal, Memories, Legal, Documents. **Constraint:** toggling a module off changes only whether it's surfaced; it never deletes existing data (see [`DECISIONS.md`](./DECISIONS.md)).
+**Heading:** "Make PRISM yours." **Content (MVP):** module toggles for the five P0 modules only — Medications, Injections, Appointments, Milestones, Journal. Labs, Procedures, Memories, Legal, and Documents are P1 (§14) and are not offered as toggles until their screens ship — the `modules` table already supports all ten keys, so no schema change is needed when they're added. **Constraint:** toggling a module off changes only whether it's surfaced; it never deletes existing data (see [`DECISIONS.md`](./DECISIONS.md)).
 
 ### Screen 57 — Module Configuration
 **Behavior:** selecting a module opens deeper configuration, e.g. Medication (Enabled, Reminder behavior), Journal (Enabled, Mood tracking, Photos), Memories (Enabled, Timeline integration).
@@ -308,29 +308,29 @@ All fields optional; saves changes.
 ### Screen 66 — Support
 **Content:** Help center, Contact support, Report a problem, Privacy concern. Support forms avoid collecting sensitive information unnecessarily.
 
-### Screen 67 — Legal Journey
+### Screen 67 — Legal Journey (P1)
 **Content:** legal records — Name change, Gender marker, Driver's license, Passport, Birth certificate, Social Security, Custom — each with a status. Wording never implies legal transition is required (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §17).
 
-### Screen 68 — Legal Item Detail
+### Screen 68 — Legal Item Detail (P1)
 **Content:** Title, Category, Status, Date, Notes. **Actions:** **Edit**, **Delete.**
 
-### Screen 69 — Documents
+### Screen 69 — Documents (P1)
 **Type:** high-security section (see [`SECURITY.md`](./SECURITY.md)). **Categories:** Medical, Labs, Surgery, Insurance, Legal, Other. **Behavior:** document names are shown; contents are not rendered until explicitly opened. **Action:** **Add document** → Screen 70.
 
-### Screen 70 — Add Document
+### Screen 70 — Add Document (P1)
 **Fields:** File, Title, Category. **Action:** **Secure document.** **Copy before upload:** "This file contains information you chose to store privately in PRISM."
 
-### Screen 71 — Document Detail
+### Screen 71 — Document Detail (P1)
 **Content:** Document name, Category, Date, File type, Size. **Actions:** **Open**, **Share**, **Delete.** Sharing requires an explicit user action — it is never automatic or implied.
 
 ---
 
 ## 10. Global Screens
 
-### Screen 72 — Search
+### Screen 72 — Search (P1)
 **Content:** universal search field, placeholder "Search PRISM," scoped to Timeline, Medications, Appointments, Labs, Milestones, Journal, Memories, Legal, Documents — filtered to enabled modules only.
 
-### Screen 73 — Search Results
+### Screen 73 — Search Results (P1)
 **Content:** results grouped by category (e.g. Timeline: 3 results, Appointments: 1 result, Journal: 2 results, Milestones: 1 result). Search must respect the same privacy and authorization rules as every other read (RLS-scoped, enabled-modules-only).
 
 ### Screen 74 — Confirmation Modal
@@ -383,9 +383,9 @@ Recommended build sequence (mirrors [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC
 
 **P0 — Required for MVP:** Splash, Welcome, Sign Up, Sign In, Onboarding, Today, Quick Add, Care, Medications, Medication Detail, Medication Logging, Injections, Appointments, Journey, Timeline, Milestones, Journal, You, Customize PRISM, Privacy, App Lock, Notifications, Data & Export, Delete Account.
 
-**P1 — Shortly after MVP:** Labs, Procedures, Memories, Legal Journey, Search, Documents.
+**P1 — Shortly after MVP:** Labs, Procedures, Memories, Legal Journey, Universal Search, Documents. Also P1 at the feature (not screen) level: Advanced recurring schedules, Supply tracking, Enhanced journal functionality.
 
-> **Note:** other source sections describe "basic labs," Procedures, and a "basic legal journey" as part of the MVP itself, which conflicts with this screen-level P1 placement — see [`DECISIONS.md`](./DECISIONS.md) §Contradictions Requiring a Product Decision. This P0/P1 split is the most granular of the sources and is treated as the working default until the product owner resolves it explicitly.
+> **Resolved:** this P0/P1 split was confirmed by explicit product-owner decision on 2026-09-01 — see [`DECISIONS.md`](./DECISIONS.md) §Full MVP (P0) / next-release (P1) scope. It supersedes the narrative "basic labs / procedures / basic legal journey" wording that had appeared elsewhere as part of MVP; those sections have since been corrected to match this list.
 
 **P2 — Future:** AI Assistant, Health integrations, Provider information, Insurance, Advanced backup, PRISM Resources, PRISM Connect.
 

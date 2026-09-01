@@ -170,22 +170,27 @@ PRISM stores and organizes what the user tells it. It does not interpret, recomm
 
 ## 13. MVP Definition
 
+**This scope was confirmed by explicit product-owner decision on 2026-09-01** (see [`DECISIONS.md`](./DECISIONS.md) §Full MVP (P0) / next-release (P1) scope), resolving an earlier inconsistency across source material about whether Labs, Procedures, and Legal Journey belonged in the first release. They do not.
+
 The first release includes:
 
-- **Account** — signup, login, password recovery, account deletion
+- **Account** — signup, login, email verification, password recovery, account deletion
 - **Onboarding** — philosophy, module selection, identity, care setup, privacy setup
+- **Personalization** — the module-driven configuration model and the engine that drives TODAY
 - **TODAY** — personalized dashboard, relevant cards, Quick Add
-- **CARE** — medications, medication logging, reminders, injections, appointments, basic labs
+- **CARE** — medications, medication logging, reminders, injections, appointments
 - **JOURNEY** — timeline, milestones, journal
-- **YOU** — profile, Customize PRISM, notifications, privacy, app lock, settings
-- **Data** — basic export, account deletion
+- **YOU** — profile, Customize PRISM, notifications, privacy, app lock, accessibility, settings
+- **Data** — export, account deletion
 
-Full screen-by-screen MVP priority (P0/P1/P2) is defined in [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §MVP Screen Priority and [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §Release Priorities.
+**Deferred to the next release (P1):** Labs, Procedures, Legal Journey, Memories, Documents, Universal Search, advanced recurring schedules, supply tracking, and enhanced journal functionality. The database schema and storage architecture anticipate all of these from the start (see [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md) and [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §18) — only their user-facing screens are deferred.
+
+Full screen-by-screen MVP priority (P0/P1/P2) is defined in [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §MVP Screen Priority and [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §24–25.
 
 ## 14. Future Vision
 
-### Version 1.1 (candidate features)
-Home-screen widgets, better recurring schedules, supply tracking, photo memories, enhanced journal, advanced timeline, additional customization, better search.
+### P1 / Version 1.1 (adopted scope — see [`DECISIONS.md`](./DECISIONS.md))
+Labs, Procedures, Legal Journey, Memories, Documents, Universal Search, advanced recurring schedules, supply tracking, and enhanced journal functionality — this is the confirmed next-release scope from §13 above, not a loose candidate list. Also still under consideration for this release or later, at the team's discretion: home-screen widgets, advanced timeline visualization, additional customization.
 
 ### Version 2 (candidate features)
 Secure document vault, advanced photo memories, cloud backup, enhanced export, health-ecosystem integrations where appropriate, provider information, insurance information, PRISM Resources, PRISM Insights, an optional PRISM Assistant, and an optional PRISM Connect.
