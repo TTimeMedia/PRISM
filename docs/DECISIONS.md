@@ -97,6 +97,13 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** A user experimenting with what to track should never risk losing data by toggling a module off.
 **Implications:** Toggling a module in Customize PRISM changes only what is _surfaced_ (TODAY, CARE, search, Quick Add); the underlying rows are untouched and reappear exactly as they were if the module is re-enabled. This is Non-Negotiable Rule 7 (`MASTER_BUILD_SPEC.md` §31) and must be implemented at the query/filter layer, never via a delete.
 
+### Minimum password length is 8 characters
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** `MASTER_BUILD_SPEC.md` §17 and `SECURITY.md` §1 specify email + password authentication but do not set a minimum length. This is visible to the user (Sign Up and Reset Password's inline validation error), so it is recorded here rather than left as an undocumented implementation detail, per `BUILD_STATUS.md`'s own rule for implementation-level choices.
+**Implications:** `packages/validation`'s `passwordSchema` enforces 8–72 characters client-side; Supabase Auth's own server-side minimum (6 by default) is a backstop, not the enforced policy. No complexity rules (uppercase/symbol requirements) are imposed — PRISM does not sacrifice usability for a false sense of security (`MASTER_BUILD_SPEC.md` §31, Non-Negotiable Rule 12).
+
 ## Product Structure
 
 ### The primary navigation is TODAY / CARE / JOURNEY / YOU

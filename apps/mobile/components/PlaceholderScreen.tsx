@@ -8,6 +8,8 @@ export interface PlaceholderScreenProps {
   subtitle: string;
   emptyTitle: string;
   emptySubtitle?: string;
+  /** e.g. YOU's "Sign out" — a real, working action on an otherwise-placeholder screen. */
+  action?: { label: string; onPress: () => void };
 }
 
 /**
@@ -24,6 +26,7 @@ export function PlaceholderScreen({
   subtitle,
   emptyTitle,
   emptySubtitle,
+  action,
 }: PlaceholderScreenProps) {
   const theme = useTheme();
 
@@ -34,7 +37,7 @@ export function PlaceholderScreen({
     >
       <PRISMHeader title={title} subtitle={subtitle} />
       <ScrollView contentContainerStyle={styles.content}>
-        <PRISMEmptyState title={emptyTitle} subtitle={emptySubtitle} />
+        <PRISMEmptyState title={emptyTitle} subtitle={emptySubtitle} action={action} />
       </ScrollView>
     </SafeAreaView>
   );

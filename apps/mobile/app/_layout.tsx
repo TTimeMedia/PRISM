@@ -16,7 +16,7 @@ import { Sora_600SemiBold, Sora_700Bold } from '@expo-google-fonts/sora';
 import { ThemeProvider, PRISMToastProvider } from '@prism/ui';
 import { GlobalErrorFallback } from '../components/GlobalErrorFallback';
 import { OfflineBanner } from '../components/OfflineBanner';
-import { AuthProvider } from '../lib/auth/AuthProvider';
+import { AuthProvider, useSession } from '../lib/auth/AuthProvider';
 import { queryClient } from '../lib/queryClient';
 import { useAppStore } from '../lib/store/appStore';
 
@@ -39,16 +39,6 @@ export default function RootLayout() {
     if (fontError) throw fontError;
   }, [fontError]);
 
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
@@ -57,14 +47,48 @@ export default function RootLayout() {
             <ThemeProvider preference={themePreference}>
               <PRISMToastProvider>
                 <OfflineBanner />
-                <Stack screenOptions={{ headerShown: false }}>
-                  <Stack.Screen name="(tabs)" />
-                </Stack>
+                <RootNavigator fontsLoaded={fontsLoaded} />
               </PRISMToastProvider>
             </ThemeProvider>
           </AuthProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
+  );
+}
+
+/**
+ * Screen 01 — Splash: stays up while the app initializes (fonts +
+ * the initial session check), then routes straight to the right place
+ * (Today if authenticated, Welcome otherwise) — see
+ * docs/SCREEN_BIBLE.md §4. Onboarding-resume routing is added in the
+ * Personalization milestone once onboarding screens exist; for now any
+ * authenticated session goes straight to (tabs).
+ */
+function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
+  const { session, isLoading: authLoading, isPasswordRecovery } = useSession();
+  const ready = fontsLoaded && !authLoading;
+
+  useEffect(() => {
+    if (ready) {
+      SplashScreen.hideAsync();
+    }
+  }, [ready]);
+
+  if (!ready) {
+    return null;
+  }
+
+  const showTabs = !!session && !isPasswordRecovery;
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={showTabs}>
+        <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!showTabs}>
+        <Stack.Screen name="(auth)" />
+      </Stack.Protected>
+    </Stack>
   );
 }

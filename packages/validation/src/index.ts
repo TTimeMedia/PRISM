@@ -1,4 +1,5 @@
 export * from './common';
+export * from './auth';
 export * from './profile';
 export * from './modules';
 export * from './care';

@@ -1,9 +1,9 @@
 # PRISM Build Status
 
-**STATUS: MILESTONE 01 (FOUNDATION) COMPLETE**
-**CURRENT MILESTONE: 02 — Authentication & Identity**
+**STATUS: MILESTONE 02 (AUTHENTICATION & IDENTITY) COMPLETE**
+**CURRENT MILESTONE: 03 — Personalization (Onboarding)**
 
-Last updated: 2026-09-02 (Foundation milestone complete)
+Last updated: 2026-09-02 (Authentication & Identity milestone complete)
 
 This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md)'s implementation milestones. It is a living document — update it at the end of every milestone, not just at the start of the project. It does not restate product or technical detail; it points at the document that owns each fact.
 
@@ -11,7 +11,7 @@ This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./
 
 ## 1. Current Project Status
 
-PRISM's Foundation milestone (`01`) is complete: the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure (state architecture, validation, error/loading/empty states, accessibility foundation, testing foundation, environment management) all exist and are verified working — see §9 below for what was built and how it was verified. No P0/P1 feature screens have been implemented yet; that begins with Milestone 02.
+PRISM's Foundation milestone (`01`) and Authentication & Identity milestone (`02`) are both complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens (Sign Up, Sign In, Forgot/Reset Password, Email Verification, plus Welcome) on that foundation, with real working session handling, email verification, and password recovery via deep link — see §9 (Foundation) and §10 (Authentication & Identity) below for what was built and how each was verified. No onboarding or P0/P1 feature screens exist yet; that begins with Milestone 03.
 
 ## 2. Documentation Status
 
@@ -53,15 +53,16 @@ Per [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §28:
 
 ### Current Milestone
 
-**Authentication & Identity** (milestone `02`) — not yet started. Full sign up / sign in / verification / recovery / session UI is built here, on top of the auth foundation (Supabase client, `AuthProvider`, platform-aware session storage) established in `01`.
+**Personalization (Onboarding)** (milestone `03`) — not yet started. The 12 onboarding screens, module selection, profile/journey-stage/care setup, and the personalized TODAY engine are built here, on top of the working session layer from `02`.
 
 ### Completed Milestones
 
-**Foundation** (milestone `01`) — complete as of 2026-09-02. See §9 below for what was built and how it was verified.
+- **Foundation** (milestone `01`) — complete as of 2026-09-02. See §9 below for what was built and how it was verified.
+- **Authentication & Identity** (milestone `02`) — complete as of 2026-09-02. See §10 below.
 
 ### Remaining Milestones
 
-Thirteen (`02` through `14`), starting with Authentication & Identity.
+Twelve (`03` through `14`), starting with Personalization.
 
 ## 6. Known Open Decisions
 
@@ -123,11 +124,11 @@ Unchecked — nothing has been built yet. Update this checklist at the end of ea
 
 ### Authentication
 
-- [ ] Sign up
-- [ ] Sign in
-- [ ] Email verification
-- [ ] Password recovery (with enumeration protection)
-- [ ] Session handling
+- [x] Sign up
+- [x] Sign in
+- [x] Email verification
+- [x] Password recovery (with enumeration protection)
+- [x] Session handling
 
 ### Personalization
 
@@ -212,14 +213,44 @@ Completed 2026-09-02. This section records what was built, the engineering decis
 - `apps/mobile`: `expo export --platform web` succeeds (after the two fixes above). Visual verification was done via `expo start --web` — the dev/client-rendered path, and the relevant one, since this app's shipped web presence is the separate Next.js marketing site, not this Expo app in static-export form — in both light and dark mode, across all four tabs. Screenshots confirmed exact PRISM color tokens in both themes, the approved empty-state copy verbatim, correct active-tab highlighting, and no layout defects. Full detail in the Final Report for this milestone.
 - **Non-blocking observation**: Expo Router's _static_ web export (as distinct from the dev server) shows a theme-resolution inconsistency between the server-rendered pass and client hydration — the resolved color scheme can differ between the pre-rendered HTML and the hydrated client on first paint. This did not reproduce under `expo start --web` (confirmed correct in both themes) and does not affect the native iOS/Android app. It is not a blocker because static web export is not a shipped target for this app; worth a look only if that changes.
 
-## 10. Known Technical Risks
+## 10. Authentication & Identity Milestone (02) — Completion Notes
+
+Completed 2026-09-02. Built on the auth foundation from Milestone 01 (Supabase client, `AuthProvider`, platform-aware session storage).
+
+### What was built
+
+- **Seven Authentication screens** (`features/auth/screens/`, routed from `app/(auth)/`): Welcome, Sign Up, Sign In, Forgot Password, Reset Password, Email Verification — see `docs/SCREEN_BIBLE.md` §4. Copy matches the spec verbatim (verified via screenshot, not just code review).
+- **Root navigation guards** (`app/_layout.tsx`, `app/(auth)/_layout.tsx`): Expo Router's `Stack.Protected` gates `(tabs)` vs. `(auth)` on session state, and gates `reset-password` specifically on `isPasswordRecovery` within the auth group. The native splash screen now stays up until both fonts and the initial session check resolve, then routes straight to the correct destination — implementing Screen 01 (Splash)'s behavior without a separate routed screen.
+- **`packages/validation/src/auth.ts`**: email/password/sign-up/sign-in/forgot-password/reset-password Zod schemas. Password minimum length (8) is a recorded decision — see `docs/DECISIONS.md` "Minimum password length is 8 characters".
+- **`lib/auth/actions.ts`**: thin wrappers around `supabase.auth.*` (signUp, signIn, sendPasswordResetEmail, updatePassword, resendVerificationEmail, signOut) — kept separate from screens so they're unit-testable without rendering.
+- **`lib/auth/errors.ts`**: maps Supabase `AuthApiError` codes to PRISM's approved, non-technical error copy (never the raw backend message) — with a handful of specific, still-calm messages (e.g. "Please verify your email before signing in.") where the user genuinely needs to know what to do next.
+- **`lib/auth/deepLinks.ts` + `AuthProvider.tsx`**: password recovery works via the emailed deep link. Supabase's implicit-flow recovery link (`prism://reset-password#access_token=...&type=recovery`) is parsed by hand (there is no `window.location` on native, and the client is configured with `detectSessionInUrl: false`), the session is established via `setSession()`, and `isPasswordRecovery` is tracked manually — `setSession()` always fires a `SIGNED_IN` auth event, never `PASSWORD_RECOVERY` (that event is only emitted by the browser-only URL-detection code path this app doesn't use), so the link's own `type=recovery` parameter is the actual source of truth, not the emitted event name.
+- **YOU placeholder gets a working "Sign out"** action — session handling needs a real, working way to end a session even before the rest of Screen 53 exists (Milestone `09`).
+
+### Engineering decisions (internal — not product-visible beyond the password-length one already in `DECISIONS.md`)
+
+- **`react-hook-form` + `@hookform/resolvers/zod`** is the form pattern for every auth screen (already a Foundation-era dependency, unused until now) — controlled inputs via `Controller`, validation via the shared Zod schemas, so client validation and the shape sent to Supabase never drift apart.
+- **Enumeration protection implementation**: Forgot Password shows the fixed "If an account exists…" message on every successful submit regardless of the underlying result (Supabase's own `resetPasswordForEmail` already doesn't reveal existence). A genuine failure (network, rate limit) is deliberately _not_ folded into that same message — those aren't "does this email exist" signals, so distinguishing them doesn't weaken the protection.
+- **"Open email" is best-effort** (`Linking.openURL('mailto:')`, silently no-ops on failure) — there is no universal cross-platform API to open the platform mail app's inbox specifically.
+- **"Change email" on the Email Verification screen** returns to Sign Up rather than attempting to mutate a pending signup — there is no session yet to change an email against.
+
+### Verification performed
+
+- `pnpm -r typecheck` passes with zero errors across all 8 workspace projects (including Expo Router's own generated route types, regenerated via `expo export --platform web` after adding the new routes).
+- `pnpm -r test` passes 52/52 tests — 29 new for this milestone (10 validation schema tests, 13 `lib/auth` unit tests covering deep-link parsing and error mapping, 6 screen-level tests covering navigation and form validation/submission).
+- ESLint passes with zero errors/warnings; Prettier formatting is clean repository-wide.
+- `expo export --platform web` bundles all 22 routes (7 auth + 4 tabs, each reachable both bare and `(group)`-prefixed) with no errors.
+- **Visual verification** via `expo start --web` (dev/client-rendered — see Milestone 01's note on why this is the relevant path, not the static export): every auth screen screenshotted in both light and dark mode, confirming exact PRISM color tokens, the approved copy verbatim, and correct layout. Live interaction was also verified, not just static screenshots: submitting Sign Up with an invalid email, a too-short password, and mismatched passwords produced the correct inline red-bordered fields with the exact Zod error messages, with no crash and no raw error exposed.
+- Password recovery's deep-link handling (`parseAuthDeepLink`, `isPasswordRecoveryLink`) is covered by unit tests against realistic implicit-flow URLs (including an expired-link error response), but the full end-to-end flow — a real email delivered by a live Supabase project, tapped on a device — could not be exercised in this environment (no live Supabase project, no physical device/simulator). The code follows Supabase's documented native pattern; this is the one piece of Milestone 02 that still needs a real device + live project pass before shipping.
+
+## 11. Known Technical Risks
 
 - **Recurring reminders across timezones/DST.** `TECHNICAL_BIBLE.md` §14 requires that a weekly reminder "should not move" when a user travels, but does not specify the exact scheduling algorithm. Real, tractable risk — resolve during the CARE milestone (`07`) when the reminder engine is built, and cover it explicitly in that milestone's tests.
 - **Offline sync conflict resolution.** The rule ("never silently overwrite; resolve deterministically; surface conflict when necessary" — `TECHNICAL_BIBLE.md` §14) is clear in intent but the exact algorithm (last-write-wins vs. field-level merge vs. user-prompted resolution) is left open. Address during Hardening (`07`).
 - **Third-party push notification service.** Even the default provider (§6) touches user data in transit and deserves the same "security red flag" review as any other third-party integration before it's wired up in milestone `09`/`10` — don't let "it's the standard Expo default" skip that review.
 - **`frequency_config`/`recurrence` JSON schema drift.** Because these are JSONB with no enforced shape, inconsistent writes across the mobile app and any future web/admin surface are a real risk if the shape isn't validated centrally (see `packages/validation` in `TECHNICAL_BIBLE.md` §4). Define and validate the shape once, in one shared package, not per-call-site.
 
-## 11. Known Legal/Privacy Review Items
+## 12. Known Legal/Privacy Review Items
 
 Tracked in full in [`SECURITY.md`](./SECURITY.md) §21 — restated here for build-status visibility, all pre-launch (not pre-Foundation) items:
 

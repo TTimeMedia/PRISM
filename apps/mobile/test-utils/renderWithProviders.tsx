@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaProvider, type Metrics } from 'react-native-safe-area-context';
 import { render, type RenderOptions } from '@testing-library/react-native';
-import { ThemeProvider } from '@prism/ui';
+import { PRISMToastProvider, ThemeProvider } from '@prism/ui';
 
 // SafeAreaProvider measures the frame natively; in the test renderer
 // that measurement never resolves, so children stay unrendered unless
@@ -14,15 +14,20 @@ const TEST_SAFE_AREA_METRICS: Metrics = {
 
 /**
  * Wraps a component with the providers every real screen renders under
- * (theme, safe area). Auth/React Query providers are added here as
- * soon as a test needs them — see lib/auth/AuthProvider.tsx and
+ * (theme, safe area, toasts). Auth/React Query providers are added here
+ * as soon as a test needs them — see lib/auth/AuthProvider.tsx and
  * lib/queryClient.ts.
  */
 export function renderWithProviders(ui: React.ReactElement, options?: RenderOptions) {
-  return render(<ThemeProvider preference="dark">{ui}</ThemeProvider>, {
-    wrapper: ({ children }) => (
-      <SafeAreaProvider initialMetrics={TEST_SAFE_AREA_METRICS}>{children}</SafeAreaProvider>
-    ),
-    ...options,
-  });
+  return render(
+    <ThemeProvider preference="dark">
+      <PRISMToastProvider>{ui}</PRISMToastProvider>
+    </ThemeProvider>,
+    {
+      wrapper: ({ children }) => (
+        <SafeAreaProvider initialMetrics={TEST_SAFE_AREA_METRICS}>{children}</SafeAreaProvider>
+      ),
+      ...options,
+    },
+  );
 }
