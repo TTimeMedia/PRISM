@@ -11,6 +11,9 @@ export const milestoneCreateSchema = z.object({
 });
 export type MilestoneCreateInput = z.infer<typeof milestoneCreateSchema>;
 
+export const milestoneUpdateSchema = milestoneCreateSchema.partial();
+export type MilestoneUpdateInput = z.infer<typeof milestoneUpdateSchema>;
+
 /** Mood is optional and never a clinical score — see docs/PRODUCT_BIBLE.md §20. */
 export const journalEntryCreateSchema = z.object({
   title: z.string().max(200).nullable().optional(),
@@ -20,6 +23,9 @@ export const journalEntryCreateSchema = z.object({
   tags: z.array(z.string().max(50)).max(20).default([]),
 });
 export type JournalEntryCreateInput = z.infer<typeof journalEntryCreateSchema>;
+
+export const journalEntryUpdateSchema = journalEntryCreateSchema.partial();
+export type JournalEntryUpdateInput = z.infer<typeof journalEntryUpdateSchema>;
 
 /** P1. "Not progress. Memories." — see docs/DESIGN_SYSTEM.md §18. */
 export const memoryCreateSchema = z.object({

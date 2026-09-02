@@ -17,3 +17,5 @@ export * from './PRISMErrorState';
 export * from './PRISMListItem';
 export * from './PRISMHeader';
 export * from './PRISMBottomNav';
+export * from './PRISMTimeline';
+export * from './PRISMMilestone';

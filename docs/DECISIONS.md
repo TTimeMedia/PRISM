@@ -158,6 +158,36 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** Screen 24 (Medications) calls for showing a medication's "Next scheduled event," but no real dose-scheduling-resolution engine exists yet (the same gap already tracked in `docs/BUILD_STATUS.md` Known Technical Risks as blocking TODAY's "medication due today" classification). Inventing a plausible-looking next-occurrence date without a real resolution algorithm would risk showing the user incorrect information about their own medication — worse than not showing it.
 **Implications:** `describeFrequency()` (`apps/mobile/features/care/medicationDisplay.ts`) describes the _configured_ recurrence pattern in plain language ("Daily at 08:00", "Every 3 days") — real, stored data, honestly presented — rather than resolving it into a specific next-dose timestamp. Building the real scheduling-resolution engine is deferred to the same future work that resolves the TODAY gap; when it ships, both surfaces should be updated together.
 
+## JOURNEY
+
+### Timeline's "medications" events are real logged doses, not a predicted schedule
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** `MASTER_BUILD_SPEC.md` §09 lists medications among Timeline's P0 record types, but a medication itself has no single instant-in-time event — unlike an injection (`injected_at`) or appointment (`starts_at`), it's an ongoing configuration. Inventing a "next dose" timestamp to plot on the timeline would require the same scheduling-resolution engine that doesn't exist yet (see CARE's "Next scheduled event" decision above) — and Timeline is explicitly a _history_, so a predicted future dose doesn't belong on it regardless.
+**Implications:** `buildTimelineEvents()` (`apps/mobile/services/journey/timeline.ts`) sources medication events from `medication_logs` — each entry is something that actually happened (completed/skipped/missed), with a real `scheduled_at` timestamp. No log entries yet means no medication events on Timeline yet, which is correct: nothing has happened, so nothing is shown.
+
+### Timeline navigates to the closest real record view when a screen from the source inventory doesn't exist
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** Screen 43 (Timeline Event)'s own description gives "Timeline → Injection → Injection Detail" as an example of "tapping an event opens its original record" — but the actual P0 CARE screen inventory (Screens 29-30) has no Injection Detail screen, only Injection History (a list) and Log Injection (a form). This is an internal inconsistency in the source spec, not a deliberate omission to resolve around.
+**Implications:** Tapping an injection event on Timeline opens Injection History (`/care/injections`) — the closest real view of that record, rather than a screen that doesn't exist. Every other P0 record type already has a real detail screen (Medication → its history view, Appointment/Milestone/Journal → their own Detail screens), so this substitution is needed only for injections. See `recordHref()` in `apps/mobile/features/journey/screens/TimelineScreen.tsx`.
+
+### Journal entries have no Photo field — the canonical schema doesn't have a column for one
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** Screen 48 (New Journal Entry) lists "Photo (optional)" among its fields, but the canonical `journal_entries` schema (`MASTER_BUILD_SPEC.md` §09: `id, user_id, title, content, mood, date, tags, created_at, updated_at`) has no photo/image column at all — the same category of gap as CARE's missing medication-status column, resolved the same way: don't invent schema beyond what the spec actually defines.
+**Implications:** New/Edit Journal Entry and Journal Entry Detail omit the Photo field entirely rather than adding an unspecified column or wiring up Storage integration beyond what's defined. If a future milestone adds real photo support to Journal, it needs an explicit schema decision first (a `photo_url` or `media_id` column, plus the Storage/RLS policy work that goes with it) — not a client-side-only feature bolted onto a table that has nowhere to persist it.
+
+### Journal's Mood field is free text, not a chip-select mood tracker
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** `docs/DESIGN_SYSTEM.md` §14 explicitly warns: "Avoid clinical mood trackers, mental-health dashboards, and aggressive mood charts... Mood is optional and must never be a forced rating." The `mood` column itself is a plain nullable string, not an enum — there is no suggested/fixed mood list anywhere in the source material to draw chip options from, and inventing one would risk exactly the clinical-mood-tracker pattern the design system rules out.
+**Implications:** Mood is a single free-text input, matching every other CARE/JOURNEY field with no suggested-values list (e.g. Medication's Dosage, Milestone's Category). A future milestone could add mood _suggestions_ as optional pre-fill chips (mirroring Milestone's suggested-titles pattern) without changing the underlying free-text storage — that would stay compatible with this decision; a hard-coded required selector would not.
+
 ## Product Structure
 
 ### The primary navigation is TODAY / CARE / JOURNEY / YOU

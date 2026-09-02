@@ -1,9 +1,9 @@
 # PRISM Build Status
 
-**STATUS: MILESTONE 04 (CARE) COMPLETE**
-**CURRENT MILESTONE: 05 — JOURNEY**
+**STATUS: MILESTONE 05 (JOURNEY) COMPLETE**
+**CURRENT MILESTONE: 06 — YOU**
 
-Last updated: 2026-09-02 (CARE milestone complete)
+Last updated: 2026-09-02 (JOURNEY milestone complete)
 
 This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md)'s implementation milestones. It is a living document — update it at the end of every milestone, not just at the start of the project. It does not restate product or technical detail; it points at the document that owns each fact.
 
@@ -11,7 +11,7 @@ This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./
 
 ## 1. Current Project Status
 
-PRISM's Foundation milestone (`01`), Authentication & Identity milestone (`02`), Personalization (Onboarding) milestone (`03`), and CARE milestone (`04`) are all complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens with real working session handling, email verification, and password recovery via deep link. Personalization (Onboarding) built all 12 onboarding screens, the resumable onboarding-step routing infrastructure, module selection driven by the user's Care Setup answers, and the personalized TODAY engine with a real, dynamic TODAY screen. CARE built full CRUD for Medications (with dose logging and Pause/Resume), Injections, and Appointments across all 12 P0 CARE screens — see §9 (Foundation), §10 (Authentication & Identity), §11 (Personalization / Onboarding), and §12 (CARE) below for what was built and how each was verified. No JOURNEY/YOU feature screens exist yet; that begins with Milestone 05.
+PRISM's Foundation milestone (`01`), Authentication & Identity milestone (`02`), Personalization (Onboarding) milestone (`03`), CARE milestone (`04`), and JOURNEY milestone (`05`) are all complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens with real working session handling, email verification, and password recovery via deep link. Personalization (Onboarding) built all 12 onboarding screens, the resumable onboarding-step routing infrastructure, module selection driven by the user's Care Setup answers, and the personalized TODAY engine with a real, dynamic TODAY screen. CARE built full CRUD for Medications (with dose logging and Pause/Resume), Injections, and Appointments across all 12 P0 CARE screens. JOURNEY built Journey Home, a unified Timeline (medications, injections, appointments, milestones, and journal entries in one chronological view — never a second data store), full CRUD for Milestones and Journal, and two new named design-system components (`PRISMTimeline`, `PRISMMilestone`) — see §9 (Foundation), §10 (Authentication & Identity), §11 (Personalization / Onboarding), §12 (CARE), and §13 (JOURNEY) below for what was built and how each was verified. No YOU feature screens exist yet; that begins with Milestone 06.
 
 ## 2. Documentation Status
 
@@ -53,7 +53,7 @@ Per [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §28:
 
 ### Current Milestone
 
-**JOURNEY** (milestone `05`) — not yet started. Timeline, Milestones, and Journal are built here.
+**YOU** (milestone `06`) — not yet started. Profile, Customize PRISM (P0 module toggles), Notifications, Privacy, App lock, Accessibility, Appearance, Data export, and Account deletion are built here.
 
 ### Completed Milestones
 
@@ -61,16 +61,17 @@ Per [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §28:
 - **Authentication & Identity** (milestone `02`) — complete as of 2026-09-02. See §10 below.
 - **Personalization (Onboarding)** (milestone `03`) — complete as of 2026-09-02. See §11 below.
 - **CARE** (milestone `04`) — complete as of 2026-09-02. See §12 below.
+- **JOURNEY** (milestone `05`) — complete as of 2026-09-02. See §13 below.
 
 ### Remaining Milestones
 
-Ten (`05` through `14`), starting with JOURNEY.
+Nine (`06` through `14`), starting with YOU.
 
 ## 6. Known Open Decisions
 
 The MVP scope contradiction that was open at the end of the initial documentation pass has been resolved (see [`DECISIONS.md`](./DECISIONS.md)). No product-level decisions are currently open. The following are **implementation-level** choices intentionally left to the engineer at the point they're needed, per this specification's own philosophy of not over-specifying (`MASTER_BUILD_SPEC.md` Appendix A): they should be made and then recorded in `DECISIONS.md` (if product-visible) or left as ordinary code, not raised back to the product owner.
 
-- **`reminders.recurrence` JSON shape** — the column exists and its purpose is specified (§`MASTER_BUILD_SPEC.md` §18), but the internal JSON structure is not yet designed; the `reminders` table itself has no CRUD built yet. (`medications.frequency_config`'s shape, by contrast, is already resolved — `frequencyConfigSchema` in `packages/validation/src/care.ts` — and is exercised by real Add/Edit Medication forms as of the CARE milestone.) Design `recurrence`'s shape when the actual reminder-scheduling engine is built (see §13 Known Technical Risks).
+- **`reminders.recurrence` JSON shape** — the column exists and its purpose is specified (§`MASTER_BUILD_SPEC.md` §18), but the internal JSON structure is not yet designed; the `reminders` table itself has no CRUD built yet. (`medications.frequency_config`'s shape, by contrast, is already resolved — `frequencyConfigSchema` in `packages/validation/src/care.ts` — and is exercised by real Add/Edit Medication forms as of the CARE milestone.) Design `recurrence`'s shape when the actual reminder-scheduling engine is built (see §14 Known Technical Risks).
 - **Push notification delivery provider** — `TECHNICAL_BIBLE.md` §15 specifies "native push notifications through Expo-supported infrastructure" but doesn't name a specific service. Expo's own push notification service is the natural default given the Expo-based stack; per `SECURITY.md` §6 (security red flags apply to any third-party service touching user data), give it one explicit privacy review before the Notifications work in milestone `09`/`10`, same as any other third-party dependency — not a blocker, just don't skip the review because it's the "obvious" default.
 - **Icon library** — `DESIGN_SYSTEM.md` §13 describes the required visual characteristics (geometric, rounded, simple, thin-to-medium stroke) but does not name a library. Pick one during the Design System milestone (`04`) and record the choice in `DECISIONS.md` since it affects every screen.
 - **Data export file structure** — `SECURITY.md` §9 specifies formats (JSON/CSV) and a completeness bar but not whether export is one combined file or a per-table bundle. Decide during milestone `10` (Privacy & security).
@@ -151,9 +152,9 @@ Unchecked — nothing has been built yet. Update this checklist at the end of ea
 
 ### Journey
 
-- [ ] Timeline
-- [ ] Milestones
-- [ ] Journal
+- [x] Timeline (medications/injections/appointments/milestones/journal entries, unified)
+- [x] Milestones (Add/Detail/Edit/Delete, suggested titles)
+- [x] Journal (Write/Detail/Edit/Delete, free-text mood, tags)
 
 ### YOU
 
@@ -313,16 +314,46 @@ See `DECISIONS.md` § CARE for: Pause/Resume expressed via `end_date` rather tha
 - `apps/web`: `next build` still succeeds.
 - **Visual verification**: the same temporary root-guard-bypass methodology from Milestone 03 was used (no live Supabase project or device in this sandbox to establish a real session) — reverted before commit, confirmed via `git diff` showing zero changes to `app/_layout.tsx`. Screenshotted: Care Home (empty state, since no session means no enabled modules — a real, correct rendering path, not a stand-in), Medications list (empty state), Add Medication (full form, light + dark — every field, chip group, and the conditional weekly/every-X-days/time-of-day sub-fields all render correctly), Medication Detail (the approved generic error state, since the session-gated fetch has no data to return — confirms the screen degrades safely rather than crashing), Injection History (empty state), Log Injection (full form, correctly omitting the Medication chip field when the medications list is empty), Appointments (empty state), Add Appointment (full form, light + dark), Appointment Detail (error state, same reasoning as Medication Detail). No console or page errors on any screen.
 
-## 13. Known Technical Risks
+## 13. JOURNEY Milestone (05) — Completion Notes
+
+Completed 2026-09-02. Built on CARE's data layer patterns and the working TODAY personalization engine from Milestone 03.
+
+### What was built
+
+- **All 9 P0 JOURNEY screens** (`features/journey/screens/`, routed from a new nested stack at `app/(tabs)/journey/`): Journey Home, Timeline, Milestones (list, Add, Detail, Edit), Journal (list, New, Detail, Edit). Memories (Screens 50-52) is P1 and has no screens yet, consistent with the existing "Customize PRISM and Quick Add expose only P0 modules until P1 ships" decision.
+- **Timeline engine** (`services/journey/timeline.ts`): `buildTimelineEvents()` unifies medications (as real logged doses from `medication_logs`, not a predicted schedule — see `docs/DECISIONS.md` § JOURNEY), injections, appointments, milestones, and journal entries into a single reverse-chronological list. Pure and unit-tested, following the same shape as the TODAY engine from Milestone 03. Timeline events reference their source records (`sourceId`) — Timeline is a view, never a second data store.
+- **`lib/journey/timelineQuery.ts`** (new): the data-fetching half of Timeline — only fetches records for modules that are actually enabled, the same personalization rule already applied to TODAY and CARE Home.
+- **`lib/journey/queries.ts` / `lib/journey/mutations.ts`** (new): full CRUD for milestones and journal entries, following the exact `lib/care/*` pattern (RLS-scoped reads, `user_id`-filtered mutations, query-key invalidation). Milestone/journal mutations also invalidate `today-items`, since TODAY classifies both record types.
+- **Two new named design-system components** (`packages/ui/src/components/`): `PRISMTimeline` (the "path of light" — a vertical line connecting event dots, spectrum-colored per record type) and `PRISMMilestone` (a milestone card with a larger icon, spectrum accent, date, and title — "a user-created milestone must feel equally important as a suggested one," per `docs/DESIGN_SYSTEM.md` §16). Both were listed in the design system's named component inventory (§27) since Foundation but not built until JOURNEY needed them.
+- **Shared form components** (`features/journey/components/`): `MilestoneForm` (Add/Edit Milestone, with all 12 suggested titles from `docs/MASTER_BUILD_SPEC.md` §09 as pre-fill chips, always paired with a free-text "Create your own"), `JournalEntryForm` (New/Edit Journal Entry), `TagInput` (a simple add/remove tag row for journal entries).
+
+### Product-visible decisions (recorded in `DECISIONS.md`)
+
+See `DECISIONS.md` § JOURNEY for: medication timeline events sourced from real logs rather than a predicted schedule, injection timeline events routing to Injection History (there is no Injection Detail screen in the P0 inventory, despite Screen 43's own illustrative example), journal entries having no Photo field (the canonical schema has no column for one), and Mood being free text rather than a chip-select mood tracker (explicitly ruled out by `docs/DESIGN_SYSTEM.md` §14).
+
+### Engineering decisions (internal — not product-visible, so not recorded in `DECISIONS.md`)
+
+- **Date-only records get a synthetic sort key, never a display change.** Milestones and journal entries store a bare `YYYY-MM-DD` date, while injections/appointments/medication logs store a full UTC timestamp. To interleave both kinds sensibly on one chronological list, `buildTimelineEvents()` converts a bare date to a synthetic midday-UTC sort key (`dateToSortKey()`) purely for ordering — the record's own `date` field, and everything actually displayed, is untouched. This keeps faith with `docs/TECHNICAL_BIBLE.md` §14's "a recorded date never shifts a day due to travel" rule, since only an internal comparison key is affected, never the shown date.
+- **Applied the CARE milestone's typed-routes lesson proactively.** Having found (and documented) in Milestone 04 that `.expo/types/router.d.ts` only regenerates via `expo start`, not `expo export`, this milestone ran the dev server and hit every new dynamic route by hand _before_ the final typecheck pass, rather than discovering the same stale-types surprise again. `TimelineScreen.tsx`'s `recordHref()` helper is explicitly typed to return `Href` (imported from `expo-router`) rather than a bare `string`, matching the fix already applied to `onboardingStepHref()` in Milestone 03 — the same class of bug (a function computing a route dynamically needs its return type spelled out as `Href`, or the literal-template inference that makes direct `router.push(\`/x/${id}\`)` calls type-check doesn't carry through a wrapping function).
+
+### Verification performed (Quality Gate)
+
+- `pnpm -r typecheck` passes with zero errors across all 8 workspace projects.
+- `pnpm -r test` passes 158/158 tests — 33 new for this milestone (10 new `packages/validation` schema tests, 9 Timeline engine tests covering every record type plus cross-type ordering, and a `MilestonesScreen` test suite covering the empty state, list rendering, and navigation).
+- ESLint passes with zero errors/warnings on `apps/mobile` and `apps/web`; Prettier formatting is clean repository-wide (the one file Prettier flags, `apps/mobile/expo-env.d.ts`, is Expo's own auto-generated, gitignored file).
+- `apps/web`: `next build` still succeeds.
+- **Visual verification**: the same temporary root-guard-bypass methodology from Milestones 03-04 was used (no live Supabase project or device in this sandbox to establish a real session) — reverted before commit, confirmed via `git diff` showing zero changes to `app/_layout.tsx`. Screenshotted: Journey Home (Timeline section always visible; Milestones/Journal sections correctly absent since no session means no enabled modules), Timeline (approved empty state), Milestones (approved empty state), Add Milestone (full form, light + dark — all 12 suggested-title chips, the free-text Title field, and the icon picker all render correctly), Milestone Detail (the approved generic error state, since the session-gated fetch has no data to return), Journal (approved empty state), New Journal Entry (full form, light + dark — Mood renders as free text, not a chip row, confirming the design decision), Journal Entry Detail (error state, same reasoning as Milestone Detail). No console or page errors on any screen.
+
+## 14. Known Technical Risks
 
 - **No real reminder-scheduling engine exists yet — still open after CARE.** CARE (`04`) built `reminder_enabled` as a stored, editable boolean on medications and appointments, and full dose/schedule data entry, but no push-notification delivery, and no logic that resolves a `frequency_config` into an actual next-occurrence timestamp. This is now the most consequential open gap blocking three related things: recurring reminders across timezones/DST (`TECHNICAL_BIBLE.md` §14's "should not move when a user travels" requirement), TODAY's "medication due today" classification (deliberately not fabricated — see `services/personalization/engine.ts`), and Medications' "Next scheduled event" (deliberately described in plain language instead — see `docs/DECISIONS.md` § CARE). Resolve all three together, in one place, when the reminder engine is actually built — not piecemeal per-surface.
 - **Offline sync conflict resolution.** The rule ("never silently overwrite; resolve deterministically; surface conflict when necessary" — `TECHNICAL_BIBLE.md` §14) is clear in intent but the exact algorithm (last-write-wins vs. field-level merge vs. user-prompted resolution) is left open. Address during Hardening.
 - **Third-party push notification service.** Even the default provider (§6) touches user data in transit and deserves the same "security red flag" review as any other third-party integration before it's wired up in milestone `09`/`10` — don't let "it's the standard Expo default" skip that review.
 - **`frequency_config`/`recurrence` JSON schema drift.** Because these are JSONB with no enforced shape, inconsistent writes across the mobile app and any future web/admin surface are a real risk if the shape isn't validated centrally (see `packages/validation` in `TECHNICAL_BIBLE.md` §4). Define and validate the shape once, in one shared package, not per-call-site — the shape is already centralized in `packages/validation/src/care.ts`'s `frequencyConfigSchema`; the remaining risk is only in the not-yet-built engine that consumes it.
-- **`PRISMDateInput` is a text-entry stand-in, not a native picker.** Used across onboarding's date fields (Medication/Appointment Setup, Journey Date) and now every CARE date field too (Add/Edit Medication, Log Injection, Log a dose, Add/Edit Appointment) — the same sandbox constraint (no device/simulator to verify a native module end-to-end) applies everywhere it's used. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
-- **A growing list of flows need a real-device + live-project pass before shipping**, since none of them can be constructed in this no-backend, no-device sandbox: password-recovery's deep link, the onboarding auto-advance mutation (Building screen), and — new in this milestone — every CARE mutation exercised against real data (creating/editing/pausing a medication, logging a dose or injection, creating/editing an appointment) and the CARE screens' data-driven states (populated Medications/Injections/Appointments lists, Medication/Appointment Detail with real records, Care Home's section-ordering logic). All are code-complete and covered by unit/schema tests; visual verification this milestone confirmed the _code paths_ render correctly under a session-less bypass (forms, empty states, the approved generic error state) but never exercised a real write or a populated list. Verify the full write path together the first time a live Supabase project + physical device/simulator is available — this is the single most important pre-Beta verification gap across every milestone so far.
+- **`PRISMDateInput` is a text-entry stand-in, not a native picker.** Used across onboarding's date fields (Medication/Appointment Setup, Journey Date), every CARE date field (Add/Edit Medication, Log Injection, Log a dose, Add/Edit Appointment), and now every JOURNEY date field too (Add/Edit Milestone, New/Edit Journal Entry) — the same sandbox constraint (no device/simulator to verify a native module end-to-end) applies everywhere it's used. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
+- **A growing list of flows need a real-device + live-project pass before shipping**, since none of them can be constructed in this no-backend, no-device sandbox: password-recovery's deep link, the onboarding auto-advance mutation (Building screen), every CARE mutation and populated-data state (medications, injections, appointments), and — new in this milestone — every JOURNEY mutation exercised against real data (creating/editing a milestone, writing/editing a journal entry) and the JOURNEY screens' data-driven states (a populated Timeline actually interleaving multiple record types in the right order, populated Milestones/Journal lists, Milestone/Journal Entry Detail with real records, Journey Home's moment-count summary). All are code-complete and covered by unit/schema tests; visual verification this milestone confirmed the _code paths_ render correctly under a session-less bypass (forms, empty states, the approved generic error state) but never exercised a real write, a populated list, or the Timeline's actual cross-type interleaving logic against live data. Verify the full write path together the first time a live Supabase project + physical device/simulator is available — this is the single most important pre-Beta verification gap across every milestone so far.
 
-## 14. Known Legal/Privacy Review Items
+## 15. Known Legal/Privacy Review Items
 
 Tracked in full in [`SECURITY.md`](./SECURITY.md) §21 — restated here for build-status visibility, all pre-launch (not pre-Foundation) items:
 
