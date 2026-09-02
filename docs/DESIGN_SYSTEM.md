@@ -33,13 +33,13 @@ Imagine combining **Apple-level restraint** with **a private journal** with **a 
 
 ### What PRISM should NOT feel like
 
-| Failure mode | Symptoms |
-|---|---|
-| Generic healthcare app | Blue, white, charts, medical icons, clinical language |
-| Generic LGBTQ+ app | Rainbow everywhere, flags everywhere, Pride imagery everywhere |
-| Generic fitness app | Progress rings, streaks, achievements, gamification |
+| Failure mode             | Symptoms                                                              |
+| ------------------------ | --------------------------------------------------------------------- |
+| Generic healthcare app   | Blue, white, charts, medical icons, clinical language                 |
+| Generic LGBTQ+ app       | Rainbow everywhere, flags everywhere, Pride imagery everywhere        |
+| Generic fitness app      | Progress rings, streaks, achievements, gamification                   |
 | Generic productivity app | Endless checklists, tasks, notification overload, productivity scores |
-| Generic social app | Likes, followers, feeds, engagement loops |
+| Generic social app       | Likes, followers, feeds, engagement loops                             |
 
 **Do not use:** rainbow backgrounds everywhere, excessive gradients, rainbow borders, stereotypical LGBTQ+ iconography, syringe/pill imagery as the primary brand identity, generic medical blue, excessive glassmorphism.
 
@@ -66,20 +66,20 @@ PRISM uses a **dark-first** visual language.
 
 ### Core dark tokens
 
-| Token | Value | Usage |
-|---|---|---|
-| `PRISM_BLACK` | `#0B0B0F` | App background, lock screen, splash screen |
-| `PRISM_DARK` | `#0F0F14` | Secondary background regions |
-| `PRISM_SURFACE` | `#121218` | Cards, sheets, navigation surfaces |
+| Token             | Value     | Usage                                            |
+| ----------------- | --------- | ------------------------------------------------ |
+| `PRISM_BLACK`     | `#0B0B0F` | App background, lock screen, splash screen       |
+| `PRISM_DARK`      | `#0F0F14` | Secondary background regions                     |
+| `PRISM_SURFACE`   | `#121218` | Cards, sheets, navigation surfaces               |
 | `PRISM_SURFACE_2` | `#191921` | Elevated cards, input fields, secondary controls |
-| `PRISM_SURFACE_3` | `#22222C` | Selected controls, strong emphasis surfaces |
+| `PRISM_SURFACE_3` | `#22222C` | Selected controls, strong emphasis surfaces      |
 
 ### Light mode
 
-| Token | Value |
-|---|---|
-| `PRISM_WHITE` | `#F8F8FA` |
-| `PRISM_LIGHT` | `#F2F2F5` |
+| Token           | Value     |
+| --------------- | --------- |
+| `PRISM_WHITE`   | `#F8F8FA` |
+| `PRISM_LIGHT`   | `#F2F2F5` |
 | `PRISM_LIGHT_2` | `#EAEAEE` |
 | `PRISM_LIGHT_3` | `#DEDEE5` |
 
@@ -87,39 +87,39 @@ Light mode is **not** a simple inversion of dark mode — it must independently 
 
 ### Spectrum palette (signature accent system)
 
-| Token | Value | Typical use |
-|---|---|---|
-| `PRISM_CYAN` | `#5BCFFB` | Primary action, active navigation, links, focus state |
-| `PRISM_PINK` | `#F5A9B8` | Personal/journey moments, memories, emotional/reflection surfaces |
-| `PRISM_VIOLET` | `#B58CFF` | Journey, milestones, special moments |
-| `PRISM_MINT` | `#8DE8C5` | Completed states, positive confirmations, successful saves |
-| `PRISM_YELLOW` | `#FFE58A` | Attention, upcoming, gentle reminders |
+| Token          | Value     | Typical use                                                       |
+| -------------- | --------- | ----------------------------------------------------------------- |
+| `PRISM_CYAN`   | `#5BCFFB` | Primary action, active navigation, links, focus state             |
+| `PRISM_PINK`   | `#F5A9B8` | Personal/journey moments, memories, emotional/reflection surfaces |
+| `PRISM_VIOLET` | `#B58CFF` | Journey, milestones, special moments                              |
+| `PRISM_MINT`   | `#8DE8C5` | Completed states, positive confirmations, successful saves        |
+| `PRISM_YELLOW` | `#FFE58A` | Attention, upcoming, gentle reminders                             |
 
-These assignments are guidelines, not rigid rules. **Spectrum gradient** (Cyan → Pink → Violet → Mint → Yellow) is reserved for branding, hero moments, subtle highlights, and the PRISM logo — never for every button, card, background, heading, or icon. A spectrum gradient should feel *special*.
+These assignments are guidelines, not rigid rules. **Spectrum gradient** (Cyan → Pink → Violet → Mint → Yellow) is reserved for branding, hero moments, subtle highlights, and the PRISM logo — never for every button, card, background, heading, or icon. A spectrum gradient should feel _special_.
 
 ### Text colors
 
-| Token | Dark mode | Light mode |
-|---|---|---|
-| `TEXT_PRIMARY` | `#F8F8FA` | `#111116` |
-| `TEXT_SECONDARY` | `#B8B8C2` | `#5F5F6B` |
-| `TEXT_TERTIARY` | `#858591` | `#858591` |
-| `TEXT_DISABLED` | `#555560` | `#B0B0BA` |
-| `TEXT_INVERSE` | `#0B0B0F` | `#F8F8FA` |
+| Token            | Dark mode | Light mode |
+| ---------------- | --------- | ---------- |
+| `TEXT_PRIMARY`   | `#F8F8FA` | `#111116`  |
+| `TEXT_SECONDARY` | `#B8B8C2` | `#5F5F6B`  |
+| `TEXT_TERTIARY`  | `#858591` | `#858591`  |
+| `TEXT_DISABLED`  | `#555560` | `#B0B0BA`  |
+| `TEXT_INVERSE`   | `#0B0B0F` | `#F8F8FA`  |
 
 ### Borders
 
 Borders should be subtle — avoid heavy outlines.
 
-| Token | Dark | Light |
-|---|---|---|
-| `BORDER_SUBTLE` | `rgba(255,255,255,0.07)` | `rgba(0,0,0,0.06)` |
+| Token            | Dark                     | Light              |
+| ---------------- | ------------------------ | ------------------ |
+| `BORDER_SUBTLE`  | `rgba(255,255,255,0.07)` | `rgba(0,0,0,0.06)` |
 | `BORDER_DEFAULT` | `rgba(255,255,255,0.11)` | `rgba(0,0,0,0.10)` |
-| `BORDER_STRONG` | `rgba(255,255,255,0.18)` | `rgba(0,0,0,0.16)` |
+| `BORDER_STRONG`  | `rgba(255,255,255,0.18)` | `rgba(0,0,0,0.16)` |
 
 ### Color accessibility
 
-Never communicate meaning through color alone. Bad: *green = completed.* Better: *✓ Completed*, with green as a supporting cue. Applies equally to warnings, errors, reminders, selected states, and categories.
+Never communicate meaning through color alone. Bad: _green = completed._ Better: _✓ Completed_, with green as a supporting cue. Applies equally to warnings, errors, reminders, selected states, and categories.
 
 ### Dark mode & light mode character
 
@@ -133,19 +133,19 @@ Dark mode is PRISM's **signature** environment — deep, quiet, premium, private
 
 ### Type scale (size / line-height)
 
-| Style | Size / Line-height |
-|---|---|
-| Display XL | 40 / 46 |
-| Display L | 34 / 40 |
-| Display M | 28 / 34 |
-| Heading XL | 24 / 30 |
-| Heading L | 20 / 26 |
-| Heading M | 18 / 24 |
-| Body L | 17 / 25 |
-| Body M | 15 / 22 |
-| Body S | 14 / 20 |
-| Caption | 12 / 17 |
-| Micro | 11 / 15 |
+| Style      | Size / Line-height |
+| ---------- | ------------------ |
+| Display XL | 40 / 46            |
+| Display L  | 34 / 40            |
+| Display M  | 28 / 34            |
+| Heading XL | 24 / 30            |
+| Heading L  | 20 / 26            |
+| Heading M  | 18 / 24            |
+| Body L     | 17 / 25            |
+| Body M     | 15 / 22            |
+| Body S     | 14 / 20            |
+| Caption    | 12 / 17            |
+| Micro      | 11 / 15            |
 
 Avoid excessive font sizes — mobile interfaces should prioritize readability over visual drama.
 
@@ -157,30 +157,30 @@ Regular (400), Medium (500), Semibold (600), Bold (700). Primary UI favors 400/5
 
 Use an 8-point base grid: **4, 8, 12, 16, 24, 32, 40, 48, 64, 80px.**
 
-| Use | Value |
-|---|---|
-| Screen horizontal padding | 20px |
-| Card padding | 16px |
-| Large card padding | 20px |
-| Section spacing | 32px |
-| Major section spacing | 48px |
-| Button height | 52px |
-| Input height | 52px |
-| Minimum touch target | 44px |
-| Preferred touch target | 48px+ |
+| Use                       | Value |
+| ------------------------- | ----- |
+| Screen horizontal padding | 20px  |
+| Card padding              | 16px  |
+| Large card padding        | 20px  |
+| Section spacing           | 32px  |
+| Major section spacing     | 48px  |
+| Button height             | 52px  |
+| Input height              | 52px  |
+| Minimum touch target      | 44px  |
+| Preferred touch target    | 48px+ |
 
 ## 7. Corner Radius
 
 PRISM uses soft but controlled geometry.
 
-| Token | Value | Recommended use |
-|---|---|---|
-| Radius XS | 6px | — |
-| Radius S | 10px | — |
-| Radius M | 14px | Inputs (12–14px), Buttons (14px) |
-| Radius L | 18px | Cards (18px) |
-| Radius XL | 24px | Large feature cards (24px) |
-| Radius Pill | 999px | Tags |
+| Token       | Value | Recommended use                  |
+| ----------- | ----- | -------------------------------- |
+| Radius XS   | 6px   | —                                |
+| Radius S    | 10px  | —                                |
+| Radius M    | 14px  | Inputs (12–14px), Buttons (14px) |
+| Radius L    | 18px  | Cards (18px)                     |
+| Radius XL   | 24px  | Large feature cards (24px)       |
+| Radius Pill | 999px | Tags                             |
 
 Avoid putting every element inside a pill.
 
@@ -205,12 +205,12 @@ TODAY is the most personalized surface in the app. Cards are prioritized: (1) ac
 
 ## 10. Buttons
 
-| Type | Spec | Use |
-|---|---|---|
-| **Primary** | 52px height, 14px radius, weight 600, strong-but-restrained accent | The single most important action on screen. Never every button as a spectrum gradient. |
-| **Secondary** | Transparent or surface background, subtle border | Supporting actions |
-| **Tertiary** | Text-only | Cancel, Edit, Learn more, secondary navigation |
-| **Destructive** | Reserved styling | Only for genuinely destructive actions — never use red simply because something is inactive |
+| Type            | Spec                                                               | Use                                                                                         |
+| --------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| **Primary**     | 52px height, 14px radius, weight 600, strong-but-restrained accent | The single most important action on screen. Never every button as a spectrum gradient.      |
+| **Secondary**   | Transparent or surface background, subtle border                   | Supporting actions                                                                          |
+| **Tertiary**    | Text-only                                                          | Cancel, Edit, Learn more, secondary navigation                                              |
+| **Destructive** | Reserved styling                                                   | Only for genuinely destructive actions — never use red simply because something is inactive |
 
 ## 11. Inputs
 
@@ -228,7 +228,7 @@ Primary navigation — TODAY / CARE / JOURNEY / YOU — uses a bottom navigation
 
 ### Quick Add
 
-The global **+** should feel like *"Capture something,"* not *"Enter data."* The Quick Add sheet ("Add to PRISM") lists: Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only the options relevant to the user's enabled modules.**
+The global **+** should feel like _"Capture something,"_ not _"Enter data."_ The Quick Add sheet ("Add to PRISM") lists: Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only the options relevant to the user's enabled modules.**
 
 ## 13. Icons
 
@@ -240,7 +240,7 @@ The PRISM logo should be geometric, exploring prism geometry, refraction, the le
 
 ## 15. Timeline Visual Language
 
-The JOURNEY timeline should not look like a hospital record — it uses a **path of light**, with events emerging from the path and subtle spectrum changes distinguishing event categories. The timeline should communicate *"Your story is unfolding,"* never *"You are progressing toward completion."*
+The JOURNEY timeline should not look like a hospital record — it uses a **path of light**, with events emerging from the path and subtle spectrum changes distinguishing event categories. The timeline should communicate _"Your story is unfolding,"_ never _"You are progressing toward completion."_
 
 ## 16. Milestone Visual Language
 
@@ -278,7 +278,7 @@ The lock screen exposes almost nothing: the PRISM mark, "Unlock to continue," an
 
 ### Notifications
 
-Default: **private notifications ON.** Example: *"Your PRISM reminder is ready."* Never default to *"Your testosterone injection is due"* or *"Your surgery appointment is tomorrow."* Sensitive context stays hidden unless the user explicitly opts in to more detail.
+Default: **private notifications ON.** Example: _"Your PRISM reminder is ready."_ Never default to _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_ Sensitive context stays hidden unless the user explicitly opts in to more detail.
 
 ### Privacy-safe visual design
 
@@ -286,7 +286,7 @@ Never display sensitive information unnecessarily — not in notifications, not 
 
 ## 23. Motion
 
-Motion is part of the PRISM identity, representing *light moving → refracting → settling.*
+Motion is part of the PRISM identity, representing _light moving → refracting → settling._
 
 **Standard durations:** Micro 100–150ms · Standard 180–250ms · Large 300–450ms. Use easing, not linear motion.
 
@@ -312,19 +312,19 @@ Accessibility is a product requirement, not a checklist item added at the end. S
 
 Empty states should be human, never clinical:
 
-| Context | Copy |
-|---|---|
-| General | "Nothing here yet. That's okay." |
-| Journey | "Your story starts wherever you decide." |
-| Memories | "Save the moments that matter to you." |
-| Journal | "Whenever you're ready." |
-| Care | "Nothing added yet. You can add something whenever you need to." |
+| Context  | Copy                                                             |
+| -------- | ---------------------------------------------------------------- |
+| General  | "Nothing here yet. That's okay."                                 |
+| Journey  | "Your story starts wherever you decide."                         |
+| Memories | "Save the moments that matter to you."                           |
+| Journal  | "Whenever you're ready."                                         |
+| Care     | "Nothing added yet. You can add something whenever you need to." |
 
 Avoid cartoon illustrations unless they genuinely improve the experience.
 
 ## 26. Error States
 
-Errors are calm and specific — never `Error 500`. Use *"Something went wrong. Your information wasn't changed."* with **Try again** and, when useful, **Go back.** Never expose raw Supabase/backend errors to users.
+Errors are calm and specific — never `Error 500`. Use _"Something went wrong. Your information wasn't changed."_ with **Try again** and, when useful, **Go back.** Never expose raw Supabase/backend errors to users.
 
 ### Loading states
 
@@ -332,7 +332,7 @@ Avoid generic spinners where possible — prefer skeletons, subtle shimmer, and 
 
 ### Confirmation modals
 
-Use sparingly, e.g. *"Delete this journal entry? This can't be undone."* with Cancel/Delete. Reserve for genuinely high-risk actions.
+Use sparingly, e.g. _"Delete this journal entry? This can't be undone."_ with Cancel/Delete. Reserve for genuinely high-risk actions.
 
 ## 27. Component Architecture
 
@@ -385,7 +385,7 @@ The visual system must support dynamic content: a user who enables only Journal,
 
 ## 29. Microcopy Rules
 
-PRISM copy is concise, respectful, neutral, human, nonjudgmental, and uses contractions naturally. Prefer *"You can change this anytime"* over *"This setting may be modified at any time."* Prefer *"Nothing here yet"* over *"No records have been created."*
+PRISM copy is concise, respectful, neutral, human, nonjudgmental, and uses contractions naturally. Prefer _"You can change this anytime"_ over _"This setting may be modified at any time."_ Prefer _"Nothing here yet"_ over _"No records have been created."_
 
 ## 30. Signature PRISM Moments
 
@@ -400,14 +400,14 @@ A small number of memorable experiences carry the brand:
 
 Every new screen must pass these questions before shipping:
 
-1. Does this feel like PRISM? *(If it could belong to any generic healthcare app, redesign it.)*
-2. Does this assume something about the user? *(If yes, remove the assumption.)*
-3. Is the information necessary? *(If not, hide it.)*
-4. Is the interface calmer than the problem? *(If not, simplify it.)*
-5. Is color helping? *(If not, remove it.)*
-6. Does the screen respect privacy? *(If not, redesign it.)*
-7. Does the screen imply a finish line? *(If yes, change the framing.)*
-8. Does accessibility survive the visual design? *(If not, accessibility wins.)*
+1. Does this feel like PRISM? _(If it could belong to any generic healthcare app, redesign it.)_
+2. Does this assume something about the user? _(If yes, remove the assumption.)_
+3. Is the information necessary? _(If not, hide it.)_
+4. Is the interface calmer than the problem? _(If not, simplify it.)_
+5. Is color helping? _(If not, remove it.)_
+6. Does the screen respect privacy? _(If not, redesign it.)_
+7. Does the screen imply a finish line? _(If yes, change the framing.)_
+8. Does accessibility survive the visual design? _(If not, accessibility wins.)_
 
 ## 32. Final Design Principle
 

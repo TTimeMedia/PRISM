@@ -4,7 +4,7 @@ Version: 1.0
 Status: Engineering specification
 Tagline: Your journey. Your way.
 
-This document defines *how PRISM is built*. It assumes familiarity with [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) for product intent. Screen-by-screen implementation detail lives in [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md); visual implementation detail lives in [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md); the executable synthesis of all of it lives in [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md).
+This document defines _how PRISM is built_. It assumes familiarity with [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) for product intent. Screen-by-screen implementation detail lives in [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md); visual implementation detail lives in [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md); the executable synthesis of all of it lives in [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md).
 
 ---
 
@@ -27,13 +27,13 @@ Build PRISM as a secure, personalized, mobile-first application that adapts its 
 
 ## 2. Recommended Stack
 
-| Layer | Technology |
-|---|---|
-| Mobile | React Native + Expo (current stable tooling), targeting iOS and Android |
-| Backend | Supabase — PostgreSQL, Supabase Auth, Row Level Security, Supabase Storage, Edge Functions where appropriate |
-| Web | Next.js — marketing site, documentation, support, privacy/legal pages; a future admin interface may be added separately |
-| Hosting | Vercel (for the Next.js web application) |
-| Database | PostgreSQL through Supabase — the authoritative source of truth for synchronized application data |
+| Layer    | Technology                                                                                                              |
+| -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Mobile   | React Native + Expo (current stable tooling), targeting iOS and Android                                                 |
+| Backend  | Supabase — PostgreSQL, Supabase Auth, Row Level Security, Supabase Storage, Edge Functions where appropriate            |
+| Web      | Next.js — marketing site, documentation, support, privacy/legal pages; a future admin interface may be added separately |
+| Hosting  | Vercel (for the Next.js web application)                                                                                |
+| Database | PostgreSQL through Supabase — the authoritative source of truth for synchronized application data                       |
 
 Do not make social login a requirement for MVP; email + password + verification is sufficient to start (§7).
 
@@ -145,12 +145,14 @@ Supabase provides PostgreSQL, authentication, Row Level Security, storage, and E
 ### User Lifecycle
 
 **New user:**
+
 ```
 Account Created → Email Verification → Onboarding → Profile Creation
 → Module Configuration → Privacy Configuration → Today
 ```
 
 **Returning user:**
+
 ```
 Authentication → Load Profile → Load Module Configuration → Load Relevant Data → Today
 ```
@@ -218,6 +220,7 @@ TODAY is generated dynamically, never hard-coded per user.
 **Outputs:** the engine classifies records into `due_today`, `upcoming`, `recent`, `meaningful`, `hidden`.
 
 **Priority order:**
+
 1. Things requiring action today
 2. Upcoming items
 3. Recent meaningful information
@@ -225,6 +228,7 @@ TODAY is generated dynamically, never hard-coded per user.
 5. Nothing — if there is nothing meaningful to show, **do not manufacture content**; show a calm empty state.
 
 **Conceptual pipeline:**
+
 ```
 getUserProfile()
   → getEnabledModules()
@@ -261,7 +265,7 @@ Cache data that improves responsiveness (profile, module configuration, today's 
 
 ## 13. Error Handling
 
-Every major feature needs a defined **loading**, **empty**, **error**, and **offline** state (see also [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) for per-screen specifications). Error states are user-facing and calm — never a raw technical message. Offline states tell the user what's happening, e.g. *"You're offline. Your changes will sync when you're back online."*
+Every major feature needs a defined **loading**, **empty**, **error**, and **offline** state (see also [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) for per-screen specifications). Error states are user-facing and calm — never a raw technical message. Offline states tell the user what's happening, e.g. _"You're offline. Your changes will sync when you're back online."_
 
 ## 14. Offline Behavior
 
@@ -289,8 +293,8 @@ Reminder Created → Schedule Notification → Native Notification → User Acti
 
 **Private is the default notification style.** Content:
 
-- Private: *"Your PRISM reminder is ready."*
-- Standard: *"You have something scheduled in PRISM."*
+- Private: _"Your PRISM reminder is ready."_
+- Standard: _"You have something scheduled in PRISM."_
 - Custom: user-defined text where appropriate.
 
 Avoid sensitive lock-screen content by default (see [`SECURITY.md`](./SECURITY.md) for the full private-notification rationale).
@@ -308,21 +312,26 @@ Every interactive component must have an accessible label, accessible role, acce
 Testing layers, in order: **Unit → Integration → End-to-End → Accessibility → Security → Real-device testing.**
 
 ### Unit tests
+
 Date calculations, reminder calculations, timeline sorting, personalization, module filtering, validation, status handling.
 
 ### Integration tests
+
 Authentication, Supabase queries, RLS, CRUD workflows, reminder creation, offline synchronization.
 
 ### End-to-end tests (critical workflows)
+
 - **Signup:** Create account → Verify → Onboarding → Today
 - **Medication:** Add medication → Schedule → Reminder → Log → Timeline
 - **Journey:** Create milestone → Timeline → Edit → Delete
 - **Privacy:** Enable app lock → Close app → Reopen → Authentication required
 
 ### Security testing
+
 Attempt to: access another user's record, guess another user's UUID, modify another user's record, access another user's file, access deleted records, bypass client-side permissions. **Every attempt must fail.**
 
 ### Performance
+
 PRISM should feel immediate: fast cold launch, instant navigation between cached screens, optimistic UI where safe, minimal unnecessary network requests, paginated long timelines, lazy-loaded images, efficient database queries.
 
 ## 19. Environment Strategy

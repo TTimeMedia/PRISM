@@ -25,7 +25,7 @@ Transgender men, transgender women, nonbinary people, gender-fluid people, quest
 
 ## 02. Core Philosophy & Product Principles
 
-**Your journey. Your way.** — *There's no right way to transition.* Some people take hormones, some don't; some have surgery, some don't; some change their name, some don't; some know exactly what they want, others are still figuring things out. **PRISM adapts to every journey.** This philosophy must influence the product architecture, UX, database, copy, personalization, and visual design — not just the marketing copy.
+**Your journey. Your way.** — _There's no right way to transition._ Some people take hormones, some don't; some have surgery, some don't; some change their name, some don't; some know exactly what they want, others are still figuring things out. **PRISM adapts to every journey.** This philosophy must influence the product architecture, UX, database, copy, personalization, and visual design — not just the marketing copy.
 
 1. **Person First** — the user is not a collection of medical records; the interface prioritizes the person over their data.
 2. **No Assumptions** — never assume gender, pronouns, name, HRT status, medication, injections, surgery, dysphoria, transition status, transition start date, transition goals, or legal changes. Everything is optional unless technically required for account creation (e.g. an email to sign in with).
@@ -40,6 +40,7 @@ Full detail: [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §8–9.
 **Stack:** React Native + Expo (mobile, iOS + Android) · Supabase (PostgreSQL, Auth, Row Level Security, Storage, Edge Functions) · Next.js on Vercel (web — marketing, docs, support, legal, and potentially an account/data portal) · pnpm (package manager).
 
 **Monorepo layout:**
+
 ```
 prism/
 ├── apps/{mobile, web}/
@@ -50,6 +51,7 @@ prism/
 ```
 
 **Mobile feature structure** (feature-oriented, not layer-oriented):
+
 ```
 features/
 ├── auth/  ├── onboarding/  ├── today/
@@ -101,13 +103,14 @@ Full per-screen spec: [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §5.
 
 Structure: Greeting + Date → Priority information → Upcoming information → Recent meaningful information → Optional reflection → Quick Add.
 
-**Personalization priority (render order):** (1) things requiring action today, (2) upcoming items, (3) recent meaningful activity, (4) optional reflection, (5) nothing. **Do not manufacture content to fill empty space** — an empty TODAY shows: *"Nothing urgent today. That's okay. Your PRISM is here whenever you need it."*
+**Personalization priority (render order):** (1) things requiring action today, (2) upcoming items, (3) recent meaningful activity, (4) optional reflection, (5) nothing. **Do not manufacture content to fill empty space** — an empty TODAY shows: _"Nothing urgent today. That's okay. Your PRISM is here whenever you need it."_
 
 ## 08. CARE
 
 CARE is organized without feeling clinical — see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) §19 and §27 (Data Density → Administrative mode).
 
 ### Medications
+
 Fields: `id, user_id, name, form, dosage_text, frequency_type, frequency_config, start_date, end_date, reminder_enabled, notes, created_at, updated_at`. Forms: pill, injection, patch, gel, cream, other. Frequencies: daily, weekly, every X days, custom.
 
 **Medication rules — PRISM can:** record medication, display user-entered dosage, create reminders, log completion/skipped/missed doses, record notes. **PRISM cannot:** recommend dosage, calculate hormone dosage, suggest dosage changes, determine whether a dose is appropriate, or diagnose medication issues. This is a hard boundary — not a copy-writing preference.
@@ -115,15 +118,19 @@ Fields: `id, user_id, name, form, dosage_text, frequency_type, frequency_config,
 **Medication log statuses:** Scheduled, Completed, Skipped, Missed, Skipped intentionally. Never shame users for a status.
 
 ### Injections
+
 Optional — not the identity of PRISM. Fields: `id, user_id, medication_id, injected_at, site, notes, created_at, updated_at`. Site values: left/right thigh, left/right glute, left/right abdomen, other, don't track. **Do not provide medical advice regarding injection sites.**
 
 ### Appointments
+
 Fields: `id, user_id, title, provider, category, starts_at, ends_at, location, notes, reminder_enabled, created_at, updated_at`. Categories: Primary care, Gender-affirming care, Endocrinology, Surgery, Mental health, Lab, Other — users may add custom categories.
 
 ### Labs (P1)
+
 PRISM tracks lab records; **it does not interpret them.** Fields: `id, user_id, title, date, provider, status, notes, attachment_id, created_at, updated_at`. Statuses: Scheduled, Completed, Results received, Follow-up needed. Not part of MVP (§25) — the schema and rules here apply once built.
 
 ### Procedures (P1)
+
 Fields: `id, user_id, title, date, provider, category, notes, created_at, updated_at`. PRISM records procedures; it does not determine eligibility or readiness. Not part of MVP (§25) — the schema and rules here apply once built.
 
 ## 09. JOURNEY
@@ -131,15 +138,19 @@ Fields: `id, user_id, title, date, provider, category, notes, created_at, update
 More expressive than CARE (see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) §20, §27 Personal mode).
 
 ### Timeline
+
 Unifies medications, injections, appointments, labs, procedures, milestones, journal entries, and memories into one chronological view — visual metaphor: **path of light.** Timeline events **reference** their source records; the timeline is a view, never a second independent copy of the data. Selecting an event opens the original record. In MVP, Timeline surfaces only P0 record types (medications, injections, appointments, milestones, journal entries) — this requires no special-casing, since it already pulls only from enabled modules, and labs/procedures/memories automatically appear once their P1 modules ship.
 
 ### Milestones
+
 Suggested (always optional, always paired with **"Create your own milestone"**): Came out, Started HRT, First appointment, First injection, Name change, Pronoun change, Legal gender marker change, Surgery consultation, Surgery, One month, Six months, One year.
 
 ### Journal
+
 Fields: `id, user_id, title, content, mood, date, tags, created_at, updated_at`. Mood is optional; no clinical scoring. **Journal content must never be included in analytics** (see [`SECURITY.md`](./SECURITY.md)).
 
 ### Memories (P1)
+
 Personal documentation — first Pride, favorite selfie, haircut, ID, birthday, a meaningful conversation, a special outfit, a trip, a personal achievement. Primary philosophy: **"Not progress. Memories."** Never frame photographs as proof of physical transition. Not part of MVP (§25); JOURNEY ships with Timeline, Milestones, and Journal only.
 
 ## 10. YOU
@@ -166,7 +177,7 @@ Universal search covers timeline, medications, appointments, labs, milestones, j
 
 ## 15. Notifications
 
-Default: **private notifications ON.** Example: *"Your PRISM reminder is ready."* Never default to sensitive content such as *"Your testosterone injection is due"* or *"Your surgery appointment is tomorrow."* Users can intentionally opt into more detailed notifications.
+Default: **private notifications ON.** Example: _"Your PRISM reminder is ready."_ Never default to sensitive content such as _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_ Users can intentionally opt into more detailed notifications.
 
 ## 16. App Lock
 
@@ -184,23 +195,23 @@ PostgreSQL via Supabase. All user-owned data has enforced ownership boundaries v
 
 Canonical columns:
 
-| Table | Scope | Columns |
-|---|---|---|
-| `profiles` | P0 | `id` UUID PK, `user_id` UUID UNIQUE NOT NULL, `display_name`, `pronouns`, `gender`, `birthday` DATE, `journey_start_date` DATE, `profile_photo_url`, `onboarding_completed` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` — everything except `user_id` is nullable |
-| `modules` | P0 | `id` UUID PK, `user_id` NOT NULL, `module_key` TEXT NOT NULL, `enabled` BOOLEAN DEFAULT FALSE, `configuration` JSONB DEFAULT `'{}'`, `created_at`, `updated_at` — `UNIQUE(user_id, module_key)`. Rows may exist for any of the 10 module keys; MVP's UI only lets the user toggle the 5 P0 keys (§10) |
-| `medications` | P0 | `id` UUID PK, `user_id` NOT NULL, `name` NOT NULL, `form`, `dosage_text`, `frequency_type`, `frequency_config` JSONB, `start_date`, `end_date`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `notes`, `created_at`, `updated_at` |
-| `medication_logs` | P0 | `id` UUID PK, `user_id` NOT NULL, `medication_id` NOT NULL, `scheduled_at`, `completed_at`, `status`, `notes`, `created_at`, `updated_at` |
-| `injections` | P0 | `id` UUID PK, `user_id` NOT NULL, `medication_id` (nullable), `injected_at` NOT NULL, `site`, `notes`, `created_at`, `updated_at` |
-| `appointments` | P0 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `provider`, `category`, `starts_at` NOT NULL, `ends_at`, `location`, `notes`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` |
-| `labs` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `status`, `notes`, `attachment_id`, `created_at`, `updated_at` |
-| `procedures` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `category`, `notes`, `created_at`, `updated_at` |
-| `milestones` | P0 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date` NOT NULL, `category`, `icon`, `created_at`, `updated_at` |
-| `journal_entries` | P0 | `id` UUID PK, `user_id` NOT NULL, `title`, `content` NOT NULL, `mood`, `date` NOT NULL, `tags` TEXT[], `created_at`, `updated_at` |
-| `memories` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date`, `media_id`, `created_at`, `updated_at` |
-| `legal_items` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `status` NOT NULL, `date`, `notes`, `created_at`, `updated_at` |
-| `documents` | P1 | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `storage_path` NOT NULL, `mime_type`, `file_size` BIGINT, `uploaded_at`, `created_at`, `updated_at` |
-| `reminders` | P0 | `id` UUID PK, `user_id` NOT NULL, `type` NOT NULL, `reference_id`, `scheduled_time` NOT NULL, `recurrence` JSONB, `notification_style` NOT NULL, `enabled` BOOLEAN DEFAULT TRUE, `created_at`, `updated_at` |
-| `settings` | P0 | `user_id` UUID PK, `theme` DEFAULT `'system'`, `biometric_lock` BOOLEAN DEFAULT FALSE, `notification_privacy` BOOLEAN DEFAULT TRUE, `reduced_motion` BOOLEAN DEFAULT FALSE, `accessibility_preferences` JSONB, `created_at`, `updated_at` |
+| Table             | Scope | Columns                                                                                                                                                                                                                                                                                               |
+| ----------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `profiles`        | P0    | `id` UUID PK, `user_id` UUID UNIQUE NOT NULL, `display_name`, `pronouns`, `gender`, `birthday` DATE, `journey_start_date` DATE, `profile_photo_url`, `onboarding_completed` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at` — everything except `user_id` is nullable                               |
+| `modules`         | P0    | `id` UUID PK, `user_id` NOT NULL, `module_key` TEXT NOT NULL, `enabled` BOOLEAN DEFAULT FALSE, `configuration` JSONB DEFAULT `'{}'`, `created_at`, `updated_at` — `UNIQUE(user_id, module_key)`. Rows may exist for any of the 10 module keys; MVP's UI only lets the user toggle the 5 P0 keys (§10) |
+| `medications`     | P0    | `id` UUID PK, `user_id` NOT NULL, `name` NOT NULL, `form`, `dosage_text`, `frequency_type`, `frequency_config` JSONB, `start_date`, `end_date`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `notes`, `created_at`, `updated_at`                                                                         |
+| `medication_logs` | P0    | `id` UUID PK, `user_id` NOT NULL, `medication_id` NOT NULL, `scheduled_at`, `completed_at`, `status`, `notes`, `created_at`, `updated_at`                                                                                                                                                             |
+| `injections`      | P0    | `id` UUID PK, `user_id` NOT NULL, `medication_id` (nullable), `injected_at` NOT NULL, `site`, `notes`, `created_at`, `updated_at`                                                                                                                                                                     |
+| `appointments`    | P0    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `provider`, `category`, `starts_at` NOT NULL, `ends_at`, `location`, `notes`, `reminder_enabled` BOOLEAN DEFAULT FALSE, `created_at`, `updated_at`                                                                                                |
+| `labs`            | P1    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `status`, `notes`, `attachment_id`, `created_at`, `updated_at`                                                                                                                                                       |
+| `procedures`      | P1    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `date` NOT NULL, `provider`, `category`, `notes`, `created_at`, `updated_at`                                                                                                                                                                      |
+| `milestones`      | P0    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date` NOT NULL, `category`, `icon`, `created_at`, `updated_at`                                                                                                                                                                    |
+| `journal_entries` | P0    | `id` UUID PK, `user_id` NOT NULL, `title`, `content` NOT NULL, `mood`, `date` NOT NULL, `tags` TEXT[], `created_at`, `updated_at`                                                                                                                                                                     |
+| `memories`        | P1    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `description`, `date`, `media_id`, `created_at`, `updated_at`                                                                                                                                                                                     |
+| `legal_items`     | P1    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `status` NOT NULL, `date`, `notes`, `created_at`, `updated_at`                                                                                                                                                               |
+| `documents`       | P1    | `id` UUID PK, `user_id` NOT NULL, `title` NOT NULL, `category` NOT NULL, `storage_path` NOT NULL, `mime_type`, `file_size` BIGINT, `uploaded_at`, `created_at`, `updated_at`                                                                                                                          |
+| `reminders`       | P0    | `id` UUID PK, `user_id` NOT NULL, `type` NOT NULL, `reference_id`, `scheduled_time` NOT NULL, `recurrence` JSONB, `notification_style` NOT NULL, `enabled` BOOLEAN DEFAULT TRUE, `created_at`, `updated_at`                                                                                           |
+| `settings`        | P0    | `user_id` UUID PK, `theme` DEFAULT `'system'`, `biometric_lock` BOOLEAN DEFAULT FALSE, `notification_privacy` BOOLEAN DEFAULT TRUE, `reduced_motion` BOOLEAN DEFAULT FALSE, `accessibility_preferences` JSONB, `created_at`, `updated_at`                                                             |
 
 > **Note on `settings`:** the source material states `user_id` as the table's primary key in one place; treat `settings.user_id` as the sole primary key (one settings row per user) — do not add a separate surrogate `id` column, since that would allow a user to accumulate multiple settings rows and break the "one settings row per user" invariant the rest of the spec assumes.
 
@@ -235,7 +246,7 @@ Required: Dynamic Type, VoiceOver, TalkBack, semantic labels, logical focus orde
 - **Visual language:** dark-first, geometric, premium, calm, expressive, private, light/refraction-inspired. Avoid generic healthcare blue, rainbow overload, syringe/pill/medical-cross branding, excessive glassmorphism/shadows/animation.
 - **Signature visual metaphor** (Light → Prism → Spectrum) appears subtly in onboarding, the logo, the timeline, milestone moments, major transitions, and success states — never at the expense of usability. **Rule: if removing the PRISM aesthetic makes the interface easier to understand, remove the aesthetic.**
 - **Core components:** `PRISMButton`, `PRISMIconButton`, `PRISMCard`, `PRISMSection`, `PRISMInput`, `PRISMTextArea`, `PRISMSelect`, `PRISMSwitch`, `PRISMChip`, `PRISMModal`, `PRISMSheet`, `PRISMToast`, `PRISMSkeleton`, `PRISMEmptyState`, `PRISMErrorState`, `PRISMListItem`, `PRISMHeader`, `PRISMBottomNav`, `PRISMQuickAdd`, `PRISMTimeline`, `PRISMMilestone`, `PRISMMemoryCard`, `PRISMReminderCard`. Every interactive component supports Default/Pressed/Focused/Selected/Disabled/Loading/Error/Success states — implement all of them, not just the default.
-- **Forms** support Empty/Typing/Focused/Validation error/Submitting/Success/Network failure/Offline/Unsaved changes, with visible labels, accessible inputs, keyboard-aware layout, preserved input after validation errors, client *and* server validation, and unsaved-change protection.
+- **Forms** support Empty/Typing/Focused/Validation error/Submitting/Success/Network failure/Offline/Unsaved changes, with visible labels, accessible inputs, keyboard-aware layout, preserved input after validation errors, client _and_ server validation, and unsaved-change protection.
 - **Motion:** communicates light moving → refracting → settling; Micro 100–150ms, Standard 180–250ms, Large 300–450ms; respects system Reduce Motion (remove parallax/floating/refractive animation, simplify transitions).
 - **Approved empty-state copy:** General "Nothing here yet. That's okay." · Journey "Your story starts wherever you decide." · Memories "Save the moments that matter to you." · Journal "Whenever you're ready."
 - **Error states:** "Something went wrong. Your information wasn't changed." + Try again / Go back. Never expose raw backend errors.
@@ -247,7 +258,7 @@ Full detail: [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
 
 78 screens across Authentication (7), Onboarding (12), TODAY (3), CARE (18), JOURNEY (12), YOU (19), and Global (7). Full inventory and per-screen specification: [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §2.
 
-**Screen implementation rule:** every screen must answer *"Why does this screen exist?"* — it must make the user's journey easier to manage, understand, remember, document, organize, or protect. If it doesn't, reconsider the screen.
+**Screen implementation rule:** every screen must answer _"Why does this screen exist?"_ — it must make the user's journey easier to manage, understand, remember, document, organize, or protect. If it doesn't, reconsider the screen.
 
 ## 24. MVP Scope (P0)
 
@@ -294,7 +305,7 @@ Secure document vault, advanced photo memories, cloud backup, advanced exports, 
 
 ### AI strategy (V2, optional)
 
-**PRISM Assistant** may eventually answer questions about the user's *own* stored information ("When was my last appointment?" "Show my milestones from the past year." "When did I start tracking this medication?"). AI must **not**: recommend dose changes, diagnose, recommend stopping medication, determine surgery eligibility or readiness, or make medical decisions of any kind.
+**PRISM Assistant** may eventually answer questions about the user's _own_ stored information ("When was my last appointment?" "Show my milestones from the past year." "When did I start tracking this medication?"). AI must **not**: recommend dose changes, diagnose, recommend stopping medication, determine surgery eligibility or readiness, or make medical decisions of any kind.
 
 If AI is implemented: use minimum necessary data, respect user authorization scoping, never expose unrelated records, never train external models on private user data without explicit consent and legal basis, log AI access carefully, and let users understand what data is being used.
 

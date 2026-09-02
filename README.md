@@ -24,12 +24,12 @@ PRISM is **not** a doctor, a diagnostic tool, a hormone dosing calculator, or a 
 
 ## Technology Stack
 
-| Layer | Technology |
-|---|---|
-| Mobile | React Native + Expo (iOS + Android) |
-| Backend | Supabase (PostgreSQL, Auth, Row Level Security, Storage, Edge Functions) |
-| Web | Next.js on Vercel (marketing, documentation, support, legal) |
-| Package manager | pnpm |
+| Layer           | Technology                                                               |
+| --------------- | ------------------------------------------------------------------------ |
+| Mobile          | React Native + Expo (iOS + Android)                                      |
+| Backend         | Supabase (PostgreSQL, Auth, Row Level Security, Storage, Edge Functions) |
+| Web             | Next.js on Vercel (marketing, documentation, support, legal)             |
+| Package manager | pnpm                                                                     |
 
 Full architectural rationale: [`docs/TECHNICAL_BIBLE.md`](./docs/TECHNICAL_BIBLE.md).
 
@@ -63,17 +63,17 @@ prism/
 
 All product, technical, and design documentation lives in [`docs/`](./docs):
 
-| Document | Purpose |
-|---|---|
-| [`PRODUCT_BIBLE.md`](./docs/PRODUCT_BIBLE.md) | Vision, philosophy, positioning, target users, MVP definition, success metrics — *what PRISM is and why* |
-| [`TECHNICAL_BIBLE.md`](./docs/TECHNICAL_BIBLE.md) | Architecture, stack, database, security, testing, engineering rules — *how PRISM is built* |
-| [`SCREEN_BIBLE.md`](./docs/SCREEN_BIBLE.md) | Every screen in the app (78 total), organized by Authentication, Onboarding, TODAY, CARE, JOURNEY, YOU, and Global |
-| [`DESIGN_SYSTEM.md`](./docs/DESIGN_SYSTEM.md) | Visual language — color, typography, spacing, components, motion, accessibility |
-| [`MASTER_BUILD_SPEC.md`](./docs/MASTER_BUILD_SPEC.md) | **The authoritative implementation specification** — synthesizes the above into an executable build plan |
-| [`SECURITY.md`](./docs/SECURITY.md) | Security and privacy posture: RLS, storage, secrets, logging, analytics, incident response |
-| [`DECISIONS.md`](./docs/DECISIONS.md) | Dated log of explicit product decisions, and any unresolved contradictions in the source material |
-| [`BUILD_STATUS.md`](./docs/BUILD_STATUS.md) | Current build status, MVP/P1 scope, milestone tracking, and the implementation checklist |
-| [`archive/PRISM_MASTER_SOURCE.docx`](./docs/archive/PRISM_MASTER_SOURCE.docx) | The original PRISM master document this documentation system was built from |
+| Document                                                                      | Purpose                                                                                                            |
+| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [`PRODUCT_BIBLE.md`](./docs/PRODUCT_BIBLE.md)                                 | Vision, philosophy, positioning, target users, MVP definition, success metrics — _what PRISM is and why_           |
+| [`TECHNICAL_BIBLE.md`](./docs/TECHNICAL_BIBLE.md)                             | Architecture, stack, database, security, testing, engineering rules — _how PRISM is built_                         |
+| [`SCREEN_BIBLE.md`](./docs/SCREEN_BIBLE.md)                                   | Every screen in the app (78 total), organized by Authentication, Onboarding, TODAY, CARE, JOURNEY, YOU, and Global |
+| [`DESIGN_SYSTEM.md`](./docs/DESIGN_SYSTEM.md)                                 | Visual language — color, typography, spacing, components, motion, accessibility                                    |
+| [`MASTER_BUILD_SPEC.md`](./docs/MASTER_BUILD_SPEC.md)                         | **The authoritative implementation specification** — synthesizes the above into an executable build plan           |
+| [`SECURITY.md`](./docs/SECURITY.md)                                           | Security and privacy posture: RLS, storage, secrets, logging, analytics, incident response                         |
+| [`DECISIONS.md`](./docs/DECISIONS.md)                                         | Dated log of explicit product decisions, and any unresolved contradictions in the source material                  |
+| [`BUILD_STATUS.md`](./docs/BUILD_STATUS.md)                                   | Current build status, MVP/P1 scope, milestone tracking, and the implementation checklist                           |
+| [`archive/PRISM_MASTER_SOURCE.docx`](./docs/archive/PRISM_MASTER_SOURCE.docx) | The original PRISM master document this documentation system was built from                                        |
 
 ### **`docs/MASTER_BUILD_SPEC.md` is the authoritative implementation specification.**
 

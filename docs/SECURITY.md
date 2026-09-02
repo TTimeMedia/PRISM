@@ -55,8 +55,8 @@ Rules that apply everywhere this data could flow:
 ## 7. Private Notifications
 
 - **Private notifications are the default, not an opt-in.**
-- Default content is generic and reveals nothing: *"Your PRISM reminder is ready."*
-- Never default to sensitive content such as *"Your testosterone injection is due"* or *"Your surgery appointment is tomorrow."*
+- Default content is generic and reveals nothing: _"Your PRISM reminder is ready."_
+- Never default to sensitive content such as _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_
 - Users may explicitly opt into more detailed notification content — the point is that the safer default is the one nobody has to think about.
 
 ## 8. App Lock & Biometrics
@@ -148,7 +148,7 @@ Before every release, verify (see also [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.
 
 ## 20. Incident Considerations
 
-PRISM must have documented security incident procedures before public launch, covering at minimum: how a suspected breach or unauthorized access is detected, who is notified internally, how affected users are notified (and on what timeline, consistent with applicable law), and how the incident is remediated and reviewed afterward. This procedure should exist in writing *before* it's needed — treat "we'll figure it out if it happens" as a gap to close before launch, not an acceptable interim state.
+PRISM must have documented security incident procedures before public launch, covering at minimum: how a suspected breach or unauthorized access is detected, who is notified internally, how affected users are notified (and on what timeline, consistent with applicable law), and how the incident is remediated and reviewed afterward. This procedure should exist in writing _before_ it's needed — treat "we'll figure it out if it happens" as a gap to close before launch, not an acceptable interim state.
 
 ## 21. Legal / Privacy Review Requirements
 
