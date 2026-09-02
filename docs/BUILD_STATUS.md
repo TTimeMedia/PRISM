@@ -1,9 +1,9 @@
 # PRISM Build Status
 
-**STATUS: MILESTONE 03 (PERSONALIZATION / ONBOARDING) COMPLETE**
-**CURRENT MILESTONE: 04 — CARE**
+**STATUS: MILESTONE 04 (CARE) COMPLETE**
+**CURRENT MILESTONE: 05 — JOURNEY**
 
-Last updated: 2026-09-02 (Personalization / Onboarding milestone complete)
+Last updated: 2026-09-02 (CARE milestone complete)
 
 This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md)'s implementation milestones. It is a living document — update it at the end of every milestone, not just at the start of the project. It does not restate product or technical detail; it points at the document that owns each fact.
 
@@ -11,7 +11,7 @@ This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./
 
 ## 1. Current Project Status
 
-PRISM's Foundation milestone (`01`), Authentication & Identity milestone (`02`), and Personalization (Onboarding) milestone (`03`) are all complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens with real working session handling, email verification, and password recovery via deep link. Personalization (Onboarding) built all 12 onboarding screens, the resumable onboarding-step routing infrastructure, module selection driven by the user's Care Setup answers, and the personalized TODAY engine with a real, dynamic TODAY screen — see §9 (Foundation), §10 (Authentication & Identity), and §11 (Personalization / Onboarding) below for what was built and how each was verified. No CARE/JOURNEY/YOU feature screens exist yet beyond onboarding's minimal Medication/Appointment creation; that begins with Milestone 04.
+PRISM's Foundation milestone (`01`), Authentication & Identity milestone (`02`), Personalization (Onboarding) milestone (`03`), and CARE milestone (`04`) are all complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens with real working session handling, email verification, and password recovery via deep link. Personalization (Onboarding) built all 12 onboarding screens, the resumable onboarding-step routing infrastructure, module selection driven by the user's Care Setup answers, and the personalized TODAY engine with a real, dynamic TODAY screen. CARE built full CRUD for Medications (with dose logging and Pause/Resume), Injections, and Appointments across all 12 P0 CARE screens — see §9 (Foundation), §10 (Authentication & Identity), §11 (Personalization / Onboarding), and §12 (CARE) below for what was built and how each was verified. No JOURNEY/YOU feature screens exist yet; that begins with Milestone 05.
 
 ## 2. Documentation Status
 
@@ -53,23 +53,24 @@ Per [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §28:
 
 ### Current Milestone
 
-**CARE** (milestone `04`) — not yet started. Full CRUD for medications, medication logs, reminders, injections, and appointments is built here, on top of the minimal create-only mutations onboarding already exercises (`lib/care/mutations.ts`).
+**JOURNEY** (milestone `05`) — not yet started. Timeline, Milestones, and Journal are built here.
 
 ### Completed Milestones
 
 - **Foundation** (milestone `01`) — complete as of 2026-09-02. See §9 below for what was built and how it was verified.
 - **Authentication & Identity** (milestone `02`) — complete as of 2026-09-02. See §10 below.
 - **Personalization (Onboarding)** (milestone `03`) — complete as of 2026-09-02. See §11 below.
+- **CARE** (milestone `04`) — complete as of 2026-09-02. See §12 below.
 
 ### Remaining Milestones
 
-Eleven (`04` through `14`), starting with CARE.
+Ten (`05` through `14`), starting with JOURNEY.
 
 ## 6. Known Open Decisions
 
 The MVP scope contradiction that was open at the end of the initial documentation pass has been resolved (see [`DECISIONS.md`](./DECISIONS.md)). No product-level decisions are currently open. The following are **implementation-level** choices intentionally left to the engineer at the point they're needed, per this specification's own philosophy of not over-specifying (`MASTER_BUILD_SPEC.md` Appendix A): they should be made and then recorded in `DECISIONS.md` (if product-visible) or left as ordinary code, not raised back to the product owner.
 
-- **`medications.frequency_config` and `reminders.recurrence` JSON shape** — the column exists and its purpose is specified (§`MASTER_BUILD_SPEC.md` §18), but the internal JSON structure for "every X days" / day-of-week schedules is not. Design this during the CARE milestone (`07`) alongside the reminder engine that consumes it.
+- **`reminders.recurrence` JSON shape** — the column exists and its purpose is specified (§`MASTER_BUILD_SPEC.md` §18), but the internal JSON structure is not yet designed; the `reminders` table itself has no CRUD built yet. (`medications.frequency_config`'s shape, by contrast, is already resolved — `frequencyConfigSchema` in `packages/validation/src/care.ts` — and is exercised by real Add/Edit Medication forms as of the CARE milestone.) Design `recurrence`'s shape when the actual reminder-scheduling engine is built (see §13 Known Technical Risks).
 - **Push notification delivery provider** — `TECHNICAL_BIBLE.md` §15 specifies "native push notifications through Expo-supported infrastructure" but doesn't name a specific service. Expo's own push notification service is the natural default given the Expo-based stack; per `SECURITY.md` §6 (security red flags apply to any third-party service touching user data), give it one explicit privacy review before the Notifications work in milestone `09`/`10`, same as any other third-party dependency — not a blocker, just don't skip the review because it's the "obvious" default.
 - **Icon library** — `DESIGN_SYSTEM.md` §13 describes the required visual characteristics (geometric, rounded, simple, thin-to-medium stroke) but does not name a library. Pick one during the Design System milestone (`04`) and record the choice in `DECISIONS.md` since it affects every screen.
 - **Data export file structure** — `SECURITY.md` §9 specifies formats (JSON/CSV) and a completeness bar but not whether export is one combined file or a per-table bundle. Decide during milestone `10` (Privacy & security).
@@ -142,11 +143,11 @@ Unchecked — nothing has been built yet. Update this checklist at the end of ea
 
 ### Care
 
-- [ ] Medications
-- [ ] Medication logs
-- [ ] Reminders
-- [ ] Injections
-- [ ] Appointments
+- [x] Medications (Add/Detail/Edit/Pause-Resume/Delete)
+- [x] Medication logs (log a dose, chronological history with filters)
+- [ ] Reminders — `reminder_enabled` is stored and editable on medications/appointments, but no push-notification delivery exists yet (see §6 — provider not yet chosen; scheduled for milestone `09`/`10`)
+- [x] Injections (log + history)
+- [x] Appointments (Add/Detail/Edit/Delete)
 
 ### Journey
 
@@ -279,17 +280,49 @@ See `DECISIONS.md` § Personalization (Onboarding) for: explicit `onboarding_ste
 - The new migration was re-verified against a fresh local-Postgres RLS check (see "What was built" above): valid `journey_stage` values accepted, an invalid value rejected by the CHECK constraint, `intent` arrays round-trip correctly, `app_lock_enabled` defaults to `false`, and all 10 existing RLS adversarial assertions still pass unchanged.
 - **Visual verification**: since reaching `(onboarding)` or a populated `(tabs)` route through the app's real navigation requires a live authenticated session (unavailable in this sandbox — no live Supabase project, no device/simulator), the root `Stack.Protected` guards in `app/_layout.tsx` were **temporarily** short-circuited (`guard={showTabs || true}` etc.) for the sole purpose of reaching every route directly by URL under `expo start --web`, screenshotted via Playwright (light mode for all 12 onboarding screens; TODAY in both light and dark), and the bypass was then **fully reverted** before any commit — `git diff` on `app/_layout.tsx` confirms only the real three-branch guard logic remains. All 12 onboarding screens rendered with the exact `SCREEN_BIBLE.md` copy, correct chip/toggle/form states, and the `YYYY-MM-DD` date-input stand-in visible where specified. TODAY rendered the dynamic greeting (falling back to a generic greeting with no profile name set) and the approved empty-state copy in both themes. One screen (Building) could not be fully screenshotted past its animated dots — it auto-advances by calling `useUpdateProfile`, which correctly throws `"No authenticated session."` under this bypass since no real session exists; this is the expected behavior of a real guard clause, not a defect, and mirrors Milestone 02's password-recovery deep link as a flow that needs a real device + live project pass before shipping.
 
-## 12. Known Technical Risks
+## 12. CARE Milestone (04) — Completion Notes
 
-- **Recurring reminders across timezones/DST.** `TECHNICAL_BIBLE.md` §14 requires that a weekly reminder "should not move" when a user travels, but does not specify the exact scheduling algorithm. Real, tractable risk — resolve during the CARE milestone (`07`) when the reminder engine is built, and cover it explicitly in that milestone's tests.
-- **Offline sync conflict resolution.** The rule ("never silently overwrite; resolve deterministically; surface conflict when necessary" — `TECHNICAL_BIBLE.md` §14) is clear in intent but the exact algorithm (last-write-wins vs. field-level merge vs. user-prompted resolution) is left open. Address during Hardening (`07`).
+Completed 2026-09-02. Built on the minimal create-only Medication/Appointment mutations onboarding already exercised (`lib/care/mutations.ts`).
+
+### What was built
+
+- **Full CRUD across all 12 P0 CARE screens** (`features/care/screens/`, routed from a new nested stack at `app/(tabs)/care/`): Care Home, Medications (list, Add, Detail, Edit, Log a dose, Medication Log history), Injection History, Log Injection, Appointments (list, Add, Detail, Edit).
+- **`app/(tabs)/care/` nested routing**: the `care` tab, previously a single placeholder file, became a directory with its own `_layout.tsx` (`<Stack screenOptions={{ headerShown: false }} />`, relying on Expo Router's file-based auto-discovery rather than explicitly listing every screen) and file-based dynamic `[id]` routes for Medication/Appointment detail, edit, and history.
+- **`lib/care/queries.ts`** (new): read queries for medications, a single medication, medication logs (scoped by `medication_id`), injections, appointments, and a single appointment — all RLS-scoped, no manual `user_id` filters on reads, following the exact pattern established in `lib/profile/queries.ts`.
+- **`lib/care/mutations.ts`** (expanded): `useUpdateMedication`, `usePauseMedication` (pause/resume via `end_date` — see `docs/DECISIONS.md` § CARE), `useDeleteMedication`, `useCreateMedicationLog`, `useCreateInjection`, `useUpdateAppointment`, `useDeleteAppointment` — alongside the existing `useCreateMedication`/`useCreateAppointment`. Appointment mutations also invalidate the `today-items` query key, since TODAY classifies appointments (`services/personalization/engine.ts`).
+- **Shared form components** (`features/care/components/`): `MedicationForm` (used identically by Add and Edit Medication, per the spec's own "same fields" instruction), `AppointmentForm` (same for Add/Edit Appointment), `ChipField` (a labeled single-select chip row for Form/Frequency/Site/Status), `DaysOfWeekSelect` (weekly schedule day picker).
+- **`lib/care/dateTime.ts`** (new): `toISODateTime`/`splitISODateTime`, the shared local-date-and-time ⇄ stored-UTC-ISO conversion used everywhere a CARE form collects date and time as separate fields (Log Injection, Log a dose, Add/Edit Appointment) — see `docs/TECHNICAL_BIBLE.md` §14 Timezone handling.
+- **`features/care/medicationDisplay.ts`** (new): `describeFrequency()` and `isMedicationActive()` — pure, unit-tested helpers; see the "Next scheduled event" decision in `docs/DECISIONS.md` § CARE for why this describes the configured schedule rather than resolving a next-dose timestamp.
+- **`packages/validation/src/care.ts`** (expanded): `medicationUpdateSchema`, `medicationLogCreateSchema` (renamed from the previously-unused `medicationLogUpdateSchema`), `appointmentUpdateSchema`, and a new `appointmentFormSchema` shaped for CARE's own Add/Edit Appointment forms (separate `date`/`time` fields, required `title` — distinct from onboarding's `appointmentSetupSchema`, which derives a title from category since it never asks for one directly).
+
+### Product-visible decisions (recorded in `DECISIONS.md`)
+
+See `DECISIONS.md` § CARE for: Pause/Resume expressed via `end_date` rather than an invented status column, CARE Home showing only enabled modules with real-activity sections first, and "Next scheduled event" being deliberately not computed (the configured schedule is described honestly instead).
+
+### Engineering decisions (internal — not product-visible, so not recorded in `DECISIONS.md`)
+
+- **A second typed-routes gap, found and fixed during this milestone's own quality gate.** `pnpm --filter @prism/mobile typecheck` passed cleanly right after all CARE screens were written, then failed once `.expo/types/router.d.ts` was regenerated — because that regeneration is triggered by `expo start` (the dev server), not `expo export` (confirmed by timestamp: `expo export --platform web` left the file untouched, while a subsequent `expo start --web` regenerated it within seconds of the first request). Once regenerated, the file correctly typed every new static and dynamic (`[id]`) CARE route; the remaining failures were straightforward `string | null | undefined` vs. `string | null` mismatches in `AppointmentForm.tsx` between the Zod-inferred optional-field shape and the UI components' prop types, fixed by normalizing with `?? null`/`?? ''` at each call site. Documented here so a future milestone doesn't re-diagnose the same "typecheck was clean, then wasn't" surprise: **always run `expo start --web` (or otherwise force route-type regeneration) before the final typecheck pass whenever new routes were added**, not just `expo export`.
+- **Appointment date/time editing converts through local time, not a UTC string slice.** An early version of `EditAppointmentScreen` pre-filled its Date/Time fields via `appointment.starts_at.slice(0, 10)`/`.slice(11, 16)` — since `starts_at` is stored as a UTC ISO string but the form's Date/Time fields are meant to represent local time (matching how `toISODateTime` combines them on create), this would have silently shown the wrong time to any user not in UTC. Caught during implementation, not by a test; fixed by adding `splitISODateTime()` as the documented inverse of `toISODateTime()` in `lib/care/dateTime.ts`.
+- **`medicationLogUpdateSchema` renamed to `medicationLogCreateSchema`.** It was defined in Milestone 03 but never used; CARE is the first milestone to actually create a log entry, and there is no log-editing screen in the spec, so "create" is the accurate name.
+
+### Verification performed (Quality Gate)
+
+- `pnpm -r typecheck` passes with zero errors across all 8 workspace projects (after the typed-routes regeneration and `AppointmentForm.tsx` fixes above).
+- `pnpm -r test` passes 125/125 tests — 20 new for this milestone (12 new `packages/validation` schema tests, 6 pure-function tests for `medicationDisplay`/`dateTime`, and a `MedicationsScreen` test suite covering the empty state, Active/Paused sectioning, and header navigation).
+- ESLint passes with zero errors/warnings on `apps/mobile` and `apps/web`; Prettier formatting is clean repository-wide (the one file Prettier flags, `apps/mobile/expo-env.d.ts`, is Expo's own auto-generated, gitignored file).
+- `apps/web`: `next build` still succeeds.
+- **Visual verification**: the same temporary root-guard-bypass methodology from Milestone 03 was used (no live Supabase project or device in this sandbox to establish a real session) — reverted before commit, confirmed via `git diff` showing zero changes to `app/_layout.tsx`. Screenshotted: Care Home (empty state, since no session means no enabled modules — a real, correct rendering path, not a stand-in), Medications list (empty state), Add Medication (full form, light + dark — every field, chip group, and the conditional weekly/every-X-days/time-of-day sub-fields all render correctly), Medication Detail (the approved generic error state, since the session-gated fetch has no data to return — confirms the screen degrades safely rather than crashing), Injection History (empty state), Log Injection (full form, correctly omitting the Medication chip field when the medications list is empty), Appointments (empty state), Add Appointment (full form, light + dark), Appointment Detail (error state, same reasoning as Medication Detail). No console or page errors on any screen.
+
+## 13. Known Technical Risks
+
+- **No real reminder-scheduling engine exists yet — still open after CARE.** CARE (`04`) built `reminder_enabled` as a stored, editable boolean on medications and appointments, and full dose/schedule data entry, but no push-notification delivery, and no logic that resolves a `frequency_config` into an actual next-occurrence timestamp. This is now the most consequential open gap blocking three related things: recurring reminders across timezones/DST (`TECHNICAL_BIBLE.md` §14's "should not move when a user travels" requirement), TODAY's "medication due today" classification (deliberately not fabricated — see `services/personalization/engine.ts`), and Medications' "Next scheduled event" (deliberately described in plain language instead — see `docs/DECISIONS.md` § CARE). Resolve all three together, in one place, when the reminder engine is actually built — not piecemeal per-surface.
+- **Offline sync conflict resolution.** The rule ("never silently overwrite; resolve deterministically; surface conflict when necessary" — `TECHNICAL_BIBLE.md` §14) is clear in intent but the exact algorithm (last-write-wins vs. field-level merge vs. user-prompted resolution) is left open. Address during Hardening.
 - **Third-party push notification service.** Even the default provider (§6) touches user data in transit and deserves the same "security red flag" review as any other third-party integration before it's wired up in milestone `09`/`10` — don't let "it's the standard Expo default" skip that review.
-- **`frequency_config`/`recurrence` JSON schema drift.** Because these are JSONB with no enforced shape, inconsistent writes across the mobile app and any future web/admin surface are a real risk if the shape isn't validated centrally (see `packages/validation` in `TECHNICAL_BIBLE.md` §4). Define and validate the shape once, in one shared package, not per-call-site.
-- **TODAY does not yet classify "medication due today."** The personalization engine (`services/personalization/engine.ts`) classifies real appointments/milestones/journal entries, but deliberately does not fabricate a due-today bucket for medications, since no real dose-scheduling/recurrence-resolution logic exists yet (see the `frequency_config` risk above). Address together with the reminder engine during CARE (`04`).
-- **`PRISMDateInput` is a text-entry stand-in, not a native picker.** Used across onboarding's date fields (Medication/Appointment Setup, Journey Date) because no device/simulator exists in this sandbox to verify a native module end-to-end. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
-- **Password-recovery deep link and the onboarding auto-advance mutation (Building screen) both still need a real-device + live-project pass.** Both are code-complete and unit-tested but exercise a path (a real emailed link tapped on a device; a real authenticated session) that cannot be constructed in this sandbox. Verify both together the first time a live Supabase project + physical device/simulator is available.
+- **`frequency_config`/`recurrence` JSON schema drift.** Because these are JSONB with no enforced shape, inconsistent writes across the mobile app and any future web/admin surface are a real risk if the shape isn't validated centrally (see `packages/validation` in `TECHNICAL_BIBLE.md` §4). Define and validate the shape once, in one shared package, not per-call-site — the shape is already centralized in `packages/validation/src/care.ts`'s `frequencyConfigSchema`; the remaining risk is only in the not-yet-built engine that consumes it.
+- **`PRISMDateInput` is a text-entry stand-in, not a native picker.** Used across onboarding's date fields (Medication/Appointment Setup, Journey Date) and now every CARE date field too (Add/Edit Medication, Log Injection, Log a dose, Add/Edit Appointment) — the same sandbox constraint (no device/simulator to verify a native module end-to-end) applies everywhere it's used. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
+- **A growing list of flows need a real-device + live-project pass before shipping**, since none of them can be constructed in this no-backend, no-device sandbox: password-recovery's deep link, the onboarding auto-advance mutation (Building screen), and — new in this milestone — every CARE mutation exercised against real data (creating/editing/pausing a medication, logging a dose or injection, creating/editing an appointment) and the CARE screens' data-driven states (populated Medications/Injections/Appointments lists, Medication/Appointment Detail with real records, Care Home's section-ordering logic). All are code-complete and covered by unit/schema tests; visual verification this milestone confirmed the _code paths_ render correctly under a session-less bypass (forms, empty states, the approved generic error state) but never exercised a real write or a populated list. Verify the full write path together the first time a live Supabase project + physical device/simulator is available — this is the single most important pre-Beta verification gap across every milestone so far.
 
-## 13. Known Legal/Privacy Review Items
+## 14. Known Legal/Privacy Review Items
 
 Tracked in full in [`SECURITY.md`](./SECURITY.md) §21 — restated here for build-status visibility, all pre-launch (not pre-Foundation) items:
 

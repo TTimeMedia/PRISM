@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { medicationCreateSchema, injectionCreateSchema, appointmentCreateSchema } from '../care';
+import {
+  medicationCreateSchema,
+  medicationUpdateSchema,
+  medicationLogCreateSchema,
+  injectionCreateSchema,
+  appointmentCreateSchema,
+  appointmentUpdateSchema,
+  appointmentFormSchema,
+} from '../care';
 
 describe('medicationCreateSchema', () => {
   it('accepts a minimal valid medication with only a name', () => {
@@ -75,6 +83,83 @@ describe('appointmentCreateSchema', () => {
 
   it('rejects a missing title', () => {
     const result = appointmentCreateSchema.safeParse({ starts_at: '2026-01-01T08:00:00Z' });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe('medicationUpdateSchema', () => {
+  it('accepts a partial update — e.g. just pausing via end_date', () => {
+    const result = medicationUpdateSchema.safeParse({ end_date: '2026-06-01' });
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts an empty object — no fields required on update', () => {
+    const result = medicationUpdateSchema.safeParse({});
+    expect(result.success).toBe(true);
+  });
+
+  it('still rejects an invalid form value when provided', () => {
+    const result = medicationUpdateSchema.safeParse({ form: 'not-a-real-form' });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe('medicationLogCreateSchema', () => {
+  it('accepts a completed entry with medication_id, scheduled_at, and status', () => {
+    const result = medicationLogCreateSchema.safeParse({
+      medication_id: '11111111-1111-1111-1111-111111111111',
+      scheduled_at: '2026-01-01T08:00:00Z',
+      status: 'completed',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('never shames a user for a status — skipped_intentionally is a valid, first-class status', () => {
+    const result = medicationLogCreateSchema.safeParse({
+      medication_id: '11111111-1111-1111-1111-111111111111',
+      scheduled_at: '2026-01-01T08:00:00Z',
+      status: 'skipped_intentionally',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a missing medication_id', () => {
+    const result = medicationLogCreateSchema.safeParse({
+      scheduled_at: '2026-01-01T08:00:00Z',
+      status: 'completed',
+    });
+    expect(result.success).toBe(false);
+  });
+});
+
+describe('appointmentUpdateSchema', () => {
+  it('accepts a partial update', () => {
+    const result = appointmentUpdateSchema.safeParse({ location: 'New location' });
+    expect(result.success).toBe(true);
+  });
+});
+
+describe('appointmentFormSchema', () => {
+  it('accepts a well-formed Add/Edit Appointment submission with separate date/time', () => {
+    const result = appointmentFormSchema.safeParse({
+      title: 'Follow-up',
+      date: '2026-06-01',
+      time: '09:30',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a missing title — CARE's form asks for one directly, unlike onboarding", () => {
+    const result = appointmentFormSchema.safeParse({ date: '2026-06-01' });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a malformed time', () => {
+    const result = appointmentFormSchema.safeParse({
+      title: 'Follow-up',
+      date: '2026-06-01',
+      time: '9:3',
+    });
     expect(result.success).toBe(false);
   });
 });

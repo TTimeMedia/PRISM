@@ -134,6 +134,30 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** "PRISM is private by default" (see above) already establishes private notifications as an on-by-default protection users shouldn't have to discover. App Lock and Biometrics are a different kind of control — an extra authentication step the user must actively choose to accept, not a passive protection — so defaulting them on would add friction to every app open for users who never asked for it.
 **Implications:** `privacySetupSchema` (`packages/validation/src/onboarding.ts`) defaults `app_lock_enabled: false`, `biometric_lock: false`, `notification_privacy: true`. This is the concrete, screen-level expression of the existing "private by default" decision plus a genuinely new choice (App Lock/Biometrics off), so it's recorded here rather than left implicit in the Zod schema alone.
 
+## CARE
+
+### "Pause" a medication is expressed via `end_date`, not a new status column
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** Screen 26 (Medication Detail) specifies a **Pause** action that "preserves history — it does not delete past logs," but the canonical `medications` schema (`MASTER_BUILD_SPEC.md` §18) has no dedicated status/paused column, only `start_date`/`end_date`. Adding an invented column beyond the schema the specification actually defines would go against Foundation's "no invented medical logic beyond what's specified" discipline; the schema already has a field for exactly this concept.
+**Decision:** Pausing a medication sets `end_date` to today; Resuming clears it back to `null`. This is functionally identical to how a medication's course naturally ends — "paused" and "ended" share the same representation (an `end_date` in the past), which is a deliberate simplification, not an oversight. `medication_logs` are a separate table keyed by `medication_id`, so pausing never touches historical log rows — the "preserves history" requirement holds automatically.
+**Implications:** The Medications list (Screen 24) shows Active and Paused as two sections, based on whether `end_date` is null or in the future — mirroring the existing Upcoming/Past split already used for Appointments (Screen 31), rather than inventing a new pattern. `isMedicationActive()` (`apps/mobile/features/care/medicationDisplay.ts`) is the single place this comparison happens.
+
+### CARE Home shows only enabled modules, sections with real activity first
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** `SCREEN_BIBLE.md` §CARE Personalization states "a user who only tracks appointments should never be confronted with an empty, oversized medication dashboard." A disabled module's data is also never fetched at all, consistent with the same rule already established for TODAY in Milestone 03 (`docs/DECISIONS.md`'s Personalization section, and `docs/BUILD_STATUS.md` §11).
+**Implications:** `CareHomeScreen` reads `useModules()` first and only queries `medications`/`injections`/`appointments` for modules that are actually enabled; sections are then ordered by which one has the most real content, not a fixed order. A user with nothing tracked yet sees the same approved empty state as any other empty collection, never an empty three-section dashboard.
+
+### "Next scheduled event" is not computed — Medications shows the configured schedule instead
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** Screen 24 (Medications) calls for showing a medication's "Next scheduled event," but no real dose-scheduling-resolution engine exists yet (the same gap already tracked in `docs/BUILD_STATUS.md` Known Technical Risks as blocking TODAY's "medication due today" classification). Inventing a plausible-looking next-occurrence date without a real resolution algorithm would risk showing the user incorrect information about their own medication — worse than not showing it.
+**Implications:** `describeFrequency()` (`apps/mobile/features/care/medicationDisplay.ts`) describes the _configured_ recurrence pattern in plain language ("Daily at 08:00", "Every 3 days") — real, stored data, honestly presented — rather than resolving it into a specific next-dose timestamp. Building the real scheduling-resolution engine is deferred to the same future work that resolves the TODAY gap; when it ships, both surfaces should be updated together.
+
 ## Product Structure
 
 ### The primary navigation is TODAY / CARE / JOURNEY / YOU

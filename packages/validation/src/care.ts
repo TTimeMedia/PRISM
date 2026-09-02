@@ -44,14 +44,18 @@ export const medicationCreateSchema = z.object({
 });
 export type MedicationCreateInput = z.infer<typeof medicationCreateSchema>;
 
-export const medicationLogUpdateSchema = z.object({
+/** Editing a medication's own configuration must never rewrite its historical logs — see docs/SCREEN_BIBLE.md Screen 27. */
+export const medicationUpdateSchema = medicationCreateSchema.partial();
+export type MedicationUpdateInput = z.infer<typeof medicationUpdateSchema>;
+
+export const medicationLogCreateSchema = z.object({
   medication_id: z.string().uuid(),
   scheduled_at: isoDateTimeSchema,
   completed_at: isoDateTimeSchema.nullable().optional(),
   status: z.enum(MEDICATION_LOG_STATUSES),
   notes: notesSchema,
 });
-export type MedicationLogUpdateInput = z.infer<typeof medicationLogUpdateSchema>;
+export type MedicationLogCreateInput = z.infer<typeof medicationLogCreateSchema>;
 
 /** No medical guidance is given on site selection — see docs/PRODUCT_BIBLE.md §13. */
 export const injectionCreateSchema = z.object({
@@ -74,6 +78,33 @@ export const appointmentCreateSchema = z.object({
   reminder_enabled: z.boolean().default(false),
 });
 export type AppointmentCreateInput = z.infer<typeof appointmentCreateSchema>;
+
+export const appointmentUpdateSchema = appointmentCreateSchema.partial();
+export type AppointmentUpdateInput = z.infer<typeof appointmentUpdateSchema>;
+
+/**
+ * Shape of CARE's Add/Edit Appointment forms (Screens 32/34), which
+ * collect date and time as separate fields — unlike `appointmentCreateSchema`,
+ * which stores the combined `starts_at`. Title is required here (CARE's
+ * form asks for one directly); onboarding's Appointment Setup instead
+ * derives a title from category, since it never asks for one — see
+ * `deriveAppointmentTitle` in @prism/validation onboarding.
+ */
+export const appointmentFormSchema = z.object({
+  title: titleSchema,
+  provider: z.string().trim().max(200).nullable().optional(),
+  category: z.string().trim().max(100).nullable().optional(),
+  date: isoDateSchema,
+  time: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Expected HH:mm')
+    .nullable()
+    .optional(),
+  location: z.string().trim().max(300).nullable().optional(),
+  notes: notesSchema,
+  reminder_enabled: z.boolean().default(false),
+});
+export type AppointmentFormInput = z.infer<typeof appointmentFormSchema>;
 
 // --- P1 (schema/validation exists now; screens ship later — see docs/DECISIONS.md)
 
