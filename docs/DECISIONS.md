@@ -104,6 +104,36 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** `MASTER_BUILD_SPEC.md` §17 and `SECURITY.md` §1 specify email + password authentication but do not set a minimum length. This is visible to the user (Sign Up and Reset Password's inline validation error), so it is recorded here rather than left as an undocumented implementation detail, per `BUILD_STATUS.md`'s own rule for implementation-level choices.
 **Implications:** `packages/validation`'s `passwordSchema` enforces 8–72 characters client-side; Supabase Auth's own server-side minimum (6 by default) is a backstop, not the enforced policy. No complexity rules (uppercase/symbol requirements) are imposed — PRISM does not sacrifice usability for a false sense of security (`MASTER_BUILD_SPEC.md` §31, Non-Negotiable Rule 12).
 
+## Personalization (Onboarding)
+
+### Onboarding resumability is driven by an explicit `onboarding_step` column
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** A user who closes the app mid-onboarding must resume exactly where they left off, not at the beginning. Inferring position from field-completeness doesn't work — a skipped optional field (e.g. Identity's Name, which is optional and often left blank) is indistinguishable from a field the user simply hasn't reached yet.
+**Implications:** `profiles.onboarding_step` is written after every onboarding screen's Continue/Skip action, and `app/(onboarding)/_layout.tsx`'s `initialRouteName` resolves from it directly. This is implementation-visible (it determines exactly where a returning user lands) so it's recorded here rather than left as an undocumented schema choice.
+
+### Care Setup's raw selection is not persisted — only its module-enablement effect is
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** Screen 12 (Care Setup)'s multi-select (hormones, medication, patches, gel/cream, blockers, injections, surgery, other, none) exists to decide which modules to enable, not as a fact worth storing in its own right — storing it separately from the `modules` table it drives would create a second source of truth that can drift.
+**Implications:** `careSetupImpliesMedication`/`careSetupImpliesInjection` (`packages/types/src/onboarding.ts`) map the selection directly onto enabling the `medications`/`injections` modules at submit time. A user resuming onboarding partway through reconstructs an equivalent signal from which modules are already enabled (`careSetupSignalFromModules()`, `lib/onboarding/careSetupSignal.ts`) rather than from a stored raw answer, so `getNextOnboardingStep`'s branching still works correctly on resume.
+
+### Appointment Setup is gated by the Intent screen, not by Care Setup
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** Screen 15 (Appointment Setup)'s own stated condition — "only shown if appointment tracking was selected" — has no corresponding option in Care Setup's option list (Screen 12), which is entirely about medication-family tracking. The only earlier screen that actually offers an "appointments" option is Screen 09 (Intent, "What Brings You Here?"), so that is the selection the condition must refer to.
+**Implications:** `intentImpliesAppointments()` checks `profiles.intent` (not Care Setup) to decide whether Appointment Setup appears in the onboarding sequence. Recorded here since it resolves a real ambiguity in the source screens rather than restating an explicit spec instruction.
+
+### App Lock and Biometrics default off; Private notifications defaults on
+
+**Date:** 2026-09-02
+**Status:** Active
+**Reason:** "PRISM is private by default" (see above) already establishes private notifications as an on-by-default protection users shouldn't have to discover. App Lock and Biometrics are a different kind of control — an extra authentication step the user must actively choose to accept, not a passive protection — so defaulting them on would add friction to every app open for users who never asked for it.
+**Implications:** `privacySetupSchema` (`packages/validation/src/onboarding.ts`) defaults `app_lock_enabled: false`, `biometric_lock: false`, `notification_privacy: true`. This is the concrete, screen-level expression of the existing "private by default" decision plus a genuinely new choice (App Lock/Biometrics off), so it's recorded here rather than left implicit in the Zod schema alone.
+
 ## Product Structure
 
 ### The primary navigation is TODAY / CARE / JOURNEY / YOU

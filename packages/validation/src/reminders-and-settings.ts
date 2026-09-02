@@ -34,6 +34,7 @@ export type ReminderCreateInput = z.infer<typeof reminderCreateSchema>;
 
 export const settingsUpdateSchema = z.object({
   theme: z.enum(THEMES).optional(),
+  app_lock_enabled: z.boolean().optional(),
   biometric_lock: z.boolean().optional(),
   notification_privacy: z.boolean().optional(),
   reduced_motion: z.boolean().optional(),

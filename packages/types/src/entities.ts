@@ -12,6 +12,7 @@
  * docs/PRODUCT_BIBLE.md §12 (Product Boundaries).
  */
 import type { ModuleKey } from './modules';
+import type { JourneyStage } from './onboarding';
 
 export type UUID = string;
 /** ISO 8601 timestamp string, always stored/transmitted in UTC. */
@@ -29,6 +30,12 @@ export interface Profile {
   journey_start_date: ISODate | null;
   profile_photo_url: string | null;
   onboarding_completed: boolean;
+  /** Screen 10 (Journey Stage) — optional, never rendered as a progress meter. */
+  journey_stage: JourneyStage | null;
+  /** Screen 09 (What Brings You Here?) — multi-select intent, also gates whether Appointment Setup appears. */
+  intent: string[] | null;
+  /** Resume point for an interrupted onboarding flow — see @prism/types OnboardingStep. Null = not started. */
+  onboarding_step: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -287,6 +294,8 @@ export type Theme = (typeof THEMES)[number];
 export interface Settings {
   user_id: UUID;
   theme: Theme;
+  /** Master switch for the lock screen — see docs/SECURITY.md §8. Distinct from biometric_lock, which only selects the unlock method. */
+  app_lock_enabled: boolean;
   biometric_lock: boolean;
   notification_privacy: boolean;
   reduced_motion: boolean;

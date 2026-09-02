@@ -27,12 +27,54 @@ import type {
   Settings,
 } from '@prism/types';
 
-/** Fields the database generates/defaults — optional on insert, omitted from Row-derived Insert type accordingly. */
-type Insertable<Row, GeneratedKeys extends keyof Row> = Omit<Row, GeneratedKeys> &
-  Partial<Pick<Row, GeneratedKeys>>;
+/** Every key of Row whose value type is nullable — a nullable column can always be omitted on insert, same as an explicit null. */
+type NullableKeys<Row> = { [K in keyof Row]: null extends Row[K] ? K : never }[keyof Row];
+
+/**
+ * Fields optional on insert: the database-generated ones (GeneratedKeys)
+ * plus every nullable column (NullableKeys) — a Zod schema's
+ * `.nullable().optional()` field is `T | null | undefined`, and a
+ * nullable Postgres column with no client-supplied value just stores
+ * NULL, so "key omitted" and "key explicitly null" must both type-check.
+ */
+type Insertable<Row, GeneratedKeys extends keyof Row> = Omit<
+  Row,
+  GeneratedKeys | NullableKeys<Row>
+> &
+  Partial<Pick<Row, GeneratedKeys | NullableKeys<Row>>>;
 
 /** Fields that must never be changed by an update payload (ownership, identity, immutable timestamps). */
 type Updatable<Row, ImmutableKeys extends keyof Row> = Partial<Omit<Row, ImmutableKeys>>;
+
+/**
+ * Forces TS to re-materialize a type as a fresh mapped/object type rather
+ * than keeping it as a reference to a named interface. Needed below
+ * because `SupabaseClient`'s own generic defaults resolve the table
+ * schema via `... extends GenericSchema ? ... : never`, and that check
+ * silently resolves to `never` — degrading every `.insert()`/`.update()`
+ * call on every table to accepting nothing — when a table's `Row` is a
+ * *named* interface (e.g. `Profile`) rather than an inline/mapped object
+ * type, specifically once that interface has an array-typed field (e.g.
+ * `intent: string[] | null`). Verified in isolation against this exact
+ * TypeScript version: an inline object literal or a `Flatten<T>`-wrapped
+ * type both satisfy the check; a bare named-interface reference does
+ * not. This is the fix, not a style preference — do not remove it.
+ */
+type Flatten<T> = { [K in keyof T]: T[K] };
+
+/**
+ * Wraps Row/Insert/Update into the shape postgrest-js actually requires
+ * (`GenericTable`, from @supabase/postgrest-js) — it needs a
+ * `Relationships` array on every table, or its generic table lookups
+ * silently degrade to `never` too. See the `Flatten` comment above for
+ * the other half of why this file exists in this exact shape.
+ */
+type Table<Row, Insert, Update> = {
+  Row: Flatten<Row>;
+  Insert: Flatten<Insert>;
+  Update: Flatten<Update>;
+  Relationships: [];
+};
 
 type Generated = 'id' | 'created_at' | 'updated_at';
 type Immutable = 'id' | 'user_id' | 'created_at';
@@ -40,95 +82,84 @@ type Immutable = 'id' | 'user_id' | 'created_at';
 export interface Database {
   public: {
     Tables: {
-      profiles: {
-        Row: Profile;
-        Insert: Insertable<Profile, Generated>;
-        Update: Updatable<Profile, Immutable>;
-      };
-      modules: {
-        Row: Module;
-        Insert: Insertable<Module, Generated | 'enabled' | 'configuration'>;
-        Update: Updatable<Module, Immutable>;
-      };
-      medications: {
-        Row: Medication;
-        Insert: Insertable<Medication, Generated | 'reminder_enabled'>;
-        Update: Updatable<Medication, Immutable>;
-      };
-      medication_logs: {
-        Row: MedicationLog;
-        Insert: Insertable<MedicationLog, Generated>;
-        Update: Updatable<MedicationLog, Immutable>;
-      };
-      injections: {
-        Row: Injection;
-        Insert: Insertable<Injection, Generated>;
-        Update: Updatable<Injection, Immutable>;
-      };
-      appointments: {
-        Row: Appointment;
-        Insert: Insertable<Appointment, Generated | 'reminder_enabled'>;
-        Update: Updatable<Appointment, Immutable>;
-      };
+      profiles: Table<Profile, Insertable<Profile, Generated>, Updatable<Profile, Immutable>>;
+      modules: Table<
+        Module,
+        Insertable<Module, Generated | 'enabled' | 'configuration'>,
+        Updatable<Module, Immutable>
+      >;
+      medications: Table<
+        Medication,
+        Insertable<Medication, Generated | 'reminder_enabled'>,
+        Updatable<Medication, Immutable>
+      >;
+      medication_logs: Table<
+        MedicationLog,
+        Insertable<MedicationLog, Generated>,
+        Updatable<MedicationLog, Immutable>
+      >;
+      injections: Table<
+        Injection,
+        Insertable<Injection, Generated>,
+        Updatable<Injection, Immutable>
+      >;
+      appointments: Table<
+        Appointment,
+        Insertable<Appointment, Generated | 'reminder_enabled'>,
+        Updatable<Appointment, Immutable>
+      >;
       /** P1 — see docs/DECISIONS.md. Table exists from Foundation onward regardless. */
-      labs: {
-        Row: Lab;
-        Insert: Insertable<Lab, Generated>;
-        Update: Updatable<Lab, Immutable>;
-      };
+      labs: Table<Lab, Insertable<Lab, Generated>, Updatable<Lab, Immutable>>;
       /** P1 — see docs/DECISIONS.md. */
-      procedures: {
-        Row: Procedure;
-        Insert: Insertable<Procedure, Generated>;
-        Update: Updatable<Procedure, Immutable>;
-      };
-      milestones: {
-        Row: Milestone;
-        Insert: Insertable<Milestone, Generated>;
-        Update: Updatable<Milestone, Immutable>;
-      };
-      journal_entries: {
-        Row: JournalEntry;
-        Insert: Insertable<JournalEntry, Generated | 'tags'>;
-        Update: Updatable<JournalEntry, Immutable>;
-      };
+      procedures: Table<
+        Procedure,
+        Insertable<Procedure, Generated>,
+        Updatable<Procedure, Immutable>
+      >;
+      milestones: Table<
+        Milestone,
+        Insertable<Milestone, Generated>,
+        Updatable<Milestone, Immutable>
+      >;
+      journal_entries: Table<
+        JournalEntry,
+        Insertable<JournalEntry, Generated | 'tags'>,
+        Updatable<JournalEntry, Immutable>
+      >;
       /** P1 — see docs/DECISIONS.md. */
-      memories: {
-        Row: Memory;
-        Insert: Insertable<Memory, Generated>;
-        Update: Updatable<Memory, Immutable>;
-      };
+      memories: Table<Memory, Insertable<Memory, Generated>, Updatable<Memory, Immutable>>;
       /** P1 — see docs/DECISIONS.md. */
-      legal_items: {
-        Row: LegalItem;
-        Insert: Insertable<LegalItem, Generated>;
-        Update: Updatable<LegalItem, Immutable>;
-      };
+      legal_items: Table<
+        LegalItem,
+        Insertable<LegalItem, Generated>,
+        Updatable<LegalItem, Immutable>
+      >;
       /** P1 — see docs/DECISIONS.md. High-security — see docs/SECURITY.md §5. */
-      documents: {
-        Row: Document;
-        Insert: Insertable<Document, Generated | 'uploaded_at'>;
-        Update: Updatable<Document, Immutable>;
-      };
-      reminders: {
-        Row: Reminder;
-        Insert: Insertable<Reminder, Generated | 'notification_style' | 'enabled'>;
-        Update: Updatable<Reminder, Immutable>;
-      };
-      settings: {
-        Row: Settings;
-        Insert: Insertable<
+      documents: Table<
+        Document,
+        Insertable<Document, Generated | 'uploaded_at'>,
+        Updatable<Document, Immutable>
+      >;
+      reminders: Table<
+        Reminder,
+        Insertable<Reminder, Generated | 'notification_style' | 'enabled'>,
+        Updatable<Reminder, Immutable>
+      >;
+      settings: Table<
+        Settings,
+        Insertable<
           Settings,
           | 'theme'
+          | 'app_lock_enabled'
           | 'biometric_lock'
           | 'notification_privacy'
           | 'reduced_motion'
           | 'created_at'
           | 'updated_at'
-        >;
+        >,
         /** No `Immutable` fields to exclude beyond user_id — settings has no `id` column; user_id is the primary key. */
-        Update: Partial<Omit<Settings, 'user_id' | 'created_at'>>;
-      };
+        Partial<Omit<Settings, 'user_id' | 'created_at'>>
+      >;
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;

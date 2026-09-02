@@ -3,6 +3,7 @@ export * from './PRISMIconButton';
 export * from './PRISMCard';
 export * from './PRISMSection';
 export * from './PRISMInput';
+export * from './PRISMDateInput';
 export * from './PRISMTextArea';
 export * from './PRISMSelect';
 export * from './PRISMSwitch';

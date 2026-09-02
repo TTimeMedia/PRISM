@@ -1,9 +1,9 @@
 # PRISM Build Status
 
-**STATUS: MILESTONE 02 (AUTHENTICATION & IDENTITY) COMPLETE**
-**CURRENT MILESTONE: 03 — Personalization (Onboarding)**
+**STATUS: MILESTONE 03 (PERSONALIZATION / ONBOARDING) COMPLETE**
+**CURRENT MILESTONE: 04 — CARE**
 
-Last updated: 2026-09-02 (Authentication & Identity milestone complete)
+Last updated: 2026-09-02 (Personalization / Onboarding milestone complete)
 
 This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md)'s implementation milestones. It is a living document — update it at the end of every milestone, not just at the start of the project. It does not restate product or technical detail; it points at the document that owns each fact.
 
@@ -11,7 +11,7 @@ This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./
 
 ## 1. Current Project Status
 
-PRISM's Foundation milestone (`01`) and Authentication & Identity milestone (`02`) are both complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens (Sign Up, Sign In, Forgot/Reset Password, Email Verification, plus Welcome) on that foundation, with real working session handling, email verification, and password recovery via deep link — see §9 (Foundation) and §10 (Authentication & Identity) below for what was built and how each was verified. No onboarding or P0/P1 feature screens exist yet; that begins with Milestone 03.
+PRISM's Foundation milestone (`01`), Authentication & Identity milestone (`02`), and Personalization (Onboarding) milestone (`03`) are all complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens with real working session handling, email verification, and password recovery via deep link. Personalization (Onboarding) built all 12 onboarding screens, the resumable onboarding-step routing infrastructure, module selection driven by the user's Care Setup answers, and the personalized TODAY engine with a real, dynamic TODAY screen — see §9 (Foundation), §10 (Authentication & Identity), and §11 (Personalization / Onboarding) below for what was built and how each was verified. No CARE/JOURNEY/YOU feature screens exist yet beyond onboarding's minimal Medication/Appointment creation; that begins with Milestone 04.
 
 ## 2. Documentation Status
 
@@ -53,16 +53,17 @@ Per [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §28:
 
 ### Current Milestone
 
-**Personalization (Onboarding)** (milestone `03`) — not yet started. The 12 onboarding screens, module selection, profile/journey-stage/care setup, and the personalized TODAY engine are built here, on top of the working session layer from `02`.
+**CARE** (milestone `04`) — not yet started. Full CRUD for medications, medication logs, reminders, injections, and appointments is built here, on top of the minimal create-only mutations onboarding already exercises (`lib/care/mutations.ts`).
 
 ### Completed Milestones
 
 - **Foundation** (milestone `01`) — complete as of 2026-09-02. See §9 below for what was built and how it was verified.
 - **Authentication & Identity** (milestone `02`) — complete as of 2026-09-02. See §10 below.
+- **Personalization (Onboarding)** (milestone `03`) — complete as of 2026-09-02. See §11 below.
 
 ### Remaining Milestones
 
-Twelve (`03` through `14`), starting with Personalization.
+Eleven (`04` through `14`), starting with CARE.
 
 ## 6. Known Open Decisions
 
@@ -132,12 +133,12 @@ Unchecked — nothing has been built yet. Update this checklist at the end of ea
 
 ### Personalization
 
-- [ ] Onboarding (all 12 screens)
-- [ ] Module selection (P0 modules only)
-- [ ] Profile
-- [ ] Journey stage
-- [ ] Care configuration
-- [ ] Personalized TODAY (engine + dynamic cards)
+- [x] Onboarding (all 12 screens)
+- [x] Module selection (P0 modules only)
+- [x] Profile
+- [x] Journey stage
+- [x] Care configuration
+- [x] Personalized TODAY (engine + dynamic cards)
 
 ### Care
 
@@ -243,14 +244,52 @@ Completed 2026-09-02. Built on the auth foundation from Milestone 01 (Supabase c
 - **Visual verification** via `expo start --web` (dev/client-rendered — see Milestone 01's note on why this is the relevant path, not the static export): every auth screen screenshotted in both light and dark mode, confirming exact PRISM color tokens, the approved copy verbatim, and correct layout. Live interaction was also verified, not just static screenshots: submitting Sign Up with an invalid email, a too-short password, and mismatched passwords produced the correct inline red-bordered fields with the exact Zod error messages, with no crash and no raw error exposed.
 - Password recovery's deep-link handling (`parseAuthDeepLink`, `isPasswordRecoveryLink`) is covered by unit tests against realistic implicit-flow URLs (including an expired-link error response), but the full end-to-end flow — a real email delivered by a live Supabase project, tapped on a device — could not be exercised in this environment (no live Supabase project, no physical device/simulator). The code follows Supabase's documented native pattern; this is the one piece of Milestone 02 that still needs a real device + live project pass before shipping.
 
-## 11. Known Technical Risks
+## 11. Personalization (Onboarding) Milestone (03) — Completion Notes
+
+Completed 2026-09-02. Built on the working session layer from Milestone 02.
+
+### What was built
+
+- **Migration** (`supabase/migrations/20260902120000_onboarding_profile_fields.sql`): `profiles.journey_stage` (CHECK-constrained enum), `profiles.intent text[]`, `profiles.onboarding_step text`, `settings.app_lock_enabled boolean not null default false`. Re-verified end-to-end against the same real local-Postgres RLS methodology from Milestone 01 (fresh `prism_verify` database, all 9 migrations applied in order, full adversarial RLS suite re-run, all 10 assertions still pass).
+- **`packages/types/src/onboarding.ts`**: `JOURNEY_STAGES`, `INTENT_OPTIONS` (12), `CARE_SETUP_OPTIONS` (9), the 12-step `ONBOARDING_STEPS` sequence, and the pure `getNextOnboardingStep(current, {careSetup, intent})` branching function — UI-framework-free and unit-tested independently of any screen.
+- **`packages/validation/src/onboarding.ts`**: Zod schemas for every onboarding screen's input (Identity, Care Setup, Injection Setup, Appointment Setup, Privacy Setup), all matching the "everything optional, always skippable" pattern the Screen Bible requires.
+- **`lib/profile/queries.ts`, `lib/care/mutations.ts`**: the first real React Query mutations beyond auth — `useProfile`/`useUpdateProfile`, `useModules`/`useSetModuleEnabled`, `useSettings`/`useUpdateSettings`, plus minimal `useCreateMedication`/`useCreateAppointment` for the two onboarding screens that persist a real record. Read queries rely on RLS to scope results (no manual `user_id` filter); mutations filter by `user_id` for update targeting.
+- **Onboarding routing** (`app/(onboarding)/_layout.tsx`, `lib/onboarding/routes.ts`): a third `Stack.Protected` branch in the root layout (`(tabs)` / `(onboarding)` / `(auth)`, mutually exclusive on session + `onboarding_completed`), with the onboarding stack's `initialRouteName` resuming at `profile.onboarding_step` so a user who closes the app mid-onboarding picks up exactly where they left off.
+- **All 12 onboarding screens** (`features/onboarding/screens/`): Philosophy (the PRISM Manifesto, verbatim), Intent, Journey Stage, Identity, Care Setup, Medication Setup, Injection Setup, Appointment Setup, Journey Date, Privacy Setup, Building, Ready. Medication/Injection/Appointment Setup are conditionally skipped per `getNextOnboardingStep` based on the user's Care Setup and Intent answers — never shown to a user who didn't ask for that kind of tracking.
+- **Personalization engine** (`services/personalization/engine.ts`): `calculateTodayItems → filterIrrelevantItems → rankItems → buildTodayDashboard`, per `TECHNICAL_BIBLE.md` §10's pipeline. Pure and deterministic (takes an explicit `now: Date`), classifying real appointments/milestones/journal entries into `due_today` / `upcoming` / `recent` / `meaningful` / `hidden` buckets, ranked due-today-first.
+- **Real TODAY screen** (`features/today/screens/TodayScreen.tsx`, `lib/today/queries.ts`): a dynamic time-of-day greeting, loading skeletons, the approved empty state, and populated cards driven entirely by the engine above. A disabled module's records are never fetched at all (not merely filtered after the fact) — the strongest form of "if a module is disabled, its content must not surface anywhere."
+
+### Product-visible decisions (recorded in `DECISIONS.md`)
+
+See `DECISIONS.md` § Personalization (Onboarding) for: explicit `onboarding_step` persistence for resumability, Care Setup's raw selection not being persisted (only its module-enablement effect), Appointment Setup being gated by the Intent screen rather than Care Setup, and App Lock/Biometrics defaulting off while Private notifications defaults on at Privacy Setup.
+
+### Engineering decisions (internal — not product-visible, so not recorded in `DECISIONS.md`)
+
+- **`Database` type generic-inference bug, found and fixed.** The very first real `.insert()`/`.update()` calls beyond `.auth.*` (this milestone's `useUpdateProfile`, `useCreateMedication`, etc.) silently typed as `never`, which would have broken every future milestone's database writes if it had gone unnoticed. Root cause: `supabase-js`'s `SupabaseClient` generic resolves a table's `Row`/`Insert`/`Update` types via a structural check that silently fails — resolving to `never` — specifically when the type is a **named interface reference** (e.g. `Profile`) that has **any array-typed field** (`intent: string[] | null`), as opposed to an inline object literal. Isolated via ~17 minimal standalone reproduction files (created and deleted, not committed). Fixed in `packages/database/src/database.types.ts` by wrapping every `Row`/`Insert`/`Update` in a `Flatten<T> = { [K in keyof T]: T[K] }` mapped type, which forces TypeScript to re-materialize the type as a fresh object type rather than a named reference. Also required adding a `Relationships: []` field to every table (required by `postgrest-js`'s `GenericTable` type, previously missing) and widening `Insertable`'s optional-key computation to include any nullable-valued field (`NullableKeys<Row>`), since Zod's `.nullable().optional()` produces `T | null | undefined`, not just `T | null`.
+- **A second, related typed-routes bug, found and fixed during this milestone's own visual verification.** `lib/onboarding/routes.ts`'s `onboardingStepHref()` originally built its return value via a `` `/(onboarding)/${string}` `` template-literal type. That type doesn't structurally match Expo Router's generated `Href` union (a closed set of specific literal route strings), even though every value it actually produces is one of those literals — `pnpm --filter @prism/mobile typecheck` only caught this once `.expo/types/router.d.ts` had been freshly regenerated (see Visual Verification below), which is why it wasn't caught by the very first typecheck pass earlier in this milestone. Fixed by replacing the template interpolation with an explicit `Record<OnboardingStep, Href>` literal-to-literal map.
+- **Onboarding resume reconstructs the Care Setup signal from `modules`, not from a stored raw answer** (`lib/onboarding/careSetupSignal.ts`): since Care Setup's raw multi-select is deliberately not persisted (see `DECISIONS.md`), a user resuming onboarding partway through needs an equivalent signal to decide whether Medication/Injection Setup should still appear. `careSetupSignalFromModules()` derives a Care-Setup-shaped string array from which modules are already enabled, which `getNextOnboardingStep` then branches on exactly as it would the original answer.
+- **`PRISMDateInput`** (`packages/ui/src/components/PRISMDateInput.tsx`): a validated text-entry stand-in for a platform-native date picker (`YYYY-MM-DD`, numeric-and-punctuation keyboard), used in Medication Setup, Appointment Setup, and Journey Date. `SCREEN_BIBLE.md` §3's Global Screen Contract calls for a native picker; this sandbox has no device/simulator to verify a native module against, so a real-but-simpler stand-in was built and documented rather than either integrating an unverified native module sight-unseen or silently skipping the requirement. Swapping in a real native picker is a tracked follow-up (see §12 below), not a blocker.
+
+### Verification performed (Quality Gate)
+
+- `pnpm -r typecheck` passes with zero errors across all 8 workspace projects (after fixing the typed-routes issue above).
+- `pnpm -r test` passes 96/96 tests — 44 new for this milestone (9 `packages/types` onboarding-logic tests, 14 `packages/validation` onboarding-schema tests, 5 `careSetupSignal` tests, 2 onboarding-screen tests, comprehensive personalization-engine tests covering every bucket/ranking/filtering rule, and a rewritten `TodayScreen` test suite covering empty/named-greeting/populated/error states).
+- ESLint passes with zero errors/warnings on `apps/mobile` and `apps/web`; Prettier formatting is clean repository-wide (the one file Prettier flags, `apps/mobile/expo-env.d.ts`, is Expo's own auto-generated, gitignored file, not project source).
+- `apps/web`: `next build` still succeeds.
+- The new migration was re-verified against a fresh local-Postgres RLS check (see "What was built" above): valid `journey_stage` values accepted, an invalid value rejected by the CHECK constraint, `intent` arrays round-trip correctly, `app_lock_enabled` defaults to `false`, and all 10 existing RLS adversarial assertions still pass unchanged.
+- **Visual verification**: since reaching `(onboarding)` or a populated `(tabs)` route through the app's real navigation requires a live authenticated session (unavailable in this sandbox — no live Supabase project, no device/simulator), the root `Stack.Protected` guards in `app/_layout.tsx` were **temporarily** short-circuited (`guard={showTabs || true}` etc.) for the sole purpose of reaching every route directly by URL under `expo start --web`, screenshotted via Playwright (light mode for all 12 onboarding screens; TODAY in both light and dark), and the bypass was then **fully reverted** before any commit — `git diff` on `app/_layout.tsx` confirms only the real three-branch guard logic remains. All 12 onboarding screens rendered with the exact `SCREEN_BIBLE.md` copy, correct chip/toggle/form states, and the `YYYY-MM-DD` date-input stand-in visible where specified. TODAY rendered the dynamic greeting (falling back to a generic greeting with no profile name set) and the approved empty-state copy in both themes. One screen (Building) could not be fully screenshotted past its animated dots — it auto-advances by calling `useUpdateProfile`, which correctly throws `"No authenticated session."` under this bypass since no real session exists; this is the expected behavior of a real guard clause, not a defect, and mirrors Milestone 02's password-recovery deep link as a flow that needs a real device + live project pass before shipping.
+
+## 12. Known Technical Risks
 
 - **Recurring reminders across timezones/DST.** `TECHNICAL_BIBLE.md` §14 requires that a weekly reminder "should not move" when a user travels, but does not specify the exact scheduling algorithm. Real, tractable risk — resolve during the CARE milestone (`07`) when the reminder engine is built, and cover it explicitly in that milestone's tests.
 - **Offline sync conflict resolution.** The rule ("never silently overwrite; resolve deterministically; surface conflict when necessary" — `TECHNICAL_BIBLE.md` §14) is clear in intent but the exact algorithm (last-write-wins vs. field-level merge vs. user-prompted resolution) is left open. Address during Hardening (`07`).
 - **Third-party push notification service.** Even the default provider (§6) touches user data in transit and deserves the same "security red flag" review as any other third-party integration before it's wired up in milestone `09`/`10` — don't let "it's the standard Expo default" skip that review.
 - **`frequency_config`/`recurrence` JSON schema drift.** Because these are JSONB with no enforced shape, inconsistent writes across the mobile app and any future web/admin surface are a real risk if the shape isn't validated centrally (see `packages/validation` in `TECHNICAL_BIBLE.md` §4). Define and validate the shape once, in one shared package, not per-call-site.
+- **TODAY does not yet classify "medication due today."** The personalization engine (`services/personalization/engine.ts`) classifies real appointments/milestones/journal entries, but deliberately does not fabricate a due-today bucket for medications, since no real dose-scheduling/recurrence-resolution logic exists yet (see the `frequency_config` risk above). Address together with the reminder engine during CARE (`04`).
+- **`PRISMDateInput` is a text-entry stand-in, not a native picker.** Used across onboarding's date fields (Medication/Appointment Setup, Journey Date) because no device/simulator exists in this sandbox to verify a native module end-to-end. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
+- **Password-recovery deep link and the onboarding auto-advance mutation (Building screen) both still need a real-device + live-project pass.** Both are code-complete and unit-tested but exercise a path (a real emailed link tapped on a device; a real authenticated session) that cannot be constructed in this sandbox. Verify both together the first time a live Supabase project + physical device/simulator is available.
 
-## 12. Known Legal/Privacy Review Items
+## 13. Known Legal/Privacy Review Items
 
 Tracked in full in [`SECURITY.md`](./SECURITY.md) §21 — restated here for build-status visibility, all pre-launch (not pre-Foundation) items:
 

@@ -19,6 +19,7 @@ import { OfflineBanner } from '../components/OfflineBanner';
 import { AuthProvider, useSession } from '../lib/auth/AuthProvider';
 import { queryClient } from '../lib/queryClient';
 import { useAppStore } from '../lib/store/appStore';
+import { useProfile } from '../lib/profile/queries';
 
 export { GlobalErrorFallback as ErrorBoundary };
 
@@ -58,16 +59,25 @@ export default function RootLayout() {
 }
 
 /**
- * Screen 01 — Splash: stays up while the app initializes (fonts +
- * the initial session check), then routes straight to the right place
- * (Today if authenticated, Welcome otherwise) — see
- * docs/SCREEN_BIBLE.md §4. Onboarding-resume routing is added in the
- * Personalization milestone once onboarding screens exist; for now any
- * authenticated session goes straight to (tabs).
+ * Screen 01 — Splash: stays up while the app initializes (fonts, the
+ * initial session check, and — once authenticated — the profile fetch
+ * needed to know whether onboarding is complete), then routes straight
+ * to the right place: (tabs) if onboarding is complete, (onboarding) —
+ * resuming at profile.onboarding_step — if not, (auth) otherwise. See
+ * docs/SCREEN_BIBLE.md §4 and the User Lifecycle in
+ * docs/TECHNICAL_BIBLE.md §7.
  */
 function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const { session, isLoading: authLoading, isPasswordRecovery } = useSession();
-  const ready = fontsLoaded && !authLoading;
+  const showAuth = !session || isPasswordRecovery;
+
+  // Only meaningful once authenticated and not mid-recovery — useProfile()
+  // itself no-ops (enabled: false) until there's a session to scope it to.
+  const { data: profile, isLoading: profileLoading } = useProfile();
+
+  const authReady = fontsLoaded && !authLoading;
+  const needsProfile = authReady && !showAuth;
+  const ready = authReady && (!needsProfile || !profileLoading);
 
   useEffect(() => {
     if (ready) {
@@ -79,14 +89,18 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
     return null;
   }
 
-  const showTabs = !!session && !isPasswordRecovery;
+  const showTabs = !showAuth && !!profile?.onboarding_completed;
+  const showOnboarding = !showAuth && !profile?.onboarding_completed;
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Protected guard={showTabs}>
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>
-      <Stack.Protected guard={!showTabs}>
+      <Stack.Protected guard={showOnboarding}>
+        <Stack.Screen name="(onboarding)" />
+      </Stack.Protected>
+      <Stack.Protected guard={showAuth}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
     </Stack>
