@@ -20,11 +20,13 @@ const CONFIRM_PHRASE = 'DELETE';
 /**
  * Screen 64 — Delete Account. Deleting an `auth.users` row requires the
  * Supabase service-role key, which must never ship in the mobile app
- * (docs/SECURITY.md) — so this calls a `delete-account` Edge Function.
- * That function doesn't exist yet (no server-side Edge Functions have
- * shipped — see supabase/functions/README.md); this screen is real,
- * working UI up to that boundary, and surfaces a clear error rather than
- * pretending to succeed until it's deployed. See docs/DECISIONS.md § YOU.
+ * (docs/SECURITY.md) — so this calls the `delete-account` Edge Function
+ * (supabase/functions/delete-account/index.ts). That function is written
+ * but not yet deployed to a real Supabase project (no production project
+ * exists in this sandbox — see supabase/functions/README.md and
+ * docs/BUILD_STATUS.md's Launch-readiness section); this screen surfaces
+ * a clear error rather than pretending to succeed until it's deployed.
+ * See docs/DECISIONS.md § YOU.
  */
 export function DeleteAccountScreen() {
   const theme = useTheme();

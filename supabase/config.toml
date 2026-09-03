@@ -399,6 +399,12 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# delete-account (see supabase/functions/delete-account/index.ts) must only
+# ever run for an authenticated caller — verify_jwt=true (the default) is
+# left explicit here since this function is destructive and irreversible.
+[functions.delete-account]
+verify_jwt = true
+
 [analytics]
 enabled = true
 port = 54327

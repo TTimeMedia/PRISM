@@ -1,6 +1,6 @@
 import React from 'react';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { ArrowLeft, Plus } from 'lucide-react-native';
 import {
   PRISMEmptyState,
@@ -42,15 +42,19 @@ export function JournalScreen() {
           </PRISMIconButton>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
-        {isLoading ? (
+      {isLoading ? (
+        <View style={styles.content}>
           <View style={styles.skeletons}>
             <PRISMSkeleton height={72} />
             <PRISMSkeleton height={72} />
           </View>
-        ) : isError ? (
+        </View>
+      ) : isError ? (
+        <View style={styles.content}>
           <PRISMErrorState onRetry={() => refetch()} />
-        ) : (entries ?? []).length === 0 ? (
+        </View>
+      ) : (entries ?? []).length === 0 ? (
+        <View style={styles.content}>
           <PRISMEmptyState
             title="Nothing written yet."
             subtitle="Write whenever you have something to say."
@@ -59,19 +63,22 @@ export function JournalScreen() {
               onPress: () => router.push('/journey/journal/add'),
             }}
           />
-        ) : (
-          <View style={styles.list}>
-            {(entries ?? []).map((entry) => (
-              <PRISMListItem
-                key={entry.id}
-                title={entry.title?.trim() || formatDate(entry.date)}
-                subtitle={journalPreview(entry)}
-                onPress={() => router.push(`/journey/journal/${entry.id}`)}
-              />
-            ))}
-          </View>
-        )}
-      </ScrollView>
+        </View>
+      ) : (
+        <FlatList
+          data={entries}
+          keyExtractor={(entry) => entry.id}
+          contentContainerStyle={styles.content}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          renderItem={({ item: entry }) => (
+            <PRISMListItem
+              title={entry.title?.trim() || formatDate(entry.date)}
+              subtitle={journalPreview(entry)}
+              onPress={() => router.push(`/journey/journal/${entry.id}`)}
+            />
+          )}
+        />
+      )}
     </View>
   );
 }
@@ -102,7 +109,7 @@ const styles = StyleSheet.create({
   skeletons: {
     gap: spacing.sm,
   },
-  list: {
-    gap: spacing.xs,
+  separator: {
+    height: spacing.xs,
   },
 });

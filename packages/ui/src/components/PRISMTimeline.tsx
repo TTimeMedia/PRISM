@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { spacing } from '../tokens/spacing';
 import { type } from '../tokens/typography';
@@ -29,8 +29,10 @@ export function PRISMTimeline({ events }: PRISMTimelineProps) {
   const theme = useTheme();
 
   return (
-    <View>
-      {events.map((event, index) => {
+    <FlatList
+      data={events}
+      keyExtractor={(event) => event.id}
+      renderItem={({ item: event, index }) => {
         const isLast = index === events.length - 1;
         const content = (
           <View style={styles.row}>
@@ -73,8 +75,8 @@ export function PRISMTimeline({ events }: PRISMTimelineProps) {
             {content}
           </Pressable>
         );
-      })}
-    </View>
+      }}
+    />
   );
 }
 

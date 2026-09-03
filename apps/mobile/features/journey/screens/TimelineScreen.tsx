@@ -1,6 +1,6 @@
 import React from 'react';
 import { router, type Href } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
   PRISMEmptyState,
@@ -38,16 +38,20 @@ export function TimelineScreen() {
           </PRISMIconButton>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
-        {isLoading ? (
+      {isLoading ? (
+        <View style={styles.content}>
           <View style={styles.skeletons}>
             <PRISMSkeleton height={56} />
             <PRISMSkeleton height={56} />
             <PRISMSkeleton height={56} />
           </View>
-        ) : isError ? (
+        </View>
+      ) : isError ? (
+        <View style={styles.content}>
           <PRISMErrorState onRetry={() => refetch()} />
-        ) : events && events.length > 0 ? (
+        </View>
+      ) : events && events.length > 0 ? (
+        <View style={styles.content}>
           <PRISMTimeline
             events={events.map((event) => ({
               id: event.id,
@@ -58,13 +62,15 @@ export function TimelineScreen() {
               onPress: () => router.push(recordHref(event.moduleKey, event.sourceId)),
             }))}
           />
-        ) : (
+        </View>
+      ) : (
+        <View style={styles.content}>
           <PRISMEmptyState
             title="Your story starts wherever you decide."
             subtitle="Nothing recorded yet."
           />
-        )}
-      </ScrollView>
+        </View>
+      )}
     </View>
   );
 }

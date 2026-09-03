@@ -8,14 +8,20 @@ import { useUpdateProfile, useUpdateSettings } from '../../../lib/profile/querie
 
 /**
  * Screen 17 — Privacy Setup. Private notifications default ON — see
- * docs/SECURITY.md §7. App Lock enforcement itself (the actual lock
- * screen) is a later milestone; this only captures the preference.
+ * docs/SECURITY.md §7.
+ *
+ * App Lock is deliberately NOT offered here. Enabling it requires a PIN
+ * to exist first — there's no lock without a fallback unlock method
+ * (see AppLockSettingsScreen's own header) — and this screen has no way
+ * to collect one. An earlier version of this screen let onboarding set
+ * `app_lock_enabled: true` with no PIN ever stored, which permanently
+ * locked the user out on next launch (AppLockScreen has no recovery
+ * path). App Lock is only ever enabled from YOU → App Lock, where PIN
+ * creation is enforced before the setting can be turned on.
  */
 export function PrivacySetupScreen() {
   const updateSettings = useUpdateSettings();
   const updateProfile = useUpdateProfile();
-  const [appLockEnabled, setAppLockEnabled] = useState(false);
-  const [biometricLock, setBiometricLock] = useState(false);
   const [notificationPrivacy, setNotificationPrivacy] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -24,8 +30,6 @@ export function PrivacySetupScreen() {
     const next = getNextOnboardingStep('privacy_setup', { careSetup: null, intent: null });
     await Promise.all([
       updateSettings.mutateAsync({
-        app_lock_enabled: appLockEnabled,
-        biometric_lock: biometricLock,
         notification_privacy: notificationPrivacy,
       }),
       updateProfile.mutateAsync({ onboarding_step: next }),
@@ -41,8 +45,6 @@ export function PrivacySetupScreen() {
       onPrimaryPress={submit}
       primaryLoading={isSubmitting}
     >
-      <PRISMSwitch label="App Lock" value={appLockEnabled} onValueChange={setAppLockEnabled} />
-      <PRISMSwitch label="Biometrics" value={biometricLock} onValueChange={setBiometricLock} />
       <PRISMSwitch
         label="Private notifications"
         description="Private notifications hide sensitive information from your lock screen."
