@@ -1,0 +1,17 @@
+# Prettier auto-loads this file with no flag needed — kept instead of
+# reusing --ignore-path .gitignore because that flag only reads the one
+# file it's given, not the nested apps/mobile/.gitignore and
+# apps/web/.gitignore where each app's own auto-generated
+# type-declaration file is actually listed.
+node_modules/
+.pnpm-store/
+apps/mobile/.expo/
+apps/mobile/dist/
+apps/mobile/web-build/
+apps/mobile/expo-env.d.ts
+apps/web/.next/
+apps/web/out/
+apps/web/next-env.d.ts
+dist/
+build/
+coverage/

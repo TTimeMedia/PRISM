@@ -1,0 +1,85 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.hero {
+  max-width: 640px;
+  width: 100%;
+  text-align: center;
+  padding: 96px 0 64px;
+}
+
+.wordmark {
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--prism-text-secondary);
+  margin-bottom: 32px;
+}
+
+.tagline {
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 46px;
+  margin-bottom: 20px;
+}
+
+.subhead {
+  font-size: 17px;
+  line-height: 25px;
+  color: var(--prism-text-secondary);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.section {
+  max-width: 640px;
+  width: 100%;
+  padding: 48px 0;
+  border-top: 1px solid var(--prism-border-subtle);
+}
+
+.sectionTitle {
+  font-family: var(--font-sora), sans-serif;
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 34px;
+  margin-bottom: 16px;
+}
+
+.sectionBody {
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--prism-text-secondary);
+}
+
+.sectionBody p {
+  margin-bottom: 4px;
+}
+
+.spectrumBar {
+  display: flex;
+  height: 4px;
+  width: 100%;
+  max-width: 640px;
+  border-radius: var(--prism-radius-pill);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.spectrumBar span {
+  flex: 1;
+}
+
+.footer {
+  padding: 48px 0 24px;
+  font-size: 13px;
+  color: var(--prism-text-tertiary);
+}
