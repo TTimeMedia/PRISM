@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { radius } from '../tokens/radius';
-import { spacing } from '../tokens/spacing';
+import { layout, spacing } from '../tokens/spacing';
 import { type } from '../tokens/typography';
 
 export interface PRISMChipProps {
@@ -48,6 +48,11 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+    // Minimum touch target per docs/DESIGN_SYSTEM.md §23 (44x44px) —
+    // padding + text alone (~36px) fell short; found during the
+    // Hardening milestone's accessibility audit.
+    minHeight: layout.minTouchTarget,
+    justifyContent: 'center',
     alignSelf: 'flex-start',
   },
   label: {

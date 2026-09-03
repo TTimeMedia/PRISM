@@ -4,11 +4,13 @@
 -- Every attempt must fail."
 --
 -- This file was written and verified against a real PostgreSQL 16
--- server during Milestone 01 (Foundation) — every assertion below
+-- server during Milestone 01 (Foundation), and re-verified with TESTs
+-- 8-9 added during the Hardening milestone (07) — every assertion below
 -- passed against the actual migrations in supabase/migrations/, run in
 -- order, with no errors. See docs/BUILD_STATUS.md for how it was run
--- (this sandbox has no Docker, so a local, non-Docker Postgres plus a
--- small stand-in for Supabase's `auth`/`storage` schemas was used).
+-- (no Docker daemon is available in this sandbox, so a local,
+-- non-Docker Postgres plus a small stand-in for Supabase's
+-- `auth`/`storage` schemas was used instead).
 --
 -- To run against a real local Supabase project (requires Docker):
 --   supabase start
@@ -60,6 +62,26 @@ insert into public.journal_entries (user_id, content, date) values
 
 insert into storage.objects (bucket_id, name, owner) values
   ('documents', '11111111-1111-1111-1111-111111111111/report.pdf', '11111111-1111-1111-1111-111111111111');
+
+-- Every other P0 user-owned table gets one row too, so the adversarial
+-- reads below (TESTs 11-15) cover the full table set, not just the two
+-- exercised when this suite was first written — see docs/BUILD_STATUS.md
+-- § Hardening milestone.
+insert into public.appointments (user_id, title, starts_at) values
+  ('11111111-1111-1111-1111-111111111111', 'Endocrinology follow-up', now());
+
+insert into public.injections (user_id, injected_at) values
+  ('11111111-1111-1111-1111-111111111111', now());
+
+insert into public.milestones (user_id, title, date) values
+  ('11111111-1111-1111-1111-111111111111', 'Started HRT', current_date);
+
+insert into public.medication_logs (user_id, medication_id, scheduled_at, status)
+  select '11111111-1111-1111-1111-111111111111', id, now(), 'completed'
+  from public.medications where user_id = '11111111-1111-1111-1111-111111111111';
+
+insert into storage.objects (bucket_id, name, owner) values
+  ('profile-photos', '11111111-1111-1111-1111-111111111111/profile.jpg', '11111111-1111-1111-1111-111111111111');
 
 reset role;
 
@@ -140,6 +162,40 @@ begin
   raise notice 'PASS: User B cannot see User A''s document object.';
 end $$;
 
+-- TEST 8: every remaining P0 user-owned table follows the same
+-- auth.uid() = user_id policy shape as medications/journal_entries
+-- above — confirm User B is isolated from each, not just the two
+-- tables the original suite happened to exercise.
+do $$
+declare visible_count int;
+begin
+  select count(*) into visible_count from public.appointments;
+  assert visible_count = 0, format('FAIL: User B can see %s of User A''s appointments', visible_count);
+  raise notice 'PASS: User B cannot see User A''s appointment.';
+
+  select count(*) into visible_count from public.injections;
+  assert visible_count = 0, format('FAIL: User B can see %s of User A''s injections', visible_count);
+  raise notice 'PASS: User B cannot see User A''s injection.';
+
+  select count(*) into visible_count from public.milestones;
+  assert visible_count = 0, format('FAIL: User B can see %s of User A''s milestones', visible_count);
+  raise notice 'PASS: User B cannot see User A''s milestone.';
+
+  select count(*) into visible_count from public.medication_logs;
+  assert visible_count = 0, format('FAIL: User B can see %s of User A''s medication logs', visible_count);
+  raise notice 'PASS: User B cannot see User A''s medication log.';
+end $$;
+
+-- TEST 9: User B cannot see User A's profile photo (the profile-photos
+-- bucket added in the YOU milestone, never RLS-tested until now).
+do $$
+declare visible_count int;
+begin
+  select count(*) into visible_count from storage.objects where bucket_id = 'profile-photos';
+  assert visible_count = 0, format('FAIL: User B can see %s objects in User A''s profile-photos folder', visible_count);
+  raise notice 'PASS: User B cannot see User A''s profile photo.';
+end $$;
+
 reset role;
 
 -- --- User A again: confirm they still see exactly their own data.
@@ -160,11 +216,28 @@ begin
   select count(*) into visible_count from storage.objects where bucket_id = 'documents';
   assert visible_count = 1, format('FAIL: User A cannot see their own document object (found %s)', visible_count);
   raise notice 'PASS: User A can see their own document object.';
+
+  select count(*) into visible_count from public.appointments;
+  assert visible_count = 1, format('FAIL: User A can see %s appointment rows, expected 1', visible_count);
+
+  select count(*) into visible_count from public.injections;
+  assert visible_count = 1, format('FAIL: User A can see %s injection rows, expected 1', visible_count);
+
+  select count(*) into visible_count from public.milestones;
+  assert visible_count = 1, format('FAIL: User A can see %s milestone rows, expected 1', visible_count);
+
+  select count(*) into visible_count from public.medication_logs;
+  assert visible_count = 1, format('FAIL: User A can see %s medication_log rows, expected 1', visible_count);
+
+  select count(*) into visible_count from storage.objects where bucket_id = 'profile-photos';
+  assert visible_count = 1, format('FAIL: User A cannot see their own profile photo (found %s)', visible_count);
+
+  raise notice 'PASS: User A still sees exactly their own appointment/injection/milestone/medication_log/profile-photo.';
 end $$;
 
 reset role;
 
--- TEST 8: An invalid module_key is rejected by the CHECK constraint (defense in depth).
+-- TEST 10: An invalid module_key is rejected by the CHECK constraint (defense in depth).
 set session role test_authenticated;
 set request.jwt.claim.sub = '11111111-1111-1111-1111-111111111111';
 do $$
@@ -178,7 +251,7 @@ begin
 end $$;
 reset role;
 
--- TEST 9: settings has exactly one row per user (docs/DECISIONS.md — user_id is the sole PK).
+-- TEST 11: settings has exactly one row per user (docs/DECISIONS.md — user_id is the sole PK).
 set session role test_authenticated;
 set request.jwt.claim.sub = '11111111-1111-1111-1111-111111111111';
 do $$
@@ -192,7 +265,7 @@ begin
 end $$;
 reset role;
 
--- TEST 10: an unauthenticated session (no auth.uid()) sees nothing.
+-- TEST 12: an unauthenticated session (no auth.uid()) sees nothing.
 set session role test_authenticated;
 set request.jwt.claim.sub = '';
 

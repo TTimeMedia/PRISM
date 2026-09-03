@@ -137,7 +137,7 @@ Privacy is a core brand differentiator for PRISM, not a compliance checkbox — 
 Before every release, verify (see also [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md) §18 and [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §12):
 
 - Authentication tested
-- RLS tested — including explicit attempts to access another user's record, guess another user's UUID, modify another user's record, access another user's file, access deleted records, and bypass client-side permissions. **Every attempt must fail.**
+- RLS tested — including explicit attempts to access another user's record, guess another user's UUID, modify another user's record, access another user's file, access deleted records, and bypass client-side permissions. **Every attempt must fail.** Automated on every push/PR via `.github/workflows/ci.yml`'s `database-rls` job (running `supabase/tests/database/rls_isolation_test.sql`); a real local Supabase stack (`supabase start`) is still the more authoritative check before an actual release — see that test file's own header.
 - Storage policies tested
 - Account deletion tested
 - Export tested

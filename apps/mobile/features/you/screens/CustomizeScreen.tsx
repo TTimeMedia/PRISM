@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import {
+  layout,
   PRISMCard,
   PRISMErrorState,
   PRISMHeader,
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
+    minHeight: layout.minTouchTarget,
     borderTopWidth: 1,
   },
   configureLabel: {

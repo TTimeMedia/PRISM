@@ -40,6 +40,10 @@ export function AddAppointmentScreen() {
       {modulesLoading ? (
         <PRISMSkeleton height={56} />
       ) : (
+        // If useModules() itself failed, defaultReminderEnabled is
+        // already false (its own pre-Milestone-06 default) — the form
+        // still renders rather than blocking Add Appointment entirely
+        // over a non-essential seed-value lookup. See docs/DECISIONS.md § YOU.
         <AppointmentForm
           defaultValues={{ reminder_enabled: defaultReminderEnabled }}
           submitLabel="Save appointment"

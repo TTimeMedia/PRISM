@@ -7,9 +7,16 @@ import { OFFLINE_COPY } from '@prism/config';
 
 /**
  * "You're offline. Your changes will sync when you're back online." —
- * see docs/DESIGN_SYSTEM.md §26 and docs/TECHNICAL_BIBLE.md §13. Full
- * write-queueing lands with the CARE milestone; this establishes the
- * detection + banner foundation now, per the Foundation scope.
+ * see docs/DESIGN_SYSTEM.md §26 and docs/TECHNICAL_BIBLE.md §13.
+ *
+ * The "will sync" half of that promise is React Query's own default
+ * `networkMode: 'online'` (lib/queryClient.ts doesn't override it): a
+ * query or mutation fired while offline pauses rather than failing, and
+ * fires automatically the moment connectivity returns — no custom
+ * queueing code exists or is needed for that baseline case. What's
+ * genuinely unbuilt is deterministic conflict resolution for two
+ * writes to the same record made on different devices while one was
+ * offline — see docs/BUILD_STATUS.md § Known Technical Risks.
  */
 export function OfflineBanner() {
   const theme = useTheme();
