@@ -81,6 +81,25 @@ export async function cancelScheduledNotifications(identifiers: string[]): Promi
 }
 
 /**
+ * Cancels every currently-scheduled native notification for a given
+ * `{type, referenceId}` — matched via `content.data`, which every
+ * `schedule*Reminder(s)` call above sets. Lets `useReminderSync`
+ * reschedule idempotently (cancel what's there, then schedule fresh)
+ * without having to persist native notification identifiers anywhere
+ * itself; a device's own OS-level schedule is the only place those
+ * identifiers need to live.
+ */
+export async function cancelRemindersFor(type: string, referenceId: string): Promise<void> {
+  if (!isNotificationsSupported) return;
+  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+  const toCancel = scheduled.filter(
+    (request) =>
+      request.content.data?.type === type && request.content.data?.referenceId === referenceId,
+  );
+  await cancelScheduledNotifications(toCancel.map((request) => request.identifier));
+}
+
+/**
  * Schedules every reminder a medication needs and returns the
  * notification identifiers so the caller can cancel them later.
  * `daily`/`weekly`/`custom` (with `days_of_week`) use native repeating

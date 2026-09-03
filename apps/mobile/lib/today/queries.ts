@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Appointment, JournalEntry, Milestone, TodayItem } from '@prism/types';
+import type { Appointment, JournalEntry, Medication, Milestone, TodayItem } from '@prism/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules } from '../profile/queries';
@@ -32,12 +32,13 @@ export function useTodayItems() {
       modules?.map((m) => `${m.module_key}:${m.enabled}`).join(','),
     ],
     queryFn: async () => {
-      const [appointments, milestones, journalEntries] = await Promise.all([
+      const [appointments, milestones, journalEntries, medications] = await Promise.all([
         enabled.has('appointments') ? fetchAppointments() : Promise.resolve<Appointment[]>([]),
         enabled.has('milestones') ? fetchMilestones() : Promise.resolve<Milestone[]>([]),
         enabled.has('journal') ? fetchJournalEntries() : Promise.resolve<JournalEntry[]>([]),
+        enabled.has('medications') ? fetchMedications() : Promise.resolve<Medication[]>([]),
       ]);
-      return buildTodayDashboard({ appointments, milestones, journalEntries });
+      return buildTodayDashboard({ appointments, milestones, journalEntries, medications });
     },
     enabled: !!userId && !modulesLoading,
   });
@@ -57,6 +58,12 @@ async function fetchMilestones(): Promise<Milestone[]> {
 
 async function fetchJournalEntries(): Promise<JournalEntry[]> {
   const { data, error } = await supabase.from('journal_entries').select('*');
+  if (error) throw error;
+  return data;
+}
+
+async function fetchMedications(): Promise<Medication[]> {
+  const { data, error } = await supabase.from('medications').select('*');
   if (error) throw error;
   return data;
 }

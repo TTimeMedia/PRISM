@@ -16,10 +16,13 @@ import {
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 
 /**
- * Screen 58 — Notification Settings. Only "Private notifications" is
- * real — there is no reminder-delivery engine yet to back per-category
- * toggles (Medication reminders, Injection reminders, etc.), so this
- * screen doesn't pretend to have them. See docs/DECISIONS.md § YOU.
+ * Screen 58 — Notification Settings. Medication and appointment
+ * reminders are real (see lib/reminders/useReminderSync.ts) but toggled
+ * per-item, on each medication's/appointment's own Add/Edit screen —
+ * not centrally here, since "remind me about this one" is a property of
+ * the thing being reminded about, not a global category switch. This
+ * screen only holds settings that really are global: notification
+ * privacy. See docs/DECISIONS.md § YOU.
  */
 export function NotificationSettingsScreen() {
   const theme = useTheme();
@@ -53,8 +56,8 @@ export function NotificationSettingsScreen() {
             />
           </PRISMSection>
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
-            Reminders for medications, injections, appointments, and labs aren&rsquo;t available
-            yet. When they are, each one will have its own setting here.
+            Medication and appointment reminders are set per item — open a medication or appointment
+            and turn its reminder on or off there.
           </Text>
         </ScrollView>
       )}

@@ -1,11 +1,17 @@
 import type {
   Appointment,
   JournalEntry,
+  Medication,
   Milestone,
   ModuleKey,
   RelevanceBucket,
   TodayItem,
 } from '@prism/types';
+import {
+  isMedicationDueOn,
+  resolveMedicationOccurrences,
+  resolveNextMedicationOccurrence,
+} from '../../lib/reminders/scheduleResolution';
 
 /**
  * The TODAY personalization engine — see docs/TECHNICAL_BIBLE.md §10 and
@@ -15,12 +21,12 @@ import type {
  * lib/today/queries.ts for the data-fetching half of the pipeline
  * (`getUserProfile → getEnabledModules → getRelevantRecords`).
  *
- * Medications are deliberately not classified into `due_today` here —
- * that needs a real reminder-schedule resolution (recurring
- * medications across timezones/DST), tracked as a known technical risk
- * for the CARE milestone (see docs/BUILD_STATUS.md) — showing a
- * synthetic "due today" card without that would be manufactured
- * content (docs/MASTER_BUILD_SPEC.md §31, Non-Negotiable Rule 11).
+ * Medications are classified via lib/reminders/scheduleResolution.ts's
+ * real reminder-schedule resolution (recurring medications across
+ * timezones/DST) — see docs/DECISIONS.md § Reminders. Before that
+ * existed, showing a synthetic "due today" card would have been
+ * manufactured content (docs/MASTER_BUILD_SPEC.md §31, Non-Negotiable
+ * Rule 11); it no longer is, since the date is now actually resolved.
  */
 
 const UPCOMING_WINDOW_DAYS = 30;
@@ -43,6 +49,44 @@ export interface RelevantRecords {
   appointments: Appointment[];
   milestones: Milestone[];
   journalEntries: JournalEntry[];
+  medications: Medication[];
+}
+
+function startOfLocalDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+/**
+ * `due_today` if any dose resolves to today (even one already passed —
+ * matches `isMedicationDueOn`'s own "still due" reasoning), otherwise
+ * `upcoming` if the next dose falls within the same window appointments
+ * use. Independent of `reminder_enabled` — whether a dose is due and
+ * whether the user wants a push notification about it are separate
+ * concerns (see lib/reminders/scheduleResolution.ts's own header).
+ */
+function classifyMedications(medications: Medication[], now: Date): TodayItem[] {
+  return medications
+    .map((medication): TodayItem | null => {
+      const dueToday = isMedicationDueOn(medication, now);
+      const occurrence = dueToday
+        ? resolveMedicationOccurrences(medication, startOfLocalDay(now), 1)[0]
+        : resolveNextMedicationOccurrence(medication, now);
+      if (!occurrence) return null;
+      if (!dueToday) {
+        const daysUntil = daysBetween(now, occurrence);
+        if (daysUntil < 0 || daysUntil > UPCOMING_WINDOW_DAYS) return null;
+      }
+      return {
+        id: `medication-${medication.id}`,
+        moduleKey: 'medications' as ModuleKey,
+        bucket: (dueToday ? 'due_today' : 'upcoming') as RelevanceBucket,
+        sourceId: medication.id,
+        title: medication.name,
+        subtitle: medication.dosage_text ?? undefined,
+        at: occurrence.toISOString(),
+      };
+    })
+    .filter((item): item is TodayItem => item !== null);
 }
 
 function classifyAppointments(appointments: Appointment[], now: Date): TodayItem[] {
@@ -106,6 +150,7 @@ function classifyJournalEntries(entries: JournalEntry[], now: Date): TodayItem[]
 /** getRelevantRecords → calculateTodayItems (unfiltered — records are assumed already module-scoped by the caller). */
 export function calculateTodayItems(records: RelevantRecords, now: Date = new Date()): TodayItem[] {
   return [
+    ...classifyMedications(records.medications, now),
     ...classifyAppointments(records.appointments, now),
     ...classifyMilestones(records.milestones, now),
     ...classifyJournalEntries(records.journalEntries, now),

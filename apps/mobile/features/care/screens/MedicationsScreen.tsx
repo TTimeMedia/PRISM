@@ -15,7 +15,7 @@ import {
 } from '@prism/ui';
 import type { Medication } from '@prism/types';
 import { useMedications } from '../../../lib/care/queries';
-import { describeFrequency, isMedicationActive } from '../medicationDisplay';
+import { describeNextDose, isMedicationActive } from '../medicationDisplay';
 
 /** Screen 24 — Medications. Active cards first; paused ones stay reachable, never hidden entirely. */
 export function MedicationsScreen() {
@@ -88,10 +88,7 @@ export function MedicationsScreen() {
 }
 
 function MedicationRow({ medication }: { medication: Medication }) {
-  const subtitleParts = [
-    medication.dosage_text,
-    describeFrequency(medication.frequency_type, medication.frequency_config),
-  ].filter(Boolean);
+  const subtitleParts = [medication.dosage_text, describeNextDose(medication)].filter(Boolean);
   return (
     <PRISMListItem
       title={medication.name}

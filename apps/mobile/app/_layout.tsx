@@ -22,6 +22,7 @@ import { useAppStore } from '../lib/store/appStore';
 import { useAppLockStore } from '../lib/store/appLockStore';
 import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
+import { useReminderSync } from '../lib/reminders/useReminderSync';
 import { AppLockScreen } from '../features/you/screens/AppLockScreen';
 
 export { GlobalErrorFallback as ErrorBoundary };
@@ -96,6 +97,9 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const { data: settings } = useSettings();
   const appLockEnabled = showTabs && !!settings?.app_lock_enabled;
   useAppLockGate(appLockEnabled);
+  // Reminder engine — see lib/reminders/useReminderSync.ts. Only relevant
+  // once inside the app proper (its own queries are already user-scoped).
+  useReminderSync();
   const isLocked = useAppLockStore((state) => state.isLocked);
   const unlock = useAppLockStore((state) => state.unlock);
   const showAppLockScreen = appLockEnabled && isLocked;

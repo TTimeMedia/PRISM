@@ -4,7 +4,7 @@ import {
   filterIrrelevantItems,
   rankItems,
 } from '../engine';
-import type { Appointment, JournalEntry, Milestone } from '@prism/types';
+import type { Appointment, JournalEntry, Medication, Milestone } from '@prism/types';
 
 const NOW = new Date('2026-06-15T12:00:00Z');
 
@@ -56,6 +56,25 @@ function makeJournalEntry(overrides: Partial<JournalEntry> = {}): JournalEntry {
   };
 }
 
+function makeMedication(overrides: Partial<Medication> = {}): Medication {
+  return {
+    id: 'med-1',
+    user_id: 'u1',
+    name: 'Testosterone',
+    form: 'injection',
+    dosage_text: null,
+    frequency_type: null,
+    frequency_config: null,
+    start_date: null,
+    end_date: null,
+    reminder_enabled: false,
+    notes: null,
+    created_at: NOW.toISOString(),
+    updated_at: NOW.toISOString(),
+    ...overrides,
+  };
+}
+
 describe('calculateTodayItems — appointments', () => {
   it('classifies a same-day appointment as due_today', () => {
     const items = calculateTodayItems(
@@ -63,6 +82,7 @@ describe('calculateTodayItems — appointments', () => {
         appointments: [makeAppointment({ starts_at: NOW.toISOString() })],
         milestones: [],
         journalEntries: [],
+        medications: [],
       },
       NOW,
     );
@@ -77,6 +97,7 @@ describe('calculateTodayItems — appointments', () => {
         appointments: [makeAppointment({ starts_at: future.toISOString() })],
         milestones: [],
         journalEntries: [],
+        medications: [],
       },
       NOW,
     );
@@ -90,6 +111,7 @@ describe('calculateTodayItems — appointments', () => {
         appointments: [makeAppointment({ starts_at: past.toISOString() })],
         milestones: [],
         journalEntries: [],
+        medications: [],
       },
       NOW,
     );
@@ -103,6 +125,7 @@ describe('calculateTodayItems — appointments', () => {
         appointments: [makeAppointment({ starts_at: farFuture.toISOString() })],
         milestones: [],
         journalEntries: [],
+        medications: [],
       },
       NOW,
     );
@@ -113,7 +136,7 @@ describe('calculateTodayItems — appointments', () => {
 describe('calculateTodayItems — milestones and journal', () => {
   it('classifies a recent milestone as meaningful', () => {
     const items = calculateTodayItems(
-      { appointments: [], milestones: [makeMilestone()], journalEntries: [] },
+      { appointments: [], milestones: [makeMilestone()], journalEntries: [], medications: [] },
       NOW,
     );
     expect(items[0].bucket).toBe('meaningful');
@@ -121,7 +144,7 @@ describe('calculateTodayItems — milestones and journal', () => {
 
   it('classifies a recent journal entry as recent', () => {
     const items = calculateTodayItems(
-      { appointments: [], milestones: [], journalEntries: [makeJournalEntry()] },
+      { appointments: [], milestones: [], journalEntries: [makeJournalEntry()], medications: [] },
       NOW,
     );
     expect(items[0].bucket).toBe('recent');
@@ -129,10 +152,59 @@ describe('calculateTodayItems — milestones and journal', () => {
 
   it('falls back to a generic title for an untitled journal entry — never blank, never invented content', () => {
     const items = calculateTodayItems(
-      { appointments: [], milestones: [], journalEntries: [makeJournalEntry({ title: null })] },
+      {
+        appointments: [],
+        milestones: [],
+        journalEntries: [makeJournalEntry({ title: null })],
+        medications: [],
+      },
       NOW,
     );
     expect(items[0].title).toBe('Journal entry');
+  });
+});
+
+describe('calculateTodayItems — medications', () => {
+  it('classifies a medication due today (via a real schedule resolution) as due_today', () => {
+    const items = calculateTodayItems(
+      {
+        appointments: [],
+        milestones: [],
+        journalEntries: [],
+        medications: [
+          makeMedication({ frequency_type: 'daily', frequency_config: { time_of_day: '09:00' } }),
+        ],
+      },
+      NOW,
+    );
+    expect(items).toHaveLength(1);
+    expect(items[0].bucket).toBe('due_today');
+  });
+
+  it('classifies a medication next due within the window as upcoming', () => {
+    const items = calculateTodayItems(
+      {
+        appointments: [],
+        milestones: [],
+        journalEntries: [],
+        medications: [
+          makeMedication({
+            frequency_type: 'weekly',
+            frequency_config: { days_of_week: [(NOW.getUTCDay() + 2) % 7] },
+          }),
+        ],
+      },
+      NOW,
+    );
+    expect(items[0].bucket).toBe('upcoming');
+  });
+
+  it('never manufactures a medication card when there is no frequency set', () => {
+    const items = calculateTodayItems(
+      { appointments: [], milestones: [], journalEntries: [], medications: [makeMedication()] },
+      NOW,
+    );
+    expect(items).toHaveLength(0);
   });
 });
 
@@ -147,6 +219,7 @@ describe('rankItems', () => {
         ],
         milestones: [makeMilestone()],
         journalEntries: [],
+        medications: [],
       },
       NOW,
     );
@@ -158,7 +231,7 @@ describe('rankItems', () => {
 describe('filterIrrelevantItems', () => {
   it('drops any item explicitly marked hidden', () => {
     const items = calculateTodayItems(
-      { appointments: [], milestones: [], journalEntries: [] },
+      { appointments: [], milestones: [], journalEntries: [], medications: [] },
       NOW,
     );
     const withHidden = [
@@ -181,7 +254,10 @@ describe('buildTodayDashboard', () => {
     // "Do not manufacture content when the user has nothing to show." —
     // docs/MASTER_BUILD_SPEC.md §31, Non-Negotiable Rule 11.
     expect(
-      buildTodayDashboard({ appointments: [], milestones: [], journalEntries: [] }, NOW),
+      buildTodayDashboard(
+        { appointments: [], milestones: [], journalEntries: [], medications: [] },
+        NOW,
+      ),
     ).toEqual([]);
   });
 
@@ -190,6 +266,7 @@ describe('buildTodayDashboard', () => {
       appointments: [makeAppointment()],
       milestones: [makeMilestone()],
       journalEntries: [],
+      medications: [],
     };
     expect(buildTodayDashboard(records, NOW)).toEqual(buildTodayDashboard(records, NOW));
   });

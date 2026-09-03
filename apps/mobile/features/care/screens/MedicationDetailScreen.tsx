@@ -18,7 +18,7 @@ import {
 } from '@prism/ui';
 import { useMedication, useMedicationLogs } from '../../../lib/care/queries';
 import { useDeleteMedication, usePauseMedication } from '../../../lib/care/mutations';
-import { describeFrequency, isMedicationActive } from '../medicationDisplay';
+import { describeFrequency, describeNextDose, isMedicationActive } from '../medicationDisplay';
 import { MEDICATION_FORM_OPTIONS, MEDICATION_LOG_STATUS_OPTIONS } from '../optionLabels';
 
 /** Screen 26 — Medication Detail. Pause preserves history — it never deletes past logs. */
@@ -78,6 +78,7 @@ export function MedicationDetailScreen() {
               label="Schedule"
               value={describeFrequency(medication.frequency_type, medication.frequency_config)}
             />
+            <DetailRow label="Next dose" value={describeNextDose(medication)} />
             <DetailRow label="Start date" value={medication.start_date} />
             <DetailRow label="End date" value={medication.end_date} />
             <DetailRow label="Reminder" value={medication.reminder_enabled ? 'On' : 'Off'} />

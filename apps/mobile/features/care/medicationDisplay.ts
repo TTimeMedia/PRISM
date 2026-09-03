@@ -1,15 +1,13 @@
-import type { FrequencyConfig, FrequencyType } from '@prism/types';
+import type { Medication, FrequencyConfig, FrequencyType } from '@prism/types';
+import { resolveNextMedicationOccurrence } from '../../lib/reminders/scheduleResolution';
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 /**
  * A plain-language description of a medication's configured recurrence —
- * "Schedule" on Screens 24/26. This describes the stored pattern, it does
- * not resolve it into a next-occurrence date/time: no real
- * scheduling-resolution engine exists yet (see docs/BUILD_STATUS.md
- * Known Technical Risks — the same gap that keeps TODAY from classifying
- * "medication due today"). Deliberately honest rather than inventing a
- * fake "next dose" timestamp.
+ * "Schedule" on Screens 24/26. This describes the stored pattern; see
+ * `describeNextDose` below for the resolved next-occurrence date/time
+ * (lib/reminders/scheduleResolution.ts).
  */
 export function describeFrequency(
   frequencyType: FrequencyType | null,
@@ -34,4 +32,11 @@ export function describeFrequency(
 export function isMedicationActive(endDate: string | null): boolean {
   if (!endDate) return true;
   return endDate >= new Date().toISOString().slice(0, 10);
+}
+
+/** "Next dose" on Screens 24/26 — resolved via lib/reminders/scheduleResolution.ts, never invented. */
+export function describeNextDose(medication: Medication): string {
+  if (!medication.frequency_type) return 'Not scheduled';
+  const next = resolveNextMedicationOccurrence(medication);
+  return next ? next.toLocaleString() : 'None scheduled';
 }

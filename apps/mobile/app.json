@@ -49,7 +49,8 @@
         {
           "photosPermission": "PRISM uses your photo library to set your profile photo."
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "experiments": {
       "typedRoutes": true
