@@ -188,6 +188,64 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** `docs/DESIGN_SYSTEM.md` §14 explicitly warns: "Avoid clinical mood trackers, mental-health dashboards, and aggressive mood charts... Mood is optional and must never be a forced rating." The `mood` column itself is a plain nullable string, not an enum — there is no suggested/fixed mood list anywhere in the source material to draw chip options from, and inventing one would risk exactly the clinical-mood-tracker pattern the design system rules out.
 **Implications:** Mood is a single free-text input, matching every other CARE/JOURNEY field with no suggested-values list (e.g. Medication's Dosage, Milestone's Category). A future milestone could add mood _suggestions_ as optional pre-fill chips (mirroring Milestone's suggested-titles pattern) without changing the underlying free-text storage — that would stay compatible with this decision; a hard-coded required selector would not.
 
+## YOU
+
+### App Lock's PIN is a device-local secret in `expo-secure-store`, never a `settings` column
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** Screen 60 (App Lock) needs a PIN fallback, but the canonical `settings` schema (`MASTER_BUILD_SPEC.md` §18) has `app_lock_enabled`/`biometric_lock`/`notification_privacy`/`reduced_motion`/`accessibility_preferences` — no PIN column, and none should be added. A PIN is fundamentally different from every other `settings` value: it's a device-local unlock secret, not a synced preference, and syncing it to the database would mean it travels across every device the account is signed into and sits in a table other rows are read from freely — a needless expansion of what a database compromise could expose.
+**Decision:** The PIN lives only in `expo-secure-store` (`apps/mobile/lib/you/pinStorage.ts`), namespaced under its own key (`prism_app_lock_pin`), stored directly rather than hashed — SecureStore already provides OS-level encryption-at-rest (Keychain on iOS, Keystore on Android), the same guarantee a client-side hash would only approximate. `settings.app_lock_enabled`/`biometric_lock` (real, existing columns) hold whether the feature is on and which unlock method is preferred; the PIN itself never leaves the device.
+**Implications:** A PIN set on one device does not carry over to a reinstall or a second device — the user sets a new one, which is the expected behavior for a device-local secret (identical to how a phone's own passcode works). Enabling App Lock without an existing PIN prompts to set one first (`AppLockSettingsScreen`); there is no server-side "forgot PIN" recovery, since the server never had it to recover.
+
+### Notification Settings offers only "Private notifications" — every reminder-category toggle needs a delivery engine that doesn't exist yet
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** Screen 58 lists Medication/Injection/Appointment/Lab/Custom reminders as independently configurable, but no notification-scheduling or delivery engine exists anywhere in PRISM yet (no push registration, no local-notification scheduling tied to `medications.reminder_enabled`/`appointments.reminder_enabled`, no `reminders` table writes from any screen). Building toggles for reminder categories that cannot actually deliver a reminder would be exactly the fake-control pattern ruled out project-wide (see CARE's "Next scheduled event" decision) — a toggle that visibly does nothing is worse than no toggle.
+**Decision:** Notification Settings (and Privacy's own "Notifications" section) expose only "Private notifications" (`settings.notification_privacy`, a real column, already defaulting to `true` per `docs/SECURITY.md` §7), plus plain-language copy explaining that per-category reminders aren't available yet.
+**Implications:** Each existing per-item `reminder_enabled` field (Medication, Appointment) still exists and is still collected on their own Add/Edit forms — those are honest, real booleans about the record, just not yet wired to an actual notification. When a real delivery engine ships, Screen 58's full per-category toggle list becomes buildable without any schema change (`reminders.notification_style` already exists per `MASTER_BUILD_SPEC.md` §18).
+
+### Module Configuration only offers settings with a real, wired effect
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** Screen 57 gives illustrative examples — Medication (Enabled, Reminder behavior), Journal (Enabled, Mood tracking, Photos), Memories (Enabled, Timeline integration) — but Memories is P1 (no screens yet), Journal has no Photo field at all (see JOURNEY's own decision above), and Injections/Milestones have no per-item reminder field to default.
+**Decision:** `ModuleConfigScreen` offers exactly three real settings, gated per module: Enabled (every module, backed by the existing `modules.enabled` column), "Default reminders on for new items" for Medications/Appointments only (`modules.configuration.default_reminder_enabled` — seeds the `reminder_enabled` default on `AddMedicationScreen`/`AddAppointmentScreen`, a genuine behavioral effect), and "Mood tracking" for Journal only (`modules.configuration.mood_tracking_enabled` — actually shows/hides `JournalEntryForm`'s Mood field). No Photos toggle (Journal), no Timeline-integration toggle (Memories, P1) — there is nothing real behind either yet.
+**Implications:** `modules.configuration` (already a JSONB column, no schema change needed) now holds these two keys for exactly the two modules that use them. Extending Module Configuration in a future milestone (e.g. once Memories ships) means adding a new configuration key with a real effect, not a placeholder.
+
+### Profile photo: a real upload to the existing private `profile-photos` bucket, addressed by object path, not a public URL
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** The `profile-photos` storage bucket and its per-user RLS policies have existed since Foundation (`supabase/migrations/…_storage_buckets_and_policies.sql`) but were never wired to any screen. The bucket is private (`docs/SECURITY.md` §5: "never public buckets for sensitive PRISM information"), so a permanent public URL isn't available to store — only a signed URL, which expires.
+**Decision:** `EditProfileScreen` uses `expo-image-picker` (new dependency) to pick a photo and uploads it to `{user_id}/profile.<ext>` in `profile-photos` (`apps/mobile/lib/you/profilePhoto.ts`). `profiles.profile_photo_url` stores that bucket object path, not a URL; `useSignedProfilePhotoUrl()` resolves a fresh 1-hour signed URL on read wherever the photo is displayed. `packages/validation/src/profile.ts`'s `profileUpdateSchema` was relaxed from `z.string().url()` to a plain non-empty string to match what the column actually holds now.
+**Implications:** Any future reader of `profile_photo_url` must resolve it through Storage (`createSignedUrl`), never treat it as a directly-usable `<img src>`/`Image source` URL. Re-uploading a photo overwrites the same object path (`upsert: true`), so a user only ever has one stored profile photo at a time — consistent with the field being singular.
+
+### Delete Account is real, working UI up to the one boundary only a server can cross
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** Deleting a `auth.users` row requires the Supabase service-role key (or equivalent admin API access), which must never ship inside the mobile app (`docs/SECURITY.md` §14-15). No Supabase Edge Function exists yet (`supabase/functions/README.md` — "None exist yet"), so there is currently no safe way for the client to actually delete an account.
+**Decision:** `DeleteAccountScreen` is fully built — heading, plain-language consequences, a type-to-confirm ("DELETE") gate before the destructive button is enabled — and calls `supabase.functions.invoke('delete-account')`. Since that function isn't deployed, the call fails and the screen surfaces the same honest, non-technical error every other PRISM failure uses ("Couldn't delete your account. Please try again later.") rather than a fabricated success.
+**Implications:** A future milestone (or a backend-focused one) must add the `delete-account` Edge Function itself before this screen's primary action can succeed — tracked in `supabase/functions/README.md`. Nothing about the client changes when that ships; this is a real, complete UI blocked on real, documented server-side work, not a placeholder.
+
+### Accessibility, About, and Support show what's real; nothing is faked to fill out the spec's full field list
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** Three Screen Bible entries describe more than PRISM currently has a real answer for: Screen 61 (Accessibility) lists Text size / Increased contrast / Screen reader optimizations alongside Reduced motion, but only Reduced motion has a `settings` column and an actual code path (`ReducedMotionProvider`) that changes behavior; Screen 65 (About) calls for Privacy Policy / Terms / open-source acknowledgements, none of which have been published anywhere; Screen 66 (Support) calls for Help center / Contact support / Report a problem / Privacy concern, and no support email, ticketing system, or help-center URL has been established anywhere in the source material — inventing one (e.g. a `mailto:` address) would fabricate an organizational detail nobody specified.
+**Decision:** Accessibility ships only the Reduced motion toggle as an interactive control, with plain-language copy explaining that text size already follows the OS setting (default React Native font-scaling behavior, never overridden) and that every PRISM control already carries real accessibility labels/roles. About shows Privacy Policy/Terms/acknowledgements as informational rows marked "Not yet published"/"Not yet compiled" rather than linking anywhere. Support's four rows are real, themed, tappable list items that surface an honest "This isn't connected yet" toast rather than opening a fabricated link or address.
+**Implications:** When a real contrast mode, a published legal page, or a live support channel exists, each becomes a normal wiring task — swap the static row for a real link/toggle. Until then, nothing on these three screens claims to do something it can't.
+
+### The App Lock Screen (78) is a global overlay from the root layout, not a route
+
+**Date:** 2026-09-03
+**Status:** Active
+**Reason:** Screen 78 must appear over whatever the user was doing the moment the app is locked (any tab, any nested screen) and disappear back into that exact state on unlock — routing to a dedicated screen would require capturing and restoring the prior navigation state, an unnecessary complication for something that is fundamentally "cover the screen, then uncover it."
+**Decision:** `AppLockScreen` is rendered conditionally inside `app/_layout.tsx`'s `RootNavigator`, absolutely positioned over the entire `<Stack>`, driven by `useAppLockStore` (a new, deliberately non-persisted Zustand store — "is currently locked" must reset to `true` on every fresh process start) and `useAppLockGate()` (locks on first mount when App Lock is enabled, and again whenever `AppState` leaves `'active'`).
+**Implications:** Unlocking never triggers a navigation — the underlying `<Stack>` was never unmounted, so the user resumes on the exact screen they were viewing when the app was backgrounded. Any future screen that needs "cover everything, resume exactly where you were" behavior (e.g. a future biometric re-auth for a single sensitive action) should follow the same overlay-not-route pattern rather than introducing a new one.
+
 ## Product Structure
 
 ### The primary navigation is TODAY / CARE / JOURNEY / YOU

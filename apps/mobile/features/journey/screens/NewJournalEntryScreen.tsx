@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { PRISMHeader, PRISMIconButton, useTheme, useToast } from '@prism/ui';
 import type { JournalEntryCreateInput } from '@prism/validation';
+import { useModules } from '../../../lib/profile/queries';
 import { useCreateJournalEntry } from '../../../lib/journey/mutations';
 import { JournalEntryForm } from '../components/JournalEntryForm';
 
@@ -12,6 +13,9 @@ export function NewJournalEntryScreen() {
   const theme = useTheme();
   const createJournalEntry = useCreateJournalEntry();
   const { showToast } = useToast();
+  const { data: modules } = useModules();
+  const journalModule = modules?.find((m) => m.module_key === 'journal');
+  const showMood = journalModule?.configuration.mood_tracking_enabled !== false;
 
   const submit = async (values: JournalEntryCreateInput) => {
     try {
@@ -35,6 +39,7 @@ export function NewJournalEntryScreen() {
       <JournalEntryForm
         submitLabel="Save entry"
         submitting={createJournalEntry.isPending}
+        showMood={showMood}
         onSubmit={submit}
       />
     </View>

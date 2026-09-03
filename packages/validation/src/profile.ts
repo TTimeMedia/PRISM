@@ -13,7 +13,13 @@ export const profileUpdateSchema = z.object({
   gender: z.string().trim().max(100).nullable().optional(),
   birthday: isoDateSchema.nullable().optional(),
   journey_start_date: isoDateSchema.nullable().optional(),
-  profile_photo_url: z.string().url().nullable().optional(),
+  /**
+   * The `profile-photos` storage bucket is private (docs/SECURITY.md §5),
+   * so this stores the bucket object path (e.g. "{user_id}/profile.jpg"),
+   * not a public URL — a signed URL is generated on read. See
+   * docs/DECISIONS.md § YOU.
+   */
+  profile_photo_url: z.string().trim().min(1).max(500).nullable().optional(),
 });
 
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;

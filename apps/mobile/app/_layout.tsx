@@ -13,13 +13,16 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { Sora_600SemiBold, Sora_700Bold } from '@expo-google-fonts/sora';
-import { ThemeProvider, PRISMToastProvider } from '@prism/ui';
+import { ThemeProvider, ReducedMotionProvider, PRISMToastProvider } from '@prism/ui';
 import { GlobalErrorFallback } from '../components/GlobalErrorFallback';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { AuthProvider, useSession } from '../lib/auth/AuthProvider';
 import { queryClient } from '../lib/queryClient';
 import { useAppStore } from '../lib/store/appStore';
-import { useProfile } from '../lib/profile/queries';
+import { useAppLockStore } from '../lib/store/appLockStore';
+import { useProfile, useSettings } from '../lib/profile/queries';
+import { useAppLockGate } from '../lib/you/useAppLockGate';
+import { AppLockScreen } from '../features/you/screens/AppLockScreen';
 
 export { GlobalErrorFallback as ErrorBoundary };
 
@@ -85,24 +88,38 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
     }
   }, [ready]);
 
+  const showTabs = !showAuth && !!profile?.onboarding_completed;
+  const showOnboarding = !showAuth && !profile?.onboarding_completed;
+
+  // Screen 78 — App Lock Screen. Only relevant once inside the app
+  // proper; see lib/you/useAppLockGate.ts for the lock/re-lock logic.
+  const { data: settings } = useSettings();
+  const appLockEnabled = showTabs && !!settings?.app_lock_enabled;
+  useAppLockGate(appLockEnabled);
+  const isLocked = useAppLockStore((state) => state.isLocked);
+  const unlock = useAppLockStore((state) => state.unlock);
+  const showAppLockScreen = appLockEnabled && isLocked;
+
   if (!ready) {
     return null;
   }
 
-  const showTabs = !showAuth && !!profile?.onboarding_completed;
-  const showOnboarding = !showAuth && !profile?.onboarding_completed;
-
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={showTabs}>
-        <Stack.Screen name="(tabs)" />
-      </Stack.Protected>
-      <Stack.Protected guard={showOnboarding}>
-        <Stack.Screen name="(onboarding)" />
-      </Stack.Protected>
-      <Stack.Protected guard={showAuth}>
-        <Stack.Screen name="(auth)" />
-      </Stack.Protected>
-    </Stack>
+    <ReducedMotionProvider preference={!!settings?.reduced_motion}>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Protected guard={showTabs}>
+          <Stack.Screen name="(tabs)" />
+        </Stack.Protected>
+        <Stack.Protected guard={showOnboarding}>
+          <Stack.Screen name="(onboarding)" />
+        </Stack.Protected>
+        <Stack.Protected guard={showAuth}>
+          <Stack.Screen name="(auth)" />
+        </Stack.Protected>
+      </Stack>
+      {showAppLockScreen ? (
+        <AppLockScreen biometricEnabled={!!settings?.biometric_lock} onUnlock={unlock} />
+      ) : null}
+    </ReducedMotionProvider>
   );
 }

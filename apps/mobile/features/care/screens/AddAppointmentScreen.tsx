@@ -2,7 +2,8 @@ import React from 'react';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { PRISMHeader, PRISMIconButton, useTheme, useToast } from '@prism/ui';
+import { PRISMHeader, PRISMIconButton, PRISMSkeleton, useTheme, useToast } from '@prism/ui';
+import { useModules } from '../../../lib/profile/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
 import { AppointmentForm, type AppointmentFormSubmitValues } from '../components/AppointmentForm';
 
@@ -11,6 +12,11 @@ export function AddAppointmentScreen() {
   const theme = useTheme();
   const createAppointment = useCreateAppointment();
   const { showToast } = useToast();
+  const { data: modules, isLoading: modulesLoading } = useModules();
+  const appointmentsModule = modules?.find((m) => m.module_key === 'appointments');
+  const defaultReminderEnabled = Boolean(
+    appointmentsModule?.configuration.default_reminder_enabled,
+  );
 
   const submit = async (values: AppointmentFormSubmitValues) => {
     try {
@@ -31,11 +37,16 @@ export function AddAppointmentScreen() {
           </PRISMIconButton>
         }
       />
-      <AppointmentForm
-        submitLabel="Save appointment"
-        submitting={createAppointment.isPending}
-        onSubmit={submit}
-      />
+      {modulesLoading ? (
+        <PRISMSkeleton height={56} />
+      ) : (
+        <AppointmentForm
+          defaultValues={{ reminder_enabled: defaultReminderEnabled }}
+          submitLabel="Save appointment"
+          submitting={createAppointment.isPending}
+          onSubmit={submit}
+        />
+      )}
     </View>
   );
 }

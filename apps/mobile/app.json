@@ -37,6 +37,18 @@
           "resizeMode": "contain",
           "backgroundColor": "#0B0B0F"
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "PRISM uses Face ID to unlock the app you locked for your privacy."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "PRISM uses your photo library to set your profile photo."
+        }
       ]
     ],
     "experiments": {

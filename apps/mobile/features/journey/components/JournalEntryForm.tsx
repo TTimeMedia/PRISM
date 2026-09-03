@@ -10,6 +10,8 @@ export interface JournalEntryFormProps {
   defaultValues?: Partial<JournalEntryCreateInput>;
   submitLabel: string;
   submitting?: boolean;
+  /** From modules.journal.configuration.mood_tracking_enabled — Screen 57. */
+  showMood?: boolean;
   onSubmit: (values: JournalEntryCreateInput) => void;
 }
 
@@ -25,6 +27,7 @@ export function JournalEntryForm({
   defaultValues,
   submitLabel,
   submitting = false,
+  showMood = true,
   onSubmit,
 }: JournalEntryFormProps) {
   const { control, handleSubmit } = useForm<JournalEntryCreateInput>({
@@ -67,18 +70,20 @@ export function JournalEntryForm({
           />
         )}
       />
-      <Controller
-        control={control}
-        name="mood"
-        render={({ field }) => (
-          <PRISMInput
-            label="Mood"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-          />
-        )}
-      />
+      {showMood ? (
+        <Controller
+          control={control}
+          name="mood"
+          render={({ field }) => (
+            <PRISMInput
+              label="Mood"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
+      ) : null}
       <Controller
         control={control}
         name="date"

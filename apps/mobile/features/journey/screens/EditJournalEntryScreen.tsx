@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@prism/ui';
 import type { JournalEntryCreateInput } from '@prism/validation';
+import { useModules } from '../../../lib/profile/queries';
 import { useJournalEntry } from '../../../lib/journey/queries';
 import { useUpdateJournalEntry } from '../../../lib/journey/mutations';
 import { JournalEntryForm } from '../components/JournalEntryForm';
@@ -22,6 +23,9 @@ export function EditJournalEntryScreen() {
   const { data: entry, isLoading, isError, refetch } = useJournalEntry(id);
   const updateJournalEntry = useUpdateJournalEntry(id);
   const { showToast } = useToast();
+  const { data: modules } = useModules();
+  const journalModule = modules?.find((m) => m.module_key === 'journal');
+  const showMood = journalModule?.configuration.mood_tracking_enabled !== false;
 
   const submit = async (values: JournalEntryCreateInput) => {
     try {
@@ -57,6 +61,7 @@ export function EditJournalEntryScreen() {
           }}
           submitLabel="Save changes"
           submitting={updateJournalEntry.isPending}
+          showMood={showMood}
           onSubmit={submit}
         />
       )}

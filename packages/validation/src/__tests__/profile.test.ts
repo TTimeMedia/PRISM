@@ -31,4 +31,18 @@ describe('profileUpdateSchema', () => {
     const result = profileUpdateSchema.safeParse({ birthday: 'not-a-date' });
     expect(result.success).toBe(false);
   });
+
+  it('accepts a private-bucket object path for profile_photo_url, not just a URL', () => {
+    // The profile-photos bucket is private (docs/SECURITY.md §5), so
+    // this column stores a storage object path — see docs/DECISIONS.md § YOU.
+    const result = profileUpdateSchema.safeParse({
+      profile_photo_url: 'a1b2c3d4-user-id/profile.jpg',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects an empty string for profile_photo_url', () => {
+    const result = profileUpdateSchema.safeParse({ profile_photo_url: '' });
+    expect(result.success).toBe(false);
+  });
 });
