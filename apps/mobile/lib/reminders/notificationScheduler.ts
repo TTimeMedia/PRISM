@@ -1,7 +1,10 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import type { Appointment, Medication } from '@prism/types';
-import { resolveMedicationOccurrences, resolveNextAppointmentOccurrence } from './scheduleResolution';
+import {
+  resolveMedicationOccurrences,
+  resolveNextAppointmentOccurrence,
+} from './scheduleResolution';
 
 /**
  * Local-notification scheduling — "Reminder Created → Schedule
@@ -94,7 +97,11 @@ export async function scheduleMedicationReminders(
 ): Promise<string[]> {
   if (!isNotificationsSupported || !medication.reminder_enabled) return [];
 
-  const content = reminderContent(notificationPrivacy, medication.name, medication.dosage_text ?? undefined);
+  const content = reminderContent(
+    notificationPrivacy,
+    medication.name,
+    medication.dosage_text ?? undefined,
+  );
   const data = { type: 'medication', referenceId: medication.id };
   const config = medication.frequency_config;
 
@@ -148,7 +155,11 @@ export async function scheduleAppointmentReminder(
   const next = resolveNextAppointmentOccurrence(appointment);
   if (!next) return [];
 
-  const content = reminderContent(notificationPrivacy, appointment.title, appointment.provider ?? undefined);
+  const content = reminderContent(
+    notificationPrivacy,
+    appointment.title,
+    appointment.provider ?? undefined,
+  );
   const identifier = await Notifications.scheduleNotificationAsync({
     content: { ...content, data: { type: 'appointment', referenceId: appointment.id } },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date: next },
