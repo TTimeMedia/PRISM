@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Expo
+apps/mobile/.expo/
+apps/mobile/dist/
+apps/mobile/web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Environment variables — never commit real secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Supabase local dev
+supabase/.branches/
+supabase/.temp/
+
+# Testing / coverage
+coverage/
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
