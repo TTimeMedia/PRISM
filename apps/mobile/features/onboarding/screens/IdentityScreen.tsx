@@ -85,6 +85,8 @@ export function IdentityScreen() {
             value={field.value ?? ''}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
+            returnKeyType="done"
+            onSubmitEditing={handleSubmit(submit)}
           />
         )}
       />

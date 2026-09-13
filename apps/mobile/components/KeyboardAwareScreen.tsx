@@ -3,6 +3,16 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-na
 
 export interface KeyboardAwareScreenProps {
   children: React.ReactNode;
+  /**
+   * Rendered below the scrollable `children`, inside the same
+   * `KeyboardAvoidingView` but outside the `ScrollView` — for a primary
+   * action that's normally pinned to the bottom of the screen (e.g.
+   * OnboardingScreenLayout's Continue button) and must rise above the
+   * keyboard along with everything else, without becoming *part of* the
+   * scrollable content (which would leave it floating mid-screen on a
+   * short form instead of anchored at the bottom).
+   */
+  footer?: React.ReactNode;
 }
 
 /**
@@ -13,7 +23,7 @@ export interface KeyboardAwareScreenProps {
  * Journal Entry, and every other form screen should use this rather
  * than each re-implementing keyboard handling.
  */
-export function KeyboardAwareScreen({ children }: KeyboardAwareScreenProps) {
+export function KeyboardAwareScreen({ children, footer }: KeyboardAwareScreenProps) {
   return (
     <KeyboardAvoidingView
       style={styles.flex}
@@ -24,9 +34,14 @@ export function KeyboardAwareScreen({ children }: KeyboardAwareScreenProps) {
         style={styles.flex}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        // Scrolling (dragging the content, e.g. to tap something further
+        // down) also dismisses the keyboard — the standard way to tap
+        // "outside" a field without hunting for exact blank space.
+        keyboardDismissMode="on-drag"
       >
         {children}
       </ScrollView>
+      {footer}
     </KeyboardAvoidingView>
   );
 }

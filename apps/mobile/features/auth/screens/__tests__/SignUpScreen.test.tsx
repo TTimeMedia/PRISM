@@ -55,6 +55,23 @@ describe('SignUpScreen', () => {
     );
   });
 
+  it('pressing the keyboard\'s "Done" key on the last field submits the form — see docs/BUILD_STATUS.md keyboard-obstruction fix', async () => {
+    mockedSignUp.mockResolvedValue({
+      data: { user: null, session: null },
+      error: null,
+    } as never);
+    renderWithProviders(<SignUpScreen />);
+
+    fireEvent.changeText(screen.getByLabelText('Email'), 'user@example.com');
+    fireEvent.changeText(screen.getByLabelText('Password'), 'longenough');
+    fireEvent.changeText(screen.getByLabelText('Confirm password'), 'longenough');
+    fireEvent(screen.getByLabelText('Confirm password'), 'submitEditing');
+
+    await waitFor(() =>
+      expect(mockedSignUp).toHaveBeenCalledWith('user@example.com', 'longenough'),
+    );
+  });
+
   it('shows the approved error copy — never the raw backend message — on failure', async () => {
     mockedSignUp.mockResolvedValue({
       data: { user: null, session: null },

@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { getNextOnboardingStep } from '@prism/types';
-import { PRISMButton, PRISMDateInput, spacing } from '@prism/ui';
+import { PRISMDateInput } from '@prism/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
+import { ChipSelect } from '../components/ChipSelect';
+import { JOURNEY_DATE_CHOICE_OPTIONS } from '../optionLabels';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 
 /**
- * Screen 16 — Journey Date. Four distinct options, all but the first
- * resolving to no date — never a default is invented on the user's
- * behalf. See docs/SCREEN_BIBLE.md Screen 16.
+ * Screen 16 — Journey Date. Three mutually exclusive choices — "I don't
+ * know", "My journey doesn't have one specific start date", "I have a
+ * specific start date" — never a default is invented on the user's
+ * behalf. "Choose a date" only ever appears once "I have a specific
+ * start date" is selected; it previously showed unconditionally as the
+ * screen's primary action, which made it look required even for users
+ * who'd explicitly said they didn't have (or didn't know) a date. See
+ * docs/SCREEN_BIBLE.md Screen 16 and docs/DECISIONS.md § Onboarding.
  */
 export function JourneyDateScreen() {
   const updateProfile = useUpdateProfile();
+  const [choice, setChoice] = useState<string[]>([]);
   const [choosingDate, setChoosingDate] = useState(false);
   const [date, setDate] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,38 +49,22 @@ export function JourneyDateScreen() {
     );
   }
 
+  const selected = choice[0];
+  const hasChosenSpecificDate = selected === 'specific_date';
+
   return (
     <OnboardingScreenLayout
       title="Does your journey have a start date?"
-      primaryLabel="Choose a date"
-      onPrimaryPress={() => setChoosingDate(true)}
+      primaryLabel={hasChosenSpecificDate ? 'Choose a date' : 'Continue'}
+      onPrimaryPress={() => (hasChosenSpecificDate ? setChoosingDate(true) : submit(null))}
+      primaryLoading={isSubmitting}
     >
-      <View style={styles.actions}>
-        <PRISMButton
-          label="I don't know"
-          variant="secondary"
-          loading={isSubmitting}
-          onPress={() => submit(null)}
-        />
-        <PRISMButton
-          label="My journey doesn't have one specific start date"
-          variant="secondary"
-          loading={isSubmitting}
-          onPress={() => submit(null)}
-        />
-        <PRISMButton
-          label="Skip"
-          variant="tertiary"
-          loading={isSubmitting}
-          onPress={() => submit(null)}
-        />
-      </View>
+      <ChipSelect
+        options={JOURNEY_DATE_CHOICE_OPTIONS}
+        selected={choice}
+        onChange={setChoice}
+        multiple={false}
+      />
     </OnboardingScreenLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  actions: {
-    gap: spacing.xs,
-  },
-});

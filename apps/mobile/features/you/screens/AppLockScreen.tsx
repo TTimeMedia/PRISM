@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   PRISMButton,
-  PRISMInput,
+  PRISMPinInput,
   fontFamily,
   fontWeight,
   spacing,
@@ -59,11 +59,12 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
   };
 
   return (
-    <View
+    <KeyboardAvoidingView
       style={[
         styles.container,
         { backgroundColor: theme.colors.background, paddingTop: insets.top + spacing.xl },
       ]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
         <Text style={[styles.wordmark, { color: theme.colors.text.primary }]}>PRISM</Text>
@@ -78,22 +79,24 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
         ) : null}
 
         <View style={styles.pinBlock}>
-          <PRISMInput
+          <PRISMPinInput
             label="PIN"
             value={pin}
             onChangeText={(value) => {
               setPin(value);
               setError(undefined);
             }}
-            keyboardType="number-pad"
-            secureTextEntry
-            maxLength={8}
             error={error}
+            // iOS's number-pad keyboard has no built-in return/dismiss
+            // key — the Unlock button is the only way to submit, so it
+            // must stay reachable (the KeyboardAvoidingView above), not
+            // rely on a return key that doesn't exist for this keyboard type.
+            onSubmitEditing={submitPin}
           />
           <PRISMButton label="Unlock" variant="secondary" onPress={submitPin} disabled={!pin} />
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

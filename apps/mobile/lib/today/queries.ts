@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Appointment, JournalEntry, Medication, Milestone, TodayItem } from '@prism/types';
+import type { Appointment, Medication, Milestone, TodayItem } from '@prism/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules } from '../profile/queries';
@@ -17,6 +17,12 @@ import { buildTodayDashboard } from '../../services/personalization/engine';
  * A disabled module's records are never fetched at all, not merely
  * filtered client-side afterwards — the strongest form of "if a module
  * is disabled, its content must not surface anywhere" (docs/TECHNICAL_BIBLE.md §10).
+ *
+ * Journal entries are never fetched here — TODAY's personalization
+ * engine never classifies them into a card (see
+ * services/personalization/engine.ts's own header), so fetching them for
+ * this pipeline would only be wasted work. Journal stays reachable via
+ * JOURNEY → Journal and Timeline instead.
  */
 export function useTodayItems() {
   const { session } = useSession();
@@ -32,13 +38,12 @@ export function useTodayItems() {
       modules?.map((m) => `${m.module_key}:${m.enabled}`).join(','),
     ],
     queryFn: async () => {
-      const [appointments, milestones, journalEntries, medications] = await Promise.all([
+      const [appointments, milestones, medications] = await Promise.all([
         enabled.has('appointments') ? fetchAppointments() : Promise.resolve<Appointment[]>([]),
         enabled.has('milestones') ? fetchMilestones() : Promise.resolve<Milestone[]>([]),
-        enabled.has('journal') ? fetchJournalEntries() : Promise.resolve<JournalEntry[]>([]),
         enabled.has('medications') ? fetchMedications() : Promise.resolve<Medication[]>([]),
       ]);
-      return buildTodayDashboard({ appointments, milestones, journalEntries, medications });
+      return buildTodayDashboard({ appointments, milestones, medications });
     },
     enabled: !!userId && !modulesLoading,
   });
@@ -52,12 +57,6 @@ async function fetchAppointments(): Promise<Appointment[]> {
 
 async function fetchMilestones(): Promise<Milestone[]> {
   const { data, error } = await supabase.from('milestones').select('*');
-  if (error) throw error;
-  return data;
-}
-
-async function fetchJournalEntries(): Promise<JournalEntry[]> {
-  const { data, error } = await supabase.from('journal_entries').select('*');
   if (error) throw error;
   return data;
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
   PRISMButton,
@@ -14,6 +14,7 @@ import {
 } from '@prism/ui';
 import { supabase } from '../../../lib/supabase/client';
 import { signOut } from '../../../lib/auth/actions';
+import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 
 const CONFIRM_PHRASE = 'DELETE';
 
@@ -59,25 +60,29 @@ export function DeleteAccountScreen() {
           </PRISMIconButton>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.copy, { color: theme.colors.text.secondary }]}>
-          This permanently deletes your PRISM account and associated information. This cannot be
-          undone.
-        </Text>
-        <PRISMInput
-          label={`Type "${CONFIRM_PHRASE}" to confirm`}
-          value={confirmText}
-          onChangeText={setConfirmText}
-          autoCapitalize="characters"
-        />
-        <PRISMButton
-          label="Delete my account"
-          variant="destructive"
-          disabled={!canDelete}
-          loading={deleting}
-          onPress={handleDelete}
-        />
-      </ScrollView>
+      <KeyboardAwareScreen>
+        <View style={styles.content}>
+          <Text style={[styles.copy, { color: theme.colors.text.secondary }]}>
+            This permanently deletes your PRISM account and associated information. This cannot be
+            undone.
+          </Text>
+          <PRISMInput
+            label={`Type "${CONFIRM_PHRASE}" to confirm`}
+            value={confirmText}
+            onChangeText={setConfirmText}
+            autoCapitalize="characters"
+            returnKeyType="done"
+            onSubmitEditing={() => Keyboard.dismiss()}
+          />
+          <PRISMButton
+            label="Delete my account"
+            variant="destructive"
+            disabled={!canDelete}
+            loading={deleting}
+            onPress={handleDelete}
+          />
+        </View>
+      </KeyboardAwareScreen>
     </View>
   );
 }

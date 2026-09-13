@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { PRISMChip, spacing } from '@prism/ui';
+import { PRISMChipGroup } from '@prism/ui';
 
 export interface ChipSelectOption {
   value: string;
@@ -15,36 +14,13 @@ export interface ChipSelectProps {
   multiple?: boolean;
 }
 
-/** Wrapping chip group for onboarding's multi/single-select screens. */
+/**
+ * Wrapping chip group for onboarding's multi/single-select screens. Thin
+ * adapter over the shared `PRISMChipGroup` (packages/ui), keeping
+ * onboarding's existing array-value, no-own-label call-site contract.
+ */
 export function ChipSelect({ options, selected, onChange, multiple = true }: ChipSelectProps) {
-  const toggle = (value: string) => {
-    if (multiple) {
-      onChange(
-        selected.includes(value) ? selected.filter((v) => v !== value) : [...selected, value],
-      );
-    } else {
-      onChange(selected.includes(value) ? [] : [value]);
-    }
-  };
-
   return (
-    <View style={styles.wrap}>
-      {options.map((option) => (
-        <PRISMChip
-          key={option.value}
-          label={option.label}
-          selected={selected.includes(option.value)}
-          onPress={() => toggle(option.value)}
-        />
-      ))}
-    </View>
+    <PRISMChipGroup options={options} value={selected} onChange={onChange} multiple={multiple} />
   );
 }
-
-const styles = StyleSheet.create({
-  wrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-});

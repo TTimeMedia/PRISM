@@ -1,6 +1,6 @@
 import React from 'react';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { Controller, useForm } from 'react-hook-form';
 import {
@@ -8,8 +8,8 @@ import {
   PRISMDateInput,
   PRISMHeader,
   PRISMIconButton,
-  PRISMInput,
   PRISMTextArea,
+  PRISMTimeInput,
   spacing,
   useTheme,
   useToast,
@@ -18,7 +18,9 @@ import { injectionCreateSchema } from '@prism/validation';
 import { useMedications } from '../../../lib/care/queries';
 import { useCreateInjection } from '../../../lib/care/mutations';
 import { toISODateTime, nowDateAndTime } from '../../../lib/care/dateTime';
+import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from '../components/ChipField';
+import { MedicationPicker } from '../components/MedicationPicker';
 import { INJECTION_SITE_OPTIONS } from '../optionLabels';
 
 interface LogInjectionFormValues {
@@ -68,67 +70,68 @@ export function LogInjectionScreen() {
           </PRISMIconButton>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
-        {medicationOptions.length > 0 ? (
+      <KeyboardAwareScreen>
+        <View style={styles.content}>
+          {medicationOptions.length > 0 ? (
+            <Controller
+              control={control}
+              name="medication_id"
+              render={({ field }) => (
+                <MedicationPicker
+                  label="Medication"
+                  options={medicationOptions}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          ) : null}
           <Controller
             control={control}
-            name="medication_id"
+            name="date"
+            render={({ field }) => (
+              <PRISMDateInput label="Date" value={field.value} onChangeText={field.onChange} />
+            )}
+          />
+          <Controller
+            control={control}
+            name="time"
+            render={({ field }) => (
+              <PRISMTimeInput label="Time" value={field.value} onChangeText={field.onChange} />
+            )}
+          />
+          <Controller
+            control={control}
+            name="site"
             render={({ field }) => (
               <ChipField
-                label="Medication"
-                options={medicationOptions}
+                label="Site"
+                options={INJECTION_SITE_OPTIONS}
                 value={field.value}
                 onChange={field.onChange}
               />
             )}
           />
-        ) : null}
-        <Controller
-          control={control}
-          name="date"
-          render={({ field }) => (
-            <PRISMDateInput label="Date" value={field.value} onChangeText={field.onChange} />
-          )}
-        />
-        <Controller
-          control={control}
-          name="time"
-          render={({ field }) => (
-            <PRISMInput
-              label="Time"
-              placeholder="HH:mm"
-              value={field.value}
-              onChangeText={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="site"
-          render={({ field }) => (
-            <ChipField
-              label="Site"
-              options={INJECTION_SITE_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="notes"
-          render={({ field }) => (
-            <PRISMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
-          )}
-        />
-        <View style={styles.submit}>
-          <PRISMButton
-            label="Save injection"
-            onPress={handleSubmit(submit)}
-            loading={createInjection.isPending}
+          <Controller
+            control={control}
+            name="notes"
+            render={({ field }) => (
+              <PRISMTextArea
+                label="Notes"
+                value={field.value ?? ''}
+                onChangeText={field.onChange}
+              />
+            )}
           />
+          <View style={styles.submit}>
+            <PRISMButton
+              label="Save injection"
+              onPress={handleSubmit(submit)}
+              loading={createInjection.isPending}
+            />
+          </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </View>
   );
 }

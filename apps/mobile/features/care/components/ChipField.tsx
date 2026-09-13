@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { PRISMChip, spacing, type, useTheme } from '@prism/ui';
+import { PRISMChipGroup } from '@prism/ui';
 
 export interface ChipFieldOption {
   value: string;
@@ -14,39 +13,18 @@ export interface ChipFieldProps {
   onChange: (value: string | null) => void;
 }
 
-/** A labeled single-select chip row — Form, Frequency, Injection Site, Log Status. */
+/**
+ * A labeled single-select chip row — Form, Frequency, Injection Site, Log
+ * Status. Thin adapter over the shared `PRISMChipGroup` (packages/ui),
+ * keeping CARE's existing single-nullable-value call-site contract.
+ */
 export function ChipField({ label, options, value, onChange }: ChipFieldProps) {
-  const theme = useTheme();
-
   return (
-    <View style={styles.container}>
-      <Text style={[styles.label, { color: theme.colors.text.secondary }]}>{label}</Text>
-      <View style={styles.wrap}>
-        {options.map((option) => (
-          <PRISMChip
-            key={option.value}
-            label={option.label}
-            selected={value === option.value}
-            onPress={() => onChange(value === option.value ? null : option.value)}
-          />
-        ))}
-      </View>
-    </View>
+    <PRISMChipGroup
+      label={label}
+      options={options}
+      value={value ? [value] : []}
+      onChange={(next) => onChange(next[0] ?? null)}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: spacing.md,
-  },
-  label: {
-    fontSize: type.bodyS.fontSize,
-    lineHeight: type.bodyS.lineHeight,
-    marginBottom: spacing.sm,
-  },
-  wrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-});

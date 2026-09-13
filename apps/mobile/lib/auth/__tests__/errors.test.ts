@@ -1,4 +1,4 @@
-import { AuthApiError } from '@supabase/supabase-js';
+import { AuthApiError, AuthRetryableFetchError } from '@supabase/supabase-js';
 import { getAuthErrorMessage, isEmailNotConfirmedError } from '../errors';
 
 describe('getAuthErrorMessage', () => {
@@ -28,9 +28,28 @@ describe('getAuthErrorMessage', () => {
     );
   });
 
-  it('falls back to the generic copy for a non-auth error (e.g. a network failure)', () => {
-    expect(getAuthErrorMessage(new TypeError('Network request failed'))).toBe(
+  it('falls back to the generic copy for a non-auth error', () => {
+    expect(getAuthErrorMessage(new TypeError('Unexpected'))).toBe(
       "Something went wrong. Your information wasn't changed.",
+    );
+  });
+
+  /**
+   * Regression coverage: when the request never reaches Supabase at all
+   * (wrong EXPO_PUBLIC_SUPABASE_URL, no backend running, DNS/TLS/connection
+   * failure — e.g. a physical device using `127.0.0.1`, which only ever
+   * resolves to the device itself, not the developer's machine), auth-js
+   * throws `AuthRetryableFetchError`, NOT `AuthApiError`. Login, sign-up,
+   * and password reset all go through this same `getAuthErrorMessage`, so
+   * this one case previously produced the exact same unhelpful generic
+   * message as an actual invalid password — indistinguishable to the user,
+   * and to whoever's debugging it, from every other failure. This must
+   * surface a distinct, actionable message instead.
+   */
+  it('gives a distinct, actionable message when the request never reached the server', () => {
+    const error = new AuthRetryableFetchError('Failed to fetch', 0);
+    expect(getAuthErrorMessage(error)).toBe(
+      "Can't reach PRISM's servers. Check your connection and try again.",
     );
   });
 });

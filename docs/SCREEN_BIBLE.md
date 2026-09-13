@@ -152,7 +152,7 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 
 ### Screen 16 — Journey Date
 
-**Heading:** "Does your journey have a start date?" **Content:** Choose a date · I don't know · My journey doesn't have one specific start date · Skip. No default date is ever invented on the user's behalf.
+**Heading:** "Does your journey have a start date?" **Content:** three mutually exclusive choices — I don't know · My journey doesn't have one specific start date · I have a specific start date. "Choose a date" only appears once the third is selected — it is never shown as the default/primary action, since that reads as required even when the user has just said they don't have (or don't know) one. No default date is ever invented on the user's behalf.
 
 ### Screen 17 — Privacy Setup
 

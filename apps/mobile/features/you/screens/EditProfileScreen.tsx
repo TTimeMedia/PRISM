@@ -1,6 +1,6 @@
 import React from 'react';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
   PRISMErrorState,
@@ -13,6 +13,7 @@ import {
 } from '@prism/ui';
 import type { ProfileUpdateInput } from '@prism/validation';
 import { useProfile, useUpdateProfile } from '../../../lib/profile/queries';
+import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ProfileForm } from '../components/ProfileForm';
 
 /** Screen 55 — Edit Profile. Every field is optional; saving updates only what changed. */
@@ -46,20 +47,22 @@ export function EditProfileScreen() {
       ) : isError || !profile ? (
         <PRISMErrorState onRetry={() => refetch()} />
       ) : (
-        <ScrollView contentContainerStyle={styles.content}>
-          <ProfileForm
-            defaultValues={{
-              display_name: profile.display_name ?? '',
-              pronouns: profile.pronouns ?? '',
-              gender: profile.gender ?? '',
-              birthday: profile.birthday ?? '',
-              journey_start_date: profile.journey_start_date ?? '',
-              profile_photo_url: profile.profile_photo_url ?? null,
-            }}
-            submitting={updateProfile.isPending}
-            onSubmit={submit}
-          />
-        </ScrollView>
+        <KeyboardAwareScreen>
+          <View style={styles.content}>
+            <ProfileForm
+              defaultValues={{
+                display_name: profile.display_name ?? '',
+                pronouns: profile.pronouns ?? '',
+                gender: profile.gender ?? '',
+                birthday: profile.birthday ?? '',
+                journey_start_date: profile.journey_start_date ?? '',
+                profile_photo_url: profile.profile_photo_url ?? null,
+              }}
+              submitting={updateProfile.isPending}
+              onSubmit={submit}
+            />
+          </View>
+        </KeyboardAwareScreen>
       )}
     </View>
   );

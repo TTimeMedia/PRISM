@@ -81,7 +81,6 @@ describe('calculateTodayItems — appointments', () => {
       {
         appointments: [makeAppointment({ starts_at: NOW.toISOString() })],
         milestones: [],
-        journalEntries: [],
         medications: [],
       },
       NOW,
@@ -96,7 +95,6 @@ describe('calculateTodayItems — appointments', () => {
       {
         appointments: [makeAppointment({ starts_at: future.toISOString() })],
         milestones: [],
-        journalEntries: [],
         medications: [],
       },
       NOW,
@@ -110,7 +108,6 @@ describe('calculateTodayItems — appointments', () => {
       {
         appointments: [makeAppointment({ starts_at: past.toISOString() })],
         milestones: [],
-        journalEntries: [],
         medications: [],
       },
       NOW,
@@ -124,7 +121,6 @@ describe('calculateTodayItems — appointments', () => {
       {
         appointments: [makeAppointment({ starts_at: farFuture.toISOString() })],
         milestones: [],
-        journalEntries: [],
         medications: [],
       },
       NOW,
@@ -133,34 +129,47 @@ describe('calculateTodayItems — appointments', () => {
   });
 });
 
-describe('calculateTodayItems — milestones and journal', () => {
+describe('calculateTodayItems — milestones', () => {
   it('classifies a recent milestone as meaningful', () => {
     const items = calculateTodayItems(
-      { appointments: [], milestones: [makeMilestone()], journalEntries: [], medications: [] },
+      { appointments: [], milestones: [makeMilestone()], medications: [] },
       NOW,
     );
     expect(items[0].bucket).toBe('meaningful');
   });
+});
 
-  it('classifies a recent journal entry as recent', () => {
-    const items = calculateTodayItems(
-      { appointments: [], milestones: [], journalEntries: [makeJournalEntry()], medications: [] },
-      NOW,
-    );
-    expect(items[0].bucket).toBe('recent');
+describe('calculateTodayItems — journal entries never become a TODAY card', () => {
+  // Regression: a real, freshly-created journal entry
+  // ("Today I Used My App For The First Time") was surfacing as TODAY's
+  // main content card. TODAY's card types are Medication (due today),
+  // Appointment (upcoming), and Journey (recent milestone) — see
+  // docs/SCREEN_BIBLE.md Screen 20. Journal is not one of them; it stays
+  // reachable via JOURNEY → Journal and Timeline instead. RelevantRecords
+  // no longer even accepts journal entries as an input — the pipeline
+  // has no way to turn one into a TodayItem, so this isn't just a
+  // filtered-out case, it's structurally impossible.
+  it('accepts no journalEntries field at all — TypeScript itself would reject one', () => {
+    const records: Parameters<typeof calculateTodayItems>[0] = {
+      appointments: [],
+      milestones: [],
+      medications: [],
+    };
+    // @ts-expect-error — journalEntries is not part of RelevantRecords.
+    records.journalEntries = [makeJournalEntry()];
+    expect(calculateTodayItems(records, NOW)).toEqual([]);
   });
 
-  it('falls back to a generic title for an untitled journal entry — never blank, never invented content', () => {
+  it('a milestone and an appointment on the same day as a journal entry still surface normally — the fix is scoped to journal only', () => {
     const items = calculateTodayItems(
       {
-        appointments: [],
-        milestones: [],
-        journalEntries: [makeJournalEntry({ title: null })],
+        appointments: [makeAppointment({ starts_at: NOW.toISOString() })],
+        milestones: [makeMilestone()],
         medications: [],
       },
       NOW,
     );
-    expect(items[0].title).toBe('Journal entry');
+    expect(items.map((i) => i.moduleKey).sort()).toEqual(['appointments', 'milestones']);
   });
 });
 
@@ -170,7 +179,6 @@ describe('calculateTodayItems — medications', () => {
       {
         appointments: [],
         milestones: [],
-        journalEntries: [],
         medications: [
           makeMedication({ frequency_type: 'daily', frequency_config: { time_of_day: '09:00' } }),
         ],
@@ -186,7 +194,6 @@ describe('calculateTodayItems — medications', () => {
       {
         appointments: [],
         milestones: [],
-        journalEntries: [],
         medications: [
           makeMedication({
             frequency_type: 'weekly',
@@ -201,7 +208,7 @@ describe('calculateTodayItems — medications', () => {
 
   it('never manufactures a medication card when there is no frequency set', () => {
     const items = calculateTodayItems(
-      { appointments: [], milestones: [], journalEntries: [], medications: [makeMedication()] },
+      { appointments: [], milestones: [], medications: [makeMedication()] },
       NOW,
     );
     expect(items).toHaveLength(0);
@@ -218,7 +225,6 @@ describe('rankItems', () => {
           makeAppointment({ id: 'today-apt', starts_at: NOW.toISOString() }),
         ],
         milestones: [makeMilestone()],
-        journalEntries: [],
         medications: [],
       },
       NOW,
@@ -230,10 +236,7 @@ describe('rankItems', () => {
 
 describe('filterIrrelevantItems', () => {
   it('drops any item explicitly marked hidden', () => {
-    const items = calculateTodayItems(
-      { appointments: [], milestones: [], journalEntries: [], medications: [] },
-      NOW,
-    );
+    const items = calculateTodayItems({ appointments: [], milestones: [], medications: [] }, NOW);
     const withHidden = [
       ...items,
       {
@@ -253,19 +256,15 @@ describe('buildTodayDashboard', () => {
   it('never manufactures content — returns an empty array when there is nothing relevant', () => {
     // "Do not manufacture content when the user has nothing to show." —
     // docs/MASTER_BUILD_SPEC.md §31, Non-Negotiable Rule 11.
-    expect(
-      buildTodayDashboard(
-        { appointments: [], milestones: [], journalEntries: [], medications: [] },
-        NOW,
-      ),
-    ).toEqual([]);
+    expect(buildTodayDashboard({ appointments: [], milestones: [], medications: [] }, NOW)).toEqual(
+      [],
+    );
   });
 
   it('is deterministic for the same input and `now`', () => {
     const records = {
       appointments: [makeAppointment()],
       milestones: [makeMilestone()],
-      journalEntries: [],
       medications: [],
     };
     expect(buildTodayDashboard(records, NOW)).toEqual(buildTodayDashboard(records, NOW));

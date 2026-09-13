@@ -1,6 +1,5 @@
 import type {
   Appointment,
-  JournalEntry,
   Medication,
   Milestone,
   ModuleKey,
@@ -48,7 +47,6 @@ function isSameDay(a: Date, b: Date): boolean {
 export interface RelevantRecords {
   appointments: Appointment[];
   milestones: Milestone[];
-  journalEntries: JournalEntry[];
   medications: Medication[];
 }
 
@@ -128,32 +126,22 @@ function classifyMilestones(milestones: Milestone[], now: Date): TodayItem[] {
     .filter((item): item is TodayItem => item !== null);
 }
 
-function classifyJournalEntries(entries: JournalEntry[], now: Date): TodayItem[] {
-  return entries
-    .map((entry): TodayItem | null => {
-      const date = new Date(entry.date);
-      const daysAgo = daysBetween(date, now);
-      if (daysAgo < 0 || daysAgo > RECENT_WINDOW_DAYS) return null;
-      return {
-        id: `journal-${entry.id}`,
-        moduleKey: 'journal' as ModuleKey,
-        bucket: 'recent' as RelevanceBucket,
-        sourceId: entry.id,
-        title: entry.title ?? 'Journal entry',
-        subtitle: entry.mood ?? undefined,
-        at: entry.date,
-      };
-    })
-    .filter((item): item is TodayItem => item !== null);
-}
-
-/** getRelevantRecords → calculateTodayItems (unfiltered — records are assumed already module-scoped by the caller). */
+/**
+ * getRelevantRecords → calculateTodayItems (unfiltered — records are
+ * assumed already module-scoped by the caller).
+ *
+ * Journal entries are deliberately never classified into a TodayItem —
+ * TODAY's card types are Medication (due today), Appointment (upcoming),
+ * and Journey (recent milestone) (docs/SCREEN_BIBLE.md Screen 20); a
+ * journal entry's own private title/content is not one of them, so it
+ * must never become the dashboard's headline content. Journal stays
+ * reachable via JOURNEY → Journal and Timeline instead.
+ */
 export function calculateTodayItems(records: RelevantRecords, now: Date = new Date()): TodayItem[] {
   return [
     ...classifyMedications(records.medications, now),
     ...classifyAppointments(records.appointments, now),
     ...classifyMilestones(records.milestones, now),
-    ...classifyJournalEntries(records.journalEntries, now),
   ];
 }
 

@@ -81,6 +81,8 @@ export function SignInScreen() {
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
+            returnKeyType="done"
+            onSubmitEditing={handleSubmit(onSubmit)}
           />
         )}
       />

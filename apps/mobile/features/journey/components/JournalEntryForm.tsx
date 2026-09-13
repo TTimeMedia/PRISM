@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { journalEntryCreateSchema, type JournalEntryCreateInput } from '@prism/validation';
 import { PRISMButton, PRISMDateInput, PRISMInput, PRISMTextArea, spacing } from '@prism/ui';
+import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { TagInput } from './TagInput';
 
 export interface JournalEntryFormProps {
@@ -43,69 +44,71 @@ export function JournalEntryForm({
   });
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      <Controller
-        control={control}
-        name="title"
-        render={({ field }) => (
-          <PRISMInput
-            label="Title"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="content"
-        render={({ field, fieldState }) => (
-          <PRISMTextArea
-            label="What's on your mind?"
-            minLines={10}
-            value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            error={fieldState.error?.message}
-          />
-        )}
-      />
-      {showMood ? (
+    <KeyboardAwareScreen>
+      <View style={styles.content}>
         <Controller
           control={control}
-          name="mood"
+          name="title"
           render={({ field }) => (
             <PRISMInput
-              label="Mood"
+              label="Title"
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
             />
           )}
         />
-      ) : null}
-      <Controller
-        control={control}
-        name="date"
-        render={({ field, fieldState }) => (
-          <PRISMDateInput
-            label="Date"
-            value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            error={fieldState.error?.message}
+        <Controller
+          control={control}
+          name="content"
+          render={({ field, fieldState }) => (
+            <PRISMTextArea
+              label="What's on your mind?"
+              minLines={10}
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+        {showMood ? (
+          <Controller
+            control={control}
+            name="mood"
+            render={({ field }) => (
+              <PRISMInput
+                label="Mood"
+                value={field.value ?? ''}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+              />
+            )}
           />
-        )}
-      />
-      <Controller
-        control={control}
-        name="tags"
-        render={({ field }) => <TagInput value={field.value} onChange={field.onChange} />}
-      />
-      <View style={styles.submit}>
-        <PRISMButton label={submitLabel} onPress={handleSubmit(onSubmit)} loading={submitting} />
+        ) : null}
+        <Controller
+          control={control}
+          name="date"
+          render={({ field, fieldState }) => (
+            <PRISMDateInput
+              label="Date"
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="tags"
+          render={({ field }) => <TagInput value={field.value} onChange={field.onChange} />}
+        />
+        <View style={styles.submit}>
+          <PRISMButton label={submitLabel} onPress={handleSubmit(onSubmit)} loading={submitting} />
+        </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScreen>
   );
 }
 

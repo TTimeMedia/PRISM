@@ -1,6 +1,6 @@
 import React from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { medicationLogCreateSchema, type MedicationLogCreateInput } from '@prism/validation';
 import {
@@ -8,8 +8,8 @@ import {
   PRISMDateInput,
   PRISMHeader,
   PRISMIconButton,
-  PRISMInput,
   PRISMTextArea,
+  PRISMTimeInput,
   spacing,
   useTheme,
   useToast,
@@ -17,6 +17,7 @@ import {
 import { ArrowLeft } from 'lucide-react-native';
 import { useCreateMedicationLog } from '../../../lib/care/mutations';
 import { toISODateTime, nowDateAndTime } from '../../../lib/care/dateTime';
+import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from '../components/ChipField';
 import { MEDICATION_LOG_STATUS_OPTIONS } from '../optionLabels';
 
@@ -70,54 +71,55 @@ export function LogMedicationDoseScreen() {
           </PRISMIconButton>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
-        <Controller
-          control={control}
-          name="status"
-          render={({ field }) => (
-            <ChipField
-              label="Status"
-              options={MEDICATION_LOG_STATUS_OPTIONS}
-              value={field.value}
-              onChange={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="date"
-          render={({ field }) => (
-            <PRISMDateInput label="Date" value={field.value} onChangeText={field.onChange} />
-          )}
-        />
-        <Controller
-          control={control}
-          name="time"
-          render={({ field }) => (
-            <PRISMInput
-              label="Time"
-              placeholder="HH:mm"
-              value={field.value}
-              onChangeText={field.onChange}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="notes"
-          render={({ field }) => (
-            <PRISMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
-          )}
-        />
-        <View style={styles.submit}>
-          <PRISMButton
-            label="Save entry"
-            onPress={handleSubmit(submit)}
-            loading={createLog.isPending}
-            disabled={!status}
+      <KeyboardAwareScreen>
+        <View style={styles.content}>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <ChipField
+                label="Status"
+                options={MEDICATION_LOG_STATUS_OPTIONS}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            )}
           />
+          <Controller
+            control={control}
+            name="date"
+            render={({ field }) => (
+              <PRISMDateInput label="Date" value={field.value} onChangeText={field.onChange} />
+            )}
+          />
+          <Controller
+            control={control}
+            name="time"
+            render={({ field }) => (
+              <PRISMTimeInput label="Time" value={field.value} onChangeText={field.onChange} />
+            )}
+          />
+          <Controller
+            control={control}
+            name="notes"
+            render={({ field }) => (
+              <PRISMTextArea
+                label="Notes"
+                value={field.value ?? ''}
+                onChangeText={field.onChange}
+              />
+            )}
+          />
+          <View style={styles.submit}>
+            <PRISMButton
+              label="Save entry"
+              onPress={handleSubmit(submit)}
+              loading={createLog.isPending}
+              disabled={!status}
+            />
+          </View>
         </View>
-      </ScrollView>
+      </KeyboardAwareScreen>
     </View>
   );
 }

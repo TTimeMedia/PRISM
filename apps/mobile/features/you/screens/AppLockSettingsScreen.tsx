@@ -7,7 +7,7 @@ import {
   PRISMErrorState,
   PRISMHeader,
   PRISMIconButton,
-  PRISMInput,
+  PRISMPinInput,
   PRISMSection,
   PRISMSheet,
   PRISMSkeleton,
@@ -127,24 +127,14 @@ export function AppLockSettingsScreen() {
         onRequestClose={() => setPinModalVisible(false)}
       >
         <View style={styles.pinFields}>
-          <PRISMInput
+          <PRISMPinInput
             label="New PIN"
             helperText={pinError ? undefined : 'Used to unlock PRISM. Stored only on this device.'}
             value={newPin}
             onChangeText={setNewPin}
-            keyboardType="number-pad"
-            secureTextEntry
-            maxLength={8}
             error={pinError}
           />
-          <PRISMInput
-            label="Confirm PIN"
-            value={confirmPin}
-            onChangeText={setConfirmPin}
-            keyboardType="number-pad"
-            secureTextEntry
-            maxLength={8}
-          />
+          <PRISMPinInput label="Confirm PIN" value={confirmPin} onChangeText={setConfirmPin} />
           <View style={styles.sheetActions}>
             <PRISMButton label="Save" onPress={savePin} />
             <PRISMButton

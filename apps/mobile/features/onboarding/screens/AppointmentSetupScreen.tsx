@@ -8,11 +8,13 @@ import {
   deriveAppointmentTitle,
   type AppointmentSetupInput,
 } from '@prism/validation';
-import { PRISMDateInput, PRISMInput, PRISMSwitch } from '@prism/ui';
+import { PRISMDateInput, PRISMInput, PRISMSwitch, PRISMTimeInput } from '@prism/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useProfile, useSetModuleEnabled, useUpdateProfile } from '../../../lib/profile/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
+import { ChipField } from '../../care/components/ChipField';
+import { SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS } from '../../care/optionLabels';
 
 /**
  * Screen 15 — Appointment Setup. Only shown when intent included
@@ -101,11 +103,11 @@ export function AppointmentSetupScreen() {
         control={control}
         name="category"
         render={({ field }) => (
-          <PRISMInput
+          <ChipField
             label="Appointment type"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
+            options={SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS}
+            value={field.value ?? null}
+            onChange={field.onChange}
           />
         )}
       />
@@ -126,9 +128,8 @@ export function AppointmentSetupScreen() {
         control={control}
         name="time"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRISMTimeInput
             label="Time"
-            placeholder="HH:mm"
             value={field.value ?? ''}
             onChangeText={field.onChange}
             onBlur={field.onBlur}

@@ -26,6 +26,17 @@ export const JOURNEY_STAGE_CHIP_OPTIONS: ChipSelectOption[] = [
   { value: 'prefer_not_to_say', label: 'Prefer not to say' },
 ];
 
+/**
+ * Screen 16 — three mutually exclusive choices. "I have a specific start
+ * date" is the only one that leads anywhere else (to the date picker) —
+ * see JourneyDateScreen.tsx.
+ */
+export const JOURNEY_DATE_CHOICE_OPTIONS: ChipSelectOption[] = [
+  { value: 'unknown', label: "I don't know" },
+  { value: 'no_specific_date', label: "My journey doesn't have one specific start date" },
+  { value: 'specific_date', label: 'I have a specific start date' },
+];
+
 /** Screen 12 — exact copy from docs/SCREEN_BIBLE.md Screen 12. */
 export const CARE_SETUP_CHIP_OPTIONS: ChipSelectOption[] = [
   { value: 'hormones', label: 'Hormones' },

@@ -1,5 +1,13 @@
 import React from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { componentRadius } from '../tokens/radius';
@@ -23,36 +31,50 @@ export function PRISMSheet({ visible, title, onRequestClose, children }: PRISMSh
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onRequestClose}>
-      <Pressable
-        style={styles.backdrop}
-        accessibilityLabel="Close"
-        accessibilityRole="button"
-        onPress={onRequestClose}
+      {/*
+        A bottom sheet's content is otherwise pinned by `justifyContent:
+        'flex-end'` alone, which the keyboard can cover — this rises the
+        whole sheet above the keyboard while a field inside it is
+        focused, without changing anything about its resting position.
+      */}
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <Pressable
-          style={[
-            styles.sheet,
-            { backgroundColor: theme.colors.surface, paddingBottom: insets.bottom + spacing.lg },
-          ]}
-          onPress={(e) => e.stopPropagation()}
+          style={styles.backdrop}
+          accessibilityLabel="Close"
+          accessibilityRole="button"
+          onPress={onRequestClose}
         >
-          <View style={[styles.handle, { backgroundColor: theme.colors.border.strong }]} />
-          {title ? (
-            <Text
-              accessibilityRole="header"
-              style={[styles.title, { color: theme.colors.text.primary }]}
-            >
-              {title}
-            </Text>
-          ) : null}
-          {children}
+          <Pressable
+            style={[
+              styles.sheet,
+              { backgroundColor: theme.colors.surface, paddingBottom: insets.bottom + spacing.lg },
+            ]}
+            onPress={(e) => e.stopPropagation()}
+          >
+            <View style={[styles.handle, { backgroundColor: theme.colors.border.strong }]} />
+            {title ? (
+              <Text
+                accessibilityRole="header"
+                style={[styles.title, { color: theme.colors.text.primary }]}
+              >
+                {title}
+              </Text>
+            ) : null}
+            {children}
+          </Pressable>
         </Pressable>
-      </Pressable>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

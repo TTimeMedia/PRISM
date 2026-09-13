@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -8,9 +8,11 @@ import {
   PRISMInput,
   PRISMSwitch,
   PRISMTextArea,
+  PRISMTimeInput,
   spacing,
 } from '@prism/ui';
 import { appointmentFormSchema, type AppointmentFormInput } from '@prism/validation';
+import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from './ChipField';
 import { SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS } from '../optionLabels';
 import { toISODateTime } from '../../../lib/care/dateTime';
@@ -69,100 +71,101 @@ export function AppointmentForm({
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      <Controller
-        control={control}
-        name="title"
-        render={({ field, fieldState }) => (
-          <PRISMInput
-            label="Title"
-            value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            error={fieldState.error?.message}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="provider"
-        render={({ field }) => (
-          <PRISMInput
-            label="Provider"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="category"
-        render={({ field }) => (
-          <ChipField
-            label="Category"
-            options={SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS}
-            value={field.value ?? null}
-            onChange={field.onChange}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="date"
-        render={({ field, fieldState }) => (
-          <PRISMDateInput
-            label="Date"
-            value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            error={fieldState.error?.message}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="time"
-        render={({ field }) => (
-          <PRISMInput
-            label="Time"
-            placeholder="HH:mm"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="location"
-        render={({ field }) => (
-          <PRISMInput
-            label="Location"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="reminder_enabled"
-        render={({ field }) => (
-          <PRISMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
-        )}
-      />
-      <Controller
-        control={control}
-        name="notes"
-        render={({ field }) => (
-          <PRISMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
-        )}
-      />
-      <View style={styles.submit}>
-        <PRISMButton label={submitLabel} onPress={handleSubmit(submit)} loading={submitting} />
+    <KeyboardAwareScreen>
+      <View style={styles.content}>
+        <Controller
+          control={control}
+          name="title"
+          render={({ field, fieldState }) => (
+            <PRISMInput
+              label="Title"
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="provider"
+          render={({ field }) => (
+            <PRISMInput
+              label="Provider"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="category"
+          render={({ field }) => (
+            <ChipField
+              label="Category"
+              options={SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS}
+              value={field.value ?? null}
+              onChange={field.onChange}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="date"
+          render={({ field, fieldState }) => (
+            <PRISMDateInput
+              label="Date"
+              value={field.value}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="time"
+          render={({ field }) => (
+            <PRISMTimeInput
+              label="Time"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="location"
+          render={({ field }) => (
+            <PRISMInput
+              label="Location"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              onBlur={field.onBlur}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="reminder_enabled"
+          render={({ field }) => (
+            <PRISMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
+          )}
+        />
+        <Controller
+          control={control}
+          name="notes"
+          render={({ field }) => (
+            <PRISMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
+          )}
+        />
+        <View style={styles.submit}>
+          <PRISMButton label={submitLabel} onPress={handleSubmit(submit)} loading={submitting} />
+        </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScreen>
   );
 }
 

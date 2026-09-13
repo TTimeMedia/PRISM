@@ -8,10 +8,10 @@ import { fontWeight, type } from '../tokens/typography';
 import { PRISMButton } from './PRISMButton';
 import { PRISMSheet } from './PRISMSheet';
 
-export interface PRISMDateInputProps {
+export interface PRISMTimeInputProps {
   /** Always visible — never rely on placeholder text as the only label. See docs/DESIGN_SYSTEM.md §11. */
   label: string;
-  /** The canonical wire format, YYYY-MM-DD, or '' when nothing is chosen yet. */
+  /** The canonical wire format, 24-hour HH:mm, or '' when nothing is chosen yet. */
   value: string;
   onChangeText: (value: string) => void;
   onBlur?: () => void;
@@ -19,42 +19,38 @@ export interface PRISMDateInputProps {
   error?: string;
   placeholder?: string;
   editable?: boolean;
-  minimumDate?: Date;
-  maximumDate?: Date;
   testID?: string;
 }
 
 /**
- * A native date field (docs/SCREEN_BIBLE.md §3's Global Screen Contract) —
- * tapping opens the platform's own date picker instead of a keyboard, so a
- * date is always selected, never typed. Value stays the app's canonical
- * YYYY-MM-DD string; every call site that already wires
- * value/onChangeText/onBlur/error through react-hook-form keeps working
- * unchanged.
+ * A native time field, the time counterpart to PRISMDateInput — tapping
+ * opens the platform's own time picker instead of a keyboard. Value stays
+ * the app's canonical 24-hour HH:mm wire format (what the zod schemas and
+ * reminder scheduler already expect — see packages/validation's
+ * `time_of_day` fields); only the on-screen display respects the device's
+ * 12/24-hour locale preference.
  */
-export function PRISMDateInput({
+export function PRISMTimeInput({
   label,
   value,
   onChangeText,
   onBlur,
   helperText,
   error,
-  placeholder = 'Choose a date',
+  placeholder = 'Choose a time',
   editable = true,
-  minimumDate,
-  maximumDate,
   testID,
-}: PRISMDateInputProps) {
+}: PRISMTimeInputProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [draft, setDraft] = useState<Date>(() => parseIsoDate(value) ?? new Date());
+  const [draft, setDraft] = useState<Date>(() => parseHHmm(value) ?? new Date());
 
   const borderColor = error ? theme.destructive : theme.colors.border.default;
-  const displayValue = value ? formatDisplayDate(value) : null;
+  const displayValue = value ? formatDisplayTime(value) : null;
 
   function openPicker() {
     if (!editable) return;
-    setDraft(parseIsoDate(value) ?? new Date());
+    setDraft(parseHHmm(value) ?? new Date());
     setOpen(true);
   }
 
@@ -62,7 +58,7 @@ export function PRISMDateInput({
     setOpen(false);
     onBlur?.();
     if (event.type === 'set' && selected) {
-      onChangeText(formatIsoDate(selected));
+      onChangeText(formatHHmm(selected));
     }
   }
 
@@ -74,7 +70,7 @@ export function PRISMDateInput({
   function handleConfirm() {
     setOpen(false);
     onBlur?.();
-    onChangeText(formatIsoDate(draft));
+    onChangeText(formatHHmm(draft));
   }
 
   return (
@@ -85,7 +81,7 @@ export function PRISMDateInput({
         onPress={openPicker}
         accessibilityRole="button"
         accessibilityLabel={label}
-        accessibilityHint="Opens a date picker"
+        accessibilityHint="Opens a time picker"
         accessibilityValue={displayValue ? { text: displayValue } : undefined}
         accessibilityState={{ disabled: !editable }}
         style={[
@@ -121,10 +117,8 @@ export function PRISMDateInput({
         <DateTimePicker
           testID={testID ? `${testID}-native` : undefined}
           value={draft}
-          mode="date"
+          mode="time"
           display="default"
-          minimumDate={minimumDate}
-          maximumDate={maximumDate}
           onChange={handleAndroidChange}
         />
       ) : null}
@@ -134,10 +128,8 @@ export function PRISMDateInput({
           <DateTimePicker
             testID={testID ? `${testID}-native` : undefined}
             value={draft}
-            mode="date"
-            display="inline"
-            minimumDate={minimumDate}
-            maximumDate={maximumDate}
+            mode="time"
+            display="spinner"
             onChange={(_event, selected) => selected && setDraft(selected)}
           />
           <View style={styles.sheetActions}>
@@ -154,27 +146,28 @@ export function PRISMDateInput({
   );
 }
 
-/** Parses the app's YYYY-MM-DD wire format as a local date, avoiding UTC-shift bugs from `new Date(string)`. */
-function parseIsoDate(value: string): Date | null {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+/** Parses the app's 24-hour HH:mm wire format into a Date carrying just that time (today's date, ignored by callers). */
+function parseHHmm(value: string): Date | null {
+  const match = /^(\d{2}):(\d{2})$/.exec(value);
   if (!match) return null;
-  const [, year, month, day] = match;
-  return new Date(Number(year), Number(month) - 1, Number(day));
+  const [, hours, minutes] = match;
+  const date = new Date();
+  date.setHours(Number(hours), Number(minutes), 0, 0);
+  return date;
 }
 
-/** Formats a Date as the app's canonical YYYY-MM-DD wire format, using local date parts (not toISOString, which shifts by timezone). */
-function formatIsoDate(date: Date): string {
-  const year = String(date.getFullYear()).padStart(4, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+/** Formats a Date's time-of-day as the app's canonical 24-hour HH:mm wire format. */
+function formatHHmm(date: Date): string {
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
-/** Human, locale-respecting display for an already-chosen date. */
-function formatDisplayDate(value: string): string {
-  const date = parseIsoDate(value);
+/** Human, locale-respecting display (12- or 24-hour per device settings) for an already-chosen time. */
+function formatDisplayTime(value: string): string {
+  const date = parseHHmm(value);
   if (!date) return value;
-  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
 }
 
 const styles = StyleSheet.create({

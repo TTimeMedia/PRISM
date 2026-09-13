@@ -37,7 +37,19 @@ export function OnboardingScreenLayout({
 
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
-      <KeyboardAwareScreen>
+      <KeyboardAwareScreen
+        footer={
+          <View style={styles.actions}>
+            <PRISMButton
+              label={primaryLabel}
+              loading={primaryLoading}
+              disabled={primaryDisabled}
+              onPress={onPrimaryPress}
+            />
+            {onSkip ? <PRISMButton label={skipLabel} variant="tertiary" onPress={onSkip} /> : null}
+          </View>
+        }
+      >
         <View style={styles.content}>
           <Text
             accessibilityRole="header"
@@ -53,15 +65,6 @@ export function OnboardingScreenLayout({
           {children ? <View style={styles.body}>{children}</View> : null}
         </View>
       </KeyboardAwareScreen>
-      <View style={styles.actions}>
-        <PRISMButton
-          label={primaryLabel}
-          loading={primaryLoading}
-          disabled={primaryDisabled}
-          onPress={onPrimaryPress}
-        />
-        {onSkip ? <PRISMButton label={skipLabel} variant="tertiary" onPress={onSkip} /> : null}
-      </View>
     </SafeAreaView>
   );
 }
