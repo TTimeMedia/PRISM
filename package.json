@@ -27,7 +27,10 @@
       "unrs-resolver"
     ],
     "overrides": {
-      "@hookform/resolvers>zod": "^3.24.1"
+      "zod": "^3.24.1",
+      "eas-cli>zod": "^4.6.5",
+      "@expo/eas-build-job>zod": "^4.6.5",
+      "@expo/steps>zod": "^4.6.5"
     }
   }
 }
