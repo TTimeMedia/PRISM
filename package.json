@@ -25,6 +25,9 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "unrs-resolver"
-    ]
+    ],
+    "overrides": {
+      "@hookform/resolvers>zod": "^3.24.1"
+    }
   }
 }
