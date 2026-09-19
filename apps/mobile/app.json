@@ -11,10 +11,13 @@
     "backgroundColor": "#0B0B0F",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.prism.mobile"
+      "bundleIdentifier": "ttimemedia.prism",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
-      "package": "app.prism.mobile",
+      "package": "ttimemedia.prism",
       "adaptiveIcon": {
         "backgroundColor": "#0B0B0F",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
