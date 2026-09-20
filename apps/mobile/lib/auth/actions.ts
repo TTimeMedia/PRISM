@@ -9,9 +9,14 @@ import { supabase } from '../supabase/client';
  */
 
 const RESET_PASSWORD_REDIRECT = Linking.createURL('reset-password');
+const VERIFY_EMAIL_REDIRECT = Linking.createURL('verify-email');
 
 export async function signUp(email: string, password: string) {
-  return supabase.auth.signUp({ email, password });
+  return supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: VERIFY_EMAIL_REDIRECT },
+  });
 }
 
 export async function signIn(email: string, password: string) {
@@ -33,7 +38,11 @@ export async function updatePassword(password: string) {
 }
 
 export async function resendVerificationEmail(email: string) {
-  return supabase.auth.resend({ type: 'signup', email });
+  return supabase.auth.resend({
+    type: 'signup',
+    email,
+    options: { emailRedirectTo: VERIFY_EMAIL_REDIRECT },
+  });
 }
 
 export async function signOut() {
