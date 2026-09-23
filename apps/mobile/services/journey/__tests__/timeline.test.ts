@@ -96,6 +96,7 @@ function milestone(overrides: Partial<Milestone> = {}): Milestone {
     date: '2026-06-10',
     category: null,
     icon: null,
+    image_path: null,
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,
@@ -162,6 +163,19 @@ describe('buildTimelineEvents', () => {
   it('includes a milestone event, using its own date field for display-worthy ordering', () => {
     const events = buildTimelineEvents({ ...emptyRecords(), milestones: [milestone()] });
     expect(events[0]).toMatchObject({ moduleKey: 'milestones', title: 'Started HRT' });
+  });
+
+  it("carries a milestone's photo path onto its timeline event, and omits it when there is none", () => {
+    const events = buildTimelineEvents({
+      ...emptyRecords(),
+      milestones: [
+        milestone({ id: 'with', image_path: 'u1/milestones/photo.jpg' }),
+        milestone({ id: 'without', image_path: null }),
+      ],
+    });
+
+    expect(events.find((e) => e.sourceId === 'with')?.imagePath).toBe('u1/milestones/photo.jpg');
+    expect(events.find((e) => e.sourceId === 'without')?.imagePath).toBeUndefined();
   });
 
   it('includes a journal entry event, falling back to a generic title when untitled', () => {

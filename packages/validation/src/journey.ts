@@ -8,6 +8,7 @@ export const milestoneCreateSchema = z.object({
   date: isoDateSchema,
   category: z.string().max(100).nullable().optional(),
   icon: z.string().max(50).nullable().optional(),
+  image_path: z.string().max(500).nullable().optional(),
 });
 export type MilestoneCreateInput = z.infer<typeof milestoneCreateSchema>;
 

@@ -12,6 +12,8 @@ export interface PRISMTimelineEventItem {
   subtitle?: string;
   /** Already formatted for display. */
   date: string;
+  /** Optional media (e.g. a milestone photo) shown inside the entry. */
+  media?: React.ReactNode;
   onPress?: () => void;
 }
 
@@ -52,6 +54,7 @@ export function PRISMTimeline({ events }: PRISMTimelineProps) {
                   {event.subtitle}
                 </Text>
               ) : null}
+              {event.media}
             </View>
           </View>
         );

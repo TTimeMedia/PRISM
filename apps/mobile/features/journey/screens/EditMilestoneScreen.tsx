@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
@@ -11,9 +11,11 @@ import {
   useToast,
 } from '@prism/ui';
 import type { MilestoneCreateInput } from '@prism/validation';
+import { useSession } from '../../../lib/auth/AuthProvider';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useUpdateMilestone } from '../../../lib/journey/mutations';
-import { MilestoneForm } from '../components/MilestoneForm';
+import { removeMilestoneImage, uploadMilestoneImage } from '../../../lib/journey/milestoneImage';
+import { MilestoneForm, type MilestoneImageChange } from '../components/MilestoneForm';
 
 /** Edit Milestone — same fields as Add, per docs/SCREEN_BIBLE.md Screen 46's Edit action. */
 export function EditMilestoneScreen() {
@@ -21,14 +23,32 @@ export function EditMilestoneScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: milestone, isLoading, isError, refetch } = useMilestone(id);
   const updateMilestone = useUpdateMilestone(id);
+  const { session } = useSession();
   const { showToast } = useToast();
+  const [uploading, setUploading] = useState(false);
 
-  const submit = async (values: MilestoneCreateInput) => {
+  const submit = async (values: MilestoneCreateInput, image: MilestoneImageChange) => {
+    // undefined = photo unchanged; string = replaced; null = removed.
+    let newPath: string | null | undefined;
+    let uploadedPath: string | null = null;
     try {
-      await updateMilestone.mutateAsync(values);
+      if (image.asset && session?.user.id) {
+        setUploading(true);
+        uploadedPath = await uploadMilestoneImage(session.user.id, image.asset);
+        newPath = uploadedPath;
+      } else if (image.removed) {
+        newPath = null;
+      }
+      await updateMilestone.mutateAsync(
+        newPath === undefined ? values : { ...values, image_path: newPath },
+      );
+      if (newPath !== undefined) await removeMilestoneImage(milestone?.image_path);
       router.back();
     } catch {
+      await removeMilestoneImage(uploadedPath);
       showToast("Couldn't save your changes. Please try again.", 'error');
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -55,8 +75,9 @@ export function EditMilestoneScreen() {
             category: milestone.category,
             icon: milestone.icon ?? 'sparkles',
           }}
+          existingImagePath={milestone.image_path}
           submitLabel="Save changes"
-          submitting={updateMilestone.isPending}
+          submitting={updateMilestone.isPending || uploading}
           onSubmit={submit}
         />
       )}

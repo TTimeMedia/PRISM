@@ -5,6 +5,7 @@ import type { JournalEntryCreateInput, MilestoneCreateInput } from '@prism/valid
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { journalEntriesKey, journalEntryKey, milestoneKey, milestonesKey } from './queries';
+import { removeMilestoneImage } from './milestoneImage';
 
 type MilestoneUpdate = Database['public']['Tables']['milestones']['Update'];
 type JournalEntryUpdate = Database['public']['Tables']['journal_entries']['Update'];
@@ -73,12 +74,19 @@ export function useDeleteMilestone() {
   return useMutation({
     mutationFn: async (id: string): Promise<void> => {
       if (!userId) throw new Error('No authenticated session.');
+      const { data: existing } = await supabase
+        .from('milestones')
+        .select('image_path')
+        .eq('id', id)
+        .eq('user_id', userId)
+        .maybeSingle();
       const { error } = await supabase
         .from('milestones')
         .delete()
         .eq('id', id)
         .eq('user_id', userId);
       if (error) throw error;
+      await removeMilestoneImage(existing?.image_path);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: milestonesKey(userId) });

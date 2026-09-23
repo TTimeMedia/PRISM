@@ -205,6 +205,8 @@ export interface Milestone {
   date: ISODate;
   category: string | null;
   icon: string | null;
+  /** Object path in the private `memories` bucket ({user_id}/milestones/...), not a URL. */
+  image_path: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }

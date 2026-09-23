@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import type { ImagePickerAsset } from 'expo-image-picker';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { milestoneCreateSchema, type MilestoneCreateInput } from '@prism/validation';
@@ -10,16 +11,29 @@ import {
   PRISMInput,
   PRISMTextArea,
   spacing,
+  useToast,
 } from '@prism/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { SUGGESTED_MILESTONE_TITLES } from '../optionLabels';
 import { MILESTONE_ICON_OPTIONS } from '../milestoneIcons';
+import { pickMilestoneImage } from '../../../lib/journey/milestoneImage';
+import { MilestonePhotoField } from './MilestonePhotoField';
+
+/** What the user did with the photo in this session; the screen does the upload/cleanup. */
+export interface MilestoneImageChange {
+  /** A newly picked photo, not yet uploaded. */
+  asset: ImagePickerAsset | null;
+  /** The already-saved photo was removed (and not replaced). */
+  removed: boolean;
+}
 
 export interface MilestoneFormProps {
   defaultValues?: Partial<MilestoneCreateInput>;
+  /** The photo already saved on the milestone being edited, if any. */
+  existingImagePath?: string | null;
   submitLabel: string;
   submitting?: boolean;
-  onSubmit: (values: MilestoneCreateInput) => void;
+  onSubmit: (values: MilestoneCreateInput, image: MilestoneImageChange) => void;
 }
 
 /**
@@ -31,10 +45,34 @@ export interface MilestoneFormProps {
  */
 export function MilestoneForm({
   defaultValues,
+  existingImagePath,
   submitLabel,
   submitting = false,
   onSubmit,
 }: MilestoneFormProps) {
+  const { showToast } = useToast();
+  const [pendingAsset, setPendingAsset] = useState<ImagePickerAsset | null>(null);
+  const [removed, setRemoved] = useState(false);
+
+  const pickPhoto = async () => {
+    try {
+      const result = await pickMilestoneImage();
+      if (result.status === 'picked') {
+        setPendingAsset(result.asset);
+        setRemoved(false);
+      } else if (result.status === 'denied') {
+        showToast('Allow photo access in Settings to add a photo.', 'error');
+      }
+    } catch {
+      showToast("Couldn't open your photos. Please try again.", 'error');
+    }
+  };
+
+  const removePhoto = () => {
+    setPendingAsset(null);
+    setRemoved(true);
+  };
+
   const { control, handleSubmit, setValue } = useForm<MilestoneCreateInput>({
     resolver: zodResolver(milestoneCreateSchema),
     defaultValues: {
@@ -124,8 +162,19 @@ export function MilestoneForm({
             </View>
           )}
         />
+        <MilestonePhotoField
+          existingPath={existingImagePath}
+          pendingUri={pendingAsset?.uri ?? null}
+          removed={removed}
+          onPick={pickPhoto}
+          onRemove={removePhoto}
+        />
         <View style={styles.submit}>
-          <PRISMButton label={submitLabel} onPress={handleSubmit(onSubmit)} loading={submitting} />
+          <PRISMButton
+            label={submitLabel}
+            onPress={handleSubmit((values) => onSubmit(values, { asset: pendingAsset, removed }))}
+            loading={submitting}
+          />
         </View>
       </View>
     </KeyboardAwareScreen>

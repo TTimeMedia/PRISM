@@ -15,6 +15,7 @@ import {
 import type { ModuleKey } from '@prism/types';
 import { useTimelineEvents } from '../../../lib/journey/timelineQuery';
 import { eventColor } from '../eventDisplay';
+import { MilestoneTimelineImage } from '../components/MilestoneTimelineImage';
 
 /**
  * Screen 42 — Timeline. Tapping an event opens its original record
@@ -59,6 +60,9 @@ export function TimelineScreen() {
               title: event.title,
               subtitle: event.subtitle,
               date: formatEventDate(event.at),
+              media: event.imagePath ? (
+                <MilestoneTimelineImage path={event.imagePath} label={event.title} />
+              ) : undefined,
               onPress: () => router.push(recordHref(event.moduleKey, event.sourceId)),
             }))}
           />

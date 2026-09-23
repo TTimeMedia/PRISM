@@ -15,6 +15,7 @@ import { appointmentFormSchema, type AppointmentFormInput } from '@prism/validat
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from './ChipField';
 import { SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS } from '../optionLabels';
+import { LocationSearchInput } from '../../../components/LocationSearchInput';
 import { toISODateTime } from '../../../lib/care/dateTime';
 
 export type AppointmentFormValues = AppointmentFormInput;
@@ -139,8 +140,7 @@ export function AppointmentForm({
           control={control}
           name="location"
           render={({ field }) => (
-            <PRISMInput
-              label="Location"
+            <LocationSearchInput
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}

@@ -30,6 +30,7 @@ export function PRISMInput({ label, helperText, error, ...inputProps }: PRISMInp
         accessibilityLabel={label}
         accessibilityState={{ disabled: inputProps.editable === false }}
         placeholderTextColor={theme.colors.text.tertiary}
+        {...inputProps}
         style={[
           styles.input,
           {
@@ -46,7 +47,6 @@ export function PRISMInput({ label, helperText, error, ...inputProps }: PRISMInp
           setFocused(false);
           inputProps.onBlur?.(e);
         }}
-        {...inputProps}
       />
       {error ? (
         <Text

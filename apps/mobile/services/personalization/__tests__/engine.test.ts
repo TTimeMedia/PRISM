@@ -35,6 +35,7 @@ function makeMilestone(overrides: Partial<Milestone> = {}): Milestone {
     date: NOW.toISOString().slice(0, 10),
     category: null,
     icon: null,
+    image_path: null,
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,

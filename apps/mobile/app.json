@@ -56,7 +56,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "PRISM uses your photo library to set your profile photo."
+          "photosPermission": "PRISM uses your photo library to set your profile photo and to add photos to your milestones."
         }
       ],
       [

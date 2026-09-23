@@ -14,6 +14,7 @@ import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useProfile, useSetModuleEnabled, useUpdateProfile } from '../../../lib/profile/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
 import { ChipField } from '../../care/components/ChipField';
+import { LocationSearchInput } from '../../../components/LocationSearchInput';
 import { SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS } from '../../care/optionLabels';
 
 /**
@@ -141,8 +142,7 @@ export function AppointmentSetupScreen() {
         control={control}
         name="location"
         render={({ field }) => (
-          <PRISMInput
-            label="Location"
+          <LocationSearchInput
             value={field.value ?? ''}
             onChangeText={field.onChange}
             onBlur={field.onBlur}

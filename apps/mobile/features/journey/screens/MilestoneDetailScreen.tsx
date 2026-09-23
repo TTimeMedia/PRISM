@@ -17,6 +17,7 @@ import {
 } from '@prism/ui';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useDeleteMilestone } from '../../../lib/journey/mutations';
+import { MilestoneTimelineImage } from '../components/MilestoneTimelineImage';
 
 /** Screen 46 — Milestone Detail. */
 export function MilestoneDetailScreen() {
@@ -53,6 +54,11 @@ export function MilestoneDetailScreen() {
         <PRISMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
+          {milestone.image_path ? (
+            <View style={styles.photo}>
+              <MilestoneTimelineImage path={milestone.image_path} label={milestone.title} height={240} />
+            </View>
+          ) : null}
           <PRISMSection>
             <DetailRow label="Date" value={formatDate(milestone.date)} />
             <DetailRow label="Category" value={milestone.category} />
@@ -112,6 +118,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
+  },
+  photo: {
+    marginBottom: spacing.md,
   },
   row: {
     marginBottom: spacing.sm,

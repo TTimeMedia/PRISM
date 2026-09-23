@@ -78,6 +78,7 @@ export function buildTimelineEvents(records: TimelineRecords): TimelineEvent[] {
     sourceId: milestone.id,
     title: milestone.title,
     subtitle: milestone.category ?? undefined,
+    imagePath: milestone.image_path ?? undefined,
     at: dateToSortKey(milestone.date),
   }));
 
