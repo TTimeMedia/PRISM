@@ -155,6 +155,7 @@ export interface Database {
           | 'notification_privacy'
           | 'reduced_motion'
           | 'calendar_sync_enabled'
+          | 'accent_color'
           | 'created_at'
           | 'updated_at'
         >,

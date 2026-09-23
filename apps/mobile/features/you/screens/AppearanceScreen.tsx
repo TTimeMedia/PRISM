@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, Check } from 'lucide-react-native';
 import {
   ACCENT_THEMES,
+  type AccentKey,
   onAccentColor,
   PRISMErrorState,
   PRISMHeader,
@@ -37,6 +38,11 @@ export function AppearanceScreen() {
   const setThemePreference = useAppStore((state) => state.setThemePreference);
   const accentColor = useAppStore((state) => state.accentColor);
   const setAccentColor = useAppStore((state) => state.setAccentColor);
+
+  const selectAccent = (key: AccentKey) => {
+    setAccentColor(key);
+    updateSettings.mutate({ accent_color: key });
+  };
 
   const setTheme = (value: Theme) => {
     setThemePreference(value);
@@ -77,7 +83,7 @@ export function AppearanceScreen() {
                   accessibilityRole="radio"
                   accessibilityLabel={`${label} accent`}
                   accessibilityState={{ selected }}
-                  onPress={() => setAccentColor(key)}
+                  onPress={() => selectAccent(key)}
                   style={styles.swatchItem}
                 >
                   <View

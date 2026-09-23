@@ -301,6 +301,8 @@ export interface Settings {
   reduced_motion: boolean;
   /** Master switch for device-calendar sync — see docs/DECISIONS.md § CARE. Permission is requested only when this is turned on, never eagerly. */
   calendar_sync_enabled: boolean;
+  /** Accent color theme key (see ACCENT_THEMES in @prism/ui). Unknown values fall back to the default client-side. */
+  accent_color: string;
   accessibility_preferences: Record<string, unknown> | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;

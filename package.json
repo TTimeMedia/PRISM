@@ -10,6 +10,9 @@
   "scripts": {
     "dev:mobile": "pnpm --filter @prism/mobile start",
     "dev:web": "pnpm --filter @prism/web dev",
+    "db:start": "npx supabase start && npx supabase migration up",
+    "db:up": "npx supabase migration up",
+    "db:stop": "npx supabase stop",
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",

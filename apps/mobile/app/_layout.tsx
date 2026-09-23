@@ -22,6 +22,7 @@ import { useAppStore } from '../lib/store/appStore';
 import { useAppLockStore } from '../lib/store/appLockStore';
 import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
+import { useAppearanceSync } from '../lib/you/useAppearanceSync';
 import { useReminderSync } from '../lib/reminders/useReminderSync';
 import { AppLockScreen } from '../features/you/screens/AppLockScreen';
 
@@ -98,6 +99,7 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const { data: settings } = useSettings();
   const appLockEnabled = showTabs && !!settings?.app_lock_enabled;
   useAppLockGate(appLockEnabled);
+  useAppearanceSync(settings?.theme, settings?.accent_color);
   // Reminder engine — see lib/reminders/useReminderSync.ts. Only relevant
   // once inside the app proper (its own queries are already user-scoped).
   useReminderSync();

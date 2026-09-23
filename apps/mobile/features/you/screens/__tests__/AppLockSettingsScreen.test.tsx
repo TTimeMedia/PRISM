@@ -42,6 +42,7 @@ function settings(overrides: Partial<Settings> = {}): Settings {
     notification_privacy: true,
     reduced_motion: false,
     calendar_sync_enabled: false,
+    accent_color: 'cyan',
     accessibility_preferences: null,
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',

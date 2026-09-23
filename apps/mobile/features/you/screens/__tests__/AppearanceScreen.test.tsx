@@ -18,6 +18,8 @@ jest.mock('../../../../lib/profile/queries', () => ({
 const mockedUseSettings = useSettings as jest.MockedFunction<typeof useSettings>;
 const mockedUseUpdateSettings = useUpdateSettings as jest.MockedFunction<typeof useUpdateSettings>;
 
+const mutate = jest.fn();
+
 describe('AppearanceScreen accent themes', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -28,7 +30,7 @@ describe('AppearanceScreen accent themes', () => {
       isError: false,
       refetch: jest.fn(),
     } as never);
-    mockedUseUpdateSettings.mockReturnValue({ mutate: jest.fn() } as never);
+    mockedUseUpdateSettings.mockReturnValue({ mutate } as never);
   });
 
   it('marks the current accent as selected and switches it when another swatch is pressed', () => {
@@ -39,6 +41,7 @@ describe('AppearanceScreen accent themes', () => {
     fireEvent.press(screen.getByLabelText('Coral accent'));
 
     expect(useAppStore.getState().accentColor).toBe('coral');
+    expect(mutate).toHaveBeenCalledWith({ accent_color: 'coral' });
     expect(screen.getByLabelText('Coral accent').props.accessibilityState.selected).toBe(true);
     expect(screen.getByLabelText('Sky accent').props.accessibilityState.selected).toBe(false);
   });
