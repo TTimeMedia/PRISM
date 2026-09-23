@@ -1,9 +1,9 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { PRISMButton, radius, spacing, type, useTheme } from '@prism/ui';
-import { useSignedMilestoneImageUrl } from '../../../lib/journey/useSignedMilestoneImageUrl';
+import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 
-export interface MilestonePhotoFieldProps {
+export interface EntryPhotoFieldProps {
   /** The photo already saved on this milestone, if any (a private-bucket path). */
   existingPath?: string | null;
   /** A photo just picked but not yet uploaded — shown instead of the saved one. */
@@ -15,16 +15,16 @@ export interface MilestonePhotoFieldProps {
 }
 
 /** Add / change / remove a photo on a milestone — nothing uploads until the form is saved. */
-export function MilestonePhotoField({
+export function EntryPhotoField({
   existingPath,
   pendingUri,
   removed = false,
   onPick,
   onRemove,
-}: MilestonePhotoFieldProps) {
+}: EntryPhotoFieldProps) {
   const theme = useTheme();
   const showExisting = !pendingUri && !removed && !!existingPath;
-  const { data: signedUrl } = useSignedMilestoneImageUrl(showExisting ? existingPath : null);
+  const { data: signedUrl } = useSignedEntryImageUrl(showExisting ? existingPath : null);
   const uri = pendingUri ?? (showExisting ? signedUrl : null);
   const hasPhoto = !!pendingUri || showExisting;
 

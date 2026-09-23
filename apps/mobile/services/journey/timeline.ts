@@ -88,6 +88,7 @@ export function buildTimelineEvents(records: TimelineRecords): TimelineEvent[] {
     sourceId: entry.id,
     title: entry.title?.trim() || 'Journal entry',
     subtitle: entry.mood ?? undefined,
+    imagePath: entry.image_path ?? undefined,
     at: dateToSortKey(entry.date),
   }));
 

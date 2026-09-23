@@ -112,6 +112,7 @@ function journalEntry(overrides: Partial<JournalEntry> = {}): JournalEntry {
     mood: 'hopeful',
     date: '2026-06-12',
     tags: [],
+    image_path: null,
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,
@@ -176,6 +177,15 @@ describe('buildTimelineEvents', () => {
 
     expect(events.find((e) => e.sourceId === 'with')?.imagePath).toBe('u1/milestones/photo.jpg');
     expect(events.find((e) => e.sourceId === 'without')?.imagePath).toBeUndefined();
+  });
+
+  it("carries a journal entry's photo path onto its timeline event", () => {
+    const events = buildTimelineEvents({
+      ...emptyRecords(),
+      journalEntries: [journalEntry({ image_path: 'u1/journal/photo.jpg' })],
+    });
+
+    expect(events[0]?.imagePath).toBe('u1/journal/photo.jpg');
   });
 
   it('includes a journal entry event, falling back to a generic title when untitled', () => {

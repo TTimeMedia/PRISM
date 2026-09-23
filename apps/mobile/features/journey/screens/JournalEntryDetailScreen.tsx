@@ -18,6 +18,7 @@ import {
 } from '@prism/ui';
 import { useJournalEntry } from '../../../lib/journey/queries';
 import { useDeleteJournalEntry } from '../../../lib/journey/mutations';
+import { EntryImage } from '../components/EntryImage';
 
 /** Screen 49 — Journal Entry Detail. Journal content must remain private — never sent to analytics. */
 export function JournalEntryDetailScreen() {
@@ -64,6 +65,13 @@ export function JournalEntryDetailScreen() {
               </Text>
             ) : null}
             <Text style={[styles.body, { color: theme.colors.text.primary }]}>{entry.content}</Text>
+            {entry.image_path ? (
+              <EntryImage
+                path={entry.image_path}
+                label={entry.title?.trim() || 'this journal entry'}
+                height={240}
+              />
+            ) : null}
             {entry.tags.length > 0 ? (
               <View style={styles.tags}>
                 {entry.tags.map((tag) => (

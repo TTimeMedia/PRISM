@@ -14,8 +14,12 @@ import type { MilestoneCreateInput } from '@prism/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useUpdateMilestone } from '../../../lib/journey/mutations';
-import { removeMilestoneImage, uploadMilestoneImage } from '../../../lib/journey/milestoneImage';
-import { MilestoneForm, type MilestoneImageChange } from '../components/MilestoneForm';
+import {
+  removeEntryImage,
+  uploadEntryImage,
+  type EntryImageChange,
+} from '../../../lib/journey/entryImage';
+import { MilestoneForm } from '../components/MilestoneForm';
 
 /** Edit Milestone — same fields as Add, per docs/SCREEN_BIBLE.md Screen 46's Edit action. */
 export function EditMilestoneScreen() {
@@ -27,14 +31,14 @@ export function EditMilestoneScreen() {
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
 
-  const submit = async (values: MilestoneCreateInput, image: MilestoneImageChange) => {
+  const submit = async (values: MilestoneCreateInput, image: EntryImageChange) => {
     // undefined = photo unchanged; string = replaced; null = removed.
     let newPath: string | null | undefined;
     let uploadedPath: string | null = null;
     try {
       if (image.asset && session?.user.id) {
         setUploading(true);
-        uploadedPath = await uploadMilestoneImage(session.user.id, image.asset);
+        uploadedPath = await uploadEntryImage(session.user.id, image.asset, 'milestones');
         newPath = uploadedPath;
       } else if (image.removed) {
         newPath = null;
@@ -42,10 +46,10 @@ export function EditMilestoneScreen() {
       await updateMilestone.mutateAsync(
         newPath === undefined ? values : { ...values, image_path: newPath },
       );
-      if (newPath !== undefined) await removeMilestoneImage(milestone?.image_path);
+      if (newPath !== undefined) await removeEntryImage(milestone?.image_path);
       router.back();
     } catch {
-      await removeMilestoneImage(uploadedPath);
+      await removeEntryImage(uploadedPath);
       showToast("Couldn't save your changes. Please try again.", 'error');
     } finally {
       setUploading(false);

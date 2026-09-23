@@ -22,6 +22,7 @@ export const journalEntryCreateSchema = z.object({
   mood: z.string().max(50).nullable().optional(),
   date: isoDateSchema,
   tags: z.array(z.string().max(50)).max(20).default([]),
+  image_path: z.string().max(500).nullable().optional(),
 });
 export type JournalEntryCreateInput = z.infer<typeof journalEntryCreateSchema>;
 

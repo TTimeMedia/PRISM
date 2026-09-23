@@ -220,6 +220,8 @@ export interface JournalEntry {
   mood: string | null;
   date: ISODate;
   tags: string[];
+  /** Object path in the private `memories` bucket ({user_id}/journal/...), not a URL. */
+  image_path: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }

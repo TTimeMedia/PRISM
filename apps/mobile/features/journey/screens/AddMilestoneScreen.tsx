@@ -6,8 +6,12 @@ import { PRISMHeader, PRISMIconButton, useTheme, useToast } from '@prism/ui';
 import type { MilestoneCreateInput } from '@prism/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useCreateMilestone } from '../../../lib/journey/mutations';
-import { removeMilestoneImage, uploadMilestoneImage } from '../../../lib/journey/milestoneImage';
-import { MilestoneForm, type MilestoneImageChange } from '../components/MilestoneForm';
+import {
+  removeEntryImage,
+  uploadEntryImage,
+  type EntryImageChange,
+} from '../../../lib/journey/entryImage';
+import { MilestoneForm } from '../components/MilestoneForm';
 
 /** Screen 45 — Add Milestone. */
 export function AddMilestoneScreen() {
@@ -17,18 +21,18 @@ export function AddMilestoneScreen() {
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
 
-  const submit = async (values: MilestoneCreateInput, image: MilestoneImageChange) => {
+  const submit = async (values: MilestoneCreateInput, image: EntryImageChange) => {
     let imagePath: string | null = null;
     try {
       if (image.asset && session?.user.id) {
         setUploading(true);
-        imagePath = await uploadMilestoneImage(session.user.id, image.asset);
+        imagePath = await uploadEntryImage(session.user.id, image.asset, 'milestones');
       }
       await createMilestone.mutateAsync({ ...values, image_path: imagePath });
       showToast('Saved to your journey.', 'success');
       router.back();
     } catch {
-      await removeMilestoneImage(imagePath);
+      await removeEntryImage(imagePath);
       showToast("Couldn't save this milestone. Please try again.", 'error');
     } finally {
       setUploading(false);

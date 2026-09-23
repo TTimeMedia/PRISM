@@ -51,6 +51,7 @@ function makeJournalEntry(overrides: Partial<JournalEntry> = {}): JournalEntry {
     mood: 'hopeful',
     date: NOW.toISOString().slice(0, 10),
     tags: [],
+    image_path: null,
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,

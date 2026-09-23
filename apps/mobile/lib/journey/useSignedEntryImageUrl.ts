@@ -8,9 +8,9 @@ const SIGNED_URL_TTL_SECONDS = 60 * 60;
  * displayable URL — this resolves a short-lived signed URL for it on
  * read. See lib/journey/milestoneImage.ts.
  */
-export function useSignedMilestoneImageUrl(path: string | null | undefined) {
+export function useSignedEntryImageUrl(path: string | null | undefined) {
   return useQuery({
-    queryKey: ['milestone-image-signed-url', path],
+    queryKey: ['entry-image-signed-url', path],
     queryFn: async (): Promise<string> => {
       const { data, error } = await supabase.storage
         .from('memories')

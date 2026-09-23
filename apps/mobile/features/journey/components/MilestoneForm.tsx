@@ -16,16 +16,8 @@ import {
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { SUGGESTED_MILESTONE_TITLES } from '../optionLabels';
 import { MILESTONE_ICON_OPTIONS } from '../milestoneIcons';
-import { pickMilestoneImage } from '../../../lib/journey/milestoneImage';
-import { MilestonePhotoField } from './MilestonePhotoField';
-
-/** What the user did with the photo in this session; the screen does the upload/cleanup. */
-export interface MilestoneImageChange {
-  /** A newly picked photo, not yet uploaded. */
-  asset: ImagePickerAsset | null;
-  /** The already-saved photo was removed (and not replaced). */
-  removed: boolean;
-}
+import { pickEntryImage, type EntryImageChange } from '../../../lib/journey/entryImage';
+import { EntryPhotoField } from './EntryPhotoField';
 
 export interface MilestoneFormProps {
   defaultValues?: Partial<MilestoneCreateInput>;
@@ -33,7 +25,7 @@ export interface MilestoneFormProps {
   existingImagePath?: string | null;
   submitLabel: string;
   submitting?: boolean;
-  onSubmit: (values: MilestoneCreateInput, image: MilestoneImageChange) => void;
+  onSubmit: (values: MilestoneCreateInput, image: EntryImageChange) => void;
 }
 
 /**
@@ -56,7 +48,7 @@ export function MilestoneForm({
 
   const pickPhoto = async () => {
     try {
-      const result = await pickMilestoneImage();
+      const result = await pickEntryImage();
       if (result.status === 'picked') {
         setPendingAsset(result.asset);
         setRemoved(false);
@@ -162,7 +154,7 @@ export function MilestoneForm({
             </View>
           )}
         />
-        <MilestonePhotoField
+        <EntryPhotoField
           existingPath={existingImagePath}
           pendingUri={pendingAsset?.uri ?? null}
           removed={removed}

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { radius, spacing, useTheme } from '@prism/ui';
-import { useSignedMilestoneImageUrl } from '../../../lib/journey/useSignedMilestoneImageUrl';
+import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 
 /** A milestone's photo, shown inside its Timeline entry. */
-export function MilestoneTimelineImage({
+export function EntryImage({
   path,
   label,
   height = 160,
@@ -14,7 +14,7 @@ export function MilestoneTimelineImage({
   height?: number;
 }) {
   const theme = useTheme();
-  const { data: uri } = useSignedMilestoneImageUrl(path);
+  const { data: uri } = useSignedEntryImageUrl(path);
 
   return (
     <View style={[styles.frame, { height, backgroundColor: theme.colors.surfaceElevated }]}>
