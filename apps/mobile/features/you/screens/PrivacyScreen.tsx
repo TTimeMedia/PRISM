@@ -42,7 +42,7 @@ export function PrivacyScreen() {
             <PRISMListItem
               title="App lock"
               subtitle={settings.app_lock_enabled ? 'On' : 'Off'}
-              leading={<Lock size={20} color={theme.spectrum.cyan} />}
+              leading={<Lock size={20} color={theme.accent} />}
               onPress={() => router.push('/you/privacy/app-lock')}
             />
           </PRISMSection>

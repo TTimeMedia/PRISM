@@ -37,7 +37,7 @@ export function PRISMSwitch({
         value={value}
         onValueChange={onValueChange}
         disabled={disabled}
-        trackColor={{ false: theme.colors.border.strong, true: theme.spectrum.cyan }}
+        trackColor={{ false: theme.colors.border.strong, true: theme.accent }}
         thumbColor={theme.colors.text.inverse}
       />
     </View>

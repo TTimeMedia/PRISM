@@ -32,9 +32,14 @@ export function CalendarSettingsScreen() {
 
   const toggleCalendarSync = async (value: boolean) => {
     if (value) {
-      const granted = await calendarProvider.requestPermission();
-      if (!granted) {
-        showToast('Calendar access was not granted.', 'error');
+      try {
+        const granted = await calendarProvider.requestPermission();
+        if (!granted) {
+          showToast('Calendar access was not granted.', 'error');
+          return;
+        }
+      } catch {
+        showToast("Calendar isn't available in this build of PRISM.", 'error');
         return;
       }
     }

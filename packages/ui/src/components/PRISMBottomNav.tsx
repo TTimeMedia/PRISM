@@ -39,7 +39,7 @@ export function PRISMBottomNav({ items }: PRISMBottomNavProps) {
       ]}
     >
       {items.map((item) => {
-        const color = item.focused ? theme.spectrum.cyan : theme.colors.text.tertiary;
+        const color = item.focused ? theme.accent : theme.colors.text.tertiary;
         return (
           <Pressable
             key={item.key}

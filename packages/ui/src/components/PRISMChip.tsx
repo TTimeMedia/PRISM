@@ -26,7 +26,7 @@ export function PRISMChip({ label, selected = false, onPress, disabled = false }
       style={({ pressed }) => [
         styles.base,
         {
-          backgroundColor: selected ? theme.spectrum.cyan : theme.colors.surfaceElevated,
+          backgroundColor: selected ? theme.accent : theme.colors.surfaceElevated,
           opacity: disabled ? 0.4 : pressed ? 0.85 : 1,
         },
       ]}
@@ -34,7 +34,7 @@ export function PRISMChip({ label, selected = false, onPress, disabled = false }
       <Text
         style={[
           styles.label,
-          { color: selected ? theme.colors.text.inverse : theme.colors.text.primary },
+          { color: selected ? theme.onAccent : theme.colors.text.primary },
         ]}
       >
         {label}

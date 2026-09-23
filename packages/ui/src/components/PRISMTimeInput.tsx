@@ -130,6 +130,7 @@ export function PRISMTimeInput({
             value={draft}
             mode="time"
             display="spinner"
+            themeVariant={theme.scheme}
             onChange={(_event, selected) => selected && setDraft(selected)}
           />
           <View style={styles.sheetActions}>

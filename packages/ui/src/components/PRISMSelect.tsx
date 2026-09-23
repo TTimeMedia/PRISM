@@ -52,7 +52,7 @@ export function PRISMSelect<T extends string = string>({
               styles.option,
               {
                 backgroundColor: selected ? theme.colors.surfaceSelected : theme.colors.surface,
-                borderColor: selected ? theme.spectrum.cyan : theme.colors.border.subtle,
+                borderColor: selected ? theme.accent : theme.colors.border.subtle,
                 opacity: pressed ? 0.85 : 1,
               },
             ]}
@@ -67,7 +67,7 @@ export function PRISMSelect<T extends string = string>({
                 </Text>
               ) : null}
             </View>
-            {selected ? <Check size={20} color={theme.spectrum.cyan} /> : null}
+            {selected ? <Check size={20} color={theme.accent} /> : null}
           </Pressable>
         );
       })}

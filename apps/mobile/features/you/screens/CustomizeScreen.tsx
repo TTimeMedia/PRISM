@@ -56,7 +56,7 @@ export function CustomizeScreen() {
             <PRISMCard key={info.key} style={styles.card}>
               <View style={styles.body}>
                 <View style={styles.row}>
-                  {info.icon(theme.spectrum.cyan)}
+                  {info.icon(theme.accent)}
                   <View style={styles.text}>
                     <Text style={[styles.title, { color: theme.colors.text.primary }]}>
                       {info.label}

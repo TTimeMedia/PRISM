@@ -53,7 +53,7 @@ export function CareHomeScreen() {
     sections.push({
       key: 'medications',
       title: 'Medications',
-      icon: <Pill size={20} color={theme.spectrum.cyan} />,
+      icon: <Pill size={20} color={theme.accent} />,
       count: active.length,
       summary:
         active.length > 0

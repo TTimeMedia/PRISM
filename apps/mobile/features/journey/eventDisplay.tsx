@@ -15,7 +15,7 @@ type Theme = ReturnType<typeof useTheme>;
 export function eventColor(theme: Theme, moduleKey: ModuleKey): string {
   switch (moduleKey) {
     case 'medications':
-      return theme.spectrum.cyan;
+      return theme.accent;
     case 'injections':
       return theme.spectrum.mint;
     case 'appointments':
@@ -25,7 +25,7 @@ export function eventColor(theme: Theme, moduleKey: ModuleKey): string {
     case 'journal':
       return theme.spectrum.pink;
     default:
-      return theme.spectrum.cyan;
+      return theme.accent;
   }
 }
 

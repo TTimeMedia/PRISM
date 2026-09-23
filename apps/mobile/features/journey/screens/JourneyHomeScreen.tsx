@@ -48,7 +48,7 @@ export function JourneyHomeScreen() {
     {
       key: 'timeline',
       title: 'Timeline',
-      icon: <Compass size={20} color={theme.spectrum.cyan} />,
+      icon: <Compass size={20} color={theme.accent} />,
       subtitle: 'Your story, in order.',
       href: '/journey/timeline',
     },

@@ -136,6 +136,7 @@ export function PRISMDateInput({
             value={draft}
             mode="date"
             display="inline"
+            themeVariant={theme.scheme}
             minimumDate={minimumDate}
             maximumDate={maximumDate}
             onChange={(_event, selected) => selected && setDraft(selected)}

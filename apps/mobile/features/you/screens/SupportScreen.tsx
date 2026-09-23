@@ -38,7 +38,7 @@ export function SupportScreen() {
         <PRISMSection>
           <PRISMListItem
             title="Help center"
-            leading={<HelpCircle size={20} color={theme.spectrum.cyan} />}
+            leading={<HelpCircle size={20} color={theme.accent} />}
             onPress={notConnected}
           />
           <PRISMListItem

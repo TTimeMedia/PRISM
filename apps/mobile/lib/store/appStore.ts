@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Theme } from '@prism/types';
+import { DEFAULT_ACCENT_KEY, type AccentKey } from '@prism/ui';
 
 /**
  * Persistent, local, non-sensitive app preferences only — see
@@ -15,6 +16,9 @@ import type { Theme } from '@prism/types';
 interface AppState {
   themePreference: Theme;
   setThemePreference: (theme: Theme) => void;
+  /** Accent color theme — device-local, like the light/dark cache. */
+  accentColor: AccentKey;
+  setAccentColor: (accent: AccentKey) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -22,6 +26,8 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       themePreference: 'system',
       setThemePreference: (theme) => set({ themePreference: theme }),
+      accentColor: DEFAULT_ACCENT_KEY,
+      setAccentColor: (accent) => set({ accentColor: accent }),
     }),
     {
       name: 'prism-app-preferences',

@@ -120,6 +120,38 @@ describe('TodayScreen', () => {
     expect(screen.queryByText('Nothing urgent today.')).toBeNull();
   });
 
+  it('opens the record when a card is pressed, and never shows medications as cards', () => {
+    mockedUseTodayItems.mockReturnValue({
+      data: [
+        {
+          id: 'milestone-1',
+          moduleKey: 'milestones',
+          bucket: 'meaningful',
+          sourceId: '1',
+          title: 'Started HRT',
+          at: new Date().toISOString(),
+        },
+        {
+          id: 'medication-9',
+          moduleKey: 'medications',
+          bucket: 'recent',
+          sourceId: '9',
+          title: 'Testosterone',
+          at: new Date().toISOString(),
+        },
+      ],
+      isLoading: false,
+      isError: false,
+      refetch: jest.fn(),
+    } as never);
+
+    renderWithProviders(<TodayScreen />);
+
+    expect(screen.queryByText('Testosterone')).toBeNull();
+    fireEvent.press(screen.getByText('Started HRT'));
+    expect(router.push).toHaveBeenCalledWith('/journey/milestones/1');
+  });
+
   it('shows the approved error state, not a raw error, when the query fails', () => {
     mockedUseTodayItems.mockReturnValue({
       data: undefined,

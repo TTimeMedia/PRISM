@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
-import { darkTokens, lightTokens, spectrum, spectrumGradient, destructive } from '../tokens/colors';
+import {
+  darkTokens,
+  lightTokens,
+  spectrum,
+  spectrumGradient,
+  destructive,
+  onAccentColor,
+  resolveAccentColor,
+} from '../tokens/colors';
+import type { AccentKey } from '../tokens/colors';
 import type { ColorTokens } from '../tokens/colors';
 import { shadow } from '../tokens/shadows';
 import type { ShadowTokens } from '../tokens/shadows';
@@ -10,6 +19,10 @@ export interface ResolvedTheme {
   /** The theme actually rendered right now — never 'system'. */
   scheme: 'light' | 'dark';
   colors: ColorTokens;
+  /** The user's chosen primary-action color — see ACCENT_THEMES. */
+  accent: string;
+  /** Readable text/icon color to place on top of an accent fill. */
+  onAccent: string;
   spectrum: typeof spectrum;
   spectrumGradient: typeof spectrumGradient;
   destructive: string;
@@ -27,25 +40,31 @@ export interface ThemeProviderProps {
    * @prism/database settings.
    */
   preference: Theme;
+  /** The user's chosen accent theme; defaults to the original PRISM cyan. */
+  accent?: AccentKey;
   children: React.ReactNode;
 }
 
-export function ThemeProvider({ preference, children }: ThemeProviderProps) {
+export function ThemeProvider({ preference, accent, children }: ThemeProviderProps) {
   const systemScheme = useRNColorScheme();
 
   const value = useMemo<ResolvedTheme>(() => {
     const scheme: 'light' | 'dark' =
       preference === 'system' ? (systemScheme === 'light' ? 'light' : 'dark') : preference;
 
+    const accentColor = resolveAccentColor(accent);
+
     return {
       scheme,
       colors: scheme === 'dark' ? darkTokens : lightTokens,
+      accent: accentColor,
+      onAccent: onAccentColor(accentColor),
       spectrum,
       spectrumGradient,
       destructive,
       shadow: scheme === 'dark' ? shadow.dark : shadow.light,
     };
-  }, [preference, systemScheme]);
+  }, [preference, accent, systemScheme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

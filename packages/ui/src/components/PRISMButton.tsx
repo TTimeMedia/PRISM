@@ -60,7 +60,7 @@ function variantStyle(
   const opacity = pressed && !disabled ? 0.85 : 1;
   switch (variant) {
     case 'primary':
-      return { backgroundColor: theme.spectrum.cyan, opacity, borderWidth: 0 };
+      return { backgroundColor: theme.accent, opacity, borderWidth: 0 };
     case 'secondary':
       return {
         backgroundColor: 'transparent',
@@ -78,6 +78,7 @@ function variantStyle(
 function textColor(variant: PRISMButtonVariant, theme: ReturnType<typeof useTheme>) {
   switch (variant) {
     case 'primary':
+      return theme.onAccent;
     case 'destructive':
       return theme.colors.text.inverse;
     case 'secondary':

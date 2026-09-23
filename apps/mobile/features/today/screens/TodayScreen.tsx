@@ -54,11 +54,11 @@ const QUICK_ACTIONS: QuickAction[] = [
  * from the personalization engine — never hard-coded. See
  * docs/SCREEN_BIBLE.md Screen 20 and docs/TECHNICAL_BIBLE.md §10.
  *
- * "Quick actions" and "Coming Up" sit below the existing due-today
- * feed — see this screen's own layout, not a redesign of it. "Coming
- * Up" is a display-side slice of the same `useTodayItems()` data the
- * feed above already fetched (lib/today/comingUp.ts): no second query,
- * no invented content.
+ * "Coming up" leads the screen — what's next matters most. Below it, cards
+ * for anything not already listed there (appointments, recent milestones)
+ * open their own record; medications appear only in Coming up, never as
+ * cards. "Coming up" is a display-side slice of the same `useTodayItems()`
+ * data (lib/today/comingUp.ts): no second query, no invented content.
  */
 export function TodayScreen() {
   const theme = useTheme();
@@ -68,6 +68,12 @@ export function TodayScreen() {
   const name = profile?.display_name?.trim();
   const greeting = name ? `${timeOfDayGreeting()}, ${name}.` : `${timeOfDayGreeting()}.`;
   const comingUp = selectComingUpItems(items ?? []);
+  const comingUpIds = new Set(comingUp.map((item) => item.id));
+  // Medications live only in Coming up (and their own screens); anything
+  // already shown in Coming up isn't repeated as a card below it.
+  const feedItems = (items ?? []).filter(
+    (item) => item.moduleKey !== 'medications' && !comingUpIds.has(item.id),
+  );
 
   return (
     <SafeAreaView
@@ -85,49 +91,6 @@ export function TodayScreen() {
           <PRISMErrorState onRetry={() => refetch()} />
         ) : (
           <>
-            {items && items.length > 0 ? (
-              <View style={styles.cards}>
-                {items.map((item) => (
-                  <PRISMCard key={item.id} accessibilityLabel={item.title}>
-                    <Text style={[styles.cardTitle, { color: theme.colors.text.primary }]}>
-                      {item.title}
-                    </Text>
-                    {item.subtitle ? (
-                      <Text style={[styles.cardSubtitle, { color: theme.colors.text.secondary }]}>
-                        {item.subtitle}
-                      </Text>
-                    ) : null}
-                  </PRISMCard>
-                ))}
-              </View>
-            ) : (
-              <PRISMEmptyState
-                title="Nothing urgent today."
-                subtitle="Your PRISM is here whenever you need it."
-              />
-            )}
-
-            <PRISMSection title="Quick actions">
-              <View style={styles.quickActions}>
-                {QUICK_ACTIONS.map(({ key, label, href, Icon }) => (
-                  <PRISMCard
-                    key={key}
-                    accessibilityLabel={label}
-                    onPress={() => router.push(href)}
-                    style={styles.quickActionCard}
-                  >
-                    <Icon size={22} color={theme.spectrum.cyan} />
-                    <Text
-                      style={[styles.quickActionLabel, { color: theme.colors.text.primary }]}
-                      numberOfLines={2}
-                    >
-                      + {label}
-                    </Text>
-                  </PRISMCard>
-                ))}
-              </View>
-            </PRISMSection>
-
             <PRISMSection title="Coming up">
               {comingUp.length > 0 ? (
                 <View style={styles.comingUpList}>
@@ -148,6 +111,53 @@ export function TodayScreen() {
               ) : (
                 <PRISMEmptyState title="Nothing scheduled." />
               )}
+            </PRISMSection>
+
+            {feedItems.length > 0 ? (
+              <View style={styles.cards}>
+                {feedItems.map((item) => (
+                  <PRISMCard
+                    key={item.id}
+                    accessibilityLabel={item.title}
+                    onPress={() => router.push(comingUpItemHref(item))}
+                  >
+                    <Text style={[styles.cardTitle, { color: theme.colors.text.primary }]}>
+                      {item.title}
+                    </Text>
+                    {item.subtitle ? (
+                      <Text style={[styles.cardSubtitle, { color: theme.colors.text.secondary }]}>
+                        {item.subtitle}
+                      </Text>
+                    ) : null}
+                  </PRISMCard>
+                ))}
+              </View>
+            ) : comingUp.length === 0 ? (
+              <PRISMEmptyState
+                title="Nothing urgent today."
+                subtitle="Your PRISM is here whenever you need it."
+              />
+            ) : null}
+
+            <PRISMSection title="Quick actions">
+              <View style={styles.quickActions}>
+                {QUICK_ACTIONS.map(({ key, label, href, Icon }) => (
+                  <PRISMCard
+                    key={key}
+                    accessibilityLabel={label}
+                    onPress={() => router.push(href)}
+                    style={styles.quickActionCard}
+                  >
+                    <Icon size={22} color={theme.accent} />
+                    <Text
+                      style={[styles.quickActionLabel, { color: theme.colors.text.primary }]}
+                      numberOfLines={2}
+                    >
+                      + {label}
+                    </Text>
+                  </PRISMCard>
+                ))}
+              </View>
             </PRISMSection>
           </>
         )}

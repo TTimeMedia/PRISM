@@ -31,6 +31,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const themePreference = useAppStore((state) => state.themePreference);
+  const accentColor = useAppStore((state) => state.accentColor);
   const [fontsLoaded, fontError] = useFonts({
     Inter: Inter_400Regular,
     'Inter-Medium': Inter_500Medium,
@@ -49,7 +50,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <ThemeProvider preference={themePreference}>
+            <ThemeProvider preference={themePreference} accent={accentColor}>
               <PRISMToastProvider>
                 <OfflineBanner />
                 <RootNavigator fontsLoaded={fontsLoaded} />

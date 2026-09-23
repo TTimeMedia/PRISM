@@ -1,14 +1,17 @@
 import React from 'react';
 import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
-import { ArrowLeft } from 'lucide-react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ArrowLeft, Check } from 'lucide-react-native';
 import {
+  ACCENT_THEMES,
+  onAccentColor,
   PRISMErrorState,
   PRISMHeader,
   PRISMIconButton,
   PRISMSelect,
   PRISMSkeleton,
   spacing,
+  type,
   useTheme,
 } from '@prism/ui';
 import type { Theme } from '@prism/types';
@@ -32,6 +35,8 @@ export function AppearanceScreen() {
   const { data: settings, isLoading, isError, refetch } = useSettings();
   const updateSettings = useUpdateSettings();
   const setThemePreference = useAppStore((state) => state.setThemePreference);
+  const accentColor = useAppStore((state) => state.accentColor);
+  const setAccentColor = useAppStore((state) => state.setAccentColor);
 
   const setTheme = (value: Theme) => {
     setThemePreference(value);
@@ -60,6 +65,37 @@ export function AppearanceScreen() {
             value={settings.theme}
             onChange={setTheme}
           />
+          <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>
+            Accent color
+          </Text>
+          <View style={styles.swatches} accessibilityRole="radiogroup">
+            {ACCENT_THEMES.map(({ key, label, color }) => {
+              const selected = key === accentColor;
+              return (
+                <Pressable
+                  key={key}
+                  accessibilityRole="radio"
+                  accessibilityLabel={`${label} accent`}
+                  accessibilityState={{ selected }}
+                  onPress={() => setAccentColor(key)}
+                  style={styles.swatchItem}
+                >
+                  <View
+                    style={[
+                      styles.swatch,
+                      { backgroundColor: color },
+                      selected && { borderColor: theme.colors.text.primary },
+                    ]}
+                  >
+                    {selected ? <Check size={20} color={onAccentColor(color)} /> : null}
+                  </View>
+                  <Text style={[styles.swatchLabel, { color: theme.colors.text.tertiary }]}>
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </View>
       )}
     </View>
@@ -74,5 +110,34 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
+  },
+  sectionLabel: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  swatches: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+  },
+  swatchItem: {
+    alignItems: 'center',
+    width: 64,
+    gap: spacing.xs,
+  },
+  swatch: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 3,
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  swatchLabel: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
   },
 });

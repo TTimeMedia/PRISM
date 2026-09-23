@@ -64,7 +64,7 @@ export function PRISMPinInput({
                 styles.dot,
                 {
                   borderColor: theme.colors.border.default,
-                  backgroundColor: index < value.length ? theme.spectrum.cyan : 'transparent',
+                  backgroundColor: index < value.length ? theme.accent : 'transparent',
                 },
               ]}
             />

@@ -43,7 +43,7 @@ export function YouScreen() {
         <PRISMSection title="Me">
           <PRISMListItem
             title="Profile"
-            leading={<UserRound size={20} color={theme.spectrum.cyan} />}
+            leading={<UserRound size={20} color={theme.accent} />}
             onPress={() => router.push('/you/profile')}
           />
         </PRISMSection>
@@ -78,7 +78,7 @@ export function YouScreen() {
           />
           <PRISMListItem
             title="Accessibility"
-            leading={<AccessibilityIcon size={20} color={theme.spectrum.cyan} />}
+            leading={<AccessibilityIcon size={20} color={theme.accent} />}
             onPress={() => router.push('/you/accessibility')}
           />
           <PRISMListItem

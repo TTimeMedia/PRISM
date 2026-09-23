@@ -20,7 +20,7 @@ export function PRISMInput({ label, helperText, error, ...inputProps }: PRISMInp
   const borderColor = error
     ? theme.destructive
     : focused
-      ? theme.spectrum.cyan
+      ? theme.accent
       : theme.colors.border.default;
 
   return (

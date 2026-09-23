@@ -26,7 +26,7 @@ export function PRISMTextArea({
   const borderColor = error
     ? theme.destructive
     : focused
-      ? theme.spectrum.cyan
+      ? theme.accent
       : theme.colors.border.default;
 
   return (
