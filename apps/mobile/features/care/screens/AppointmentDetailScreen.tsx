@@ -17,15 +17,19 @@ import {
 } from '@prism/ui';
 import { useAppointment } from '../../../lib/care/queries';
 import { useDeleteAppointment } from '../../../lib/care/mutations';
+import { useSettings } from '../../../lib/profile/queries';
+import { calendarProvider } from '../../../lib/calendar';
 
 /** Screen 33 — Appointment Detail. */
 export function AppointmentDetailScreen() {
   const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: appointment, isLoading, isError, refetch } = useAppointment(id);
+  const { data: settings } = useSettings();
   const deleteAppointment = useDeleteAppointment();
   const { showToast } = useToast();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [addingToCalendar, setAddingToCalendar] = useState(false);
 
   const handleDelete = async () => {
     setConfirmDelete(false);
@@ -34,6 +38,25 @@ export function AppointmentDetailScreen() {
       router.back();
     } catch {
       showToast("Couldn't delete this appointment. Please try again.", 'error');
+    }
+  };
+
+  const handleAddToCalendar = async () => {
+    if (!appointment) return;
+    setAddingToCalendar(true);
+    try {
+      await calendarProvider.addAppointment({
+        title: appointment.title,
+        location: appointment.location,
+        notes: appointment.notes,
+        startsAt: appointment.starts_at,
+        endsAt: appointment.ends_at,
+      });
+      showToast('Added to your calendar.', 'success');
+    } catch {
+      showToast("Couldn't add this to your calendar. Please try again.", 'error');
+    } finally {
+      setAddingToCalendar(false);
     }
   };
 
@@ -70,6 +93,14 @@ export function AppointmentDetailScreen() {
               variant="secondary"
               onPress={() => router.push(`/care/appointments/${id}/edit`)}
             />
+            {settings?.calendar_sync_enabled ? (
+              <PRISMButton
+                label="Add to calendar"
+                variant="secondary"
+                loading={addingToCalendar}
+                onPress={handleAddToCalendar}
+              />
+            ) : null}
             <PRISMButton
               label="Delete"
               variant="destructive"

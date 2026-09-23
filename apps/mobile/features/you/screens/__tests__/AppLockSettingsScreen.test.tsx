@@ -41,6 +41,7 @@ function settings(overrides: Partial<Settings> = {}): Settings {
     biometric_lock: false,
     notification_privacy: true,
     reduced_motion: false,
+    calendar_sync_enabled: false,
     accessibility_preferences: null,
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',

@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import {
   Bell,
+  CalendarDays,
   Download,
   HelpCircle,
   Palette,
@@ -79,6 +80,12 @@ export function YouScreen() {
             title="Accessibility"
             leading={<AccessibilityIcon size={20} color={theme.spectrum.cyan} />}
             onPress={() => router.push('/you/accessibility')}
+          />
+          <PRISMListItem
+            title="Calendar"
+            subtitle="Sync appointments to your device calendar."
+            leading={<CalendarDays size={20} color={theme.spectrum.mint} />}
+            onPress={() => router.push('/you/calendar')}
           />
         </PRISMSection>
 

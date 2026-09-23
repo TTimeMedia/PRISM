@@ -136,6 +136,27 @@ export function useCreateMedicationLog() {
   });
 }
 
+export function useDeleteMedicationLog(medicationId: string) {
+  const { session } = useSession();
+  const userId = session?.user.id;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string): Promise<void> => {
+      if (!userId) throw new Error('No authenticated session.');
+      const { error } = await supabase
+        .from('medication_logs')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: medicationLogsKey(userId, medicationId) });
+    },
+  });
+}
+
 export function useCreateInjection() {
   const { session } = useSession();
   const userId = session?.user.id;
@@ -151,6 +172,23 @@ export function useCreateInjection() {
         .single();
       if (error) throw error;
       return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: injectionsKey(userId) });
+    },
+  });
+}
+
+export function useDeleteInjection() {
+  const { session } = useSession();
+  const userId = session?.user.id;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string): Promise<void> => {
+      if (!userId) throw new Error('No authenticated session.');
+      const { error } = await supabase.from('injections').delete().eq('id', id).eq('user_id', userId);
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: injectionsKey(userId) });

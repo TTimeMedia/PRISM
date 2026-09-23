@@ -154,6 +154,7 @@ export interface Database {
           | 'biometric_lock'
           | 'notification_privacy'
           | 'reduced_motion'
+          | 'calendar_sync_enabled'
           | 'created_at'
           | 'updated_at'
         >,

@@ -59,6 +59,12 @@
           "photosPermission": "PRISM uses your photo library to set your profile photo."
         }
       ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "PRISM uses your calendar to add appointments you choose to sync."
+        }
+      ],
       "expo-notifications"
     ],
     "experiments": {

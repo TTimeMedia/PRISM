@@ -299,6 +299,8 @@ export interface Settings {
   biometric_lock: boolean;
   notification_privacy: boolean;
   reduced_motion: boolean;
+  /** Master switch for device-calendar sync — see docs/DECISIONS.md § CARE. Permission is requested only when this is turned on, never eagerly. */
+  calendar_sync_enabled: boolean;
   accessibility_preferences: Record<string, unknown> | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
