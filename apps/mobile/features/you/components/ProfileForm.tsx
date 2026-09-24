@@ -6,6 +6,8 @@ import { UserRound } from 'lucide-react-native';
 import { profileUpdateSchema, type ProfileUpdateInput } from '@prism/validation';
 import { PRISMButton, PRISMDateInput, PRISMInput, spacing, useTheme, useToast } from '@prism/ui';
 import { useSession } from '../../../lib/auth/AuthProvider';
+import { ListPickerField } from '../../../components/ListPickerField';
+import { GENDER_OPTIONS, PRONOUN_OPTIONS } from '../../../lib/pickerOptions';
 import { pickProfilePhoto, uploadProfilePhoto } from '../../../lib/you/profilePhoto';
 import { useSignedProfilePhotoUrl } from '../../../lib/you/useSignedProfilePhotoUrl';
 
@@ -81,11 +83,13 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
         control={control}
         name="pronouns"
         render={({ field }) => (
-          <PRISMInput
+          <ListPickerField
             label="Pronouns"
             value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
+            onChange={field.onChange}
+            options={PRONOUN_OPTIONS}
+            placeholder="Choose or write your own"
+            customPrompt="Write your pronouns"
           />
         )}
       />
@@ -93,11 +97,13 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
         control={control}
         name="gender"
         render={({ field }) => (
-          <PRISMInput
+          <ListPickerField
             label="Gender"
             value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
+            onChange={field.onChange}
+            options={GENDER_OPTIONS}
+            placeholder="Choose or write your own"
+            customPrompt="Write your gender"
           />
         )}
       />

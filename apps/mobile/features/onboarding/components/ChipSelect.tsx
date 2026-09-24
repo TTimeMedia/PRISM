@@ -12,6 +12,8 @@ export interface ChipSelectProps {
   onChange: (next: string[]) => void;
   /** Single-select behaves like a radio group instead of independent toggles. */
   multiple?: boolean;
+  /** Optional heading above the chips. */
+  label?: string;
 }
 
 /**
@@ -19,8 +21,20 @@ export interface ChipSelectProps {
  * adapter over the shared `PRISMChipGroup` (packages/ui), keeping
  * onboarding's existing array-value, no-own-label call-site contract.
  */
-export function ChipSelect({ options, selected, onChange, multiple = true }: ChipSelectProps) {
+export function ChipSelect({
+  options,
+  selected,
+  onChange,
+  multiple = true,
+  label,
+}: ChipSelectProps) {
   return (
-    <PRISMChipGroup options={options} value={selected} onChange={onChange} multiple={multiple} />
+    <PRISMChipGroup
+      label={label}
+      options={options}
+      value={selected}
+      onChange={onChange}
+      multiple={multiple}
+    />
   );
 }

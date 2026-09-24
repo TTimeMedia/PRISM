@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getNextOnboardingStep } from '@prism/types';
 import { identitySchema, type IdentityInput } from '@prism/validation';
 import { PRISMInput } from '@prism/ui';
+import { ListPickerField } from '../../../components/ListPickerField';
+import { GENDER_OPTIONS, PRONOUN_OPTIONS } from '../../../lib/pickerOptions';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
@@ -69,11 +71,13 @@ export function IdentityScreen() {
         control={control}
         name="pronouns"
         render={({ field }) => (
-          <PRISMInput
+          <ListPickerField
             label="Pronouns"
             value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
+            onChange={field.onChange}
+            options={PRONOUN_OPTIONS}
+            placeholder="Choose or write your own"
+            customPrompt="Write your pronouns"
           />
         )}
       />
@@ -81,13 +85,13 @@ export function IdentityScreen() {
         control={control}
         name="gender"
         render={({ field }) => (
-          <PRISMInput
+          <ListPickerField
             label="Gender"
             value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            returnKeyType="done"
-            onSubmitEditing={handleSubmit(submit)}
+            onChange={field.onChange}
+            options={GENDER_OPTIONS}
+            placeholder="Choose or write your own"
+            customPrompt="Write your gender"
           />
         )}
       />

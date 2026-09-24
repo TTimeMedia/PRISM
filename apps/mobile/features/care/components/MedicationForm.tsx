@@ -12,6 +12,8 @@ import {
   PRISMTimeInput,
   spacing,
 } from '@prism/ui';
+import { ListPickerField } from '../../../components/ListPickerField';
+import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from './ChipField';
 import { DaysOfWeekSelect } from './DaysOfWeekSelect';
@@ -55,11 +57,13 @@ export function MedicationForm({
           control={control}
           name="name"
           render={({ field, fieldState }) => (
-            <PRISMInput
+            <ListPickerField
               label="Medication name"
               value={field.value}
-              onChangeText={field.onChange}
-              onBlur={field.onBlur}
+              onChange={field.onChange}
+              options={MEDICATION_OPTIONS}
+              placeholder="Choose or search"
+              searchable
               error={fieldState.error?.message}
             />
           )}

@@ -6,6 +6,8 @@ import { FREQUENCY_TYPES, MEDICATION_FORMS, getNextOnboardingStep } from '@prism
 import { medicationCreateSchema, type MedicationCreateInput } from '@prism/validation';
 import { PRISMDateInput, PRISMInput, PRISMSwitch, spacing } from '@prism/ui';
 import { StyleSheet, View } from 'react-native';
+import { ListPickerField } from '../../../components/ListPickerField';
+import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { ChipSelect } from '../components/ChipSelect';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
@@ -84,11 +86,13 @@ export function MedicationSetupScreen() {
         control={control}
         name="name"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <ListPickerField
             label="Medication name"
             value={field.value}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
+            onChange={field.onChange}
+            options={MEDICATION_OPTIONS}
+            placeholder="Choose or search"
+            searchable
             error={fieldState.error?.message}
           />
         )}
@@ -99,6 +103,7 @@ export function MedicationSetupScreen() {
           name="form"
           render={({ field }) => (
             <ChipSelect
+              label="Form"
               options={FORM_OPTIONS}
               selected={field.value ? [field.value] : []}
               onChange={(next) => field.onChange(next[0] ?? null)}
@@ -125,6 +130,7 @@ export function MedicationSetupScreen() {
           name="frequency_type"
           render={({ field }) => (
             <ChipSelect
+              label="How often"
               options={FREQUENCY_OPTIONS}
               selected={field.value ? [field.value] : []}
               onChange={(next) => field.onChange(next[0] ?? null)}
