@@ -187,7 +187,11 @@ export function useDeleteInjection() {
   return useMutation({
     mutationFn: async (id: string): Promise<void> => {
       if (!userId) throw new Error('No authenticated session.');
-      const { error } = await supabase.from('injections').delete().eq('id', id).eq('user_id', userId);
+      const { error } = await supabase
+        .from('injections')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', userId);
       if (error) throw error;
     },
     onSuccess: () => {

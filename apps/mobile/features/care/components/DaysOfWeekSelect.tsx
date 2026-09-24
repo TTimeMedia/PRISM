@@ -15,10 +15,11 @@ const DAYS = [
 export interface DaysOfWeekSelectProps {
   value: number[];
   onChange: (value: number[]) => void;
+  error?: string;
 }
 
 /** Multi-select day-of-week row for a weekly medication schedule. */
-export function DaysOfWeekSelect({ value, onChange }: DaysOfWeekSelectProps) {
+export function DaysOfWeekSelect({ value, onChange, error }: DaysOfWeekSelectProps) {
   const theme = useTheme();
   const toggle = (day: number) => {
     onChange(value.includes(day) ? value.filter((d) => d !== day) : [...value, day].sort());
@@ -37,6 +38,7 @@ export function DaysOfWeekSelect({ value, onChange }: DaysOfWeekSelectProps) {
           />
         ))}
       </View>
+      {error ? <Text style={[styles.error, { color: theme.destructive }]}>{error}</Text> : null}
     </View>
   );
 }
@@ -49,6 +51,11 @@ const styles = StyleSheet.create({
     fontSize: type.bodyS.fontSize,
     lineHeight: type.bodyS.lineHeight,
     marginBottom: spacing.sm,
+  },
+  error: {
+    fontSize: type.caption.fontSize,
+    lineHeight: type.caption.lineHeight,
+    marginTop: spacing.xs,
   },
   wrap: {
     flexDirection: 'row',

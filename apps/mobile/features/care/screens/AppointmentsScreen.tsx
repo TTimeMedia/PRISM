@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft, Plus } from 'lucide-react-native';
 import {
+  PRISMButton,
   PRISMEmptyState,
   PRISMErrorState,
   PRISMHeader,
@@ -15,11 +16,13 @@ import {
 } from '@prism/ui';
 import type { Appointment } from '@prism/types';
 import { useAppointments } from '../../../lib/care/queries';
+import { CalendarImportSheet } from '../components/CalendarImportSheet';
 
 /** Screen 31 — Appointments. Upcoming shown first. */
 export function AppointmentsScreen() {
   const theme = useTheme();
   const { data: appointments, isLoading, isError, refetch } = useAppointments();
+  const [importOpen, setImportOpen] = useState(false);
 
   const now = new Date().toISOString();
   const upcoming = (appointments ?? []).filter((a) => a.starts_at >= now);
@@ -46,6 +49,13 @@ export function AppointmentsScreen() {
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.importRow}>
+          <PRISMButton
+            label="Import from calendar"
+            variant="secondary"
+            onPress={() => setImportOpen(true)}
+          />
+        </View>
         {isLoading ? (
           <View style={styles.skeletons}>
             <PRISMSkeleton height={56} />
@@ -85,6 +95,7 @@ export function AppointmentsScreen() {
           </>
         )}
       </ScrollView>
+      <CalendarImportSheet visible={importOpen} onClose={() => setImportOpen(false)} />
     </View>
   );
 }
@@ -111,6 +122,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
+  },
+  importRow: {
+    marginBottom: spacing.md,
   },
   skeletons: {
     gap: spacing.sm,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'expo-router';
-import type { OnboardingStep } from '@prism/types';
+import { normalizeOnboardingStep } from '@prism/types';
 import { useSession } from '../lib/auth/AuthProvider';
 import { useProfile } from '../lib/profile/queries';
 import { onboardingStepHref } from '../lib/onboarding/routes';
@@ -22,8 +22,9 @@ export default function Index() {
   }
 
   if (!profile?.onboarding_completed) {
-    const resumeStep = (profile?.onboarding_step as OnboardingStep | null) ?? 'philosophy';
-    return <Redirect href={onboardingStepHref(resumeStep)} />;
+    return (
+      <Redirect href={onboardingStepHref(normalizeOnboardingStep(profile?.onboarding_step))} />
+    );
   }
 
   return <Redirect href="/(tabs)/today" />;

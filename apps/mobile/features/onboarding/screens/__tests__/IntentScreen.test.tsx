@@ -34,10 +34,10 @@ describe('IntentScreen', () => {
     await waitFor(() =>
       expect(mutateAsync).toHaveBeenCalledWith({
         intent: ['journaling', 'appointments'],
-        onboarding_step: 'journey_stage',
+        onboarding_step: 'identity',
       }),
     );
-    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/journey-stage'));
+    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/identity'));
   });
 
   it('is fully skippable — every onboarding step is optional', async () => {
@@ -46,7 +46,7 @@ describe('IntentScreen', () => {
     fireEvent.press(screen.getByText('Skip'));
 
     await waitFor(() =>
-      expect(mutateAsync).toHaveBeenCalledWith({ intent: [], onboarding_step: 'journey_stage' }),
+      expect(mutateAsync).toHaveBeenCalledWith({ intent: [], onboarding_step: 'identity' }),
     );
   });
 
@@ -58,7 +58,7 @@ describe('IntentScreen', () => {
     fireEvent.press(screen.getByText('Continue'));
 
     await waitFor(() =>
-      expect(mutateAsync).toHaveBeenCalledWith({ intent: [], onboarding_step: 'journey_stage' }),
+      expect(mutateAsync).toHaveBeenCalledWith({ intent: [], onboarding_step: 'identity' }),
     );
   });
 });

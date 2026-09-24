@@ -27,7 +27,7 @@ describe('ListPickerField', () => {
   it('lets people write their own answer from the list', () => {
     renderWithProviders(<Harness />);
     fireEvent.press(screen.getByLabelText('Pronouns: Choose'));
-    fireEvent.press(screen.getByLabelText('Something else'));
+    fireEvent.press(screen.getByLabelText('Write your own'));
     fireEvent.changeText(screen.getByLabelText('Write your own'), 'xe/xem');
     fireEvent.press(screen.getByText('Use this'));
     expect(screen.getByLabelText('Pronouns: xe/xem')).toBeTruthy();

@@ -1,7 +1,7 @@
 import { deviceCalendarProvider } from './deviceCalendarProvider';
 import type { CalendarProvider } from './types';
 
-export type { CalendarAppointmentInput, CalendarProvider } from './types';
+export type { CalendarAppointmentInput, CalendarEventSummary, CalendarProvider } from './types';
 
 /**
  * The active calendar provider. Apple Calendar (device, via EventKit) is

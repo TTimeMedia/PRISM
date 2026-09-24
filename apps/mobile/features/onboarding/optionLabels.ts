@@ -2,24 +2,19 @@ import {
   BookOpen,
   Bandage,
   CalendarDays,
-  Compass,
   Droplets,
   Ellipsis,
   FlaskConical,
   Flag,
   FolderOpen,
-  Hourglass,
   LayoutGrid,
   CircleHelp,
   Pill,
-  Route,
   Scale,
   Scissors,
-  Sprout,
   Stethoscope,
   Syringe,
   Sun,
-  EyeOff,
   Ban,
   Layers,
 } from 'lucide-react-native';
@@ -40,16 +35,6 @@ export const INTENT_CHIP_OPTIONS: OptionGridOption[] = [
   { value: 'all_in_one_place', label: 'Everything in one place', icon: LayoutGrid },
   { value: 'still_figuring_out', label: "I'm still figuring things out", icon: CircleHelp },
   { value: 'something_else', label: 'Something else', icon: Ellipsis },
-];
-
-/** Screen 10 — journey stage, single-select. */
-export const JOURNEY_STAGE_CHIP_OPTIONS: OptionGridOption[] = [
-  { value: 'exploring', label: 'Exploring', icon: Compass },
-  { value: 'preparing', label: 'Preparing', icon: Hourglass },
-  { value: 'in_progress', label: 'In progress', icon: Route },
-  { value: 'established', label: 'Established', icon: Sprout },
-  { value: 'somewhere_else', label: 'Somewhere else', icon: Ellipsis },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say', icon: EyeOff },
 ];
 
 /**

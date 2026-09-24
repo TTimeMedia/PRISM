@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FREQUENCY_TYPES, MEDICATION_FORMS, getNextOnboardingStep } from '@prism/types';
+import { MEDICATION_FORMS, getNextOnboardingStep } from '@prism/types';
 import { medicationCreateSchema, type MedicationCreateInput } from '@prism/validation';
 import { PRISMDateInput, PRISMInput, PRISMSwitch, spacing } from '@prism/ui';
 import { StyleSheet, View } from 'react-native';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
+import { MedicationScheduleFields } from '../../care/components/MedicationScheduleFields';
+import { scheduleProblem, withScheduleDefaults } from '../../care/medicationSchedule';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { ChipSelect } from '../components/ChipSelect';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
@@ -18,10 +20,6 @@ import { useCreateMedication } from '../../../lib/care/mutations';
 const FORM_OPTIONS = MEDICATION_FORMS.map((value) => ({
   value,
   label: value.charAt(0).toUpperCase() + value.slice(1),
-}));
-const FREQUENCY_OPTIONS = FREQUENCY_TYPES.map((value) => ({
-  value,
-  label: value.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase()),
 }));
 
 /**
@@ -39,6 +37,7 @@ export function MedicationSetupScreen() {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { isSubmitting: isFormSubmitting },
   } = useForm<MedicationCreateInput>({
     resolver: zodResolver(medicationCreateSchema),
@@ -61,8 +60,13 @@ export function MedicationSetupScreen() {
   };
 
   const submit = async (values: MedicationCreateInput) => {
+    const problem = scheduleProblem(values);
+    if (problem) {
+      setError(problem.path, { type: 'validate', message: problem.message });
+      return;
+    }
     setIsSubmitting(true);
-    await createMedication.mutateAsync(values);
+    await createMedication.mutateAsync(withScheduleDefaults(values));
     await goNext();
     setIsSubmitting(false);
   };
@@ -124,21 +128,7 @@ export function MedicationSetupScreen() {
           />
         )}
       />
-      <View style={styles.field}>
-        <Controller
-          control={control}
-          name="frequency_type"
-          render={({ field }) => (
-            <ChipSelect
-              label="How often"
-              options={FREQUENCY_OPTIONS}
-              selected={field.value ? [field.value] : []}
-              onChange={(next) => field.onChange(next[0] ?? null)}
-              multiple={false}
-            />
-          )}
-        />
-      </View>
+      <MedicationScheduleFields control={control} frequencyLabel="How often" />
       <Controller
         control={control}
         name="start_date"

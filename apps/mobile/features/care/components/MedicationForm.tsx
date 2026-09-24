@@ -9,15 +9,15 @@ import {
   PRISMInput,
   PRISMSwitch,
   PRISMTextArea,
-  PRISMTimeInput,
   spacing,
 } from '@prism/ui';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from './ChipField';
-import { DaysOfWeekSelect } from './DaysOfWeekSelect';
-import { FREQUENCY_TYPE_OPTIONS, MEDICATION_FORM_OPTIONS } from '../optionLabels';
+import { MedicationScheduleFields } from './MedicationScheduleFields';
+import { scheduleProblem, withScheduleDefaults } from '../medicationSchedule';
+import { MEDICATION_FORM_OPTIONS } from '../optionLabels';
 
 export interface MedicationFormProps {
   defaultValues?: Partial<MedicationCreateInput>;
@@ -33,7 +33,7 @@ export function MedicationForm({
   submitting = false,
   onSubmit,
 }: MedicationFormProps) {
-  const { control, handleSubmit, watch } = useForm<MedicationCreateInput>({
+  const { control, handleSubmit, setError } = useForm<MedicationCreateInput>({
     resolver: zodResolver(medicationCreateSchema),
     defaultValues: {
       name: '',
@@ -48,7 +48,14 @@ export function MedicationForm({
       ...defaultValues,
     },
   });
-  const frequencyType = watch('frequency_type');
+  const submitChecked = (values: MedicationCreateInput) => {
+    const problem = scheduleProblem(values);
+    if (problem) {
+      setError(problem.path, { type: 'validate', message: problem.message });
+      return;
+    }
+    onSubmit(withScheduleDefaults(values));
+  };
 
   return (
     <KeyboardAwareScreen>
@@ -92,57 +99,7 @@ export function MedicationForm({
             />
           )}
         />
-        <Controller
-          control={control}
-          name="frequency_type"
-          render={({ field }) => (
-            <ChipField
-              label="Frequency"
-              options={FREQUENCY_TYPE_OPTIONS}
-              value={field.value ?? null}
-              onChange={(v) => field.onChange(v)}
-            />
-          )}
-        />
-        {frequencyType === 'weekly' ? (
-          <Controller
-            control={control}
-            name="frequency_config.days_of_week"
-            render={({ field }) => (
-              <DaysOfWeekSelect value={field.value ?? []} onChange={field.onChange} />
-            )}
-          />
-        ) : null}
-        {frequencyType === 'every_x_days' ? (
-          <Controller
-            control={control}
-            name="frequency_config.interval_days"
-            render={({ field }) => (
-              <PRISMInput
-                label="Every how many days"
-                keyboardType="number-pad"
-                value={field.value ? String(field.value) : ''}
-                onChangeText={(text) => field.onChange(text ? Number(text) : undefined)}
-                onBlur={field.onBlur}
-              />
-            )}
-          />
-        ) : null}
-        {frequencyType ? (
-          <Controller
-            control={control}
-            name="frequency_config.time_of_day"
-            render={({ field, fieldState }) => (
-              <PRISMTimeInput
-                label="Time of day"
-                value={field.value ?? ''}
-                onChangeText={field.onChange}
-                onBlur={field.onBlur}
-                error={fieldState.error?.message}
-              />
-            )}
-          />
-        ) : null}
+        <MedicationScheduleFields control={control} />
         <Controller
           control={control}
           name="start_date"
@@ -176,7 +133,11 @@ export function MedicationForm({
           )}
         />
         <View style={styles.submit}>
-          <PRISMButton label={submitLabel} onPress={handleSubmit(onSubmit)} loading={submitting} />
+          <PRISMButton
+            label={submitLabel}
+            onPress={handleSubmit(submitChecked)}
+            loading={submitting}
+          />
         </View>
       </View>
     </KeyboardAwareScreen>

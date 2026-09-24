@@ -22,7 +22,10 @@ function isTheme(value: string | undefined): value is Theme {
  * matches and this is a no-op for the device that made the change.
  * Unknown or missing values are ignored, never applied.
  */
-export function useAppearanceSync(serverTheme: string | undefined, serverAccent: string | undefined): void {
+export function useAppearanceSync(
+  serverTheme: string | undefined,
+  serverAccent: string | undefined,
+): void {
   const setThemePreference = useAppStore((state) => state.setThemePreference);
   const setAccentColor = useAppStore((state) => state.setAccentColor);
 

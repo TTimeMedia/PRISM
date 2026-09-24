@@ -24,7 +24,7 @@ export interface ListPickerFieldProps {
   /**
    * Long lists: adds a search box at the top, and typing something that
    * isn't in the list offers to use it as written. Short lists: adds a
-   * "Something else" row that opens a text box instead.
+   * "Write your own" row that opens a text box instead.
    */
   searchable?: boolean;
   /** Label of the row that lets someone write their own answer. */
@@ -46,7 +46,7 @@ export function ListPickerField({
   options,
   placeholder = 'Choose',
   searchable = false,
-  customLabel = 'Something else',
+  customLabel = 'Write your own',
   customPrompt = 'Write your own',
   error,
 }: ListPickerFieldProps) {

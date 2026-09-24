@@ -3,7 +3,7 @@
     "name": "Prism",
     "slug": "prism",
     "owner": "ttimemedia",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "prism",
@@ -13,7 +13,19 @@
       "supportsTablet": true,
       "bundleIdentifier": "ttimemedia.prism",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCalendarsWriteOnlyAccessUsageDescription": "Prism adds the appointments you choose to sync to your calendar.",
+        "CFBundleDocumentTypes": [
+          {
+            "CFBundleTypeName": "Calendar event",
+            "CFBundleTypeRole": "Viewer",
+            "LSHandlerRank": "Alternate",
+            "LSItemContentTypes": [
+              "public.calendar-event",
+              "com.apple.ical.ics"
+            ]
+          }
+        ]
       }
     },
     "android": {
@@ -29,6 +41,20 @@
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT",
         "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "category": [
+            "DEFAULT",
+            "BROWSABLE"
+          ],
+          "data": [
+            {
+              "mimeType": "text/calendar"
+            }
+          ]
+        }
       ]
     },
     "web": {
@@ -62,7 +88,7 @@
       [
         "expo-calendar",
         {
-          "calendarPermission": "Prism uses your calendar to add appointments you choose to sync."
+          "calendarPermission": "Prism reads your calendar only when you tap Import, so you can choose which appointments to add. It also adds appointments you choose to sync."
         }
       ],
       "expo-notifications"

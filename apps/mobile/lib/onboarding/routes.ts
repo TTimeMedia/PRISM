@@ -10,7 +10,6 @@ import type { OnboardingStep } from '@prism/types';
 export const ONBOARDING_ROUTE_SEGMENTS: Record<OnboardingStep, string> = {
   philosophy: 'philosophy',
   intent: 'intent',
-  journey_stage: 'journey-stage',
   identity: 'identity',
   care_setup: 'care-setup',
   medication_setup: 'medication-setup',
@@ -34,7 +33,6 @@ export const ONBOARDING_ROUTE_SEGMENTS: Record<OnboardingStep, string> = {
 const ONBOARDING_HREFS: Record<OnboardingStep, Href> = {
   philosophy: '/(onboarding)/philosophy',
   intent: '/(onboarding)/intent',
-  journey_stage: '/(onboarding)/journey-stage',
   identity: '/(onboarding)/identity',
   care_setup: '/(onboarding)/care-setup',
   medication_setup: '/(onboarding)/medication-setup',

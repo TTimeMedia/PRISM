@@ -86,7 +86,7 @@ Sequential, resumable, and every non-essential step is skippable. No step visual
 2. **Welcome** — "Welcome to PRISM." Get started / Already have an account.
 3. **Philosophy** — the approved PRISM philosophy, verbatim, never rewritten into clinical language.
 4. **What Brings You Here?** — multi-select intent (managing medications, tracking injections, appointments, labs, surgery, legal changes, milestones, journaling, records, "keeping everything in one place," "I'm still figuring things out," "something else").
-5. **Journey Stage** (optional) — Exploring / Preparing / In progress / Established / Somewhere else / Prefer not to say. **Must not** appear as a progress meter.
+5. ~~**Journey Stage**~~ — removed from onboarding (see SCREEN_BIBLE Screen 10). If it ever returns it **must not** appear as a progress meter.
 6. **Identity** (optional) — Name, Pronouns, Gender. Fully skippable.
 7. **Care Setup** (optional) — Hormones, Medication, Injections, Patches, Gel/cream, Blockers, Surgery, Other, None of these. Drives which of the next three screens appear.
 8. **Medication Setup** (conditional) — Name, Form, Dosage text, Frequency, Schedule, Start date, End date, Reminder, Notes.
@@ -265,7 +265,7 @@ Full detail: [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
 **This scope is final** — adopted by explicit product-owner decision on 2026-09-01, recorded in [`DECISIONS.md`](./DECISIONS.md) §Full MVP (P0) / next-release (P1) scope. It supersedes the narrative MVP wording that appeared in earlier drafts of this document and of `PRODUCT_BIBLE.md`.
 
 - **Authentication:** sign up, sign in, email verification, password recovery, session handling.
-- **Onboarding:** the full sequential flow (Philosophy → What Brings You Here? → Journey Stage → Identity → Care Setup → Medication/Injection/Appointment Setup → Journey Date → Privacy Setup → Building PRISM → Ready).
+- **Onboarding:** the full sequential flow (Philosophy → What Brings You Here? → Identity → Care Setup → Medication/Injection/Appointment Setup → Journey Date → Privacy Setup → Building PRISM → Ready).
 - **Personalization:** the module-driven configuration model, module selection, and the personalization engine that drives TODAY.
 - **TODAY:** personalized dashboard, dynamic cards, Quick Add.
 - **CARE:** medications, medication reminders and logging, injections, appointments.

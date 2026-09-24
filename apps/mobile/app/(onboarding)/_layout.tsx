@@ -1,8 +1,10 @@
 import React from 'react';
+import { View } from 'react-native';
 import { Stack } from 'expo-router';
-import type { OnboardingStep } from '@prism/types';
+import { normalizeOnboardingStep } from '@prism/types';
 import { useProfile } from '../../lib/profile/queries';
 import { ONBOARDING_ROUTE_SEGMENTS } from '../../lib/onboarding/routes';
+import { OnboardingBackButton } from '../../features/onboarding/components/OnboardingBackButton';
 
 /**
  * The 12 Onboarding screens (docs/SCREEN_BIBLE.md §5). Resumes at
@@ -14,25 +16,27 @@ import { ONBOARDING_ROUTE_SEGMENTS } from '../../lib/onboarding/routes';
  */
 export default function OnboardingLayout() {
   const { data: profile } = useProfile();
-  const resumeStep = (profile?.onboarding_step as OnboardingStep | null) ?? 'philosophy';
+  const resumeStep = normalizeOnboardingStep(profile?.onboarding_step);
   const initialRouteName = ONBOARDING_ROUTE_SEGMENTS[resumeStep] ?? 'philosophy';
 
   return (
-    <Stack initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="philosophy" />
-      <Stack.Screen name="intent" />
-      <Stack.Screen name="journey-stage" />
-      <Stack.Screen name="identity" />
-      <Stack.Screen name="care-setup" />
-      <Stack.Screen name="medication-setup" />
-      <Stack.Screen name="injection-setup" />
-      <Stack.Screen name="appointment-setup" />
-      <Stack.Screen name="journey-date" />
-      <Stack.Screen name="privacy-setup" />
-      <Stack.Screen name="reminders" />
-      <Stack.Screen name="building" />
-      <Stack.Screen name="tour" />
-      <Stack.Screen name="ready" />
-    </Stack>
+    <View style={{ flex: 1 }}>
+      <Stack initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="philosophy" />
+        <Stack.Screen name="intent" />
+        <Stack.Screen name="identity" />
+        <Stack.Screen name="care-setup" />
+        <Stack.Screen name="medication-setup" />
+        <Stack.Screen name="injection-setup" />
+        <Stack.Screen name="appointment-setup" />
+        <Stack.Screen name="journey-date" />
+        <Stack.Screen name="privacy-setup" />
+        <Stack.Screen name="reminders" />
+        <Stack.Screen name="building" />
+        <Stack.Screen name="tour" />
+        <Stack.Screen name="ready" />
+      </Stack>
+      <OnboardingBackButton />
+    </View>
   );
 }

@@ -54,7 +54,6 @@ export type CareSetupOption = (typeof CARE_SETUP_OPTIONS)[number];
 export const ONBOARDING_STEPS = [
   'philosophy',
   'intent',
-  'journey_stage',
   'identity',
   'care_setup',
   'medication_setup',
@@ -118,8 +117,6 @@ export function getNextOnboardingStep(
     case 'philosophy':
       return 'intent';
     case 'intent':
-      return 'journey_stage';
-    case 'journey_stage':
       return 'identity';
     case 'identity':
       return 'care_setup';
@@ -150,4 +147,63 @@ export function getNextOnboardingStep(
     case 'ready':
       return 'ready';
   }
+}
+
+/**
+ * The step to return to when someone taps Back — the exact inverse of
+ * getNextOnboardingStep, so it skips the same conditional screens that
+ * were skipped on the way forward. `null` means there is nothing before
+ * it (the first screen). `building` is a transient screen, so `tour`
+ * steps back past it to `reminders`.
+ */
+export function getPreviousOnboardingStep(
+  current: OnboardingStep,
+  ctx: OnboardingBranchContext,
+): OnboardingStep | null {
+  const priorSetupStep = (): OnboardingStep => {
+    if (careSetupImpliesInjection(ctx.careSetup)) return 'injection_setup';
+    if (careSetupImpliesMedication(ctx.careSetup)) return 'medication_setup';
+    return 'care_setup';
+  };
+  switch (current) {
+    case 'philosophy':
+      return null;
+    case 'intent':
+      return 'philosophy';
+    case 'identity':
+      return 'intent';
+    case 'care_setup':
+      return 'identity';
+    case 'medication_setup':
+      return 'care_setup';
+    case 'injection_setup':
+      return careSetupImpliesMedication(ctx.careSetup) ? 'medication_setup' : 'care_setup';
+    case 'appointment_setup':
+      return priorSetupStep();
+    case 'journey_date':
+      return intentImpliesAppointments(ctx.intent) ? 'appointment_setup' : priorSetupStep();
+    case 'privacy_setup':
+      return 'journey_date';
+    case 'reminders':
+      return 'privacy_setup';
+    case 'building':
+      return 'reminders';
+    case 'tour':
+      return 'reminders';
+    case 'ready':
+      return 'tour';
+  }
+}
+
+/**
+ * Turns a saved `profiles.onboarding_step` into a screen that exists. The
+ * Journey Stage screen was removed (it asked for more than it needed to),
+ * so anyone whose progress was saved there picks up at the next screen, and
+ * anything unrecognised starts from the beginning rather than going nowhere.
+ */
+export function normalizeOnboardingStep(saved: string | null | undefined): OnboardingStep {
+  if (saved === 'journey_stage') return 'identity';
+  return (ONBOARDING_STEPS as readonly string[]).includes(saved ?? '')
+    ? (saved as OnboardingStep)
+    : 'philosophy';
 }

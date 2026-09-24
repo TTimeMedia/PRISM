@@ -6,6 +6,18 @@ export interface CalendarAppointmentInput {
   endsAt?: string | null;
 }
 
+/** An event read from the calendar, for the person to review before anything is imported. */
+export interface CalendarEventSummary {
+  /** The calendar's own id for the event; only used to tell rows apart. */
+  id: string;
+  title: string;
+  location: string | null;
+  notes: string | null;
+  startsAt: string;
+  endsAt: string | null;
+  allDay: boolean;
+}
+
 /**
  * Seam between PRISM and whichever device/account calendar it's syncing
  * to. Only one implementation exists today (device-calendar-provider.ts,
@@ -18,4 +30,8 @@ export interface CalendarProvider {
   requestPermission(): Promise<boolean>;
   /** Adds an appointment to the calendar, returning the created event's id. */
   addAppointment(appointment: CalendarAppointmentInput): Promise<string>;
+  /** Requests full read access. Only ever called when someone taps Import from calendar. */
+  requestReadPermission(): Promise<boolean>;
+  /** Upcoming events across the person's calendars, soonest first. Needs read access. */
+  listUpcomingEvents(days?: number): Promise<CalendarEventSummary[]>;
 }

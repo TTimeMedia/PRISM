@@ -1,10 +1,11 @@
 import * as Calendar from 'expo-calendar';
-import type { CalendarAppointmentInput, CalendarProvider } from './types';
+import type { CalendarAppointmentInput, CalendarEventSummary, CalendarProvider } from './types';
 
 /**
- * iOS device-calendar provider (EventKit, via expo-calendar). Requests
- * write-only access — enough to create events without reading the
- * user's existing calendars or events.
+ * iOS device-calendar provider (EventKit, via expo-calendar). Adding an
+ * appointment needs only write-only access. Reading events (Import from
+ * calendar) asks for full access separately, and only when someone taps
+ * Import.
  *
  * expo-calendar also ships a same-named "classic" API
  * (requestCalendarPermissionsAsync, createEventAsync, ...) that
@@ -16,6 +17,30 @@ export const deviceCalendarProvider: CalendarProvider = {
   async requestPermission() {
     const { granted } = await Calendar.requestCalendarPermissions(true);
     return granted;
+  },
+
+  async requestReadPermission() {
+    const { granted } = await Calendar.requestCalendarPermissions(false);
+    return granted;
+  },
+
+  async listUpcomingEvents(days = 120) {
+    const start = new Date();
+    const end = new Date(start.getTime() + days * 24 * 60 * 60 * 1000);
+    const calendars = await Calendar.getCalendars();
+    if (calendars.length === 0) return [];
+    const events = await Calendar.listEvents(calendars, start, end);
+    return events
+      .map((event): CalendarEventSummary => ({
+        id: event.id,
+        title: event.title || 'Untitled event',
+        location: event.location || null,
+        notes: event.notes || null,
+        startsAt: new Date(event.startDate).toISOString(),
+        endsAt: event.endDate ? new Date(event.endDate).toISOString() : null,
+        allDay: !!event.allDay,
+      }))
+      .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   },
 
   async addAppointment(appointment: CalendarAppointmentInput) {

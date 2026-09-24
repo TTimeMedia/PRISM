@@ -16,7 +16,7 @@ PRISM is organized into four primary areas: **TODAY / CARE / JOURNEY / YOU**, pl
 
 **Authentication (7):** Splash · Welcome · Sign Up · Sign In · Forgot Password · Reset Password · Email Verification
 
-**Onboarding (12):** Philosophy · What Brings You Here? · Journey Stage · Identity · Care Setup · Medication Setup · Injection Setup · Appointment Setup · Journey Date · Privacy Setup · Building PRISM · PRISM Ready
+**Onboarding:** Philosophy · What Brings You Here? · Identity · Care Setup · Medication Setup · Injection Setup · Appointment Setup · Journey Date · Privacy Setup · Building PRISM · PRISM Ready
 
 **TODAY (3):** Today · Quick Add · Notifications
 
@@ -122,7 +122,9 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 **Content (multi-select):** Managing medications · Tracking injections · Keeping up with appointments · Tracking lab work · Preparing for surgery · Keeping track of legal changes · Documenting milestones · Journaling · Saving important records · Keeping everything in one place · I'm still figuring things out · Something else.
 **Action:** **Continue.**
 
-### Screen 10 — Journey Stage
+### Screen 10 — Journey Stage (removed)
+
+> **Removed from onboarding.** Asking where someone is in their journey was more than the app needs. The screen is gone from the flow; the `profiles.journey_stage` column is kept but never set. Anyone whose saved progress was on this screen resumes at Identity.
 
 **Heading:** "Where are you right now?" / _"There's no wrong answer, and you can change this anytime."_
 **Content:** Exploring · Preparing · In progress · Established · Somewhere else · **Prefer not to say.**

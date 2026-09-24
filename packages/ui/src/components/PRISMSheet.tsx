@@ -50,7 +50,7 @@ export function PRISMSheet({ visible, title, onRequestClose, children }: PRISMSh
           <Pressable
             style={[
               styles.sheet,
-              { backgroundColor: theme.colors.surface, paddingBottom: insets.bottom + spacing.lg },
+              { backgroundColor: theme.colors.field, paddingBottom: insets.bottom + spacing.lg },
             ]}
             onPress={(e) => e.stopPropagation()}
           >

@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xl,
+    // Leaves room for the floating Back arrow (OnboardingBackButton).
+    paddingTop: spacing.huge,
   },
   hero: {
     alignItems: 'center',

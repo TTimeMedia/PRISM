@@ -5,6 +5,8 @@ import {
   getNextOnboardingStep,
   intentImpliesAppointments,
   ONBOARDING_STEPS,
+  getPreviousOnboardingStep,
+  normalizeOnboardingStep,
 } from '../onboarding';
 
 describe('careSetupImpliesMedication', () => {
@@ -49,8 +51,6 @@ describe('getNextOnboardingStep', () => {
     const ctx = { careSetup: ['none'], intent: [] };
     let step = getNextOnboardingStep('philosophy', ctx);
     expect(step).toBe('intent');
-    step = getNextOnboardingStep(step, ctx);
-    expect(step).toBe('journey_stage');
     step = getNextOnboardingStep(step, ctx);
     expect(step).toBe('identity');
     step = getNextOnboardingStep(step, ctx);
@@ -103,5 +103,70 @@ describe('getNextOnboardingStep', () => {
         expect(ONBOARDING_STEPS).toContain(getNextOnboardingStep(step, ctx));
       }
     }
+  });
+});
+
+describe('getPreviousOnboardingStep', () => {
+  it('has nothing before the first screen', () => {
+    expect(getPreviousOnboardingStep('philosophy', { careSetup: null, intent: null })).toBeNull();
+  });
+
+  it('walks the straight-through steps backwards', () => {
+    const ctx = { careSetup: null, intent: null };
+    expect(getPreviousOnboardingStep('intent', ctx)).toBe('philosophy');
+    expect(getPreviousOnboardingStep('identity', ctx)).toBe('intent');
+    expect(getPreviousOnboardingStep('care_setup', ctx)).toBe('identity');
+    expect(getPreviousOnboardingStep('privacy_setup', ctx)).toBe('journey_date');
+    expect(getPreviousOnboardingStep('ready', ctx)).toBe('tour');
+    expect(getPreviousOnboardingStep('tour', ctx)).toBe('reminders');
+  });
+
+  it('skips the setup screens that were skipped going forward', () => {
+    expect(
+      getPreviousOnboardingStep('journey_date', { careSetup: ['none'], intent: ['journaling'] }),
+    ).toBe('care_setup');
+    expect(getPreviousOnboardingStep('journey_date', { careSetup: ['hormones'], intent: [] })).toBe(
+      'medication_setup',
+    );
+    expect(
+      getPreviousOnboardingStep('journey_date', { careSetup: ['injections'], intent: [] }),
+    ).toBe('injection_setup');
+    expect(
+      getPreviousOnboardingStep('journey_date', {
+        careSetup: ['hormones', 'injections'],
+        intent: ['appointments'],
+      }),
+    ).toBe('appointment_setup');
+    expect(
+      getPreviousOnboardingStep('appointment_setup', {
+        careSetup: ['hormones', 'injections'],
+        intent: ['appointments'],
+      }),
+    ).toBe('injection_setup');
+    expect(
+      getPreviousOnboardingStep('injection_setup', {
+        careSetup: ['hormones', 'injections'],
+        intent: [],
+      }),
+    ).toBe('medication_setup');
+    expect(
+      getPreviousOnboardingStep('injection_setup', { careSetup: ['injections'], intent: [] }),
+    ).toBe('care_setup');
+  });
+});
+
+describe('normalizeOnboardingStep', () => {
+  it('keeps every current step as it is', () => {
+    for (const step of ONBOARDING_STEPS) expect(normalizeOnboardingStep(step)).toBe(step);
+  });
+
+  it('moves anyone saved on the removed Journey Stage screen on to Identity', () => {
+    expect(normalizeOnboardingStep('journey_stage')).toBe('identity');
+  });
+
+  it('starts from the beginning when nothing usable was saved', () => {
+    expect(normalizeOnboardingStep(null)).toBe('philosophy');
+    expect(normalizeOnboardingStep(undefined)).toBe('philosophy');
+    expect(normalizeOnboardingStep('something_old')).toBe('philosophy');
   });
 });
