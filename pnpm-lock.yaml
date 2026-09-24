@@ -168,6 +168,9 @@ importers:
       '@types/react':
         specifier: ~19.2.2
         version: 19.2.18
+      babel-preset-expo:
+        specifier: ~57.0.10
+        version: 57.0.10(@babel/core@7.29.7)(@babel/runtime@7.29.7)(expo@57.0.19)(react-refresh@0.14.2)
       eas-cli:
         specifier: ^24.7.0
         version: 24.7.0(@types/node@20.19.43)(typescript@5.7.3)
@@ -9442,7 +9445,9 @@ snapshots:
       metro-runtime: 0.84.5
     transitivePeerDependencies:
       - '@babel/core'
+      - bufferutil
       - supports-color
+      - utf-8-validate
 
   '@react-native/normalize-colors@0.74.89': {}
 
