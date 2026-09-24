@@ -173,7 +173,7 @@ site_url = "http://127.0.0.1:3000"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000", "prism://"]
+additional_redirect_urls = ["https://127.0.0.1:3000", "prism://", "prism://**", "exp+prism://**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -209,7 +209,7 @@ password_requirements = ""
 
 [auth.rate_limit]
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
-email_sent = 2
+email_sent = 30
 # Number of SMS messages that can be sent per hour. Requires auth.sms to be enabled.
 sms_sent = 30
 # Number of anonymous sign-ins that can be made per hour per IP address. Requires enable_anonymous_sign_ins = true.
@@ -254,7 +254,7 @@ host = "smtp.resend.com"
 port = 465
 user = "resend"
 pass = "env(RESEND_API_KEY)"
-admin_email = "onboarding@resend.dev"
+admin_email = "no-reply@ttimemedia.org"
 sender_name = "PRISM"
 
 # Uncomment to customize email template
@@ -432,3 +432,25 @@ enabled = true
 # declarative_schema_path = "./schemas"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+# Production overrides — applied only when pushing to the hosted PRISM
+# project (`supabase config push`); everything else inherits the values
+# above. The site URL is the public website that email links fall back to.
+[remotes.production]
+project_id = "flsoubaxeycffbdjgoyx"
+
+[remotes.production.auth]
+site_url = "https://ttimemedia.org/prism"
+
+# Keep these production settings at their hosted values rather than the
+# local-development ones above.
+[remotes.production.auth.email]
+max_frequency = "1m0s"
+otp_length = 8
+
+[remotes.production.auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[remotes.production.storage.analytics]
+enabled = true
