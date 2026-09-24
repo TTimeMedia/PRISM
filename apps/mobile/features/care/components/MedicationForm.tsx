@@ -154,19 +154,6 @@ export function MedicationForm({
         />
         <Controller
           control={control}
-          name="end_date"
-          render={({ field, fieldState }) => (
-            <PRISMDateInput
-              label="End date"
-              value={field.value ?? ''}
-              onChangeText={field.onChange}
-              onBlur={field.onBlur}
-              error={fieldState.error?.message}
-            />
-          )}
-        />
-        <Controller
-          control={control}
           name="reminder_enabled"
           render={({ field }) => (
             <PRISMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />

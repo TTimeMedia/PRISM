@@ -1,29 +1,55 @@
+import {
+  BookOpen,
+  Bandage,
+  CalendarDays,
+  Compass,
+  Droplets,
+  Ellipsis,
+  FlaskConical,
+  Flag,
+  FolderOpen,
+  Hourglass,
+  LayoutGrid,
+  CircleHelp,
+  Pill,
+  Route,
+  Scale,
+  Scissors,
+  Sprout,
+  Stethoscope,
+  Syringe,
+  Sun,
+  EyeOff,
+  Ban,
+  Layers,
+} from 'lucide-react-native';
 import type { ChipSelectOption } from './components/ChipSelect';
+import type { OptionGridOption } from './components/OptionGrid';
 
-/** Screen 09 — exact copy from docs/SCREEN_BIBLE.md Screen 09. */
-export const INTENT_CHIP_OPTIONS: ChipSelectOption[] = [
-  { value: 'managing_medications', label: 'Managing medications' },
-  { value: 'tracking_injections', label: 'Tracking injections' },
-  { value: 'appointments', label: 'Keeping up with appointments' },
-  { value: 'lab_work', label: 'Tracking lab work' },
-  { value: 'surgery', label: 'Preparing for surgery' },
-  { value: 'legal_changes', label: 'Keeping track of legal changes' },
-  { value: 'milestones', label: 'Documenting milestones' },
-  { value: 'journaling', label: 'Journaling' },
-  { value: 'records', label: 'Saving important records' },
-  { value: 'all_in_one_place', label: 'Keeping everything in one place' },
-  { value: 'still_figuring_out', label: "I'm still figuring things out" },
-  { value: 'something_else', label: 'Something else' },
+/** Screen 09 — What Brings You Here? Values match docs/SCREEN_BIBLE.md Screen 09; labels are the softened in-app wording. */
+export const INTENT_CHIP_OPTIONS: OptionGridOption[] = [
+  { value: 'managing_medications', label: 'Medications', icon: Pill },
+  { value: 'tracking_injections', label: 'Injections', icon: Syringe },
+  { value: 'appointments', label: 'Appointments', icon: CalendarDays },
+  { value: 'lab_work', label: 'Lab work', icon: FlaskConical },
+  { value: 'surgery', label: 'Preparing for surgery', icon: Stethoscope },
+  { value: 'legal_changes', label: 'Legal changes', icon: Scale },
+  { value: 'milestones', label: 'Milestones', icon: Flag },
+  { value: 'journaling', label: 'Journaling', icon: BookOpen },
+  { value: 'records', label: 'Important records', icon: FolderOpen },
+  { value: 'all_in_one_place', label: 'Everything in one place', icon: LayoutGrid },
+  { value: 'still_figuring_out', label: "I'm still figuring things out", icon: CircleHelp },
+  { value: 'something_else', label: 'Something else', icon: Ellipsis },
 ];
 
-/** Screen 10 — exact copy from docs/SCREEN_BIBLE.md Screen 10. */
-export const JOURNEY_STAGE_CHIP_OPTIONS: ChipSelectOption[] = [
-  { value: 'exploring', label: 'Exploring' },
-  { value: 'preparing', label: 'Preparing' },
-  { value: 'in_progress', label: 'In progress' },
-  { value: 'established', label: 'Established' },
-  { value: 'somewhere_else', label: 'Somewhere else' },
-  { value: 'prefer_not_to_say', label: 'Prefer not to say' },
+/** Screen 10 — journey stage, single-select. */
+export const JOURNEY_STAGE_CHIP_OPTIONS: OptionGridOption[] = [
+  { value: 'exploring', label: 'Exploring', icon: Compass },
+  { value: 'preparing', label: 'Preparing', icon: Hourglass },
+  { value: 'in_progress', label: 'In progress', icon: Route },
+  { value: 'established', label: 'Established', icon: Sprout },
+  { value: 'somewhere_else', label: 'Somewhere else', icon: Ellipsis },
+  { value: 'prefer_not_to_say', label: 'Prefer not to say', icon: EyeOff },
 ];
 
 /**
@@ -37,15 +63,15 @@ export const JOURNEY_DATE_CHOICE_OPTIONS: ChipSelectOption[] = [
   { value: 'specific_date', label: 'I have a specific start date' },
 ];
 
-/** Screen 12 — exact copy from docs/SCREEN_BIBLE.md Screen 12. */
-export const CARE_SETUP_CHIP_OPTIONS: ChipSelectOption[] = [
-  { value: 'hormones', label: 'Hormones' },
-  { value: 'medication', label: 'Medication' },
-  { value: 'injections', label: 'Injections' },
-  { value: 'patches', label: 'Patches' },
-  { value: 'gel_cream', label: 'Gel/cream' },
-  { value: 'blockers', label: 'Blockers' },
-  { value: 'surgery', label: 'Surgery' },
-  { value: 'other', label: 'Other' },
-  { value: 'none', label: 'None of these' },
+/** Screen 12 — what care to set up. */
+export const CARE_SETUP_CHIP_OPTIONS: OptionGridOption[] = [
+  { value: 'hormones', label: 'Hormones', icon: Droplets },
+  { value: 'medication', label: 'Medication', icon: Pill },
+  { value: 'injections', label: 'Injections', icon: Syringe },
+  { value: 'patches', label: 'Patches', icon: Bandage },
+  { value: 'gel_cream', label: 'Gel/cream', icon: Sun },
+  { value: 'blockers', label: 'Blockers', icon: Layers },
+  { value: 'surgery', label: 'Surgery', icon: Scissors },
+  { value: 'other', label: 'Other', icon: Ellipsis },
+  { value: 'none', label: 'None of these', icon: Ban },
 ];

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PrismMark } from '../../../components/motion';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 
@@ -21,8 +22,10 @@ export function ReadyScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="Your Prism is ready."
-      subtitle="Everything you chose to track is now organized around you."
+      hero={<PrismMark />}
+      phase={1}
+      title="Prism is ready."
+      subtitle="Everything you chose is set up and waiting, all in your private space."
       primaryLabel="Enter Prism"
       onPrimaryPress={enterPrism}
       primaryLoading={isSubmitting}

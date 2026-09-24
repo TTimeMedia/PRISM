@@ -18,7 +18,7 @@ describe('WelcomeScreen', () => {
     expect(screen.getByText("A private place that's just yours.")).toBeTruthy();
     expect(
       screen.getByText(
-        "Keep your care, your milestones, and your journal together in one private place. Your information stays yours.",
+        'Keep your care, your milestones, and your journal together in one private place. Your information stays yours.',
       ),
     ).toBeTruthy();
   });

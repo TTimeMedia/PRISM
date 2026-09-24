@@ -45,7 +45,9 @@ export function EntryPhotoField({
           variant="secondary"
           onPress={onPick}
         />
-        {hasPhoto ? <PRISMButton label="Remove photo" variant="tertiary" onPress={onRemove} /> : null}
+        {hasPhoto ? (
+          <PRISMButton label="Remove photo" variant="tertiary" onPress={onRemove} />
+        ) : null}
       </View>
     </View>
   );

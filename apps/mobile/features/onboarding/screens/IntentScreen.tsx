@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { getNextOnboardingStep, type IntentOption } from '@prism/types';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
-import { ChipSelect } from '../components/ChipSelect';
+import { OptionGrid } from '../components/OptionGrid';
 import { INTENT_CHIP_OPTIONS } from '../optionLabels';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
@@ -34,7 +34,7 @@ export function IntentScreen() {
       primaryLoading={isSubmitting}
       onSkip={() => submit([])}
     >
-      <ChipSelect options={INTENT_CHIP_OPTIONS} selected={selected} onChange={setSelected} />
+      <OptionGrid options={INTENT_CHIP_OPTIONS} selected={selected} onChange={setSelected} />
     </OnboardingScreenLayout>
   );
 }

@@ -28,7 +28,7 @@ describe('IntentScreen', () => {
     renderWithProviders(<IntentScreen />);
 
     fireEvent.press(screen.getByText('Journaling'));
-    fireEvent.press(screen.getByText('Keeping up with appointments'));
+    fireEvent.press(screen.getByText('Appointments'));
     fireEvent.press(screen.getByText('Continue'));
 
     await waitFor(() =>

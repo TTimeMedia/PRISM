@@ -99,6 +99,11 @@ export function YouScreen() {
 
         <PRISMSection title="About">
           <PRISMListItem
+            title="How Prism works"
+            leading={<HelpCircle size={20} color={theme.spectrum.cyan} />}
+            onPress={() => router.push('/you/how-it-works')}
+          />
+          <PRISMListItem
             title="About Prism"
             leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
             onPress={() => router.push('/you/about')}

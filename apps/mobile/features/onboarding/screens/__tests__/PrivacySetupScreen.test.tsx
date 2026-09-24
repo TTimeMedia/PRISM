@@ -67,9 +67,9 @@ describe('PrivacySetupScreen', () => {
     fireEvent.press(screen.getByText('Continue'));
 
     await waitFor(() =>
-      expect(updateProfileMutateAsync).toHaveBeenCalledWith({ onboarding_step: 'building' }),
+      expect(updateProfileMutateAsync).toHaveBeenCalledWith({ onboarding_step: 'reminders' }),
     );
-    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/building'));
+    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/reminders'));
   });
 
   it('toggling private notifications off is reflected in the submitted settings', async () => {

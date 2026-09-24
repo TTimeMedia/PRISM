@@ -62,7 +62,9 @@ export const ONBOARDING_STEPS = [
   'appointment_setup',
   'journey_date',
   'privacy_setup',
+  'reminders',
   'building',
+  'tour',
   'ready',
 ] as const;
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
@@ -138,8 +140,12 @@ export function getNextOnboardingStep(
     case 'journey_date':
       return 'privacy_setup';
     case 'privacy_setup':
+      return 'reminders';
+    case 'reminders':
       return 'building';
     case 'building':
+      return 'tour';
+    case 'tour':
       return 'ready';
     case 'ready':
       return 'ready';

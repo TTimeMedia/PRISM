@@ -47,6 +47,16 @@ export async function requestNotificationPermissions(): Promise<boolean> {
   return requested.granted;
 }
 
+export type NotificationPermissionStatus = 'granted' | 'denied' | 'undetermined' | 'unsupported';
+
+/** Where the phone's notification permission stands right now, without prompting. */
+export async function getNotificationPermissionStatus(): Promise<NotificationPermissionStatus> {
+  if (!isNotificationsSupported) return 'unsupported';
+  const current = await Notifications.getPermissionsAsync();
+  if (current.granted) return 'granted';
+  return current.canAskAgain ? 'undetermined' : 'denied';
+}
+
 function parseTimeOfDay(timeOfDay: string | undefined): [hour: number, minute: number] {
   const match = timeOfDay?.match(/^([01]\d|2[0-3]):([0-5]\d)$/);
   return match ? [Number(match[1]), Number(match[2])] : [9, 0];

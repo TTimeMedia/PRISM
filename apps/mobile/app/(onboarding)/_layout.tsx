@@ -29,7 +29,9 @@ export default function OnboardingLayout() {
       <Stack.Screen name="appointment-setup" />
       <Stack.Screen name="journey-date" />
       <Stack.Screen name="privacy-setup" />
+      <Stack.Screen name="reminders" />
       <Stack.Screen name="building" />
+      <Stack.Screen name="tour" />
       <Stack.Screen name="ready" />
     </Stack>
   );

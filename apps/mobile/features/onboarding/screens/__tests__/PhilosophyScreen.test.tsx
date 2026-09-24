@@ -26,7 +26,7 @@ describe('PhilosophyScreen', () => {
 
   it('renders the intro copy', () => {
     renderWithProviders(<PhilosophyScreen />);
-    expect(screen.getByText("Set it up your way.")).toBeTruthy();
+    expect(screen.getByText('Set it up your way.')).toBeTruthy();
     expect(screen.getByText('Prism fits around you.')).toBeTruthy();
   });
 

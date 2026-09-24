@@ -92,7 +92,12 @@ function Ray({ color, angleDeg, index, reducedMotion }: RayProps) {
  * into the five spectrum colors, which then shimmer gently. Static under
  * Reduce Motion. Decorative — hidden from screen readers.
  */
-export function PrismMark() {
+export interface PrismMarkProps {
+  /** Rendered width in points; height keeps the mark's proportions. */
+  size?: number;
+}
+
+export function PrismMark({ size = WIDTH }: PrismMarkProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
   const beam = useSharedValue(reducedMotion ? 1 : 0);
@@ -114,8 +119,8 @@ export function PrismMark() {
 
   return (
     <Svg
-      width={WIDTH}
-      height={HEIGHT}
+      width={size}
+      height={(size * HEIGHT) / WIDTH}
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"

@@ -6,7 +6,7 @@ import {
   getNextOnboardingStep,
 } from '@prism/types';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
-import { ChipSelect } from '../components/ChipSelect';
+import { OptionGrid } from '../components/OptionGrid';
 import { CARE_SETUP_CHIP_OPTIONS } from '../optionLabels';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useProfile, useSetModuleEnabled, useUpdateProfile } from '../../../lib/profile/queries';
@@ -45,12 +45,13 @@ export function CareSetupScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="What would you like to keep track of?"
+      title="What care would you like to set up?"
+      subtitle="Choose anything that applies. You can add or change these later."
       primaryLabel="Continue"
       onPrimaryPress={() => submit(selected)}
       primaryLoading={isSubmitting}
     >
-      <ChipSelect options={CARE_SETUP_CHIP_OPTIONS} selected={selected} onChange={setSelected} />
+      <OptionGrid options={CARE_SETUP_CHIP_OPTIONS} selected={selected} onChange={setSelected} />
     </OnboardingScreenLayout>
   );
 }

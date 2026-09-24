@@ -18,6 +18,8 @@ export interface OnboardingScreenLayoutProps {
   skipLabel?: string;
   /** 0-1 position in the setup flow; the background light shifts with it. */
   phase?: number;
+  /** Shown above the title, centered — used for the finale on the Ready screen. */
+  hero?: React.ReactNode;
 }
 
 /**
@@ -36,7 +38,8 @@ export function OnboardingScreenLayout({
   onSkip,
   skipLabel = 'Skip',
   phase,
-}:OnboardingScreenLayoutProps) {
+  hero,
+}: OnboardingScreenLayoutProps) {
   const theme = useTheme();
 
   return (
@@ -56,6 +59,7 @@ export function OnboardingScreenLayout({
         }
       >
         <View style={styles.content}>
+          {hero ? <View style={styles.hero}>{hero}</View> : null}
           <Reveal index={0}>
             <Text
               accessibilityRole="header"
@@ -89,6 +93,10 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.xl,
+  },
+  hero: {
+    alignItems: 'center',
+    marginBottom: spacing.lg,
   },
   title: {
     fontFamily: fontFamily.display,

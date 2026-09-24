@@ -18,7 +18,9 @@ export const ONBOARDING_ROUTE_SEGMENTS: Record<OnboardingStep, string> = {
   appointment_setup: 'appointment-setup',
   journey_date: 'journey-date',
   privacy_setup: 'privacy-setup',
+  reminders: 'reminders',
   building: 'building',
+  tour: 'tour',
   ready: 'ready',
 };
 
@@ -40,7 +42,9 @@ const ONBOARDING_HREFS: Record<OnboardingStep, Href> = {
   appointment_setup: '/(onboarding)/appointment-setup',
   journey_date: '/(onboarding)/journey-date',
   privacy_setup: '/(onboarding)/privacy-setup',
+  reminders: '/(onboarding)/reminders',
   building: '/(onboarding)/building',
+  tour: '/(onboarding)/tour',
   ready: '/(onboarding)/ready',
 };
 

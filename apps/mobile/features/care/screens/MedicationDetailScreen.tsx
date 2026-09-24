@@ -80,7 +80,6 @@ export function MedicationDetailScreen() {
             />
             <DetailRow label="Next dose" value={describeNextDose(medication)} />
             <DetailRow label="Start date" value={medication.start_date} />
-            <DetailRow label="End date" value={medication.end_date} />
             <DetailRow label="Reminder" value={medication.reminder_enabled ? 'On' : 'Off'} />
             <DetailRow label="Notes" value={medication.notes} />
             <DetailRow label="Status" value={active ? 'Active' : 'Paused'} />

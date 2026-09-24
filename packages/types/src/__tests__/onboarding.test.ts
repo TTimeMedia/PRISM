@@ -61,7 +61,11 @@ describe('getNextOnboardingStep', () => {
     step = getNextOnboardingStep(step, ctx);
     expect(step).toBe('privacy_setup');
     step = getNextOnboardingStep(step, ctx);
+    expect(step).toBe('reminders');
+    step = getNextOnboardingStep(step, ctx);
     expect(step).toBe('building');
+    step = getNextOnboardingStep(step, ctx);
+    expect(step).toBe('tour');
     step = getNextOnboardingStep(step, ctx);
     expect(step).toBe('ready');
     // Terminal.

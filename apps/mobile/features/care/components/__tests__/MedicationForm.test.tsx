@@ -9,8 +9,8 @@ import { MOCK_PICKED_DATE } from '../../../../__mocks__/@react-native-community/
 describe('MedicationForm — native date/time pickers', () => {
   it('shows "Choose a date" for an unset date field, never a raw text field', () => {
     renderWithProviders(<MedicationForm submitLabel="Save" onSubmit={jest.fn()} />);
-    // Both start_date and end_date are unset, so the placeholder appears twice.
-    expect(screen.getAllByText('Choose a date').length).toBe(2);
+    // start_date is unset, so the placeholder appears once (there is no end date field).
+    expect(screen.getAllByText('Choose a date').length).toBe(1);
   });
 
   it('displays an existing start_date in human-readable form, already editable', () => {

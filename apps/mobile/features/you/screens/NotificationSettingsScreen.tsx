@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { AppState, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
+  PRISMButton,
   PRISMErrorState,
   PRISMHeader,
   PRISMIconButton,
@@ -14,6 +15,11 @@ import {
   useTheme,
 } from '@prism/ui';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import {
+  getNotificationPermissionStatus,
+  requestNotificationPermissions,
+  type NotificationPermissionStatus,
+} from '../../../lib/reminders/notificationScheduler';
 
 /**
  * Screen 58 — Notification Settings. Medication and appointment
@@ -28,6 +34,27 @@ export function NotificationSettingsScreen() {
   const theme = useTheme();
   const { data: settings, isLoading, isError, refetch } = useSettings();
   const updateSettings = useUpdateSettings();
+  const [permission, setPermission] = useState<NotificationPermissionStatus>('unsupported');
+
+  // Re-check whenever the app comes back to the foreground, so returning
+  // from the phone's Settings reflects the change straight away.
+  useEffect(() => {
+    const refresh = () => void getNotificationPermissionStatus().then(setPermission);
+    refresh();
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') refresh();
+    });
+    return () => subscription.remove();
+  }, []);
+
+  const turnOnReminders = async () => {
+    if (permission === 'denied') {
+      await Linking.openSettings();
+      return;
+    }
+    await requestNotificationPermissions();
+    setPermission(await getNotificationPermissionStatus());
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -45,6 +72,19 @@ export function NotificationSettingsScreen() {
         <PRISMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
+          {permission === 'undetermined' || permission === 'denied' ? (
+            <PRISMSection title="Reminders">
+              <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
+                {permission === 'denied'
+                  ? "Reminders are off on this phone, so Prism can't remind you about medications or appointments. Turn them on in your phone's Settings."
+                  : 'Turn on reminders so Prism can tell you when a medication or appointment is coming up.'}
+              </Text>
+              <PRISMButton
+                label={permission === 'denied' ? 'Open Settings' : 'Turn on reminders'}
+                onPress={turnOnReminders}
+              />
+            </PRISMSection>
+          ) : null}
           <PRISMSection title="Notifications">
             <PRISMSwitch
               label="Private notifications"

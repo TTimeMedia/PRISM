@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { getNextOnboardingStep, type JourneyStage } from '@prism/types';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
-import { ChipSelect } from '../components/ChipSelect';
+import { OptionGrid } from '../components/OptionGrid';
 import { JOURNEY_STAGE_CHIP_OPTIONS } from '../optionLabels';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
@@ -38,7 +38,7 @@ export function JourneyStageScreen() {
       primaryLoading={isSubmitting}
       onSkip={() => submit([])}
     >
-      <ChipSelect
+      <OptionGrid
         options={JOURNEY_STAGE_CHIP_OPTIONS}
         selected={selected}
         onChange={setSelected}
