@@ -33,16 +33,17 @@ PRISM should feel less like a medical record system and more like a **personal o
 
 This line is the product's north star (§16) and should anchor the splash screen, the marketing website hero, and app store copy.
 
-## 4. The PRISM Manifesto
+## 4. The Prism Manifesto
 
-> **There's no right way to transition.**
+> **Set it up your way.**
 >
-> Some people take hormones. Some don't.
-> Some have surgery. Some don't.
-> Some change their name. Some don't.
-> Some know exactly what they want. Others are still figuring things out.
+> Add only what you want to keep. Leave the rest out.
+> Everything is optional, and you can change any of it later.
+> What you write here stays in your private space.
 >
-> **PRISM adapts to every journey.**
+> **Prism fits around you.**
+
+This is the in-app intro (Screen 08). It is deliberately about how Prism works — optional, private, yours — rather than about any particular path. The underlying principle is unchanged: Prism does not define a universal transition path, and never implies that one exists. The tone is calm and private; the copy never suggests that anything is being monitored or judged.
 
 ## 5. Product Positioning
 

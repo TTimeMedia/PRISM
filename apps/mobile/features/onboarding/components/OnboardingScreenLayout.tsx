@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PRISMButton, fontFamily, fontWeight, spacing, type, useTheme } from '@prism/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
+import { AmbientBackground, Reveal } from '../../../components/motion';
 
 export interface OnboardingScreenLayoutProps {
   title: string;
@@ -15,6 +16,8 @@ export interface OnboardingScreenLayoutProps {
   /** e.g. "I'll do this later" / "Not right now" / "Skip" — every non-essential step is skippable. */
   onSkip?: () => void;
   skipLabel?: string;
+  /** 0-1 position in the setup flow; the background light shifts with it. */
+  phase?: number;
 }
 
 /**
@@ -32,11 +35,13 @@ export function OnboardingScreenLayout({
   primaryDisabled = false,
   onSkip,
   skipLabel = 'Skip',
-}: OnboardingScreenLayoutProps) {
+  phase,
+}:OnboardingScreenLayoutProps) {
   const theme = useTheme();
 
   return (
     <SafeAreaView style={[styles.flex, { backgroundColor: theme.colors.background }]}>
+      <AmbientBackground phase={phase} />
       <KeyboardAwareScreen
         footer={
           <View style={styles.actions}>
@@ -51,18 +56,26 @@ export function OnboardingScreenLayout({
         }
       >
         <View style={styles.content}>
-          <Text
-            accessibilityRole="header"
-            style={[styles.title, { color: theme.colors.text.primary }]}
-          >
-            {title}
-          </Text>
-          {subtitle ? (
-            <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>
-              {subtitle}
+          <Reveal index={0}>
+            <Text
+              accessibilityRole="header"
+              style={[styles.title, { color: theme.colors.text.primary }]}
+            >
+              {title}
             </Text>
+          </Reveal>
+          {subtitle ? (
+            <Reveal index={1}>
+              <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>
+                {subtitle}
+              </Text>
+            </Reveal>
           ) : null}
-          {children ? <View style={styles.body}>{children}</View> : null}
+          {children ? (
+            <Reveal index={2} style={styles.body}>
+              {children}
+            </Reveal>
+          ) : null}
         </View>
       </KeyboardAwareScreen>
     </SafeAreaView>

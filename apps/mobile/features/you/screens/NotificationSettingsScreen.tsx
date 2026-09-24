@@ -49,7 +49,7 @@ export function NotificationSettingsScreen() {
             <PRISMSwitch
               label="Private notifications"
               description={
-                'Notification previews stay generic, e.g. "Your PRISM reminder is ready."'
+                'Notification previews stay generic, e.g. "Your Prism reminder is ready."'
               }
               value={settings.notification_privacy}
               onValueChange={(value) => updateSettings.mutate({ notification_privacy: value })}

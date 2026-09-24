@@ -26,7 +26,9 @@ export function IntentScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="What would you like PRISM to help with?"
+      title="What would you like to keep here?"
+      subtitle="Choose anything that fits. You can change it anytime."
+      phase={0.45}
       primaryLabel="Continue"
       onPrimaryPress={() => submit(selected)}
       primaryLoading={isSubmitting}

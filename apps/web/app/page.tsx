@@ -37,7 +37,7 @@ export default function Home() {
             <p>Some change their name. Some don&rsquo;t.</p>
             <p>Some know exactly what they want. Others are still figuring things out.</p>
             <p style={{ marginTop: 12, color: 'var(--prism-text-primary)' }}>
-              PRISM adapts to every journey.
+              Prism adapts to every journey.
             </p>
           </div>
         </section>
@@ -47,7 +47,7 @@ export default function Home() {
             Everything that matters. Nothing that doesn&rsquo;t.
           </h2>
           <div className={styles.sectionBody}>
-            <p>PRISM builds itself around what you choose to track.</p>
+            <p>Prism builds itself around what you choose to track.</p>
             <p>Medication. Appointments. Milestones. Journal entries. Memories.</p>
             <p style={{ marginTop: 12, color: 'var(--prism-text-primary)' }}>
               Or none of those. You decide.

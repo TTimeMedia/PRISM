@@ -25,7 +25,7 @@ Transgender men, transgender women, nonbinary people, gender-fluid people, quest
 
 ## 02. Core Philosophy & Product Principles
 
-**Your journey. Your way.** — _There's no right way to transition._ Some people take hormones, some don't; some have surgery, some don't; some change their name, some don't; some know exactly what they want, others are still figuring things out. **PRISM adapts to every journey.** This philosophy must influence the product architecture, UX, database, copy, personalization, and visual design — not just the marketing copy.
+**Your journey. Your way.** — _Set it up your way._ Add only what you want to keep; everything is optional, private, and changeable later. **Prism fits around you.** This philosophy must influence the product architecture, UX, database, copy, personalization, and visual design — not just the marketing copy.
 
 1. **Person First** — the user is not a collection of medical records; the interface prioritizes the person over their data.
 2. **No Assumptions** — never assume gender, pronouns, name, HRT status, medication, injections, surgery, dysphoria, transition status, transition start date, transition goals, or legal changes. Everything is optional unless technically required for account creation (e.g. an email to sign in with).

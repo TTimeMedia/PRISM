@@ -48,9 +48,9 @@ export function YouScreen() {
           />
         </PRISMSection>
 
-        <PRISMSection title="PRISM">
+        <PRISMSection title="Prism">
           <PRISMListItem
-            title="Customize PRISM"
+            title="Customize Prism"
             subtitle="Choose what shows up for you."
             leading={<Sliders size={20} color={theme.spectrum.violet} />}
             onPress={() => router.push('/you/customize')}
@@ -99,7 +99,7 @@ export function YouScreen() {
 
         <PRISMSection title="About">
           <PRISMListItem
-            title="About PRISM"
+            title="About Prism"
             leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
             onPress={() => router.push('/you/about')}
           />

@@ -39,7 +39,7 @@ export function CalendarSettingsScreen() {
           return;
         }
       } catch {
-        showToast("Calendar isn't available in this build of PRISM.", 'error');
+        showToast("Calendar isn't available in this build of Prism.", 'error');
         return;
       }
     }
@@ -67,7 +67,7 @@ export function CalendarSettingsScreen() {
               label="Sync to calendar"
               description={
                 available
-                  ? 'Add appointments to your device calendar. PRISM only asks for calendar access once you turn this on.'
+                  ? 'Add appointments to your device calendar. Prism only asks for calendar access once you turn this on.'
                   : 'Not available on this device.'
               }
               value={settings.calendar_sync_enabled}

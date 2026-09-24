@@ -49,7 +49,7 @@ describe('getAuthErrorMessage', () => {
   it('gives a distinct, actionable message when the request never reached the server', () => {
     const error = new AuthRetryableFetchError('Failed to fetch', 0);
     expect(getAuthErrorMessage(error)).toBe(
-      "Can't reach PRISM's servers. Check your connection and try again.",
+      "Can't reach Prism's servers. Check your connection and try again.",
     );
   });
 });

@@ -15,10 +15,10 @@ describe('WelcomeScreen', () => {
 
   it('renders the approved welcome copy', () => {
     renderWithProviders(<WelcomeScreen />);
-    expect(screen.getByText('Welcome to PRISM.')).toBeTruthy();
+    expect(screen.getByText("A private place that's just yours.")).toBeTruthy();
     expect(
       screen.getByText(
-        "A private space built around your journey—not someone else's idea of what your journey should look like.",
+        "Keep your care, your milestones, and your journal together in one private place. Your information stays yours.",
       ),
     ).toBeTruthy();
   });

@@ -45,8 +45,9 @@ export function IdentityScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="Tell PRISM about you."
-      subtitle="Everything here is optional."
+      title="How should Prism address you?"
+      subtitle="Everything here is optional, and it stays private to your account."
+      phase={0.85}
       primaryLabel="Continue"
       onPrimaryPress={handleSubmit(submit)}
       primaryLoading={isSubmitting || isFormSubmitting}

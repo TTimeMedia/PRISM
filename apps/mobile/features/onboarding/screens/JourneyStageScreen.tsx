@@ -31,7 +31,8 @@ export function JourneyStageScreen() {
   return (
     <OnboardingScreenLayout
       title="Where are you right now?"
-      subtitle="There's no wrong answer, and you can change this anytime."
+      subtitle="Choose what feels closest. You can change this anytime."
+      phase={0.65}
       primaryLabel="Continue"
       onPrimaryPress={() => submit(selected)}
       primaryLoading={isSubmitting}

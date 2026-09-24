@@ -46,7 +46,7 @@ export function DataExportScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <PRISMSection title="Export">
           <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
-            Downloads everything you&rsquo;ve stored in PRISM — profile, medications, injections,
+            Downloads everything you&rsquo;ve stored in Prism — profile, medications, injections,
             appointments, milestones, and journal entries — as a single JSON file.
           </Text>
           <PRISMButton label="Export my data" loading={isExporting} onPress={handleExport} />
@@ -54,7 +54,7 @@ export function DataExportScreen() {
 
         <PRISMSection title="Delete account">
           <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
-            Permanently deletes your PRISM account and everything in it. This cannot be undone.
+            Permanently deletes your Prism account and everything in it. This cannot be undone.
           </Text>
           <PRISMButton
             label="Delete my account"

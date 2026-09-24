@@ -23,9 +23,9 @@ import {
 
 const isNotificationsSupported = Platform.OS !== 'web';
 
-const PRIVATE_TITLE = 'PRISM';
+const PRIVATE_TITLE = 'Prism';
 /** Matches docs/SECURITY.md §7's example verbatim. */
-const PRIVATE_BODY = 'Your PRISM reminder is ready.';
+const PRIVATE_BODY = 'Your Prism reminder is ready.';
 
 export function configureNotificationHandler(): void {
   if (!isNotificationsSupported) return;

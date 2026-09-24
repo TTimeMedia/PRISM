@@ -7,7 +7,7 @@ import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 
-/** Screen 08 — Philosophy. Verbatim from docs/PRODUCT_BIBLE.md §4 — never rewritten into clinical language. */
+/** Screen 08 — Philosophy. A short, calm intro to how PRISM works: optional, private, yours. */
 export function PhilosophyScreen() {
   const theme = useTheme();
   const updateProfile = useUpdateProfile();
@@ -23,26 +23,24 @@ export function PhilosophyScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="There's no right way to transition."
+      title="Set it up your way."
+      phase={0.25}
       primaryLabel="Continue"
       onPrimaryPress={onContinue}
       primaryLoading={isSubmitting}
     >
       <View style={styles.manifesto}>
         <Text style={[styles.line, { color: theme.colors.text.secondary }]}>
-          Some people take hormones. Some don&apos;t.
+          Add only what you want to keep. Leave the rest out.
         </Text>
         <Text style={[styles.line, { color: theme.colors.text.secondary }]}>
-          Some have surgery. Some don&apos;t.
+          Everything is optional, and you can change any of it later.
         </Text>
         <Text style={[styles.line, { color: theme.colors.text.secondary }]}>
-          Some change their name. Some don&apos;t.
-        </Text>
-        <Text style={[styles.line, { color: theme.colors.text.secondary }]}>
-          Some know exactly what they want. Others are still figuring things out.
+          What you write here stays in your private space.
         </Text>
         <Text style={[styles.emphasis, { color: theme.colors.text.primary }]}>
-          PRISM adapts to every journey.
+          Prism fits around you.
         </Text>
       </View>
     </OnboardingScreenLayout>

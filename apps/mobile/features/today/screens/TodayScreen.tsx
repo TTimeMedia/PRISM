@@ -135,7 +135,7 @@ export function TodayScreen() {
             ) : comingUp.length === 0 ? (
               <PRISMEmptyState
                 title="Nothing urgent today."
-                subtitle="Your PRISM is here whenever you need it."
+                subtitle="Your Prism is here whenever you need it."
               />
             ) : null}
 

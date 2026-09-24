@@ -21,9 +21,9 @@ export function ReadyScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="Your PRISM is ready."
+      title="Your Prism is ready."
       subtitle="Everything you chose to track is now organized around you."
-      primaryLabel="Enter PRISM"
+      primaryLabel="Enter Prism"
       onPrimaryPress={enterPrism}
       primaryLoading={isSubmitting}
     />

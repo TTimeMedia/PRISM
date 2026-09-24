@@ -39,7 +39,8 @@ export function SignUpScreen() {
 
   return (
     <AuthScreenLayout
-      title="Create your account"
+      title="Let's set up your space."
+      subtitle="Use an email and password. We'll send a link to confirm it's you."
       footer={
         <PRISMButton
           label="Sign in"
@@ -110,7 +111,7 @@ export function SignUpScreen() {
         />
       </View>
       <Text style={[styles.legal, { color: theme.colors.text.tertiary }]}>
-        By continuing, you agree to PRISM&apos;s Terms and Privacy Policy.
+        By continuing, you agree to Prism&apos;s Terms and Privacy Policy.
       </Text>
     </AuthScreenLayout>
   );

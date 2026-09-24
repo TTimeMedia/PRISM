@@ -36,8 +36,8 @@ export function VerifyEmailScreen() {
 
   return (
     <AuthScreenLayout
-      title="Check your email"
-      subtitle="We sent a verification link to your email address."
+      title="Check your email."
+      subtitle="We sent a link to confirm it's you. Tap it on this phone and you'll come right back to Prism."
     >
       {resendError ? <FormError message={resendError} /> : null}
       <View style={styles.actions}>

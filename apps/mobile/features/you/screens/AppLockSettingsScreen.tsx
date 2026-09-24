@@ -102,7 +102,7 @@ export function AppLockSettingsScreen() {
           <PRISMSection>
             <PRISMSwitch
               label="Enable App Lock"
-              description="Require a PIN or biometrics to open PRISM."
+              description="Require a PIN or biometrics to open Prism."
               value={settings.app_lock_enabled}
               onValueChange={toggleAppLock}
             />
@@ -129,7 +129,7 @@ export function AppLockSettingsScreen() {
         <View style={styles.pinFields}>
           <PRISMPinInput
             label="New PIN"
-            helperText={pinError ? undefined : 'Used to unlock PRISM. Stored only on this device.'}
+            helperText={pinError ? undefined : 'Used to unlock Prism. Stored only on this device.'}
             value={newPin}
             onChangeText={setNewPin}
             error={pinError}

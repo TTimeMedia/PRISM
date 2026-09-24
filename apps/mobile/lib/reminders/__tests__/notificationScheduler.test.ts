@@ -210,8 +210,8 @@ describe('scheduleMedicationReminders', () => {
     });
     await scheduleMedicationReminders(med, true);
     const content = mockScheduleNotificationAsync.mock.calls[0][0].content;
-    expect(content.title).toBe('PRISM');
-    expect(content.body).toBe('Your PRISM reminder is ready.');
+    expect(content.title).toBe('Prism');
+    expect(content.body).toBe('Your Prism reminder is ready.');
   });
 
   it('uses the medication name and dosage as content when notification privacy is off', async () => {

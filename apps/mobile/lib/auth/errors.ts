@@ -25,7 +25,7 @@ export function getAuthErrorMessage(error: unknown): string {
   }
 
   if (isAuthRetryableFetchError(error)) {
-    return "Can't reach PRISM's servers. Check your connection and try again.";
+    return "Can't reach Prism's servers. Check your connection and try again.";
   }
 
   if (isAuthApiError(error)) {

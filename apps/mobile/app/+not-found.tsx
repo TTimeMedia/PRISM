@@ -6,7 +6,7 @@ import { PRISMButton, PRISMErrorState } from '@prism/ui';
 export default function NotFoundScreen() {
   return (
     <>
-      <Stack.Screen options={{ title: 'PRISM' }} />
+      <Stack.Screen options={{ title: 'Prism' }} />
       <SafeAreaView style={styles.container}>
         <PRISMErrorState message="This screen doesn't exist." />
         <Link href="/(tabs)/today" asChild>

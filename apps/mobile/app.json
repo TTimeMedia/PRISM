@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PRISM",
+    "name": "Prism",
     "slug": "prism",
     "owner": "ttimemedia",
     "version": "0.1.0",
@@ -50,19 +50,19 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "PRISM uses Face ID to unlock the app you locked for your privacy."
+          "faceIDPermission": "Prism uses Face ID to unlock the app you locked for your privacy."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "PRISM uses your photo library to set your profile photo and to add photos to your milestones."
+          "photosPermission": "Prism uses your photo library to set your profile photo and to add photos to your milestones."
         }
       ],
       [
         "expo-calendar",
         {
-          "calendarPermission": "PRISM uses your calendar to add appointments you choose to sync."
+          "calendarPermission": "Prism uses your calendar to add appointments you choose to sync."
         }
       ],
       "expo-notifications"

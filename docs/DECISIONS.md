@@ -64,7 +64,7 @@ All decisions below were extracted from the original PRISM master source documen
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** Core manifesto: "There's no right way to transition." (`PRODUCT_BIBLE.md` §4)
+**Reason:** Core principle: there is no single right way to transition, so Prism never prescribes one (`PRODUCT_BIBLE.md` §4).
 **Implications:** All suggested content (milestones, categories) is optional and always paired with a "create your own" equivalent.
 
 ### PRISM does not use a transition progress score

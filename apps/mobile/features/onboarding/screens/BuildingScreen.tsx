@@ -44,7 +44,7 @@ export function BuildingScreen() {
         ))}
       </View>
       <Text style={[styles.text, { color: theme.colors.text.secondary }]}>
-        Building your PRISM…
+        Building your Prism…
       </Text>
     </SafeAreaView>
   );

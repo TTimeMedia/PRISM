@@ -67,8 +67,8 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
-        <Text style={[styles.wordmark, { color: theme.colors.text.primary }]}>PRISM</Text>
-        <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>Unlock PRISM.</Text>
+        <Text style={[styles.wordmark, { color: theme.colors.text.primary }]}>Prism</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>Unlock Prism.</Text>
 
         {biometricEnabled && biometricAvailable ? (
           <PRISMButton

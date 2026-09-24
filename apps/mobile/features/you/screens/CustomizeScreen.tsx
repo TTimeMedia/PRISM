@@ -36,7 +36,7 @@ export function CustomizeScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <PRISMHeader
-        title="Make PRISM yours."
+        title="Make Prism yours."
         leading={
           <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />

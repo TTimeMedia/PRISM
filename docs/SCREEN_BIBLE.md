@@ -114,7 +114,7 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 
 ### Screen 08 — Philosophy
 
-**Content:** "There's no right way to transition." + the PRISM Manifesto (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §4). **Action:** **Continue.**
+**Content:** "Set it up your way." + the Prism Manifesto (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §4). **Action:** **Continue.**
 
 ### Screen 09 — What Brings You Here?
 

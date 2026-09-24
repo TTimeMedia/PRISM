@@ -40,7 +40,7 @@ export function PrivacySetupScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="Protect your PRISM."
+      title="Protect your Prism."
       primaryLabel="Continue"
       onPrimaryPress={submit}
       primaryLoading={isSubmitting}

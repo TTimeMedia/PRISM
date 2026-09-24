@@ -28,7 +28,7 @@ export function AboutScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <PRISMHeader
-        title="About PRISM."
+        title="About Prism."
         leading={
           <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
@@ -37,13 +37,13 @@ export function AboutScreen() {
       />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.brand}>
-          <Text style={[styles.wordmark, { color: theme.colors.text.primary }]}>PRISM</Text>
+          <Text style={[styles.wordmark, { color: theme.colors.text.primary }]}>Prism</Text>
           <Text style={[styles.version, { color: theme.colors.text.tertiary }]}>
             Version {version}
           </Text>
         </View>
         <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
-          PRISM is an organizational companion for gender-affirming care — medications,
+          Prism is an organizational companion for gender-affirming care — medications,
           appointments, and the personal journey around them. It stores and organizes what you tell
           it; it never interprets, recommends, or diagnoses.
         </Text>

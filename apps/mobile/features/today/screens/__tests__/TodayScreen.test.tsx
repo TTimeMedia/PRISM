@@ -40,7 +40,7 @@ describe('TodayScreen', () => {
     renderWithProviders(<TodayScreen />);
 
     expect(screen.getByText('Nothing urgent today.')).toBeTruthy();
-    expect(screen.getByText('Your PRISM is here whenever you need it.')).toBeTruthy();
+    expect(screen.getByText('Your Prism is here whenever you need it.')).toBeTruthy();
   });
 
   it('renders the full base UI — greeting, empty state, Quick actions, and Coming up — for a brand-new user with zero data, never a blank screen', () => {

@@ -4,7 +4,7 @@
 
 PRISM is a private, personalized app for transgender and gender-diverse people to manage, document, organize, and reflect on their individual gender-affirming journey. PRISM does not define what transition is supposed to look like — it adapts to the individual. A person may take hormones, or not. They may have surgery, or not. They may change their name, or not. They may know exactly what they want, or still be figuring it out. PRISM supports all of those journeys, equally, without assumptions.
 
-> **There's no right way to transition. PRISM adapts to every journey.**
+> **Set it up your way. Prism fits around you.**
 
 ## Status
 

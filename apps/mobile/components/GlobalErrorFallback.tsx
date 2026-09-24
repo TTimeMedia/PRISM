@@ -19,7 +19,7 @@ export function GlobalErrorFallback({ error, retry }: GlobalErrorFallbackProps) 
   const theme = useTheme();
 
   if (__DEV__) {
-    console.error('PRISM caught an unhandled error:', error);
+    console.error('Prism caught an unhandled error:', error);
   }
 
   return (

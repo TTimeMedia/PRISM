@@ -24,10 +24,10 @@ describe('PhilosophyScreen', () => {
     mockedUseUpdateProfile.mockReturnValue({ mutateAsync } as never);
   });
 
-  it('renders the manifesto verbatim — never rewritten into clinical language', () => {
+  it('renders the intro copy', () => {
     renderWithProviders(<PhilosophyScreen />);
-    expect(screen.getByText("There's no right way to transition.")).toBeTruthy();
-    expect(screen.getByText('PRISM adapts to every journey.')).toBeTruthy();
+    expect(screen.getByText("Set it up your way.")).toBeTruthy();
+    expect(screen.getByText('Prism fits around you.')).toBeTruthy();
   });
 
   it('persists onboarding_step and advances to Intent on Continue', async () => {

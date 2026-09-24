@@ -48,14 +48,14 @@ export function AccessibilityScreen() {
           <PRISMSection>
             <PRISMSwitch
               label="Reduced motion"
-              description="Skip decorative motion effects throughout PRISM."
+              description="Skip decorative motion effects throughout Prism."
               value={settings.reduced_motion}
               onValueChange={(value) => updateSettings.mutate({ reduced_motion: value })}
             />
           </PRISMSection>
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
             Text size follows your device&rsquo;s system setting. Screen reader labels are built
-            into every PRISM control. Increased contrast isn&rsquo;t available as a separate PRISM
+            into every Prism control. Increased contrast isn&rsquo;t available as a separate Prism
             setting yet — for now, your device&rsquo;s own contrast setting applies.
           </Text>
         </ScrollView>

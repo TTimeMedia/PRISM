@@ -53,7 +53,7 @@ export function DeleteAccountScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <PRISMHeader
-        title="Delete your PRISM account?"
+        title="Delete your Prism account?"
         leading={
           <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
@@ -63,7 +63,7 @@ export function DeleteAccountScreen() {
       <KeyboardAwareScreen>
         <View style={styles.content}>
           <Text style={[styles.copy, { color: theme.colors.text.secondary }]}>
-            This permanently deletes your PRISM account and associated information. This cannot be
+            This permanently deletes your Prism account and associated information. This cannot be
             undone.
           </Text>
           <PRISMInput
