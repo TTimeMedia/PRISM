@@ -70,6 +70,12 @@
     "experiments": {
       "typedRoutes": true
     },
+    "runtimeVersion": {
+      "policy": "fingerprint"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/047c1d78-6ba0-4f66-87bf-a965f9d08753"
+    },
     "extra": {
       "router": {},
       "eas": {
