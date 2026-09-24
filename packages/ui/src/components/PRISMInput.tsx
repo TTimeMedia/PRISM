@@ -21,7 +21,7 @@ export function PRISMInput({ label, helperText, error, ...inputProps }: PRISMInp
     ? theme.destructive
     : focused
       ? theme.accent
-      : theme.colors.border.default;
+      : theme.colors.fieldBorder;
 
   return (
     <View style={styles.container}>
@@ -34,7 +34,7 @@ export function PRISMInput({ label, helperText, error, ...inputProps }: PRISMInp
         style={[
           styles.input,
           {
-            backgroundColor: theme.colors.surfaceElevated,
+            backgroundColor: theme.colors.field,
             borderColor,
             color: theme.colors.text.primary,
           },
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: type.bodyS.fontSize,
     lineHeight: type.bodyS.lineHeight,
     fontWeight: fontWeight.medium as '500',
-    marginBottom: spacing.xs,
+    marginBottom: 6,
   },
   input: {
     height: layout.inputHeight,

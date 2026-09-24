@@ -10,6 +10,10 @@ export interface ColorTokens {
   surface: string;
   surfaceElevated: string;
   surfaceSelected: string;
+  /** Background of text inputs, selects, and secondary buttons. */
+  field: string;
+  /** Resting border of the same controls. */
+  fieldBorder: string;
   text: {
     primary: string;
     secondary: string;
@@ -31,6 +35,8 @@ export const darkTokens: ColorTokens = {
   surface: '#121218', // PRISM_SURFACE — cards, sheets, navigation surfaces
   surfaceElevated: '#191921', // PRISM_SURFACE_2 — elevated cards, inputs, secondary controls
   surfaceSelected: '#22222C', // PRISM_SURFACE_3 — selected controls, strong emphasis
+  field: '#191921',
+  fieldBorder: 'rgba(255,255,255,0.10)',
   text: {
     primary: '#F8F8FA',
     secondary: '#B8B8C2',
@@ -52,6 +58,9 @@ export const lightTokens: ColorTokens = {
   surface: '#F2F2F5', // PRISM_LIGHT
   surfaceElevated: '#EAEAEE', // PRISM_LIGHT_2
   surfaceSelected: '#DEDEE5', // PRISM_LIGHT_3
+  // Light-mode fields are clean white with a soft sky-blue edge, not grey.
+  field: '#FFFFFF',
+  fieldBorder: '#B7DBEE',
   text: {
     primary: '#111116',
     secondary: '#5F5F6B',

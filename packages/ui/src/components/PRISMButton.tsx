@@ -63,9 +63,9 @@ function variantStyle(
       return { backgroundColor: theme.accent, opacity, borderWidth: 0 };
     case 'secondary':
       return {
-        backgroundColor: 'transparent',
+        backgroundColor: theme.scheme === 'light' ? theme.colors.field : 'transparent',
         borderWidth: 1,
-        borderColor: theme.colors.border.default,
+        borderColor: theme.colors.fieldBorder,
         opacity,
       };
     case 'tertiary':

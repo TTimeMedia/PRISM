@@ -26,7 +26,8 @@ export function PRISMChip({ label, selected = false, onPress, disabled = false }
       style={({ pressed }) => [
         styles.base,
         {
-          backgroundColor: selected ? theme.accent : theme.colors.surfaceElevated,
+          backgroundColor: selected ? theme.accent : theme.colors.field,
+          borderColor: selected ? theme.accent : theme.colors.fieldBorder,
           opacity: disabled ? 0.4 : pressed ? 0.85 : 1,
         },
       ]}
@@ -46,6 +47,7 @@ export function PRISMChip({ label, selected = false, onPress, disabled = false }
 const styles = StyleSheet.create({
   base: {
     borderRadius: radius.pill,
+    borderWidth: 1,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     // Minimum touch target per docs/DESIGN_SYSTEM.md §23 (44x44px) —

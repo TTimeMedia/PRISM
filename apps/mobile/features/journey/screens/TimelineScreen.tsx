@@ -1,6 +1,6 @@
 import React from 'react';
 import { router, type Href } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
   PRISMEmptyState,
@@ -16,6 +16,7 @@ import type { ModuleKey } from '@prism/types';
 import { useTimelineEvents } from '../../../lib/journey/timelineQuery';
 import { eventColor } from '../eventDisplay';
 import { EntryImage } from '../components/EntryImage';
+import { TimelinePrompts } from '../components/TimelinePrompts';
 
 /**
  * Screen 42 — Timeline. Tapping an event opens its original record
@@ -53,6 +54,7 @@ export function TimelineScreen() {
         </View>
       ) : events && events.length > 0 ? (
         <View style={styles.content}>
+          <TimelinePrompts variant="strip" />
           <PRISMTimeline
             events={events.map((event) => ({
               id: event.id,
@@ -68,12 +70,13 @@ export function TimelineScreen() {
           />
         </View>
       ) : (
-        <View style={styles.content}>
+        <ScrollView contentContainerStyle={styles.content}>
           <PRISMEmptyState
-            title="Your story starts wherever you decide."
-            subtitle="Nothing recorded yet."
+            title="Your story builds itself."
+            subtitle="Milestones, journal entries, appointments, doses and injections all land here, in order. Add one to begin."
           />
-        </View>
+          <TimelinePrompts variant="list" />
+        </ScrollView>
       )}
     </View>
   );

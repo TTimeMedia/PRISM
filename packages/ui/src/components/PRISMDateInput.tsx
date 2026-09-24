@@ -49,7 +49,7 @@ export function PRISMDateInput({
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Date>(() => parseIsoDate(value) ?? new Date());
 
-  const borderColor = error ? theme.destructive : theme.colors.border.default;
+  const borderColor = error ? theme.destructive : theme.colors.fieldBorder;
   const displayValue = value ? formatDisplayDate(value) : null;
 
   function openPicker() {
@@ -91,7 +91,7 @@ export function PRISMDateInput({
         style={[
           styles.field,
           {
-            backgroundColor: theme.colors.surfaceElevated,
+            backgroundColor: theme.colors.field,
             borderColor,
             opacity: editable ? 1 : 0.6,
           },

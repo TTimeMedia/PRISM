@@ -22,7 +22,7 @@ export function ReadyScreen() {
 
   return (
     <OnboardingScreenLayout
-      hero={<PrismMark />}
+      hero={<PrismMark size={132} />}
       phase={1}
       title="Prism is ready."
       subtitle="Everything you chose is set up and waiting, all in your private space."

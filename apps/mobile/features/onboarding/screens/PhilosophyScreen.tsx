@@ -61,7 +61,7 @@ export function PhilosophyScreen() {
 
   return (
     <OnboardingScreenLayout
-      hero={<PrismMark size={210} />}
+      hero={<PrismMark size={84} />}
       phase={0.25}
       title="Set it up your way."
       primaryLabel="Continue"
@@ -104,7 +104,7 @@ export function PhilosophyScreen() {
 
 const styles = StyleSheet.create({
   pillars: {
-    gap: spacing.md,
+    gap: spacing.lg,
   },
   pillar: {
     flexDirection: 'row',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   pillarText: {
     flex: 1,
-    gap: 2,
+    gap: spacing.xs,
   },
   heading: {
     fontFamily: fontFamily.display,
@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
     lineHeight: type.bodyS.lineHeight,
   },
   closing: {
-    marginTop: spacing.xl,
-    gap: spacing.sm,
+    marginTop: spacing.xxl,
+    gap: spacing.md,
   },
   spectrumBar: {
     flexDirection: 'row',

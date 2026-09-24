@@ -27,7 +27,7 @@ export function PRISMTextArea({
     ? theme.destructive
     : focused
       ? theme.accent
-      : theme.colors.border.default;
+      : theme.colors.fieldBorder;
 
   return (
     <View style={styles.container}>
@@ -41,7 +41,7 @@ export function PRISMTextArea({
           styles.input,
           {
             minHeight: minLines * (type.bodyL.lineHeight ?? 24),
-            backgroundColor: theme.colors.surfaceElevated,
+            backgroundColor: theme.colors.field,
             borderColor,
             color: theme.colors.text.primary,
           },

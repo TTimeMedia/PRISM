@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   legal: {
     fontSize: type.caption.fontSize,
     lineHeight: type.caption.lineHeight,
-    marginTop: spacing.lg,
+    marginTop: spacing.md,
     textAlign: 'center',
   },
 });

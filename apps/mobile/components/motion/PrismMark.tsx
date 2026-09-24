@@ -1,159 +1,126 @@
 import React, { useEffect } from 'react';
-import Svg, { Line, Polygon } from 'react-native-svg';
+import { StyleSheet, View } from 'react-native';
+import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 import Animated, {
   Easing,
   cancelAnimation,
-  useAnimatedProps,
+  useAnimatedStyle,
   useSharedValue,
   withDelay,
   withRepeat,
   withSequence,
+  withSpring,
   withTiming,
 } from 'react-native-reanimated';
 import { spectrum, useReducedMotion, useTheme } from '@prism/ui';
 
-const AnimatedLine = Animated.createAnimatedComponent(Line);
+const PRISM_IMAGE = require('../../assets/images/prism-mark.png');
 
-const WIDTH = 240;
-const HEIGHT = 150;
-const APEX = { x: 108, y: 30 };
-const LEFT = { x: 84, y: 112 };
-const RIGHT = { x: 132, y: 112 };
-const BEAM_FROM = { x: 8, y: 84 };
-const BEAM_TO = { x: 100, y: 78 };
-const RAY_FROM_X = 122;
-const RAY_FROM_Y = 76;
-const RAY_LENGTH = 130;
-const RAY_COLORS = [spectrum.cyan, spectrum.mint, spectrum.yellow, spectrum.pink, spectrum.violet];
-const RAY_ANGLES = [-26, -13, 0, 13, 26];
+/** The cut-out prism is 720 x 591. */
+const IMAGE_ASPECT = 591 / 720;
 
-interface RayProps {
-  color: string;
-  angleDeg: number;
-  index: number;
-  reducedMotion: boolean;
-}
+const DEFAULT_SIZE = 220;
 
-function Ray({ color, angleDeg, index, reducedMotion }: RayProps) {
-  const draw = useSharedValue(reducedMotion ? 1 : 0);
-  const shimmer = useSharedValue(1);
-  const rad = (angleDeg * Math.PI) / 180;
-  const x2 = RAY_FROM_X + Math.cos(rad) * RAY_LENGTH;
-  const y2 = RAY_FROM_Y + Math.sin(rad) * RAY_LENGTH;
-
-  useEffect(() => {
-    if (reducedMotion) {
-      draw.value = 1;
-      shimmer.value = 1;
-      return;
-    }
-    draw.value = withDelay(
-      700 + index * 140,
-      withTiming(1, { duration: 900, easing: Easing.out(Easing.cubic) }),
-    );
-    shimmer.value = withDelay(
-      2200 + index * 260,
-      withRepeat(
-        withSequence(
-          withTiming(0.55, { duration: 1500, easing: Easing.inOut(Easing.sin) }),
-          withTiming(1, { duration: 1500, easing: Easing.inOut(Easing.sin) }),
-        ),
-        -1,
-      ),
-    );
-    return () => {
-      cancelAnimation(draw);
-      cancelAnimation(shimmer);
-    };
-  }, [reducedMotion, index, draw, shimmer]);
-
-  const animatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: RAY_LENGTH * (1 - draw.value),
-    strokeOpacity: shimmer.value,
-  }));
-
-  return (
-    <AnimatedLine
-      x1={RAY_FROM_X}
-      y1={RAY_FROM_Y}
-      x2={x2}
-      y2={y2}
-      stroke={color}
-      strokeWidth={5}
-      strokeLinecap="round"
-      strokeDasharray={`${RAY_LENGTH} ${RAY_LENGTH}`}
-      animatedProps={animatedProps}
-    />
-  );
-}
-
-/**
- * The PRISM mark, drawn in: a beam of light meets the prism and fans out
- * into the five spectrum colors, which then shimmer gently. Static under
- * Reduce Motion. Decorative — hidden from screen readers.
- */
 export interface PrismMarkProps {
-  /** Rendered width in points; height keeps the mark's proportions. */
+  /** Rendered width in points; the height follows the logo's proportions. */
   size?: number;
 }
 
-export function PrismMark({ size = WIDTH }: PrismMarkProps) {
+/**
+ * The Prism logo (the crystal prism from the app icon, cut out on its own),
+ * easing in with a soft spring and then floating and breathing gently over a
+ * faint spectrum halo. Static under Reduce Motion. Decorative — hidden from
+ * screen readers.
+ */
+export function PrismMark({ size = DEFAULT_SIZE }: PrismMarkProps) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
-  const beam = useSharedValue(reducedMotion ? 1 : 0);
+  const appear = useSharedValue(reducedMotion ? 1 : 0);
+  const float = useSharedValue(0);
+  const halo = useSharedValue(1);
 
   useEffect(() => {
     if (reducedMotion) {
-      beam.value = 1;
+      appear.value = 1;
+      float.value = 0;
+      halo.value = 1;
       return;
     }
-    beam.value = withDelay(150, withTiming(1, { duration: 700, easing: Easing.out(Easing.cubic) }));
-    return () => cancelAnimation(beam);
-  }, [reducedMotion, beam]);
+    appear.value = withDelay(120, withSpring(1, { damping: 14, stiffness: 90 }));
+    float.value = withDelay(
+      900,
+      withRepeat(withTiming(1, { duration: 3200, easing: Easing.inOut(Easing.sin) }), -1, true),
+    );
+    halo.value = withRepeat(
+      withSequence(
+        withTiming(0.55, { duration: 2400, easing: Easing.inOut(Easing.sin) }),
+        withTiming(1, { duration: 2400, easing: Easing.inOut(Easing.sin) }),
+      ),
+      -1,
+    );
+    return () => {
+      cancelAnimation(appear);
+      cancelAnimation(float);
+      cancelAnimation(halo);
+    };
+  }, [reducedMotion, appear, float, halo]);
 
-  const beamProps = useAnimatedProps(() => ({
-    strokeDashoffset: 100 * (1 - beam.value),
+  const prismStyle = useAnimatedStyle(() => ({
+    opacity: Math.min(appear.value, 1),
+    transform: [
+      { translateY: (float.value - 0.5) * -10 },
+      { scale: 0.7 + 0.3 * appear.value + float.value * 0.02 },
+    ],
+  }));
+  const haloStyle = useAnimatedStyle(() => ({
+    opacity: halo.value * Math.min(appear.value, 1),
   }));
 
-  const edge = theme.colors.text.primary;
+  const height = size * IMAGE_ASPECT;
+  const haloSize = size * 1.5;
+  const isDark = theme.scheme === 'dark';
+  const haloColor = isDark ? spectrum.violet : spectrum.cyan;
 
   return (
-    <Svg
-      width={size}
-      height={(size * HEIGHT) / WIDTH}
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+    <View
+      style={{ width: size, height }}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
-      <AnimatedLine
-        x1={BEAM_FROM.x}
-        y1={BEAM_FROM.y}
-        x2={BEAM_TO.x}
-        y2={BEAM_TO.y}
-        stroke={edge}
-        strokeOpacity={0.85}
-        strokeWidth={4}
-        strokeLinecap="round"
-        strokeDasharray="100 100"
-        animatedProps={beamProps}
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.halo,
+          {
+            width: haloSize,
+            height: haloSize,
+            left: (size - haloSize) / 2,
+            top: (height - haloSize) / 2,
+          },
+          haloStyle,
+        ]}
+      >
+        <Svg width={haloSize} height={haloSize}>
+          <Defs>
+            <RadialGradient id="prism-halo">
+              <Stop offset="0" stopColor={haloColor} stopOpacity={0.45} />
+              <Stop offset="1" stopColor={haloColor} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
+          <Circle cx={haloSize / 2} cy={haloSize / 2} r={haloSize / 2} fill="url(#prism-halo)" />
+        </Svg>
+      </Animated.View>
+      <Animated.Image
+        source={PRISM_IMAGE}
+        resizeMode="contain"
+        style={[{ width: size, height: height }, prismStyle]}
       />
-      {RAY_COLORS.map((color, index) => (
-        <Ray
-          key={color}
-          color={color}
-          angleDeg={RAY_ANGLES[index] as number}
-          index={index}
-          reducedMotion={reducedMotion}
-        />
-      ))}
-      <Polygon
-        points={`${APEX.x},${APEX.y} ${RIGHT.x},${RIGHT.y} ${LEFT.x},${LEFT.y}`}
-        fill={theme.colors.background}
-        fillOpacity={0.55}
-        stroke={edge}
-        strokeWidth={3}
-        strokeLinejoin="round"
-      />
-    </Svg>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  halo: {
+    position: 'absolute',
+  },
+});

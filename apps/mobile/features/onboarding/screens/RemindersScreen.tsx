@@ -19,7 +19,7 @@ function NotificationPreview() {
       importantForAccessibility="no-hide-descendants"
       style={[
         styles.preview,
-        { backgroundColor: theme.colors.surfaceElevated, borderColor: theme.colors.border.default },
+        { backgroundColor: theme.colors.field, borderColor: theme.colors.fieldBorder },
       ]}
     >
       <View style={[styles.appIcon, { backgroundColor: theme.accent }]}>
@@ -88,7 +88,7 @@ export function RemindersScreen() {
         </View>
       }
       phase={0.9}
-      title="Reminders that find you."
+      title="Gentle reminders."
       subtitle="Get a nudge when it's time for a medication or an appointment. They're set on your phone, and you choose what each one says."
       primaryLabel={declinedNote ? 'Continue' : 'Turn on reminders'}
       onPrimaryPress={declinedNote ? skip : turnOn}

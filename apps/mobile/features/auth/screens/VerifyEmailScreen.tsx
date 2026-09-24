@@ -60,6 +60,6 @@ export function VerifyEmailScreen() {
 
 const styles = StyleSheet.create({
   actions: {
-    gap: spacing.sm,
+    gap: spacing.smd,
   },
 });

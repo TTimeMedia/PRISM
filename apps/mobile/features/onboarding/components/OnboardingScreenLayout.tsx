@@ -63,7 +63,11 @@ export function OnboardingScreenLayout({
           <Reveal index={0}>
             <Text
               accessibilityRole="header"
-              style={[styles.title, { color: theme.colors.text.primary }]}
+              style={[
+                styles.title,
+                { color: theme.colors.text.primary },
+                !subtitle && styles.titleAlone,
+              ]}
             >
               {title}
             </Text>
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
   },
   hero: {
     alignItems: 'center',
-    marginBottom: spacing.lg,
+    marginBottom: spacing.xl,
   },
   title: {
     fontFamily: fontFamily.display,
@@ -105,13 +109,16 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.semibold as '600',
     marginBottom: spacing.sm,
   },
+  titleAlone: {
+    marginBottom: spacing.xl,
+  },
   subtitle: {
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
     marginBottom: spacing.lg,
   },
   body: {
-    gap: spacing.xs,
+    gap: spacing.smd,
   },
   actions: {
     paddingHorizontal: spacing.lg,

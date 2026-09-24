@@ -46,14 +46,14 @@ export function PRISMPinInput({
   testID,
 }: PRISMPinInputProps) {
   const theme = useTheme();
-  const borderColor = error ? theme.destructive : theme.colors.border.default;
+  const borderColor = error ? theme.destructive : theme.colors.fieldBorder;
 
   return (
     <View style={styles.container}>
       <Text style={[styles.label, { color: theme.colors.text.secondary }]}>{label}</Text>
       <View style={styles.field}>
         <View
-          style={[styles.dots, { backgroundColor: theme.colors.surfaceElevated, borderColor }]}
+          style={[styles.dots, { backgroundColor: theme.colors.field, borderColor }]}
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
@@ -63,7 +63,7 @@ export function PRISMPinInput({
               style={[
                 styles.dot,
                 {
-                  borderColor: theme.colors.border.default,
+                  borderColor: theme.colors.fieldBorder,
                   backgroundColor: index < value.length ? theme.accent : 'transparent',
                 },
               ]}

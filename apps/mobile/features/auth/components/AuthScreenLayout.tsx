@@ -86,10 +86,10 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.lg,
   },
   body: {
-    gap: spacing.xs,
+    gap: 0,
   },
   footer: {
     paddingHorizontal: spacing.lg,

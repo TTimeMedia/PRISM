@@ -45,7 +45,7 @@ export function PRISMTimeInput({
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Date>(() => parseHHmm(value) ?? new Date());
 
-  const borderColor = error ? theme.destructive : theme.colors.border.default;
+  const borderColor = error ? theme.destructive : theme.colors.fieldBorder;
   const displayValue = value ? formatDisplayTime(value) : null;
 
   function openPicker() {
@@ -87,7 +87,7 @@ export function PRISMTimeInput({
         style={[
           styles.field,
           {
-            backgroundColor: theme.colors.surfaceElevated,
+            backgroundColor: theme.colors.field,
             borderColor,
             opacity: editable ? 1 : 0.6,
           },

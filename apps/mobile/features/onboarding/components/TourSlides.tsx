@@ -71,6 +71,8 @@ export interface TourSlidesProps {
   /** Shown as a quiet link on every slide except the last. */
   onSkip?: () => void;
   loading?: boolean;
+  /** Which slide to open on; defaults to the first. */
+  initialIndex?: number;
 }
 
 /**
@@ -78,11 +80,17 @@ export interface TourSlidesProps {
  * and again from You → How Prism works. Each slide is one idea with three
  * short points; nothing here reads or asks for anything.
  */
-export function TourSlides({ doneLabel, onDone, onSkip, loading = false }: TourSlidesProps) {
+export function TourSlides({
+  doneLabel,
+  onDone,
+  onSkip,
+  loading = false,
+  initialIndex = 0,
+}: TourSlidesProps) {
   const theme = useTheme();
   const { width } = useWindowDimensions();
   const scrollRef = useRef<ScrollView>(null);
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(initialIndex);
   const isLast = index === SLIDES.length - 1;
 
   const onScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -105,6 +113,7 @@ export function TourSlides({ doneLabel, onDone, onSkip, loading = false }: TourS
         ref={scrollRef}
         horizontal
         pagingEnabled
+        contentOffset={{ x: initialIndex * width, y: 0 }}
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={onScrollEnd}
         style={styles.flex}
