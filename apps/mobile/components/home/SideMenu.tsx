@@ -109,24 +109,14 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
           <SafeAreaView style={styles.flex} edges={['top', 'bottom']}>
             <View style={styles.header}>
               <Text style={[styles.brand, { color: theme.colors.text.primary }]}>Prism</Text>
-              <View style={styles.headerActions}>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Settings"
-                  onPress={() => go('/you/settings')}
-                  hitSlop={10}
-                >
-                  <Settings size={22} color={theme.colors.text.primary} />
-                </Pressable>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel="Close menu"
-                  onPress={onClose}
-                  hitSlop={10}
-                >
-                  <X size={24} color={theme.colors.text.primary} />
-                </Pressable>
-              </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Close menu"
+                onPress={onClose}
+                hitSlop={10}
+              >
+                <X size={24} color={theme.colors.text.primary} />
+              </Pressable>
             </View>
 
             <ScrollView contentContainerStyle={styles.list}>
@@ -135,6 +125,20 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
               <Group title="Help" items={HELP_ITEMS} onPick={go} />
             </ScrollView>
 
+            {/* Pinned under the list, so Settings is always on screen however long the menu is. */}
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Settings"
+              onPress={() => go('/you/settings')}
+              style={({ pressed }) => [
+                styles.settingsRow,
+                { borderTopColor: theme.colors.border.subtle },
+                pressed && { backgroundColor: theme.colors.surfaceSelected },
+              ]}
+            >
+              <Settings size={22} color={theme.colors.text.primary} strokeWidth={1.8} />
+              <Text style={[styles.itemLabel, { color: theme.colors.text.primary }]}>Settings</Text>
+            </Pressable>
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={name ? `Your profile, ${name}` : 'Your profile'}
@@ -226,11 +230,6 @@ const styles = StyleSheet.create({
     fontWeight: fontWeight.bold as '700',
     letterSpacing: 0.5,
   },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-  },
   list: {
     paddingHorizontal: spacing.sm,
     paddingBottom: spacing.lg,
@@ -256,6 +255,14 @@ const styles = StyleSheet.create({
   itemLabel: {
     fontSize: type.bodyL.fontSize,
     lineHeight: type.bodyL.lineHeight,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    minHeight: 52,
+    paddingHorizontal: spacing.lg,
+    borderTopWidth: 1,
   },
   profile: {
     flexDirection: 'row',
