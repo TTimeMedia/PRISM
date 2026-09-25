@@ -89,6 +89,8 @@ export function PrismMark({ size = DEFAULT_SIZE }: PrismMarkProps) {
     >
       <Animated.View
         pointerEvents="none"
+        shouldRasterizeIOS
+        renderToHardwareTextureAndroid
         style={[
           styles.halo,
           {

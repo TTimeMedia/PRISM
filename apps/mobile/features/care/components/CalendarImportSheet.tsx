@@ -41,6 +41,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState('');
   const [importing, setImporting] = useState(false);
+  const [errorDetail, setErrorDetail] = useState<string | null>(null);
 
   const close = () => {
     setPhase('intro');
@@ -60,7 +61,11 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
       }
       setEvents(await calendarProvider.listUpcomingEvents());
       setPhase('list');
-    } catch {
+    } catch (error) {
+      // Kept short and shown, so a problem can be reported precisely.
+      setErrorDetail(
+        error instanceof Error ? error.message.slice(0, 200) : String(error).slice(0, 200),
+      );
       setPhase('error');
     }
   };
@@ -140,6 +145,11 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
             Prism couldn&apos;t read the calendar just now. Check that Calendar is set up on this
             phone and try again.
           </Text>
+          {errorDetail ? (
+            <Text style={[styles.detail, { color: theme.colors.text.tertiary }]}>
+              {errorDetail}
+            </Text>
+          ) : null}
           <PRISMButton label="Try again" onPress={choose} />
           <PRISMButton label="Close" variant="tertiary" onPress={close} />
         </View>
@@ -220,6 +230,10 @@ const styles = StyleSheet.create({
   body: {
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
+  },
+  detail: {
+    fontSize: type.caption.fontSize,
+    lineHeight: type.caption.lineHeight,
   },
   search: {
     height: layout.inputHeight,

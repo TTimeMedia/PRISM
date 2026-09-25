@@ -1,6 +1,9 @@
 import type { Appointment, Medication } from '@prism/types';
 import {
+  appointmentReminderTimes,
   isMedicationDueOn,
+  medicationNudgeTimes,
+  needsDatedReminders,
   resolveMedicationOccurrences,
   resolveNextAppointmentOccurrence,
   resolveNextMedicationOccurrence,
@@ -165,5 +168,79 @@ describe('resolveNextAppointmentOccurrence', () => {
   it('returns null when starts_at has already passed', () => {
     const appt = appointment({ starts_at: '2026-06-01T14:00:00Z' });
     expect(resolveNextAppointmentOccurrence(appt, NOW)).toBeNull();
+  });
+});
+
+const baseMedication = medication();
+
+describe('appointmentReminderTimes', () => {
+  const appt = {
+    id: 'a1',
+    starts_at: '2026-10-10T15:00:00.000Z',
+  } as unknown as Appointment;
+  const now = new Date('2026-10-01T00:00:00.000Z');
+
+  it('gives one time per lead, earliest first', () => {
+    const times = appointmentReminderTimes(appt, [0, 60, 1440], now).map((d) => d.toISOString());
+    expect(times).toEqual([
+      '2026-10-09T15:00:00.000Z',
+      '2026-10-10T14:00:00.000Z',
+      '2026-10-10T15:00:00.000Z',
+    ]);
+  });
+
+  it('drops times that have already passed and repeats', () => {
+    const late = new Date('2026-10-10T14:30:00.000Z');
+    expect(
+      appointmentReminderTimes(appt, [0, 0, 60, 1440], late).map((d) => d.toISOString()),
+    ).toEqual(['2026-10-10T15:00:00.000Z']);
+  });
+
+  it('has nothing to schedule with no leads', () => {
+    expect(appointmentReminderTimes(appt, [], now)).toEqual([]);
+  });
+});
+
+describe('needsDatedReminders', () => {
+  const now = new Date(2026, 9, 1, 9, 0);
+  const med = (o: Partial<Medication>) => ({ ...baseMedication, ...o }) as Medication;
+
+  it('is false for an open-ended medication that has started', () => {
+    expect(needsDatedReminders(med({ start_date: '2026-09-01', end_date: null }), now)).toBe(false);
+    expect(needsDatedReminders(med({ start_date: null, end_date: null }), now)).toBe(false);
+  });
+
+  it('is true for a paused or ended medication', () => {
+    expect(needsDatedReminders(med({ end_date: '2026-09-15' }), now)).toBe(true);
+  });
+
+  it('is true when the start date is still ahead', () => {
+    expect(needsDatedReminders(med({ start_date: '2026-10-20' }), now)).toBe(true);
+  });
+});
+
+describe('medicationNudgeTimes', () => {
+  it('follows each of the next doses by the delay', () => {
+    const daily = {
+      ...baseMedication,
+      frequency_type: 'daily',
+      frequency_config: { time_of_day: '09:00' },
+    } as Medication;
+    const now = new Date(2026, 9, 1, 8, 0);
+    const result = medicationNudgeTimes(daily, 30, now, 2);
+    expect(result).toHaveLength(2);
+    expect(result[0]?.nudgeAt.getTime() - (result[0]?.doseAt.getTime() ?? 0)).toBe(30 * 60 * 1000);
+  });
+
+  it('leaves out a nudge whose time has already gone by', () => {
+    const daily = {
+      ...baseMedication,
+      frequency_type: 'daily',
+      frequency_config: { time_of_day: '09:00' },
+    } as Medication;
+    // Dose was at 09:00 today; it is 09:40, so today's 09:30 nudge is past and the dose itself isn't upcoming.
+    const now = new Date(2026, 9, 1, 9, 40);
+    const result = medicationNudgeTimes(daily, 30, now, 3);
+    expect(result.every((r) => r.nudgeAt > now)).toBe(true);
   });
 });

@@ -9,6 +9,7 @@ import type {
 } from '@prism/validation';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
+import { cancelDueNudges } from '../reminders/notificationScheduler';
 import {
   appointmentKey,
   appointmentsKey,
@@ -132,6 +133,8 @@ export function useCreateMedicationLog() {
       queryClient.invalidateQueries({
         queryKey: medicationLogsKey(userId, data.medication_id),
       });
+      // A dose that's been logged no longer needs its follow-up reminder.
+      void cancelDueNudges(data.medication_id).catch(() => undefined);
     },
   });
 }

@@ -27,7 +27,9 @@ export const deviceCalendarProvider: CalendarProvider = {
   async listUpcomingEvents(days = 120) {
     const start = new Date();
     const end = new Date(start.getTime() + days * 24 * 60 * 60 * 1000);
-    const calendars = await Calendar.getCalendars();
+    // Events only. Without an entity type, EventKit also wants Reminders access,
+    // which Prism never asks for, so listing calendars would fail.
+    const calendars = await Calendar.getCalendars(Calendar.EntityTypes.EVENT);
     if (calendars.length === 0) return [];
     const events = await Calendar.listEvents(calendars, start, end);
     return events

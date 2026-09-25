@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 import Animated, {
   Easing,
   cancelAnimation,
-  useAnimatedProps,
+  useAnimatedStyle,
   useSharedValue,
   withRepeat,
   withTiming,
+  type SharedValue,
 } from 'react-native-reanimated';
 import { spectrum, useReducedMotion, useTheme } from '@prism/ui';
-
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 interface Orb {
   id: string;
@@ -34,6 +33,50 @@ const ORBS: Orb[] = [
 // Where the previous screen left the background, so it keeps travelling
 // instead of restarting on every screen.
 let lastPhase = 0;
+
+interface OrbViewProps {
+  orb: Orb;
+  index: number;
+  width: number;
+  height: number;
+  glow: number;
+  drift: SharedValue<number>;
+  shift: SharedValue<number>;
+}
+
+/**
+ * One soft blob of color. The gradient is drawn once and never changes;
+ * only the wrapper's position is animated, which the GPU handles without
+ * asking the JavaScript thread to redraw anything each frame.
+ */
+function OrbView({ orb, index, width, height, glow, drift, shift }: OrbViewProps) {
+  const size = width * orb.radius * 2;
+  const style = useAnimatedStyle(() => {
+    const sway = (drift.value - 0.5) * 2 * orb.drift;
+    const cx = width * (orb.x + 0.16 * Math.sin(shift.value * 3.1 + index * 2.1)) + sway;
+    const cy = height * (orb.y + 0.12 * Math.cos(shift.value * 2.4 + index * 1.7)) - sway * 0.6;
+    return { transform: [{ translateX: cx - size / 2 }, { translateY: cy - size / 2 }] };
+  });
+
+  return (
+    <Animated.View
+      pointerEvents="none"
+      shouldRasterizeIOS
+      renderToHardwareTextureAndroid
+      style={[styles.orb, { width: size, height: size, opacity: glow }, style]}
+    >
+      <Svg width={size} height={size}>
+        <Defs>
+          <RadialGradient id={orb.id}>
+            <Stop offset="0" stopColor={orb.color} stopOpacity={1} />
+            <Stop offset="1" stopColor={orb.color} stopOpacity={0} />
+          </RadialGradient>
+        </Defs>
+        <Circle cx={size / 2} cy={size / 2} r={size / 2} fill={`url(#${orb.id})`} />
+      </Svg>
+    </Animated.View>
+  );
+}
 
 export interface AmbientBackgroundProps {
   /**
@@ -80,44 +123,33 @@ export function AmbientBackground({ phase }: AmbientBackgroundProps) {
       : withTiming(phase, { duration: 1100, easing: Easing.inOut(Easing.cubic) });
   }, [phase, reducedMotion, shift]);
 
-  const animated = ORBS.map((orb, index) =>
-    // The list is fixed-length, so hook order never changes.
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useAnimatedProps(() => {
-      const sway = (drift.value - 0.5) * 2 * orb.drift;
-      return {
-        cx: width * (orb.x + 0.16 * Math.sin(shift.value * 3.1 + index * 2.1)) + sway,
-        cy: height * (orb.y + 0.12 * Math.cos(shift.value * 2.4 + index * 1.7)) - sway * 0.6,
-      };
-    }),
-  );
-
   return (
-    <Svg
+    <View
       pointerEvents="none"
       style={StyleSheet.absoluteFill}
-      width={width}
-      height={height}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
-      <Defs>
-        {ORBS.map((orb) => (
-          <RadialGradient key={orb.id} id={orb.id}>
-            <Stop offset="0" stopColor={orb.color} stopOpacity={1} />
-            <Stop offset="1" stopColor={orb.color} stopOpacity={0} />
-          </RadialGradient>
-        ))}
-      </Defs>
       {ORBS.map((orb, index) => (
-        <AnimatedCircle
+        <OrbView
           key={orb.id}
-          r={width * orb.radius}
-          fill={`url(#${orb.id})`}
-          opacity={glow}
-          animatedProps={animated[index]}
+          orb={orb}
+          index={index}
+          width={width}
+          height={height}
+          glow={glow}
+          drift={drift}
+          shift={shift}
         />
       ))}
-    </Svg>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  orb: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+  },
+});

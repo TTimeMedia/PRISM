@@ -19,6 +19,12 @@ interface AppState {
   /** Accent color theme — device-local, like the light/dark cache. */
   accentColor: AccentKey;
   setAccentColor: (accent: AccentKey) => void;
+  /** One gentle follow-up when a dose isn't marked done. Device-local, like the reminders themselves. */
+  missedDoseNudge: boolean;
+  setMissedDoseNudge: (on: boolean) => void;
+  /** Minutes before an appointment to remind (0 = at the time). Device-local. */
+  appointmentLeadMinutes: number[];
+  setAppointmentLeadMinutes: (minutes: number[]) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -28,6 +34,10 @@ export const useAppStore = create<AppState>()(
       setThemePreference: (theme) => set({ themePreference: theme }),
       accentColor: DEFAULT_ACCENT_KEY,
       setAccentColor: (accent) => set({ accentColor: accent }),
+      missedDoseNudge: true,
+      setMissedDoseNudge: (on) => set({ missedDoseNudge: on }),
+      appointmentLeadMinutes: [60],
+      setAppointmentLeadMinutes: (minutes) => set({ appointmentLeadMinutes: minutes }),
     }),
     {
       name: 'prism-app-preferences',

@@ -1,12 +1,17 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { AppState } from 'react-native';
+import { useAppStore } from '../store/appStore';
 import type { Appointment, Medication, NotificationStyle, Reminder } from '@prism/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules, useSettings } from '../profile/queries';
 import { useAppointments, useMedications } from '../care/queries';
 import {
+  NUDGE_DELAY_MINUTES,
   cancelRemindersFor,
   configureNotificationHandler,
+  registerNotificationCategories,
+  trimToBudget,
   requestNotificationPermissions,
   scheduleAppointmentReminder,
   scheduleMedicationReminders,
@@ -43,6 +48,10 @@ export function useReminderSync(): void {
   const medicationsEnabled = !!modules?.find((m) => m.module_key === 'medications')?.enabled;
   const appointmentsEnabled = !!modules?.find((m) => m.module_key === 'appointments')?.enabled;
   const notificationPrivacy = settings?.notification_privacy ?? true;
+  const missedDoseNudge = useAppStore((state) => state.missedDoseNudge);
+  const leadMinutes = useAppStore((state) => state.appointmentLeadMinutes);
+  const [refreshTick, setRefreshTick] = useState(0);
+  const lastRefreshAt = useRef(Date.now());
 
   const signature = JSON.stringify({
     meds: medications?.map((m) => [
@@ -57,11 +66,27 @@ export function useReminderSync(): void {
     medicationsEnabled,
     appointmentsEnabled,
     notificationPrivacy,
+    missedDoseNudge,
+    leadMinutes,
+    refreshTick,
   });
   const lastSynced = useRef<string | null>(null);
 
   useEffect(() => {
     configureNotificationHandler();
+    registerNotificationCategories().catch(() => undefined);
+  }, []);
+
+  // Dated reminders are scheduled a while ahead, so top them up when the app
+  // comes back to the foreground after some hours away.
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active' && Date.now() - lastRefreshAt.current > 3 * 60 * 60 * 1000) {
+        lastRefreshAt.current = Date.now();
+        setRefreshTick((tick) => tick + 1);
+      }
+    });
+    return () => subscription.remove();
   }, []);
 
   useEffect(() => {
@@ -71,14 +96,24 @@ export function useReminderSync(): void {
 
     let cancelled = false;
     void (async () => {
-      const granted = await requestNotificationPermissions();
-      if (!granted || cancelled) return;
+      const wantsReminders =
+        (medicationsEnabled && medications.some((m) => m.reminder_enabled)) ||
+        (appointmentsEnabled && appointments.some((a) => a.reminder_enabled));
+      // Only ask for permission when something actually needs it; the clean-up of
+      // reminders that were turned off works without it.
+      if (wantsReminders) {
+        const granted = await requestNotificationPermissions();
+        if (!granted || cancelled) return;
+      }
       await syncReminders({
         userId,
         medications: medicationsEnabled ? medications : [],
         appointments: appointmentsEnabled ? appointments : [],
         notificationPrivacy,
+        nudgeDelayMinutes: missedDoseNudge ? NUDGE_DELAY_MINUTES : null,
+        appointmentLeadMinutes: leadMinutes,
       });
+      await trimToBudget();
     })();
     return () => {
       cancelled = true;
@@ -100,6 +135,8 @@ interface SyncArgs {
   medications: Medication[];
   appointments: Appointment[];
   notificationPrivacy: boolean;
+  nudgeDelayMinutes: number | null;
+  appointmentLeadMinutes: readonly number[];
 }
 
 async function syncReminders({
@@ -107,6 +144,8 @@ async function syncReminders({
   medications,
   appointments,
   notificationPrivacy,
+  nudgeDelayMinutes,
+  appointmentLeadMinutes,
 }: SyncArgs): Promise<void> {
   const desired = new Map<string, DesiredReminder>();
 
@@ -157,12 +196,12 @@ async function syncReminders({
   for (const medication of medications) {
     if (!desired.has(`medication:${medication.id}`)) continue;
     await cancelRemindersFor('medication', medication.id);
-    await scheduleMedicationReminders(medication, notificationPrivacy);
+    await scheduleMedicationReminders(medication, notificationPrivacy, { nudgeDelayMinutes });
   }
   for (const appointment of appointments) {
     if (!desired.has(`appointment:${appointment.id}`)) continue;
     await cancelRemindersFor('appointment', appointment.id);
-    await scheduleAppointmentReminder(appointment, notificationPrivacy);
+    await scheduleAppointmentReminder(appointment, notificationPrivacy, appointmentLeadMinutes);
   }
 
   const notificationStyle: NotificationStyle = notificationPrivacy ? 'private' : 'standard';

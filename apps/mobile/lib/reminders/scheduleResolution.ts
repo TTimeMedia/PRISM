@@ -155,3 +155,54 @@ export function resolveNextAppointmentOccurrence(
   const startsAt = new Date(appointment.starts_at);
   return startsAt >= now ? startsAt : null;
 }
+
+const MS_PER_MINUTE = 60 * 1000;
+
+/**
+ * When to remind about an appointment: one time per chosen lead (minutes
+ * before it starts; 0 = at the time). Times already past are dropped, and
+ * repeats collapse to one.
+ */
+export function appointmentReminderTimes(
+  appointment: Appointment,
+  leadMinutes: readonly number[],
+  now: Date = new Date(),
+): Date[] {
+  const startsAt = new Date(appointment.starts_at).getTime();
+  const times = new Set<number>();
+  for (const lead of leadMinutes) {
+    const at = startsAt - Math.max(0, lead) * MS_PER_MINUTE;
+    if (at > now.getTime()) times.add(at);
+  }
+  return [...times].sort((a, b) => a - b).map((ms) => new Date(ms));
+}
+
+/**
+ * A repeating reminder can't stop on an end date (which is also how Pause
+ * works) or wait for a start date, so those medications get one reminder
+ * per upcoming dose instead.
+ */
+export function needsDatedReminders(medication: Medication, now: Date = new Date()): boolean {
+  if (medication.end_date) return true;
+  return !!medication.start_date && medication.start_date > isoDate(now);
+}
+
+/**
+ * When to send the single gentle follow-up for each of the next few doses:
+ * `delayMinutes` after the dose was due. Kept to a few doses so the phone's
+ * limit on pending notifications is never crowded out.
+ */
+export function medicationNudgeTimes(
+  medication: Medication,
+  delayMinutes: number,
+  now: Date = new Date(),
+  maxDoses = 3,
+): { doseAt: Date; nudgeAt: Date }[] {
+  return resolveMedicationOccurrences(medication, now, 7)
+    .slice(0, maxDoses)
+    .map((doseAt) => ({
+      doseAt,
+      nudgeAt: new Date(doseAt.getTime() + delayMinutes * MS_PER_MINUTE),
+    }))
+    .filter(({ nudgeAt }) => nudgeAt > now);
+}

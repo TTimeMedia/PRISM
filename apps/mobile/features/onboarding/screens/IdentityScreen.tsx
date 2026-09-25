@@ -76,7 +76,7 @@ export function IdentityScreen() {
             value={field.value ?? ''}
             onChange={field.onChange}
             options={PRONOUN_OPTIONS}
-            placeholder="Choose or write your own"
+            placeholder="Select or write yours"
             customPrompt="Write your pronouns"
           />
         )}
@@ -90,7 +90,7 @@ export function IdentityScreen() {
             value={field.value ?? ''}
             onChange={field.onChange}
             options={GENDER_OPTIONS}
-            placeholder="Choose or write your own"
+            placeholder="Select or write yours"
             customPrompt="Write your gender"
           />
         )}
