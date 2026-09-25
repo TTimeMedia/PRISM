@@ -130,7 +130,7 @@ export function NotificationSettingsScreen() {
           </PRISMSection>
           <PRISMSection title="Reminder wording">
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
-              {`Choose what your reminders say, like "It's shot day." or "Take your Estradiol at 9:00 AM.", or write your own. Used when Private notifications is off.`}
+              {`Choose what your reminders say, like "It's shot day." or "Take your vitamins at 9:00 AM.", or write your own. Used when Private notifications is off.`}
             </Text>
             <PRISMButton
               label="Choose reminder wording"

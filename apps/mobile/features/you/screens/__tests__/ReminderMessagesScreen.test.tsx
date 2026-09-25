@@ -36,16 +36,14 @@ describe('ReminderMessagesScreen', () => {
     renderWithProviders(<ReminderMessagesScreen />);
 
     expect(screen.getByLabelText("It's shot day.").props.accessibilityState.selected).toBe(true);
-    expect(screen.getByLabelText('Take your Estradiol at 9:00 AM.')).toBeTruthy();
-    expect(
-      screen.getByLabelText('Heads up: Endocrinology check-in is coming up in 1 hour.'),
-    ).toBeTruthy();
+    expect(screen.getByLabelText('Take your Vitamin D at 9:00 AM.')).toBeTruthy();
+    expect(screen.getByLabelText('Heads up: Check-up is coming up in 1 hour.')).toBeTruthy();
   });
 
   it('saves a different built-in version', () => {
     renderWithProviders(<ReminderMessagesScreen />);
 
-    fireEvent.press(screen.getByLabelText('Shot day: Testosterone at 8:00 PM.'));
+    fireEvent.press(screen.getByLabelText('Shot day: B12 at 8:00 PM.'));
 
     expect(mutate).toHaveBeenCalledWith({
       reminder_messages: {
@@ -76,7 +74,7 @@ describe('ReminderMessagesScreen', () => {
     fireEvent.changeText(screen.getAllByLabelText('Write your own')[0], 'Meds:');
     fireEvent.press(screen.getAllByLabelText('Add Name')[0]);
 
-    expect(screen.getByText('Looks like: Meds: Estradiol')).toBeTruthy();
+    expect(screen.getByText('Looks like: Meds: Vitamin D')).toBeTruthy();
   });
 
   it('shows their own wording, and lets them delete it', () => {
@@ -91,10 +89,9 @@ describe('ReminderMessagesScreen', () => {
     renderWithProviders(<ReminderMessagesScreen />);
 
     expect(
-      screen.getByLabelText('See you at 10:00 AM, Endocrinology check-in').props.accessibilityState
-        .selected,
+      screen.getByLabelText('See you at 10:00 AM, Check-up').props.accessibilityState.selected,
     ).toBe(true);
-    fireEvent.press(screen.getByLabelText('Delete "See you at 10:00 AM, Endocrinology check-in"'));
+    fireEvent.press(screen.getByLabelText('Delete "See you at 10:00 AM, Check-up"'));
 
     expect(mutate).toHaveBeenCalledWith({
       reminder_messages: expect.objectContaining({

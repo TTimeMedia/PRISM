@@ -36,7 +36,7 @@ export interface ReminderVars {
 }
 
 export const MESSAGE_PLACEHOLDERS: { token: string; label: string; example: string }[] = [
-  { token: '{name}', label: 'Name', example: 'Estradiol' },
+  { token: '{name}', label: 'Name', example: 'Vitamin D' },
   { token: '{time}', label: 'Time', example: '9:00 AM' },
   { token: '{dose}', label: 'Dose', example: '2 mg' },
   { token: '{when}', label: 'How soon', example: 'in 1 hour' },
@@ -70,9 +70,9 @@ export const BUILT_IN_MESSAGES: Record<ReminderKind, MessageOption[]> = {
 
 /** A made-up example of each kind, for showing what a message will look like. */
 export const SAMPLE_VARS: Record<ReminderKind, ReminderVars> = {
-  medication: { name: 'Estradiol', time: '9:00 AM', dose: '2 mg', when: 'now' },
-  injection: { name: 'Testosterone', time: '8:00 PM', dose: '0.5 ml', when: 'now' },
-  appointment: { name: 'Endocrinology check-in', time: '10:00 AM', when: 'in 1 hour' },
+  medication: { name: 'Vitamin D', time: '9:00 AM', dose: '1 tablet', when: 'now' },
+  injection: { name: 'B12', time: '8:00 PM', dose: '1 ml', when: 'now' },
+  appointment: { name: 'Check-up', time: '10:00 AM', when: 'in 1 hour' },
 };
 
 export function reminderKindForMedication(form: string | null | undefined): ReminderKind {

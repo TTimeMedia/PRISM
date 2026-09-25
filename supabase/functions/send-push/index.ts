@@ -12,7 +12,7 @@
 //   the way each person chose (see ../_shared/reminderMessages.ts):
 //   { "category": "reminders",
 //     "reminders": [{ "userId": "...", "kind": "injection",
-//                     "vars": { "name": "Testosterone", "time": "8:00 PM" } }] }
+//                     "vars": { "name": "B12", "time": "8:00 PM" } }] }
 //
 // Rules (see ../_shared/push.ts):
 //  - Only people who have that category turned on receive it. Security
