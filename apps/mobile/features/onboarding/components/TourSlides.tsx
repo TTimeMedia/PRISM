@@ -55,8 +55,9 @@ const SLIDES: Slide[] = [
     icon: Palette,
     tint: 'mint',
     title: 'Make it yours',
-    body: 'Everything about Prism can be changed under You.',
+    body: 'Prism is built from parts you switch on and off.',
     points: [
+      'Turn parts on or off in Make Prism yours',
       'Pick your color and theme',
       'Lock the app with a PIN or Face ID',
       'Export or delete your data any time',

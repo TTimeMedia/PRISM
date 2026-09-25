@@ -20,9 +20,9 @@ export const shadow: { dark: ShadowTokens; light: ShadowTokens } = {
     elevation: 6,
   },
   light: {
-    shadowColor: '#000000',
-    shadowOpacity: 0.08,
-    shadowRadius: 30,
+    shadowColor: '#3C50AA',
+    shadowOpacity: 0.14,
+    shadowRadius: 24,
     shadowOffset: { width: 0, height: 8 },
     elevation: 4,
   },

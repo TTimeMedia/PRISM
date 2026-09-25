@@ -24,6 +24,8 @@ export function PRISMCard({ children, onPress, accessibilityLabel, style }: PRIS
       backgroundColor: theme.colors.surface,
       borderColor: theme.colors.border.subtle,
     },
+    // In light mode cards lift off the ground with a soft blue shadow.
+    theme.scheme === 'light' && theme.shadow,
     style,
   ];
 

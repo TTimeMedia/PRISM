@@ -53,27 +53,29 @@ export const darkTokens: ColorTokens = {
 };
 
 export const lightTokens: ColorTokens = {
-  background: '#F8F8FA', // PRISM_WHITE
-  backgroundSecondary: '#F2F2F5', // PRISM_LIGHT
-  surface: '#F2F2F5', // PRISM_LIGHT
-  surfaceElevated: '#EAEAEE', // PRISM_LIGHT_2
-  surfaceSelected: '#DEDEE5', // PRISM_LIGHT_3
-  // Light-mode fields are clean white with a soft sky-blue edge, not grey.
+  // Light mode is bright and cool, not grey: an airy periwinkle-white ground,
+  // pure white cards that lift off it with soft blue shadows, and deep navy
+  // text. The spectrum colors carry the personality, as they do in dark mode.
+  background: '#F3F6FF',
+  backgroundSecondary: '#EAEFFD',
+  surface: '#FFFFFF',
+  surfaceElevated: '#EEF2FF',
+  surfaceSelected: '#DCE6FF',
   field: '#FFFFFF',
-  fieldBorder: '#B7DBEE',
+  fieldBorder: '#A9D2EA',
   text: {
-    primary: '#111116',
-    secondary: '#5F5F6B',
-    tertiary: '#858591',
-    disabled: '#B0B0BA',
+    primary: '#12142B',
+    secondary: '#4B5177',
+    tertiary: '#727899',
+    disabled: '#B3B7CF',
     inverse: '#F8F8FA',
   },
   border: {
-    subtle: 'rgba(0,0,0,0.06)',
-    default: 'rgba(0,0,0,0.10)',
-    strong: 'rgba(0,0,0,0.16)',
+    subtle: 'rgba(60,80,170,0.09)',
+    default: 'rgba(60,80,170,0.15)',
+    strong: 'rgba(60,80,170,0.26)',
   },
-  shadow: '0 8px 30px rgba(0,0,0,0.08)',
+  shadow: '0 8px 30px rgba(60,80,170,0.14)',
 };
 
 /** The signature PRISM accent system. Accents, never decoration — see docs/DESIGN_SYSTEM.md §3. */

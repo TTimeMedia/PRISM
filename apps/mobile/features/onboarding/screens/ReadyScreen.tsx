@@ -25,7 +25,7 @@ export function ReadyScreen() {
       hero={<PrismMark size={132} />}
       phase={1}
       title="Prism is ready."
-      subtitle="Everything you chose is set up and waiting, all in your private space."
+      subtitle="Everything you picked is turned on. Add or remove parts any time in You, then Make Prism yours."
       primaryLabel="Enter Prism"
       onPrimaryPress={enterPrism}
       primaryLoading={isSubmitting}

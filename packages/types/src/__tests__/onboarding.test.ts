@@ -6,6 +6,7 @@ import {
   intentImpliesAppointments,
   ONBOARDING_STEPS,
   getPreviousOnboardingStep,
+  modulesForIntent,
   normalizeOnboardingStep,
 } from '../onboarding';
 
@@ -168,5 +169,41 @@ describe('normalizeOnboardingStep', () => {
     expect(normalizeOnboardingStep(null)).toBe('philosophy');
     expect(normalizeOnboardingStep(undefined)).toBe('philosophy');
     expect(normalizeOnboardingStep('something_old')).toBe('philosophy');
+  });
+});
+
+describe('modulesForIntent', () => {
+  it('turns on just what was picked, in a steady order', () => {
+    expect(modulesForIntent(['journaling', 'managing_medications'])).toEqual([
+      'medications',
+      'journal',
+    ]);
+    expect(modulesForIntent(['tracking_injections', 'appointments', 'milestones'])).toEqual([
+      'injections',
+      'appointments',
+      'milestones',
+    ]);
+  });
+
+  it('turns the broadly useful features on for "all in one place", "still figuring out", or no answer, but never Injections', () => {
+    const all = ['medications', 'appointments', 'milestones', 'journal'];
+    expect(modulesForIntent(['all_in_one_place'])).toEqual(all);
+    expect(modulesForIntent(['still_figuring_out', 'journaling'])).toEqual(all);
+    expect(modulesForIntent([])).toEqual(all);
+    expect(modulesForIntent(null)).toEqual(all);
+  });
+
+  it('still turns Injections on when they were picked, even alongside "everything"', () => {
+    expect(modulesForIntent(['all_in_one_place', 'tracking_injections'])).toEqual([
+      'medications',
+      'injections',
+      'appointments',
+      'milestones',
+      'journal',
+    ]);
+  });
+
+  it('turns nothing on for topics that have no feature yet', () => {
+    expect(modulesForIntent(['lab_work', 'legal_changes'])).toEqual([]);
   });
 });

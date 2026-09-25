@@ -4,6 +4,8 @@
  * resume/branching logic is unit-testable without React Native.
  */
 
+import { P0_MODULE_KEYS, type P0ModuleKey } from './modules';
+
 export const JOURNEY_STAGES = [
   'exploring',
   'preparing',
@@ -206,4 +208,33 @@ export function normalizeOnboardingStep(saved: string | null | undefined): Onboa
   return (ONBOARDING_STEPS as readonly string[]).includes(saved ?? '')
     ? (saved as OnboardingStep)
     : 'philosophy';
+}
+
+/**
+ * The features an answer to "What would you like to keep here?" turns on.
+ * Picking something turns its feature on. "Everything in one place", "still
+ * figuring things out", or skipping turns on the broadly useful ones so the
+ * app is never empty, but never Injections: not everyone does them, so that
+ * stays off unless it was picked (here or in Care Setup). Topics without a
+ * feature yet (lab work, surgery, legal changes, records) turn nothing on.
+ * Everything can be turned on or off any time under You → Make Prism yours.
+ */
+export function modulesForIntent(intent: readonly string[] | null | undefined): P0ModuleKey[] {
+  const picked = intent ?? [];
+  const everything =
+    picked.length === 0 ||
+    picked.includes('all_in_one_place') ||
+    picked.includes('still_figuring_out');
+  if (everything) {
+    return P0_MODULE_KEYS.filter(
+      (key) => key !== 'injections' || picked.includes('tracking_injections'),
+    );
+  }
+  const keys = new Set<P0ModuleKey>();
+  if (picked.includes('managing_medications')) keys.add('medications');
+  if (picked.includes('tracking_injections')) keys.add('injections');
+  if (picked.includes('appointments')) keys.add('appointments');
+  if (picked.includes('milestones')) keys.add('milestones');
+  if (picked.includes('journaling')) keys.add('journal');
+  return P0_MODULE_KEYS.filter((key) => keys.has(key));
 }

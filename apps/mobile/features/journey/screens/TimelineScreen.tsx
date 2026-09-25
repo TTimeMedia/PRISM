@@ -1,5 +1,5 @@
 import React from 'react';
-import { router, type Href } from 'expo-router';
+import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
@@ -12,8 +12,8 @@ import {
   spacing,
   useTheme,
 } from '@prism/ui';
-import type { ModuleKey } from '@prism/types';
 import { useTimelineEvents } from '../../../lib/journey/timelineQuery';
+import { recordHref } from '../../../lib/journey/recordHref';
 import { eventColor } from '../eventDisplay';
 import { EntryImage } from '../components/EntryImage';
 import { TimelinePrompts } from '../components/TimelinePrompts';
@@ -88,23 +88,6 @@ function formatEventDate(at: string): string {
     day: 'numeric',
     year: 'numeric',
   });
-}
-
-function recordHref(moduleKey: ModuleKey, sourceId: string): Href {
-  switch (moduleKey) {
-    case 'medications':
-      return `/care/medications/${sourceId}/history`;
-    case 'injections':
-      return '/care/injections';
-    case 'appointments':
-      return `/care/appointments/${sourceId}`;
-    case 'milestones':
-      return `/journey/milestones/${sourceId}`;
-    case 'journal':
-      return `/journey/journal/${sourceId}`;
-    default:
-      return '/journey';
-  }
 }
 
 const styles = StyleSheet.create({

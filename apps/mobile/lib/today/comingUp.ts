@@ -66,3 +66,21 @@ function recordHref(moduleKey: ModuleKey, sourceId: string): Href {
       return '/journey/timeline';
   }
 }
+
+/** "in 25 minutes", "in 3 hours", "tomorrow", "in 4 days", or "15 minutes ago" for something just past. */
+export function formatRelativeTime(at: string, now: Date = new Date()): string {
+  const diffMs = new Date(at).getTime() - now.getTime();
+  const minutes = Math.round(Math.abs(diffMs) / 60000);
+  const plural = (n: number, unit: string) => `${n} ${unit}${n === 1 ? '' : 's'}`;
+  if (minutes < 1) return 'now';
+  if (diffMs < 0) {
+    if (minutes < 60) return `${plural(minutes, 'minute')} ago`;
+    const hours = Math.round(minutes / 60);
+    return hours < 24 ? `${plural(hours, 'hour')} ago` : 'earlier';
+  }
+  if (minutes < 60) return `in ${plural(minutes, 'minute')}`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `in ${plural(hours, 'hour')}`;
+  const days = Math.round(hours / 24);
+  return days === 1 ? 'tomorrow' : `in ${days} days`;
+}

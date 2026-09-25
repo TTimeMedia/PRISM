@@ -1,5 +1,10 @@
 import type { TodayItem } from '@prism/types';
-import { comingUpItemHref, formatComingUpWhen, selectComingUpItems } from '../comingUp';
+import {
+  comingUpItemHref,
+  formatComingUpWhen,
+  formatRelativeTime,
+  selectComingUpItems,
+} from '../comingUp';
 
 function item(overrides: Partial<TodayItem> = {}): TodayItem {
   return {
@@ -93,5 +98,28 @@ describe('comingUpItemHref', () => {
     expect(comingUpItemHref(item({ moduleKey: 'journal', sourceId: 'j1' }))).toBe(
       '/journey/journal/j1',
     );
+  });
+});
+
+describe('formatRelativeTime', () => {
+  const now = new Date('2026-10-01T12:00:00.000Z');
+  const at = (minutes: number) => new Date(now.getTime() + minutes * 60000).toISOString();
+
+  it('says how far off something is, in friendly units', () => {
+    expect(formatRelativeTime(at(1), now)).toBe('in 1 minute');
+    expect(formatRelativeTime(at(25), now)).toBe('in 25 minutes');
+    expect(formatRelativeTime(at(180), now)).toBe('in 3 hours');
+    expect(formatRelativeTime(at(24 * 60), now)).toBe('tomorrow');
+    expect(formatRelativeTime(at(4 * 24 * 60), now)).toBe('in 4 days');
+  });
+
+  it('says how long ago something was when it is just past', () => {
+    expect(formatRelativeTime(at(-15), now)).toBe('15 minutes ago');
+    expect(formatRelativeTime(at(-120), now)).toBe('2 hours ago');
+    expect(formatRelativeTime(at(-3 * 24 * 60), now)).toBe('earlier');
+  });
+
+  it('says now for the current minute', () => {
+    expect(formatRelativeTime(at(0), now)).toBe('now');
   });
 });
