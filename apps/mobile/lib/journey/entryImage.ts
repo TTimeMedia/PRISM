@@ -23,21 +23,27 @@ export type PickEntryImageResult =
  * `{user_id}/milestones/` and `{user_id}/journal/` (per-user RLS already
  * exists — see supabase/migrations). `image_path` on those tables holds the
  * object path, never a URL, the same convention as profile photos
- * (lib/you/profilePhoto.ts). Library-only; permission is requested only
- * when the user taps "Add photo".
+ * (lib/you/profilePhoto.ts). Library-only.
+ *
+ * This opens the phone's own photo picker, which needs no permission for
+ * Prism to use it: the person picks a photo and only that photo is handed
+ * over. So nobody is ever sent to Settings to turn something on, and Prism
+ * never gets access to the rest of their library.
  */
 export async function pickEntryImage(): Promise<PickEntryImageResult> {
-  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (!permission.granted) return { status: 'denied' };
-
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'],
-    allowsEditing: false,
-    quality: 0.8,
-  });
-  const asset = result.assets?.[0];
-  if (result.canceled || !asset) return { status: 'canceled' };
-  return { status: 'picked', asset };
+  try {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 0.8,
+    });
+    const asset = result.assets?.[0];
+    if (result.canceled || !asset) return { status: 'canceled' };
+    return { status: 'picked', asset };
+  } catch {
+    // The picker itself couldn't open; there is nothing the person can toggle.
+    return { status: 'denied' };
+  }
 }
 
 /** Uploads a new object (never overwrites) and returns its path for `milestones.image_path`. */

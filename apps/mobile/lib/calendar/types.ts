@@ -16,6 +16,10 @@ export interface CalendarEventSummary {
   startsAt: string;
   endsAt: string | null;
   allDay: boolean;
+  /** Which calendar it is on, and which account that calendar belongs to (iCloud, Google, ...). */
+  calendarId: string;
+  calendarName: string;
+  accountName: string | null;
 }
 
 /**

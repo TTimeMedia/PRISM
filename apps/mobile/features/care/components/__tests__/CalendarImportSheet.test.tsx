@@ -36,6 +36,9 @@ const EVENTS = [
     startsAt: '2026-10-05T14:30:00.000Z',
     endsAt: '2026-10-05T15:00:00.000Z',
     allDay: false,
+    calendarId: 'c-icloud',
+    calendarName: 'Calendar',
+    accountName: 'iCloud',
   },
   {
     id: 'e2',
@@ -45,6 +48,9 @@ const EVENTS = [
     startsAt: '2026-10-06T17:00:00.000Z',
     endsAt: null,
     allDay: false,
+    calendarId: 'c-google',
+    calendarName: 'Work',
+    accountName: 'me@gmail.com',
   },
   {
     id: 'e3',
@@ -54,6 +60,9 @@ const EVENTS = [
     startsAt: '2026-10-07T13:00:00.000Z',
     endsAt: null,
     allDay: false,
+    calendarId: 'c-icloud',
+    calendarName: 'Calendar',
+    accountName: 'iCloud',
   },
 ];
 
@@ -133,5 +142,30 @@ describe('CalendarImportSheet', () => {
 
     expect(await screen.findByText(/Calendar access wasn.t allowed/)).toBeTruthy();
     expect(provider.listUpcomingEvents).not.toHaveBeenCalled();
+  });
+
+  it('lists events from every account, says which calendar each is on, and can filter by one', async () => {
+    open();
+    fireEvent.press(screen.getByText('Choose from my calendar'));
+
+    expect(await screen.findByText('Showing events from 2 calendars')).toBeTruthy();
+    expect(screen.getAllByText('Calendar · iCloud').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Work · me@gmail.com').length).toBeGreaterThan(0);
+
+    fireEvent.press(screen.getAllByText('Work · me@gmail.com')[0] as never);
+    expect(screen.getByLabelText('Team lunch')).toBeTruthy();
+    expect(screen.queryByLabelText('Endocrinology')).toBeNull();
+  });
+
+  it('lists an event that sits on two calendars only once', async () => {
+    provider.listUpcomingEvents.mockResolvedValue([
+      ...EVENTS,
+      { ...EVENTS[0], id: 'e1-copy', calendarId: 'c-google', calendarName: 'Work' },
+    ] as never);
+    open();
+    fireEvent.press(screen.getByText('Choose from my calendar'));
+
+    await screen.findByLabelText('Endocrinology');
+    expect(screen.getAllByLabelText('Endocrinology')).toHaveLength(1);
   });
 });

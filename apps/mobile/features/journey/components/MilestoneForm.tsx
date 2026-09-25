@@ -53,7 +53,7 @@ export function MilestoneForm({
         setPendingAsset(result.asset);
         setRemoved(false);
       } else if (result.status === 'denied') {
-        showToast('Allow photo access in Settings to add a photo.', 'error');
+        showToast("Couldn't open your photos. Please try again.", 'error');
       }
     } catch {
       showToast("Couldn't open your photos. Please try again.", 'error');

@@ -8,17 +8,20 @@ import { supabase } from '../supabase/client';
  * keeps this to what the screen actually asks for.
  */
 export async function pickProfilePhoto(): Promise<ImagePicker.ImagePickerAsset | null> {
-  const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  if (!permission.granted) return null;
-
-  const result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ['images'],
-    allowsEditing: true,
-    aspect: [1, 1],
-    quality: 0.8,
-  });
-  if (result.canceled || !result.assets[0]) return null;
-  return result.assets[0];
+  // The phone's own photo picker needs no permission, so nobody is sent to
+  // Settings: they pick a photo and only that photo is handed to Prism.
+  try {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.8,
+    });
+    if (result.canceled || !result.assets[0]) return null;
+    return result.assets[0];
+  } catch {
+    return null;
+  }
 }
 
 /**

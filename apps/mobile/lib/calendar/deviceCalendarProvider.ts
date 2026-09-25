@@ -32,6 +32,8 @@ export const deviceCalendarProvider: CalendarProvider = {
     const calendars = await Calendar.getCalendars(Calendar.EntityTypes.EVENT);
     if (calendars.length === 0) return [];
     const events = await Calendar.listEvents(calendars, start, end);
+    // Every calendar on the phone, across every account (iCloud, Google, ...).
+    const byId = new Map(calendars.map((calendar) => [calendar.id, calendar]));
     return events
       .map((event): CalendarEventSummary => ({
         id: event.id,
@@ -41,6 +43,9 @@ export const deviceCalendarProvider: CalendarProvider = {
         startsAt: new Date(event.startDate).toISOString(),
         endsAt: event.endDate ? new Date(event.endDate).toISOString() : null,
         allDay: !!event.allDay,
+        calendarId: event.calendarId,
+        calendarName: byId.get(event.calendarId)?.title || 'Calendar',
+        accountName: byId.get(event.calendarId)?.source?.name || null,
       }))
       .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
   },

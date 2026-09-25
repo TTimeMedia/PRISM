@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
   PRISMButton,
+  PRISMChipGroup,
   PRISMSheet,
   componentRadius,
   layout,
@@ -11,7 +12,13 @@ import {
   useToast,
 } from '@prism/ui';
 import { calendarProvider, type CalendarEventSummary } from '../../../lib/calendar';
-import { isAlreadyInPrism, matchesSearch } from '../../../lib/calendar/importCandidates';
+import {
+  calendarLabel,
+  calendarsOf,
+  dedupeEvents,
+  isAlreadyInPrism,
+  matchesSearch,
+} from '../../../lib/calendar/importCandidates';
 import { useAppointments } from '../../../lib/care/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
 import { ImportableEventRow } from './ImportableEventRow';
@@ -40,6 +47,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
   const [events, setEvents] = useState<CalendarEventSummary[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState('');
+  const [calendarFilter, setCalendarFilter] = useState<string>('all');
   const [importing, setImporting] = useState(false);
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
 
@@ -48,6 +56,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
     setEvents([]);
     setSelected(new Set());
     setQuery('');
+    setCalendarFilter('all');
     onClose();
   };
 
@@ -59,7 +68,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
         setPhase('denied');
         return;
       }
-      setEvents(await calendarProvider.listUpcomingEvents());
+      setEvents(dedupeEvents(await calendarProvider.listUpcomingEvents()));
       setPhase('list');
     } catch (error) {
       // Kept short and shown, so a problem can be reported precisely.
@@ -70,9 +79,15 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
     }
   };
 
+  const calendars = useMemo(() => calendarsOf(events), [events]);
   const visibleEvents = useMemo(
-    () => events.filter((event) => matchesSearch(event, query)),
-    [events, query],
+    () =>
+      events.filter(
+        (event) =>
+          (calendarFilter === 'all' || event.calendarId === calendarFilter) &&
+          matchesSearch(event, query),
+      ),
+    [events, query, calendarFilter],
   );
   const alreadyIn = (event: CalendarEventSummary) => isAlreadyInPrism(event, existing ?? []);
 
@@ -181,6 +196,21 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
                 },
               ]}
             />
+            {calendars.length > 1 ? (
+              <View style={styles.calendars}>
+                <Text style={[styles.detail, { color: theme.colors.text.tertiary }]}>
+                  Showing events from {calendars.length} calendars
+                </Text>
+                <PRISMChipGroup
+                  options={[
+                    { value: 'all', label: 'All calendars' },
+                    ...calendars.map((calendar) => ({ value: calendar.id, label: calendar.label })),
+                  ]}
+                  value={[calendarFilter]}
+                  onChange={(next) => setCalendarFilter(next[0] ?? 'all')}
+                />
+              </View>
+            ) : null}
             <ScrollView style={styles.list} keyboardShouldPersistTaps="handled">
               <View style={styles.rows}>
                 {visibleEvents.length === 0 ? (
@@ -195,6 +225,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
                       startsAt={event.startsAt}
                       allDay={event.allDay}
                       location={event.location}
+                      calendarLabel={calendars.length > 1 ? calendarLabel(event) : undefined}
                       selected={selected.has(event.id)}
                       alreadyAdded={alreadyIn(event)}
                       onPress={() => toggle(event.id)}
@@ -241,6 +272,9 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     paddingHorizontal: spacing.md,
     fontSize: type.bodyL.fontSize,
+  },
+  calendars: {
+    gap: spacing.xs,
   },
   list: {
     maxHeight: 340,
