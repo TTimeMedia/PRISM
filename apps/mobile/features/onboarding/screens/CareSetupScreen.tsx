@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import {
-  careSetupImpliesInjection,
-  careSetupImpliesMedication,
-  getNextOnboardingStep,
-} from '@prism/types';
+import { careSetupImpliesMedication, getNextOnboardingStep } from '@prism/types';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { OptionGrid } from '../components/OptionGrid';
 import { CARE_SETUP_CHIP_OPTIONS } from '../optionLabels';
@@ -31,9 +27,6 @@ export function CareSetupScreen() {
     const mutations: Promise<unknown>[] = [];
     if (careSetupImpliesMedication(careSetup)) {
       mutations.push(setModuleEnabled.mutateAsync({ moduleKey: 'medications', enabled: true }));
-    }
-    if (careSetupImpliesInjection(careSetup)) {
-      mutations.push(setModuleEnabled.mutateAsync({ moduleKey: 'injections', enabled: true }));
     }
     await Promise.all(mutations);
 

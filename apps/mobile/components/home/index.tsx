@@ -96,6 +96,7 @@ export function ActionTile({
           borderColor: colors.border,
           opacity: pressed ? 0.85 : 1,
         },
+        theme.scheme === 'light' && theme.shadow,
         style,
       ]}
     >
@@ -212,7 +213,13 @@ export function StatChip({ value, label, tint }: { value: string; label: string;
   const theme = useTheme();
   const colors = useTint(tint);
   return (
-    <View style={[styles.chip, { backgroundColor: colors.soft, borderColor: colors.border }]}>
+    <View
+      style={[
+        styles.chip,
+        { backgroundColor: colors.soft, borderColor: colors.border },
+        theme.scheme === 'light' && theme.shadow,
+      ]}
+    >
       <Text style={[styles.chipValue, { color: theme.colors.text.primary }]}>{value}</Text>
       <Text style={[styles.chipLabel, { color: theme.colors.text.secondary }]}>{label}</Text>
     </View>

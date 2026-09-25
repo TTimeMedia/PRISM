@@ -63,7 +63,7 @@ function recordHref(moduleKey: ModuleKey, sourceId: string): Href {
     case 'journal':
       return `/journey/journal/${sourceId}`;
     default:
-      return '/journey/timeline';
+      return '/you';
   }
 }
 

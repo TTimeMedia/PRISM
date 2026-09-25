@@ -25,13 +25,7 @@ export const MODULE_KEYS = [
 export type ModuleKey = (typeof MODULE_KEYS)[number];
 
 /** Module keys exposed as toggles in Customize PRISM / Quick Add for MVP. */
-export const P0_MODULE_KEYS = [
-  'medications',
-  'injections',
-  'appointments',
-  'milestones',
-  'journal',
-] as const;
+export const P0_MODULE_KEYS = ['medications', 'appointments', 'milestones', 'journal'] as const;
 
 export type P0ModuleKey = (typeof P0_MODULE_KEYS)[number];
 
@@ -39,6 +33,14 @@ export type P0ModuleKey = (typeof P0_MODULE_KEYS)[number];
 export const P1_MODULE_KEYS = ['labs', 'procedures', 'memories', 'legal', 'documents'] as const;
 
 export type P1ModuleKey = (typeof P1_MODULE_KEYS)[number];
+
+/**
+ * Module keys that no longer have their own feature. Injections used to be
+ * separate; an injection is a medication, so it now lives under Medications
+ * (a dose log with a site). The key stays valid in the database so old rows
+ * and old app versions keep working.
+ */
+export const LEGACY_MODULE_KEYS = ['injections'] as const;
 
 export function isP0Module(key: ModuleKey): key is P0ModuleKey {
   return (P0_MODULE_KEYS as readonly string[]).includes(key);

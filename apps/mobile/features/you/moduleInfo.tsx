@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pill, Syringe, CalendarDays, Flag, BookHeart } from 'lucide-react-native';
+import { Pill, CalendarDays, Flag, BookHeart } from 'lucide-react-native';
 import type { P0ModuleKey } from '@prism/types';
 
 export interface ModuleInfo {
@@ -20,16 +20,9 @@ export const MODULE_INFO: ModuleInfo[] = [
   {
     key: 'medications',
     label: 'Medications',
-    description: 'Track what you take and when.',
+    description: 'What you take and when, injections included.',
     icon: (color) => <Pill size={20} color={color} />,
     hasReminderDefault: true,
-  },
-  {
-    key: 'injections',
-    label: 'Injections',
-    description: 'Log injections and sites.',
-    icon: (color) => <Syringe size={20} color={color} />,
-    hasReminderDefault: false,
   },
   {
     key: 'appointments',

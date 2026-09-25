@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Appointment, Injection, Medication, MedicationLog } from '@prism/types';
+import type { Appointment, Medication, MedicationLog } from '@prism/types';
 import type { Database } from '@prism/database';
 import type {
   AppointmentCreateInput,
-  InjectionCreateInput,
   MedicationCreateInput,
   MedicationLogCreateInput,
 } from '@prism/validation';
@@ -13,7 +12,6 @@ import { cancelDueNudges } from '../reminders/notificationScheduler';
 import {
   appointmentKey,
   appointmentsKey,
-  injectionsKey,
   medicationKey,
   medicationLogsKey,
   medicationsKey,
@@ -156,49 +154,6 @@ export function useDeleteMedicationLog(medicationId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: medicationLogsKey(userId, medicationId) });
-    },
-  });
-}
-
-export function useCreateInjection() {
-  const { session } = useSession();
-  const userId = session?.user.id;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (input: InjectionCreateInput): Promise<Injection> => {
-      if (!userId) throw new Error('No authenticated session.');
-      const { data, error } = await supabase
-        .from('injections')
-        .insert({ ...input, user_id: userId })
-        .select()
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: injectionsKey(userId) });
-    },
-  });
-}
-
-export function useDeleteInjection() {
-  const { session } = useSession();
-  const userId = session?.user.id;
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string): Promise<void> => {
-      if (!userId) throw new Error('No authenticated session.');
-      const { error } = await supabase
-        .from('injections')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', userId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: injectionsKey(userId) });
     },
   });
 }

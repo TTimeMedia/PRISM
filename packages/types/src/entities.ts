@@ -105,6 +105,8 @@ export interface MedicationLog {
   completed_at: ISODateTime | null;
   status: MedicationLogStatus;
   notes: string | null;
+  /** Where an injectable dose went in. Only set for injectable medications. */
+  site: InjectionSite | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }

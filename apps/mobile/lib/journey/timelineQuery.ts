@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type {
   Appointment,
-  Injection,
   Medication,
   MedicationLog,
   Milestone,
@@ -15,7 +14,7 @@ import { buildTimelineEvents } from '../../services/journey/timeline';
 
 /**
  * Screen 42 — Timeline. Unifies medications (as real logged doses, not a
- * predicted schedule), injections, appointments, milestones, and journal
+ * predicted schedule; injections are doses too), appointments, milestones, and journal
  * entries into one chronological view — see
  * services/journey/timeline.ts. A disabled module's records are never
  * fetched at all, the same personalization rule already applied to
@@ -35,11 +34,10 @@ export function useTimelineEvents() {
       modules?.map((m) => `${m.module_key}:${m.enabled}`).join(','),
     ],
     queryFn: async () => {
-      const [medications, medicationLogs, injections, appointments, milestones, journalEntries] =
+      const [medications, medicationLogs, appointments, milestones, journalEntries] =
         await Promise.all([
           enabled.has('medications') ? fetchMedications() : Promise.resolve<Medication[]>([]),
           enabled.has('medications') ? fetchMedicationLogs() : Promise.resolve<MedicationLog[]>([]),
-          enabled.has('injections') ? fetchInjections() : Promise.resolve<Injection[]>([]),
           enabled.has('appointments') ? fetchAppointments() : Promise.resolve<Appointment[]>([]),
           enabled.has('milestones') ? fetchMilestones() : Promise.resolve<Milestone[]>([]),
           enabled.has('journal') ? fetchJournalEntries() : Promise.resolve<JournalEntry[]>([]),
@@ -47,7 +45,6 @@ export function useTimelineEvents() {
       return buildTimelineEvents({
         medications,
         medicationLogs,
-        injections,
         appointments,
         milestones,
         journalEntries,
@@ -65,12 +62,6 @@ async function fetchMedications(): Promise<Medication[]> {
 
 async function fetchMedicationLogs(): Promise<MedicationLog[]> {
   const { data, error } = await supabase.from('medication_logs').select('*');
-  if (error) throw error;
-  return data;
-}
-
-async function fetchInjections(): Promise<Injection[]> {
-  const { data, error } = await supabase.from('injections').select('*');
   if (error) throw error;
   return data;
 }

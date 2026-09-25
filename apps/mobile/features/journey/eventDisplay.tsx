@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, CalendarDays, Pill, Sparkles, Syringe } from 'lucide-react-native';
+import { BookOpen, CalendarDays, Pill, Sparkles } from 'lucide-react-native';
 import type { ModuleKey } from '@prism/types';
 import type { useTheme } from '@prism/ui';
 
@@ -16,8 +16,6 @@ export function eventColor(theme: Theme, moduleKey: ModuleKey): string {
   switch (moduleKey) {
     case 'medications':
       return theme.accent;
-    case 'injections':
-      return theme.spectrum.mint;
     case 'appointments':
       return theme.spectrum.yellow;
     case 'milestones':
@@ -33,8 +31,6 @@ export function eventIcon(moduleKey: ModuleKey, color: string, size = 16) {
   switch (moduleKey) {
     case 'medications':
       return <Pill size={size} color={color} />;
-    case 'injections':
-      return <Syringe size={size} color={color} />;
     case 'appointments':
       return <CalendarDays size={size} color={color} />;
     case 'milestones':

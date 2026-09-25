@@ -111,10 +111,22 @@ describe('JourneyHomeScreen', () => {
     expect(screen.getByText('Add a milestone')).toBeTruthy();
   });
 
-  it('points to where features can be added or removed', () => {
+  it('does not repeat the switches when features are on', () => {
     renderWithProviders(<JourneyHomeScreen />);
 
-    fireEvent.press(screen.getByLabelText(/^Choose what shows here/));
+    expect(screen.queryByText('Choose what shows')).toBeNull();
+  });
+
+  it('points to the switches only when nothing here is on', () => {
+    mockedUseModules.mockReturnValue({
+      data: modules(['milestones', 'journal']),
+      isLoading: false,
+      isError: false,
+    } as never);
+
+    renderWithProviders(<JourneyHomeScreen />);
+
+    fireEvent.press(screen.getByText('Choose what shows'));
     expect(router.push).toHaveBeenCalledWith('/you/customize');
   });
 });

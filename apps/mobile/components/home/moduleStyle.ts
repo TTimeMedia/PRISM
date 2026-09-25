@@ -1,4 +1,4 @@
-import { BookHeart, CalendarDays, Flag, Pill, Syringe, type LucideIcon } from 'lucide-react-native';
+import { BookHeart, CalendarDays, Flag, Pill, type LucideIcon } from 'lucide-react-native';
 import type { ModuleKey, P0ModuleKey } from '@prism/types';
 import type { Tint } from './tint';
 
@@ -16,13 +16,7 @@ export const MODULE_STYLE: Record<P0ModuleKey, ModuleStyle> = {
     label: 'Medications',
     icon: Pill,
     tint: 'cyan',
-    blurb: 'Doses, schedules and reminders.',
-  },
-  injections: {
-    label: 'Injections',
-    icon: Syringe,
-    tint: 'violet',
-    blurb: 'Log injections and where.',
+    blurb: 'Doses, schedules and reminders, injections included.',
   },
   appointments: {
     label: 'Appointments',

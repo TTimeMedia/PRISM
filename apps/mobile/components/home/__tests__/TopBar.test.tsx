@@ -37,22 +37,21 @@ describe('TopBar', () => {
     mockedAttention.mockReturnValue(false);
   });
 
-  it('names the screen and offers the menu, reminders, and what shows', () => {
+  it('names the screen and offers the menu and reminders', () => {
     renderWithProviders(<TopBar title="Care" />);
 
     expect(screen.getByText('Care')).toBeTruthy();
     expect(screen.getByLabelText('Open menu')).toBeTruthy();
     expect(screen.getByLabelText('Reminders')).toBeTruthy();
-    expect(screen.getByLabelText('Choose what shows')).toBeTruthy();
+    // "Choose what shows" lives in the menu and Settings, not on every screen.
+    expect(screen.queryByLabelText('Choose what shows')).toBeNull();
   });
 
-  it('opens reminders and the switches from the bar', () => {
+  it('opens reminders from the bar', () => {
     renderWithProviders(<TopBar title="Care" />);
 
     fireEvent.press(screen.getByLabelText('Reminders'));
     expect(router.push).toHaveBeenCalledWith('/you/notifications');
-    fireEvent.press(screen.getByLabelText('Choose what shows'));
-    expect(router.push).toHaveBeenCalledWith('/you/customize');
   });
 
   it('shows no dot on the bell when reminders are fine', () => {

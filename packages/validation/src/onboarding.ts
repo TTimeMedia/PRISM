@@ -29,19 +29,6 @@ export const careSetupSchema = z.object({
 export type CareSetupInput = z.infer<typeof careSetupSchema>;
 
 /**
- * Screen 14 — Injection Setup. Unlike Medication Setup, this captures
- * *preferences* for the injections module (there is no injection to log
- * yet) — stored in modules.configuration, not a standalone injections row.
- */
-export const injectionSetupSchema = z.object({
-  wants_tracking: z.boolean(),
-  medication_id: z.string().uuid().nullable().optional(),
-  reminder_enabled: z.boolean().default(false),
-  track_site: z.boolean().default(false),
-});
-export type InjectionSetupInput = z.infer<typeof injectionSetupSchema>;
-
-/**
  * Screen 15 — Appointment Setup. All fields optional/skippable per the
  * spec, unlike the full Add Appointment screen's required title — a
  * title is derived from `category` (or a generic fallback) at submit

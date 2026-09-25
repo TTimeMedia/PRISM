@@ -47,7 +47,8 @@ describe('CustomizeScreen', () => {
     renderWithProviders(<CustomizeScreen />);
 
     expect(screen.getByText('Medications')).toBeTruthy();
-    expect(screen.getByText('Injections')).toBeTruthy();
+    // An injection is a medication, so there is no separate switch for it.
+    expect(screen.queryByText('Injections')).toBeNull();
     expect(screen.getByText('Appointments')).toBeTruthy();
     expect(screen.getByText('Milestones')).toBeTruthy();
     expect(screen.getByText('Journal')).toBeTruthy();

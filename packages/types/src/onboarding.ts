@@ -59,7 +59,6 @@ export const ONBOARDING_STEPS = [
   'identity',
   'care_setup',
   'medication_setup',
-  'injection_setup',
   'appointment_setup',
   'journey_date',
   'privacy_setup',
@@ -73,6 +72,8 @@ export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 const MEDICATION_TRACKING_OPTIONS: readonly CareSetupOption[] = [
   'hormones',
   'medication',
+  // An injection is a medication, so it leads to the same setup.
+  'injections',
   'patches',
   'gel_cream',
   'blockers',
@@ -87,13 +88,6 @@ export function careSetupImpliesMedication(
   );
 }
 
-export function careSetupImpliesInjection(
-  careSetup: readonly string[] | null | undefined,
-): boolean {
-  if (!careSetup) return false;
-  return careSetup.includes('injections');
-}
-
 export function intentImpliesAppointments(intent: readonly string[] | null | undefined): boolean {
   if (!intent) return false;
   return intent.includes('appointments');
@@ -106,7 +100,7 @@ export interface OnboardingBranchContext {
 
 /**
  * Given the step a user just completed, returns the next step to show —
- * skipping Medication/Injection/Appointment Setup when the user's earlier
+ * skipping Medication/Appointment Setup when the user's earlier
  * answers don't call for them. `ready` is terminal (loops to itself; the
  * app treats reaching it as onboarding_completed = true, not a step to
  * resume into again).
@@ -124,14 +118,9 @@ export function getNextOnboardingStep(
       return 'care_setup';
     case 'care_setup':
       if (careSetupImpliesMedication(ctx.careSetup)) return 'medication_setup';
-      if (careSetupImpliesInjection(ctx.careSetup)) return 'injection_setup';
       if (intentImpliesAppointments(ctx.intent)) return 'appointment_setup';
       return 'journey_date';
     case 'medication_setup':
-      if (careSetupImpliesInjection(ctx.careSetup)) return 'injection_setup';
-      if (intentImpliesAppointments(ctx.intent)) return 'appointment_setup';
-      return 'journey_date';
-    case 'injection_setup':
       if (intentImpliesAppointments(ctx.intent)) return 'appointment_setup';
       return 'journey_date';
     case 'appointment_setup':
@@ -163,7 +152,6 @@ export function getPreviousOnboardingStep(
   ctx: OnboardingBranchContext,
 ): OnboardingStep | null {
   const priorSetupStep = (): OnboardingStep => {
-    if (careSetupImpliesInjection(ctx.careSetup)) return 'injection_setup';
     if (careSetupImpliesMedication(ctx.careSetup)) return 'medication_setup';
     return 'care_setup';
   };
@@ -178,8 +166,6 @@ export function getPreviousOnboardingStep(
       return 'identity';
     case 'medication_setup':
       return 'care_setup';
-    case 'injection_setup':
-      return careSetupImpliesMedication(ctx.careSetup) ? 'medication_setup' : 'care_setup';
     case 'appointment_setup':
       return priorSetupStep();
     case 'journey_date':
@@ -205,6 +191,8 @@ export function getPreviousOnboardingStep(
  */
 export function normalizeOnboardingStep(saved: string | null | undefined): OnboardingStep {
   if (saved === 'journey_stage') return 'identity';
+  // Injections became part of medications, so there is no separate setup screen.
+  if (saved === 'injection_setup') return 'journey_date';
   return (ONBOARDING_STEPS as readonly string[]).includes(saved ?? '')
     ? (saved as OnboardingStep)
     : 'philosophy';
@@ -213,10 +201,9 @@ export function normalizeOnboardingStep(saved: string | null | undefined): Onboa
 /**
  * The features an answer to "What would you like to keep here?" turns on.
  * Picking something turns its feature on. "Everything in one place", "still
- * figuring things out", or skipping turns on the broadly useful ones so the
- * app is never empty, but never Injections: not everyone does them, so that
- * stays off unless it was picked (here or in Care Setup). Topics without a
- * feature yet (lab work, surgery, legal changes, records) turn nothing on.
+ * figuring things out", or skipping turns everything on so the app is never
+ * empty. Injections count as medications. Topics without a feature yet (lab
+ * work, surgery, legal changes, records) turn nothing on.
  * Everything can be turned on or off any time under You → Make Prism yours.
  */
 export function modulesForIntent(intent: readonly string[] | null | undefined): P0ModuleKey[] {
@@ -225,14 +212,11 @@ export function modulesForIntent(intent: readonly string[] | null | undefined): 
     picked.length === 0 ||
     picked.includes('all_in_one_place') ||
     picked.includes('still_figuring_out');
-  if (everything) {
-    return P0_MODULE_KEYS.filter(
-      (key) => key !== 'injections' || picked.includes('tracking_injections'),
-    );
-  }
+  if (everything) return [...P0_MODULE_KEYS];
   const keys = new Set<P0ModuleKey>();
-  if (picked.includes('managing_medications')) keys.add('medications');
-  if (picked.includes('tracking_injections')) keys.add('injections');
+  if (picked.includes('managing_medications') || picked.includes('tracking_injections')) {
+    keys.add('medications');
+  }
   if (picked.includes('appointments')) keys.add('appointments');
   if (picked.includes('milestones')) keys.add('milestones');
   if (picked.includes('journaling')) keys.add('journal');

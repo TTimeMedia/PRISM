@@ -16,16 +16,20 @@ import {
 } from '@prism/ui';
 import { ArrowLeft } from 'lucide-react-native';
 import { useCreateMedicationLog } from '../../../lib/care/mutations';
+import { useMedication } from '../../../lib/care/queries';
 import { toISODateTime, nowDateAndTime } from '../../../lib/care/dateTime';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from '../components/ChipField';
-import { MEDICATION_LOG_STATUS_OPTIONS } from '../optionLabels';
+import { INJECTION_SITE_OPTIONS, MEDICATION_LOG_STATUS_OPTIONS } from '../optionLabels';
 
 /** The "Log" action from Medication Detail — records one dose entry (Screen 28's data source). */
 export function LogMedicationDoseScreen() {
   const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const createLog = useCreateMedicationLog();
+  const { data: medication } = useMedication(id);
+  // An injection is a medication: an injectable one also asks where the dose went.
+  const isInjectable = medication?.form === 'injection';
   const { showToast } = useToast();
   const { date, time } = nowDateAndTime();
 
@@ -34,8 +38,9 @@ export function LogMedicationDoseScreen() {
     date: string;
     time: string;
     notes: string | null;
+    site: string | null;
   }>({
-    defaultValues: { status: 'completed', date, time, notes: '' },
+    defaultValues: { status: 'completed', date, time, notes: '', site: null },
   });
   const status = watch('status');
 
@@ -44,6 +49,7 @@ export function LogMedicationDoseScreen() {
     date: string;
     time: string;
     notes: string | null;
+    site: string | null;
   }) => {
     const scheduled_at = toISODateTime(values.date, values.time);
     const input: MedicationLogCreateInput = medicationLogCreateSchema.parse({
@@ -52,6 +58,7 @@ export function LogMedicationDoseScreen() {
       completed_at: values.status === 'completed' ? scheduled_at : null,
       status: values.status ?? 'completed',
       notes: values.notes,
+      site: isInjectable ? values.site : null,
     });
     try {
       await createLog.mutateAsync(input);
@@ -99,6 +106,20 @@ export function LogMedicationDoseScreen() {
               <PRISMTimeInput label="Time" value={field.value} onChangeText={field.onChange} />
             )}
           />
+          {isInjectable ? (
+            <Controller
+              control={control}
+              name="site"
+              render={({ field }) => (
+                <ChipField
+                  label="Where (optional)"
+                  options={INJECTION_SITE_OPTIONS}
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              )}
+            />
+          ) : null}
           <Controller
             control={control}
             name="notes"

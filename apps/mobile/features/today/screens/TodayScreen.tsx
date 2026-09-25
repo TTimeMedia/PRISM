@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
-import { Bell, Sparkles } from 'lucide-react-native';
 import type { P0ModuleKey, TodayItem } from '@prism/types';
 import {
   PRISMButton,
@@ -33,6 +32,7 @@ import {
   SectionTitle,
   useTint,
 } from '../../../components/home';
+import { CustomizeTip } from '../../../components/home/CustomizeTip';
 import { TopBar } from '../../../components/home/TopBar';
 import { MODULE_STYLE, moduleStyle } from '../../../components/home/moduleStyle';
 import { formatTodayDate, timeOfDayGreeting } from '../greeting';
@@ -46,7 +46,6 @@ interface AddAction {
 /** What each feature offers to start from Today, in the order they appear. */
 const ADD_ACTIONS: AddAction[] = [
   { module: 'medications', label: 'Log a dose', href: '/care/medications' },
-  { module: 'injections', label: 'Log an injection', href: '/care/injections/add' },
   { module: 'appointments', label: 'Add an appointment', href: '/care/appointments/add' },
   { module: 'journal', label: 'Write in my journal', href: '/journey/journal/add' },
   { module: 'milestones', label: 'Add a milestone', href: '/journey/milestones/add' },
@@ -163,7 +162,7 @@ export function TodayScreen() {
                 <SectionTitle
                   title="Coming up"
                   actionLabel="Timeline"
-                  onAction={() => router.push('/journey/timeline')}
+                  onAction={() => router.push('/you')}
                 />
                 <View style={styles.list}>
                   {after.map((item) => {
@@ -204,23 +203,7 @@ export function TodayScreen() {
               </>
             ) : null}
 
-            <SectionTitle title="Make it yours" />
-            <View style={styles.list}>
-              <ItemRow
-                icon={Sparkles}
-                tint="violet"
-                title="Choose what Prism shows"
-                subtitle="Turn parts of Prism on or off."
-                onPress={() => router.push('/you/customize')}
-              />
-              <ItemRow
-                icon={Bell}
-                tint="yellow"
-                title="Set up reminders"
-                subtitle="Doses and appointments, when you want them."
-                onPress={() => router.push('/you/notifications')}
-              />
-            </View>
+            <CustomizeTip />
           </>
         )}
       </ScrollView>

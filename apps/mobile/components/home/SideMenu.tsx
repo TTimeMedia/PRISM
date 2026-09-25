@@ -40,7 +40,6 @@ interface MenuItem {
 /** Where each feature's own list lives, shown only for the features that are on. */
 const FEATURE_ITEMS: { module: keyof typeof MODULE_STYLE; href: Href }[] = [
   { module: 'medications', href: '/care/medications' },
-  { module: 'injections', href: '/care/injections' },
   { module: 'appointments', href: '/care/appointments' },
   { module: 'milestones', href: '/journey/milestones' },
   { module: 'journal', href: '/journey/journal' },
@@ -82,7 +81,7 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
   const { data: profile } = useProfile();
   const enabled = new Set(modules?.filter((m) => m.enabled).map((m) => m.module_key));
   const features: MenuItem[] = [
-    { label: 'Timeline', icon: Compass, href: '/journey/timeline' },
+    { label: 'Timeline', icon: Compass, href: '/you' },
     ...FEATURE_ITEMS.filter((item) => enabled.has(item.module)).map((item) => ({
       label: MODULE_STYLE[item.module].label,
       icon: MODULE_STYLE[item.module].icon,
@@ -114,7 +113,7 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
                 <Pressable
                   accessibilityRole="button"
                   accessibilityLabel="Settings"
-                  onPress={() => go('/you')}
+                  onPress={() => go('/you/settings')}
                   hitSlop={10}
                 >
                   <Settings size={22} color={theme.colors.text.primary} />

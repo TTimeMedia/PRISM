@@ -25,6 +25,9 @@ interface AppState {
   /** Minutes before an appointment to remind (0 = at the time). Device-local. */
   appointmentLeadMinutes: number[];
   setAppointmentLeadMinutes: (minutes: number[]) => void;
+  /** The one-time "choose what shows" tip on Today has been dismissed. Device-local. */
+  customizeTipDismissed: boolean;
+  dismissCustomizeTip: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -38,6 +41,8 @@ export const useAppStore = create<AppState>()(
       setMissedDoseNudge: (on) => set({ missedDoseNudge: on }),
       appointmentLeadMinutes: [60],
       setAppointmentLeadMinutes: (minutes) => set({ appointmentLeadMinutes: minutes }),
+      customizeTipDismissed: false,
+      dismissCustomizeTip: () => set({ customizeTipDismissed: true }),
     }),
     {
       name: 'prism-app-preferences',

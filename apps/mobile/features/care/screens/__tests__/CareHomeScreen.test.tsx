@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { CareHomeScreen } from '../CareHomeScreen';
 import { useModules, useSetModuleEnabled } from '../../../../lib/profile/queries';
-import { useAppointments, useInjections, useMedications } from '../../../../lib/care/queries';
+import { useAppointments, useMedications } from '../../../../lib/care/queries';
 
 // The top bar and menu have their own tests.
 jest.mock('../../../../components/home/TopBar', () => ({ TopBar: () => null }));
@@ -20,7 +20,6 @@ jest.mock('../../../../lib/profile/queries', () => ({
 
 jest.mock('../../../../lib/care/queries', () => ({
   useMedications: jest.fn(),
-  useInjections: jest.fn(),
   useAppointments: jest.fn(),
 }));
 
@@ -34,7 +33,6 @@ const mockedUseSetModuleEnabled = useSetModuleEnabled as jest.MockedFunction<
   typeof useSetModuleEnabled
 >;
 const mockedUseMedications = useMedications as jest.MockedFunction<typeof useMedications>;
-const mockedUseInjections = useInjections as jest.MockedFunction<typeof useInjections>;
 const mockedUseAppointments = useAppointments as jest.MockedFunction<typeof useAppointments>;
 
 const list = (data: unknown[]) => ({ data, isLoading: false, isError: false }) as never;
@@ -56,7 +54,6 @@ describe('CareHomeScreen', () => {
     } as never);
     mockedUseSetModuleEnabled.mockReturnValue({ mutate: setEnabled, isPending: false } as never);
     mockedUseMedications.mockReturnValue(list([]));
-    mockedUseInjections.mockReturnValue(list([]));
     mockedUseAppointments.mockReturnValue(list([]));
   });
 
@@ -65,7 +62,6 @@ describe('CareHomeScreen', () => {
 
     expect(screen.getByText('Add your first medication')).toBeTruthy();
     expect(screen.getByText('Add your next appointment')).toBeTruthy();
-    expect(screen.getByText('Log your first injection')).toBeTruthy();
   });
 
   it('starts adding from the button under each block', () => {
@@ -73,8 +69,8 @@ describe('CareHomeScreen', () => {
 
     fireEvent.press(screen.getByLabelText('Add your first medication'));
     expect(router.push).toHaveBeenCalledWith('/care/medications/add');
-    fireEvent.press(screen.getByLabelText('Log your first injection'));
-    expect(router.push).toHaveBeenCalledWith('/care/injections/add');
+    fireEvent.press(screen.getByLabelText('Add your next appointment'));
+    expect(router.push).toHaveBeenCalledWith('/care/appointments/add');
   });
 
   it('shows what is already there and opens it', () => {
@@ -100,23 +96,43 @@ describe('CareHomeScreen', () => {
 
   it('leaves out a feature that is off instead of nudging people toward it', () => {
     mockedUseModules.mockReturnValue({
-      data: modules(['injections']),
+      data: modules(['appointments']),
       isLoading: false,
       isError: false,
     } as never);
 
     renderWithProviders(<CareHomeScreen />);
 
-    expect(screen.queryByText('Injections')).toBeNull();
-    expect(screen.queryByText('Log your first injection')).toBeNull();
+    expect(screen.queryByText('Appointments')).toBeNull();
+    expect(screen.queryByText('Add your next appointment')).toBeNull();
     expect(screen.queryByText('Turn on')).toBeNull();
     expect(screen.getByText('Add your first medication')).toBeTruthy();
   });
 
-  it('points to where features can be added or removed', () => {
+  it('has no separate injections section, because an injection is a medication', () => {
     renderWithProviders(<CareHomeScreen />);
 
-    fireEvent.press(screen.getByLabelText(/^Choose what shows here/));
+    expect(screen.queryByText('Injections')).toBeNull();
+    expect(screen.queryByText(/injection/i)).toBeNull();
+  });
+
+  it('does not repeat the switches when features are on', () => {
+    renderWithProviders(<CareHomeScreen />);
+
+    expect(screen.queryByText('Choose what shows')).toBeNull();
+    expect(screen.queryByLabelText(/^Choose what shows here/)).toBeNull();
+  });
+
+  it('points to the switches only when nothing here is on', () => {
+    mockedUseModules.mockReturnValue({
+      data: modules(['medications', 'injections', 'appointments']),
+      isLoading: false,
+      isError: false,
+    } as never);
+
+    renderWithProviders(<CareHomeScreen />);
+
+    fireEvent.press(screen.getByText('Choose what shows'));
     expect(router.push).toHaveBeenCalledWith('/you/customize');
   });
 });

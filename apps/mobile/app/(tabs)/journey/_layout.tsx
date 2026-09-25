@@ -7,6 +7,13 @@ import { Stack } from 'expo-router';
  * (PRISMHeader) so the native header stays hidden throughout. See
  * docs/SCREEN_BIBLE.md §8.
  */
+/**
+ * Always keep this tab's first screen underneath, even when another screen
+ * in it is opened directly (for example from the side menu). Otherwise the
+ * tab would keep showing that screen instead of its home.
+ */
+export const unstable_settings = { initialRouteName: 'index' };
+
 export default function JourneyLayout() {
   return <Stack screenOptions={{ headerShown: false }} />;
 }

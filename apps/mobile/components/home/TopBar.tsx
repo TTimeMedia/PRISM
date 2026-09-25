@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { Bell, LayoutGrid, Menu } from 'lucide-react-native';
+import { Bell, Menu } from 'lucide-react-native';
 import { fontFamily, fontWeight, spacing, type, useTheme } from '@prism/ui';
 import { useReminderAttention } from '../../lib/reminders/useReminderAttention';
 import { SideMenu } from './SideMenu';
@@ -9,8 +9,7 @@ import { SideMenu } from './SideMenu';
 /**
  * The bar across the top of Today, Care and Journey: the menu on the left, a
  * bell for reminders (with a dot when reminders are on but this phone isn't
- * allowing them), the screen's name in the middle, and a shortcut to choose
- * what Prism shows on the right.
+ * allowing them) and the screen's name in the middle.
  */
 export function TopBar({ title }: { title: string }) {
   const theme = useTheme();
@@ -56,17 +55,8 @@ export function TopBar({ title }: { title: string }) {
         >
           {title}
         </Text>
-        <View style={[styles.side, styles.sideEnd]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Choose what shows"
-            onPress={() => router.push('/you/customize')}
-            style={styles.button}
-            hitSlop={6}
-          >
-            <LayoutGrid size={24} color={theme.colors.text.primary} />
-          </Pressable>
-        </View>
+        {/* Keeps the title centered. */}
+        <View style={styles.side} />
       </View>
       <SideMenu visible={menuOpen} onClose={() => setMenuOpen(false)} />
     </>
@@ -84,9 +74,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  sideEnd: {
-    justifyContent: 'flex-end',
   },
   button: {
     width: 44,

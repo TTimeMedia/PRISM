@@ -27,7 +27,6 @@ export default function OnboardingLayout() {
         <Stack.Screen name="identity" />
         <Stack.Screen name="care-setup" />
         <Stack.Screen name="medication-setup" />
-        <Stack.Screen name="injection-setup" />
         <Stack.Screen name="appointment-setup" />
         <Stack.Screen name="journey-date" />
         <Stack.Screen name="privacy-setup" />

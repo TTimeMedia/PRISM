@@ -1,1 +1,1 @@
-export { YouScreen as default } from '../../../features/you/screens/YouScreen';
+export { TimelineScreen as default } from '../../../features/journey/screens/TimelineScreen';

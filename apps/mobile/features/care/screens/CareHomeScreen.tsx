@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Bell, Plus, Sparkles } from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMErrorState,
@@ -15,7 +15,7 @@ import {
   useTheme,
 } from '@prism/ui';
 import { useModules } from '../../../lib/profile/queries';
-import { useAppointments, useInjections, useMedications } from '../../../lib/care/queries';
+import { useAppointments, useMedications } from '../../../lib/care/queries';
 import { resolveNextMedicationOccurrence } from '../../../lib/reminders/scheduleResolution';
 import { formatComingUpWhen } from '../../../lib/today/comingUp';
 import {
@@ -30,7 +30,6 @@ import { MODULE_STYLE } from '../../../components/home/moduleStyle';
 import { TopBar } from '../../../components/home/TopBar';
 import { CalendarImportSheet } from '../components/CalendarImportSheet';
 import { describeFrequency, isMedicationActive } from '../medicationDisplay';
-import { INJECTION_SITE_OPTIONS } from '../optionLabels';
 
 /**
  * CARE — Screen 22. Your care, organized by feature. Each feature that's on
@@ -46,25 +45,19 @@ export function CareHomeScreen() {
 
   const [importOpen, setImportOpen] = useState(false);
   const medications = useMedications();
-  const injections = useInjections();
   const appointments = useAppointments();
 
   const loading =
     modulesLoading ||
     (enabled.has('medications') && medications.isLoading) ||
-    (enabled.has('injections') && injections.isLoading) ||
     (enabled.has('appointments') && appointments.isLoading);
 
   const nowIso = new Date().toISOString();
   const activeMeds = (medications.data ?? []).filter((m) => isMedicationActive(m.end_date));
   const upcoming = (appointments.data ?? []).filter((a) => a.starts_at >= nowIso);
-  const injectionCount = injections.data?.length ?? 0;
   const nextAppointment = upcoming[0];
-  const siteLabel = (site: string | null) =>
-    INJECTION_SITE_OPTIONS.find((option) => option.value === site)?.label;
 
-  const anyOn =
-    enabled.has('medications') || enabled.has('injections') || enabled.has('appointments');
+  const anyOn = enabled.has('medications') || enabled.has('appointments');
 
   return (
     <SafeAreaView
@@ -114,13 +107,6 @@ export function CareHomeScreen() {
                     }
                     label="next appointment"
                     tint="yellow"
-                  />
-                ) : null}
-                {enabled.has('injections') ? (
-                  <StatChip
-                    value={String(injectionCount)}
-                    label="injections logged"
-                    tint="violet"
                   />
                 ) : null}
               </ScrollView>
@@ -204,57 +190,6 @@ export function CareHomeScreen() {
               </>
             ) : null}
 
-            {/* Injections */}
-            {enabled.has('injections') ? (
-              <>
-                <SectionTitle
-                  title="Injections"
-                  actionLabel={
-                    enabled.has('injections') && injectionCount > 0 ? 'History' : undefined
-                  }
-                  onAction={() => router.push('/care/injections')}
-                />
-                <View style={styles.list}>
-                  {(injections.data ?? []).slice(0, 2).map((injection) => (
-                    <ItemRow
-                      key={injection.id}
-                      icon={MODULE_STYLE.injections.icon}
-                      tint="violet"
-                      title={siteLabel(injection.site) ?? 'Injection'}
-                      subtitle={new Date(injection.injected_at).toLocaleDateString(undefined, {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                      onPress={() => router.push('/care/injections')}
-                    />
-                  ))}
-                  <AddButton
-                    label={injectionCount === 0 ? 'Log your first injection' : 'Log an injection'}
-                    onPress={() => router.push('/care/injections/add')}
-                  />
-                </View>
-              </>
-            ) : null}
-
-            <SectionTitle title="Make it yours" />
-            <View style={styles.list}>
-              <ItemRow
-                icon={Bell}
-                tint="pink"
-                title="Set up reminders"
-                subtitle="Get a nudge for doses and appointments."
-                onPress={() => router.push('/you/notifications')}
-              />
-              <ItemRow
-                icon={Sparkles}
-                tint="violet"
-                title="Choose what shows here"
-                subtitle="Add or remove parts of Prism any time."
-                onPress={() => router.push('/you/customize')}
-              />
-            </View>
-
             {!anyOn ? (
               <View style={styles.hero}>
                 <HeroCard tint="mint" accentTint="cyan">
@@ -262,8 +197,13 @@ export function CareHomeScreen() {
                     Care is switched off.
                   </Text>
                   <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
-                    Nothing is switched on here yet. Choose what to show below.
+                    Nothing is switched on here yet.
                   </Text>
+                  <PRISMButton
+                    label="Choose what shows"
+                    variant="secondary"
+                    onPress={() => router.push('/you/customize')}
+                  />
                 </HeroCard>
               </View>
             ) : null}

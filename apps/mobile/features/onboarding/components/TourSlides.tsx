@@ -39,7 +39,7 @@ const SLIDES: Slide[] = [
     title: 'Care, in one place',
     body: 'Keep the details of your care together and easy to find.',
     points: [
-      'Medications and injections',
+      'Medications, injections included',
       'Appointments, with directions',
       'Reminders when you want them',
     ],

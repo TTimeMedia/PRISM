@@ -1,6 +1,5 @@
 import type {
   Appointment,
-  Injection,
   Medication,
   MedicationLog,
   MedicationLogStatus,
@@ -20,14 +19,13 @@ const MEDICATION_LOG_STATUS_LABELS: Record<MedicationLogStatus, string> = {
 export interface TimelineRecords {
   medicationLogs: MedicationLog[];
   medications: Medication[];
-  injections: Injection[];
   appointments: Appointment[];
   milestones: Milestone[];
   journalEntries: JournalEntry[];
 }
 
 /**
- * Unifies medications, injections, appointments, milestones, and journal
+ * Unifies medications (injections included, as doses with a site), appointments, milestones, and journal
  * entries into a single chronological list — Screen 42 (Timeline). Events
  * reference their source records (`sourceId`); this never duplicates
  * data, it only classifies and orders it. See docs/SCREEN_BIBLE.md
@@ -48,19 +46,14 @@ export function buildTimelineEvents(records: TimelineRecords): TimelineEvent[] {
     moduleKey: 'medications',
     sourceId: log.medication_id,
     title: medicationNames.get(log.medication_id) ?? 'Medication',
-    subtitle: MEDICATION_LOG_STATUS_LABELS[log.status] ?? log.status,
+    // An injectable dose says where it went in, when that was recorded.
+    subtitle: [
+      MEDICATION_LOG_STATUS_LABELS[log.status] ?? log.status,
+      log.site ? siteLabel(log.site) : null,
+    ]
+      .filter(Boolean)
+      .join(' · '),
     at: log.scheduled_at,
-  }));
-
-  const injectionEvents: TimelineEvent[] = records.injections.map((injection) => ({
-    id: `injection:${injection.id}`,
-    moduleKey: 'injections',
-    sourceId: injection.id,
-    title: injection.medication_id
-      ? (medicationNames.get(injection.medication_id) ?? 'Injection')
-      : 'Injection',
-    subtitle: injection.site ? siteLabel(injection.site) : undefined,
-    at: injection.injected_at,
   }));
 
   const appointmentEvents: TimelineEvent[] = records.appointments.map((appointment) => ({
@@ -92,13 +85,9 @@ export function buildTimelineEvents(records: TimelineRecords): TimelineEvent[] {
     at: dateToSortKey(entry.date),
   }));
 
-  return [
-    ...logEvents,
-    ...injectionEvents,
-    ...appointmentEvents,
-    ...milestoneEvents,
-    ...journalEvents,
-  ].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
+  return [...logEvents, ...appointmentEvents, ...milestoneEvents, ...journalEvents].sort((a, b) =>
+    a.at < b.at ? 1 : a.at > b.at ? -1 : 0,
+  );
 }
 
 /**

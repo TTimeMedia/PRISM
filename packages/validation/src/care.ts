@@ -53,18 +53,11 @@ export const medicationLogCreateSchema = z.object({
   scheduled_at: isoDateTimeSchema,
   completed_at: isoDateTimeSchema.nullable().optional(),
   status: z.enum(MEDICATION_LOG_STATUSES),
-  notes: notesSchema,
-});
-export type MedicationLogCreateInput = z.infer<typeof medicationLogCreateSchema>;
-
-/** No medical guidance is given on site selection — see docs/PRODUCT_BIBLE.md §13. */
-export const injectionCreateSchema = z.object({
-  medication_id: z.string().uuid().nullable().optional(),
-  injected_at: isoDateTimeSchema,
+  /** Where an injectable dose went in. No medical guidance is given on site selection — see docs/PRODUCT_BIBLE.md §13. */
   site: z.enum(INJECTION_SITES).nullable().optional(),
   notes: notesSchema,
 });
-export type InjectionCreateInput = z.infer<typeof injectionCreateSchema>;
+export type MedicationLogCreateInput = z.infer<typeof medicationLogCreateSchema>;
 
 export const appointmentCreateSchema = z.object({
   title: titleSchema,

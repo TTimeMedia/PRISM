@@ -14,23 +14,27 @@ export function withAlpha(hex: string, alpha: number): string {
 export interface TintColors {
   /** The pure spectrum color, for fills and icons. */
   solid: string;
-  /** A soft wash for card backgrounds. */
+  /** The card surface. Cards stay neutral so color isn't everywhere. */
   soft: string;
-  /** A stronger wash for icon tiles. */
+  /** A wash for icon chips: the one place a feature's color shows. */
   tile: string;
-  /** An outline that reads on the current background. */
+  /** The card outline. */
   border: string;
 }
 
-/** One spectrum color, in the strengths that work on the current light or dark theme. */
+/**
+ * One spectrum color, in the strengths that work on the current light or dark
+ * theme. Only the small icon chip (`tile`) carries the color; cards are plain
+ * surface so screens read calm rather than rainbow.
+ */
 export function useTint(tint: Tint): TintColors {
   const theme = useTheme();
   const solid = theme.spectrum[tint];
   const dark = theme.scheme === 'dark';
   return {
     solid,
-    soft: withAlpha(solid, dark ? 0.14 : 0.22),
+    soft: theme.colors.surface,
     tile: withAlpha(solid, dark ? 0.32 : 0.6),
-    border: withAlpha(solid, dark ? 0.45 : 0.8),
+    border: theme.colors.border.default,
   };
 }

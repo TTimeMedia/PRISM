@@ -2,6 +2,7 @@ import React from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import {
+  ArrowLeft,
   Bell,
   CalendarDays,
   Download,
@@ -15,6 +16,7 @@ import {
 import {
   PRISMButton,
   PRISMHeader,
+  PRISMIconButton,
   PRISMListItem,
   PRISMSection,
   spacing,
@@ -24,7 +26,8 @@ import { useProfile } from '../../../lib/profile/queries';
 import { signOut } from '../../../lib/auth/actions';
 
 /**
- * Screen 53 — You. Primary settings hub — Me / PRISM / Privacy /
+ * Screen 53 — Settings (opened from the menu; the YOU tab itself shows the
+ * Timeline). Primary settings hub — Me / PRISM / Privacy /
  * Preferences / Data / About, per docs/SCREEN_BIBLE.md §9. Sign out was
  * added here in Milestone 02, before the rest of this screen existed; it
  * stays at the bottom now that the full hub is built.
@@ -36,8 +39,13 @@ export function YouScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <PRISMHeader
-        title="You."
+        title="Settings."
         subtitle={profile?.display_name || 'Your information belongs to you.'}
+        leading={
+          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+            <ArrowLeft size={22} color={theme.colors.text.primary} />
+          </PRISMIconButton>
+        }
       />
       <ScrollView contentContainerStyle={styles.content}>
         <PRISMSection title="Me">

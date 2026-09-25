@@ -7,6 +7,7 @@ import { TodayScreen } from '../TodayScreen';
 import { useModules, useProfile } from '../../../../lib/profile/queries';
 import { useTodayItems } from '../../../../lib/today/queries';
 import { useCreateMedicationLog } from '../../../../lib/care/mutations';
+import { useAppStore } from '../../../../lib/store/appStore';
 
 // The top bar and menu have their own tests.
 jest.mock('../../../../components/home/TopBar', () => ({ TopBar: () => null }));
@@ -68,6 +69,7 @@ describe('TodayScreen', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    useAppStore.setState({ customizeTipDismissed: false });
     mockedUseProfile.mockReturnValue({ data: undefined } as never);
     mockedUseModules.mockReturnValue({ data: ALL_MODULES } as never);
     mockedUseCreateLog.mockReturnValue({ mutateAsync: createLog } as never);
@@ -185,16 +187,28 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    fireEvent.press(screen.getByLabelText('Log an injection'));
-    expect(router.push).toHaveBeenCalledWith('/care/injections/add');
+    fireEvent.press(screen.getByLabelText('Log a dose'));
+    expect(router.push).toHaveBeenCalledWith('/care/medications');
+    // An injection is a medication, so there is no separate tile for it.
+    expect(screen.queryByLabelText('Log an injection')).toBeNull();
   });
 
-  it('shows people where to turn parts of Prism on and off', () => {
+  it('tells people once where to turn parts of Prism on and off, then stays quiet', () => {
     todayResult([]);
 
     renderWithProviders(<TodayScreen />);
 
-    fireEvent.press(screen.getByLabelText(/^Choose what Prism shows/));
+    expect(screen.getByText('Make Prism yours')).toBeTruthy();
+    fireEvent.press(screen.getByText('Got it'));
+    expect(screen.queryByText('Make Prism yours')).toBeNull();
+  });
+
+  it('opens the switches from the tip', () => {
+    todayResult([]);
+
+    renderWithProviders(<TodayScreen />);
+
+    fireEvent.press(screen.getByText('Choose what shows'));
     expect(router.push).toHaveBeenCalledWith('/you/customize');
   });
 

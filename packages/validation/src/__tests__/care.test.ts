@@ -3,7 +3,6 @@ import {
   medicationCreateSchema,
   medicationUpdateSchema,
   medicationLogCreateSchema,
-  injectionCreateSchema,
   appointmentCreateSchema,
   appointmentUpdateSchema,
   appointmentFormSchema,
@@ -48,24 +47,6 @@ describe('medicationCreateSchema', () => {
     const result = medicationCreateSchema.safeParse({
       name: 'X',
       frequency_config: { time_of_day: '25:99' },
-    });
-    expect(result.success).toBe(false);
-  });
-});
-
-describe('injectionCreateSchema', () => {
-  it('accepts "not_tracked" as a valid site — tracking is optional', () => {
-    const result = injectionCreateSchema.safeParse({
-      injected_at: '2026-01-01T08:00:00Z',
-      site: 'not_tracked',
-    });
-    expect(result.success).toBe(true);
-  });
-
-  it('rejects an invalid site value', () => {
-    const result = injectionCreateSchema.safeParse({
-      injected_at: '2026-01-01T08:00:00Z',
-      site: 'left_arm',
     });
     expect(result.success).toBe(false);
   });
@@ -161,5 +142,28 @@ describe('appointmentFormSchema', () => {
       time: '9:3',
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe('medicationLogCreateSchema — injection site', () => {
+  const dose = {
+    medication_id: '11111111-1111-4111-8111-111111111111',
+    scheduled_at: '2026-01-01T08:00:00Z',
+    status: 'completed' as const,
+  };
+
+  it('accepts a dose with no site, since only injectable doses have one', () => {
+    expect(medicationLogCreateSchema.safeParse(dose).success).toBe(true);
+    expect(medicationLogCreateSchema.safeParse({ ...dose, site: null }).success).toBe(true);
+  });
+
+  it('accepts "not_tracked" as a valid site, because saying where is optional', () => {
+    expect(medicationLogCreateSchema.safeParse({ ...dose, site: 'not_tracked' }).success).toBe(
+      true,
+    );
+  });
+
+  it('rejects an invalid site value', () => {
+    expect(medicationLogCreateSchema.safeParse({ ...dose, site: 'left_arm' }).success).toBe(false);
   });
 });

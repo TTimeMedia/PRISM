@@ -1,12 +1,5 @@
 import { buildTimelineEvents, type TimelineRecords } from '../timeline';
-import type {
-  Appointment,
-  Injection,
-  Medication,
-  MedicationLog,
-  Milestone,
-  JournalEntry,
-} from '@prism/types';
+import type { Appointment, Medication, MedicationLog, Milestone, JournalEntry } from '@prism/types';
 
 const NOW = new Date('2026-06-15T12:00:00Z');
 
@@ -14,7 +7,6 @@ function emptyRecords(): TimelineRecords {
   return {
     medicationLogs: [],
     medications: [],
-    injections: [],
     appointments: [],
     milestones: [],
     journalEntries: [],
@@ -49,20 +41,7 @@ function medicationLog(overrides: Partial<MedicationLog> = {}): MedicationLog {
     completed_at: NOW.toISOString(),
     status: 'completed',
     notes: null,
-    created_at: NOW.toISOString(),
-    updated_at: NOW.toISOString(),
-    ...overrides,
-  };
-}
-
-function injection(overrides: Partial<Injection> = {}): Injection {
-  return {
-    id: 'inj-1',
-    user_id: 'u1',
-    medication_id: null,
-    injected_at: NOW.toISOString(),
-    site: 'left_thigh',
-    notes: null,
+    site: null,
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,
@@ -147,9 +126,17 @@ describe('buildTimelineEvents', () => {
     expect(events[0].title).toBe('Medication');
   });
 
-  it('includes an injection event with a human-readable site label', () => {
-    const events = buildTimelineEvents({ ...emptyRecords(), injections: [injection()] });
-    expect(events[0]).toMatchObject({ moduleKey: 'injections', subtitle: 'Left Thigh' });
+  it('shows where an injectable dose went in, since an injection is a medication', () => {
+    const events = buildTimelineEvents({
+      ...emptyRecords(),
+      medications: [medication({ form: 'injection' })],
+      medicationLogs: [medicationLog({ site: 'left_thigh' })],
+    });
+    expect(events[0]).toMatchObject({
+      moduleKey: 'medications',
+      title: 'Estradiol',
+      subtitle: 'Completed · Left Thigh',
+    });
   });
 
   it('includes an appointment event', () => {
@@ -205,13 +192,11 @@ describe('buildTimelineEvents', () => {
     const events = buildTimelineEvents({
       medications: [medication()],
       medicationLogs: [medicationLog({ scheduled_at: '2026-06-01T08:00:00Z' })],
-      injections: [injection({ injected_at: '2026-06-20T08:00:00Z' })],
       appointments: [appointment({ starts_at: '2026-06-14T08:00:00Z' })],
       milestones: [milestone({ date: '2026-06-10' })],
       journalEntries: [journalEntry({ date: '2026-06-12' })],
     });
     expect(events.map((e) => e.moduleKey)).toEqual([
-      'injections',
       'appointments',
       'journal',
       'milestones',

@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Compass, PenLine, Sparkles } from 'lucide-react-native';
+import { Compass, PenLine } from 'lucide-react-native';
 import type { TimelineEvent } from '@prism/types';
 import {
   PRISMButton,
@@ -117,7 +117,7 @@ export function JourneyHomeScreen() {
                 <SectionTitle
                   title="Recent moments"
                   actionLabel="Timeline"
-                  onAction={() => router.push('/journey/timeline')}
+                  onAction={() => router.push('/you')}
                 />
                 <ScrollView
                   horizontal
@@ -143,7 +143,7 @@ export function JourneyHomeScreen() {
                     ? `${events.length} thing${events.length === 1 ? '' : 's'}, in order`
                     : 'Everything you add, in order.'
                 }
-                onPress={() => router.push('/journey/timeline')}
+                onPress={() => router.push('/you')}
               />
               {milestonesOn ? (
                 <ItemRow
@@ -173,22 +173,17 @@ export function JourneyHomeScreen() {
               ) : null}
             </View>
 
-            <View style={[styles.list, styles.afterList]}>
-              <ItemRow
-                icon={Sparkles}
-                tint="violet"
-                title="Choose what shows here"
-                subtitle="Add or remove parts of Prism any time."
-                onPress={() => router.push('/you/customize')}
-              />
-            </View>
-
             {!journalOn && !milestonesOn ? (
               <View style={styles.hint}>
-                <Sparkles size={18} color={theme.colors.text.tertiary} />
                 <Text style={[styles.hintText, { color: theme.colors.text.secondary }]}>
-                  Milestones and Journal are switched off. Turn one on below to start your story.
+                  Milestones and Journal aren&apos;t switched on, so there&apos;s nothing to add to
+                  yet.
                 </Text>
+                <PRISMButton
+                  label="Choose what shows"
+                  variant="secondary"
+                  onPress={() => router.push('/you/customize')}
+                />
               </View>
             ) : null}
           </>
@@ -320,17 +315,11 @@ const styles = StyleSheet.create({
   list: {
     gap: spacing.sm,
   },
-  afterList: {
-    marginTop: spacing.sm,
-  },
   hint: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
+    gap: spacing.smd,
     marginTop: spacing.lg,
   },
   hintText: {
-    flex: 1,
     fontSize: type.bodyS.fontSize,
     lineHeight: type.bodyS.lineHeight,
   },

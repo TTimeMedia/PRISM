@@ -50,7 +50,12 @@ function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
 
 export default function TabLayout() {
   return (
-    <Tabs tabBar={(props) => <CustomTabBar {...props} />} screenOptions={{ headerShown: false }}>
+    <Tabs
+      tabBar={(props) => <CustomTabBar {...props} />}
+      // Leaving a tab returns it to its home screen, so tapping a tab always
+      // shows that tab's main page, not whichever screen was open last.
+      screenOptions={{ headerShown: false, popToTopOnBlur: true }}
+    >
       <Tabs.Screen
         name="today"
         options={{

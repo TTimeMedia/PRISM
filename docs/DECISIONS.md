@@ -376,3 +376,10 @@ The following were found while cross-referencing the five source sections (Produ
 ## Adding New Decisions
 
 When a new explicit product decision is made, append it to the relevant section above (or add a new section) using the same `Decision / Date / Status / Reason / Implications` format. Do not silently edit or remove a past decision's entry — if a decision changes, add a new entry referencing the old one and mark the old one's Status as `Superseded (see [new entry]).`
+
+### An injection is a medication
+
+**Date:** 2026-09-24
+**Status:** Active
+**Reason:** Injections were a separate feature, but an injection is just one way to take a medication. Two places to log the same kind of thing was confusing.
+**Implications:** There is no separate Injections feature, switch, tile, or screen. An injectable medication (form "Injection") is logged like any other dose, and asks where it went in (optional), stored as `medication_logs.site`. The migration `20260924120000_merge_injections_into_medications.sql` copies existing `injections` rows into `medication_logs` (attaching any that had no medication to a generic "Injection" medication) and switches Medications on for anyone who had Injections on. The `injections` table is kept, unread, for history and export. Care Setup's "Injections" choice now leads to Medication Setup.

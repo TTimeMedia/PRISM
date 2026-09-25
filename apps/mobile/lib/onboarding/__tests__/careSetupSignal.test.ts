@@ -25,23 +25,13 @@ describe('careSetupSignalFromModules', () => {
     expect(careSetupSignalFromModules(modules)).toContain('medication');
   });
 
-  it('includes "injections" when the injections module is enabled', () => {
+  it('does not treat the retired injections switch as its own signal', () => {
     const modules = [makeModule({ module_key: 'injections', enabled: true })];
-    expect(careSetupSignalFromModules(modules)).toContain('injections');
+    expect(careSetupSignalFromModules(modules)).toEqual([]);
   });
 
   it('ignores a disabled module even if the row exists', () => {
     const modules = [makeModule({ module_key: 'medications', enabled: false })];
     expect(careSetupSignalFromModules(modules)).not.toContain('medication');
-  });
-
-  it('reflects both when both are enabled', () => {
-    const modules = [
-      makeModule({ module_key: 'medications', enabled: true }),
-      makeModule({ id: 'm2', module_key: 'injections', enabled: true }),
-    ];
-    const signal = careSetupSignalFromModules(modules);
-    expect(signal).toContain('medication');
-    expect(signal).toContain('injections');
   });
 });

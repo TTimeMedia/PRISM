@@ -17,7 +17,11 @@ import {
 import { useMedicationLogs } from '../../../lib/care/queries';
 import { useDeleteMedicationLog } from '../../../lib/care/mutations';
 import { ChipField } from '../components/ChipField';
-import { MEDICATION_LOG_FILTER_OPTIONS, MEDICATION_LOG_STATUS_OPTIONS } from '../optionLabels';
+import {
+  INJECTION_SITE_OPTIONS,
+  MEDICATION_LOG_FILTER_OPTIONS,
+  MEDICATION_LOG_STATUS_OPTIONS,
+} from '../optionLabels';
 
 /** Screen 28 — Medication Log. Chronological entries, filterable by status. */
 export function MedicationLogScreen() {
@@ -78,7 +82,12 @@ export function MedicationLogScreen() {
                   MEDICATION_LOG_STATUS_OPTIONS.find((o) => o.value === log.status)?.label ??
                   log.status
                 }
-                subtitle={new Date(log.scheduled_at).toLocaleString()}
+                subtitle={[
+                  new Date(log.scheduled_at).toLocaleString(),
+                  INJECTION_SITE_OPTIONS.find((o) => o.value === log.site)?.label,
+                ]
+                  .filter(Boolean)
+                  .join(' · ')}
                 showChevron={false}
                 trailing={
                   <PRISMIconButton
