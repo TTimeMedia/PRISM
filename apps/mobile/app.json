@@ -3,7 +3,7 @@
     "name": "Prism",
     "slug": "prism",
     "owner": "ttimemedia",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "prism",
