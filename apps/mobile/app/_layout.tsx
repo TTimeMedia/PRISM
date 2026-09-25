@@ -23,6 +23,7 @@ import { useAppLockStore } from '../lib/store/appLockStore';
 import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
 import { useAppearanceSync } from '../lib/you/useAppearanceSync';
+import { usePushRegistration } from '../lib/push/usePushRegistration';
 import { useReminderSync } from '../lib/reminders/useReminderSync';
 import { useNotificationResponses } from '../lib/reminders/useNotificationResponses';
 import { AppLockScreen } from '../features/you/screens/AppLockScreen';
@@ -33,7 +34,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const themePreference = useAppStore((state) => state.themePreference);
-  const accentColor = useAppStore((state) => state.accentColor);
+  const palette = useAppStore((state) => state.palette);
   const [fontsLoaded, fontError] = useFonts({
     Inter: Inter_400Regular,
     'Inter-Medium': Inter_500Medium,
@@ -52,7 +53,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <ThemeProvider preference={themePreference} accent={accentColor}>
+            <ThemeProvider preference={themePreference} palette={palette}>
               <PRISMToastProvider>
                 <OfflineBanner />
                 <RootNavigator fontsLoaded={fontsLoaded} />
@@ -100,9 +101,10 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const { data: settings } = useSettings();
   const appLockEnabled = showTabs && !!settings?.app_lock_enabled;
   useAppLockGate(appLockEnabled);
-  useAppearanceSync(settings?.theme, settings?.accent_color);
+  useAppearanceSync(settings?.theme, settings?.palette);
   // Reminder engine — see lib/reminders/useReminderSync.ts. Only relevant
   // once inside the app proper (its own queries are already user-scoped).
+  usePushRegistration(showTabs);
   useReminderSync();
   useNotificationResponses();
   const isLocked = useAppLockStore((state) => state.isLocked);

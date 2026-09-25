@@ -43,6 +43,8 @@ describe('getNextOnboardingStep', () => {
   it('walks the full linear path when nothing conditional is selected', () => {
     const ctx = { careSetup: ['none'], intent: [] };
     let step = getNextOnboardingStep('philosophy', ctx);
+    expect(step).toBe('colors');
+    step = getNextOnboardingStep(step, ctx);
     expect(step).toBe('intent');
     step = getNextOnboardingStep(step, ctx);
     expect(step).toBe('identity');
@@ -106,7 +108,8 @@ describe('getPreviousOnboardingStep', () => {
 
   it('walks the straight-through steps backwards', () => {
     const ctx = { careSetup: null, intent: null };
-    expect(getPreviousOnboardingStep('intent', ctx)).toBe('philosophy');
+    expect(getPreviousOnboardingStep('colors', ctx)).toBe('philosophy');
+    expect(getPreviousOnboardingStep('intent', ctx)).toBe('colors');
     expect(getPreviousOnboardingStep('identity', ctx)).toBe('intent');
     expect(getPreviousOnboardingStep('care_setup', ctx)).toBe('identity');
     expect(getPreviousOnboardingStep('privacy_setup', ctx)).toBe('journey_date');

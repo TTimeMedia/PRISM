@@ -15,7 +15,9 @@ import {
   type,
   useTheme,
 } from '@prism/ui';
+import { resolveReminderMessages, type PushCategory } from '@prism/types';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import { resolvePushPreferences } from '../../../lib/push/pushToken';
 import { useAppStore } from '../../../lib/store/appStore';
 import {
   getNotificationPermissionStatus,
@@ -41,6 +43,9 @@ export function NotificationSettingsScreen() {
   const setMissedDoseNudge = useAppStore((state) => state.setMissedDoseNudge);
   const leadMinutes = useAppStore((state) => state.appointmentLeadMinutes);
   const setLeadMinutes = useAppStore((state) => state.setAppointmentLeadMinutes);
+  const pushPreferences = resolvePushPreferences(settings?.push_preferences);
+  const setPush = (category: PushCategory, value: boolean) =>
+    updateSettings.mutate({ push_preferences: { ...pushPreferences, [category]: value } });
   const [testSent, setTestSent] = useState(false);
   const [permission, setPermission] = useState<NotificationPermissionStatus>('unsupported');
 
@@ -103,6 +108,36 @@ export function NotificationSettingsScreen() {
               onValueChange={(value) => updateSettings.mutate({ notification_privacy: value })}
             />
           </PRISMSection>
+          <PRISMSection title="Messages from Prism">
+            <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
+              Sent from Prism&apos;s server, so they can reach you even when the app is closed. You
+              choose which kinds you get.
+            </Text>
+            {PUSH_OPTIONS.map((option) => (
+              <PRISMSwitch
+                key={option.category}
+                label={option.label}
+                description={option.description}
+                value={pushPreferences[option.category]}
+                onValueChange={(value) => setPush(option.category, value)}
+              />
+            ))}
+            <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
+              These go through Apple and Expo&apos;s notification services to reach your phone. With
+              Private notifications on, reminders only ever say &quot;Your Prism reminder is
+              ready.&quot;
+            </Text>
+          </PRISMSection>
+          <PRISMSection title="Reminder wording">
+            <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
+              {`Choose what your reminders say, like "It's shot day." or "Take your Estradiol at 9:00 AM.", or write your own. Used when Private notifications is off.`}
+            </Text>
+            <PRISMButton
+              label="Choose reminder wording"
+              variant="secondary"
+              onPress={() => router.push('/you/reminder-messages')}
+            />
+          </PRISMSection>
           <PRISMSection title="Appointment reminders">
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
               When to be reminded about an appointment that has its reminder turned on. Pick as many
@@ -129,7 +164,10 @@ export function NotificationSettingsScreen() {
               variant="secondary"
               disabled={permission !== 'granted'}
               onPress={async () => {
-                await scheduleTestReminder(settings.notification_privacy);
+                await scheduleTestReminder(
+                  settings.notification_privacy,
+                  resolveReminderMessages(settings.reminder_messages),
+                );
                 setTestSent(true);
               }}
             />
@@ -148,6 +186,24 @@ export function NotificationSettingsScreen() {
     </View>
   );
 }
+
+const PUSH_OPTIONS: { category: PushCategory; label: string; description: string }[] = [
+  {
+    category: 'security',
+    label: 'Account and security',
+    description: 'A new sign-in, a password change, or your data export being ready.',
+  },
+  {
+    category: 'nudges',
+    label: 'Gentle check-ins',
+    description: 'An occasional nudge to log how you are doing. Never says what it is about.',
+  },
+  {
+    category: 'updates',
+    label: 'Prism news',
+    description: 'What is new in Prism.',
+  },
+];
 
 const LEAD_OPTIONS = [
   { value: '0', label: 'At the time' },

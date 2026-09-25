@@ -30,11 +30,11 @@ describe('PhilosophyScreen', () => {
     expect(screen.getByText('Prism fits around you.')).toBeTruthy();
   });
 
-  it('persists onboarding_step and advances to Intent on Continue', async () => {
+  it('persists onboarding_step and advances to Colors on Continue', async () => {
     renderWithProviders(<PhilosophyScreen />);
     fireEvent.press(screen.getByText('Continue'));
 
-    await waitFor(() => expect(mutateAsync).toHaveBeenCalledWith({ onboarding_step: 'intent' }));
-    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/intent'));
+    await waitFor(() => expect(mutateAsync).toHaveBeenCalledWith({ onboarding_step: 'colors' }));
+    await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/colors'));
   });
 });

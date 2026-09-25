@@ -1,8 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { ChevronRight, type LucideIcon } from 'lucide-react-native';
+import { ChevronRight, Plus, type LucideIcon } from 'lucide-react-native';
 import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
-import { fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { PRISMButton, fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
 import { useTint, withAlpha, type Tint } from './tint';
 
 export { useTint, withAlpha, type Tint } from './tint';
@@ -38,15 +38,23 @@ export function ScreenGlow({ colors }: { colors: [Tint, Tint] }) {
   );
 }
 
-/** A section heading with an optional "See all" style link. */
+/**
+ * A section heading with an optional "See all" style link and an optional
+ * round "+" button to add to that section (the usual place for it).
+ */
 export function SectionTitle({
   title,
   actionLabel,
   onAction,
+  onAdd,
+  addLabel,
 }: {
   title: string;
   actionLabel?: string;
   onAction?: () => void;
+  onAdd?: () => void;
+  /** Spoken label for the + button, e.g. "Add a medication". */
+  addLabel?: string;
 }) {
   const theme = useTheme();
   return (
@@ -57,13 +65,77 @@ export function SectionTitle({
       >
         {title}
       </Text>
-      {actionLabel && onAction ? (
-        <Pressable accessibilityRole="button" onPress={onAction} hitSlop={10}>
-          <Text style={[styles.sectionAction, { color: theme.colors.text.secondary }]}>
-            {actionLabel}
-          </Text>
-        </Pressable>
-      ) : null}
+      <View style={styles.sectionActions}>
+        {actionLabel && onAction ? (
+          <Pressable accessibilityRole="button" onPress={onAction} hitSlop={10}>
+            <Text style={[styles.sectionAction, { color: theme.colors.text.secondary }]}>
+              {actionLabel}
+            </Text>
+          </Pressable>
+        ) : null}
+        {onAdd ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={addLabel ?? `Add to ${title}`}
+            onPress={onAdd}
+            hitSlop={8}
+            style={({ pressed }) => [
+              styles.addCircle,
+              { backgroundColor: theme.accent, opacity: pressed ? 0.85 : 1 },
+            ]}
+          >
+            <Plus size={18} color={theme.onAccent} strokeWidth={2.8} />
+          </Pressable>
+        ) : null}
+      </View>
+    </View>
+  );
+}
+
+/**
+ * What a section looks like before anything is in it: a small icon, one
+ * line on what it's for, and one clear button to begin. Never a blank gap.
+ */
+export function EmptyCard({
+  icon: Icon,
+  tint,
+  title,
+  body,
+  primaryLabel,
+  onPrimary,
+  secondaryLabel,
+  onSecondary,
+}: {
+  icon: LucideIcon;
+  tint: Tint;
+  title: string;
+  body: string;
+  primaryLabel: string;
+  onPrimary: () => void;
+  secondaryLabel?: string;
+  onSecondary?: () => void;
+}) {
+  const theme = useTheme();
+  const colors = useTint(tint);
+  return (
+    <View
+      style={[
+        styles.empty,
+        { backgroundColor: theme.colors.surface, borderColor: theme.colors.border.default },
+        theme.scheme === 'light' && theme.shadow,
+      ]}
+    >
+      <View style={[styles.emptyIcon, { backgroundColor: colors.tile }]}>
+        <Icon size={26} color={theme.colors.text.primary} strokeWidth={1.9} />
+      </View>
+      <Text style={[styles.emptyTitle, { color: theme.colors.text.primary }]}>{title}</Text>
+      <Text style={[styles.emptyBody, { color: theme.colors.text.secondary }]}>{body}</Text>
+      <View style={styles.emptyActions}>
+        <PRISMButton label={primaryLabel} onPress={onPrimary} />
+        {secondaryLabel && onSecondary ? (
+          <PRISMButton label={secondaryLabel} variant="tertiary" onPress={onSecondary} />
+        ) : null}
+      </View>
     </View>
   );
 }
@@ -246,6 +318,51 @@ const styles = StyleSheet.create({
     fontSize: type.headingL.fontSize,
     lineHeight: type.headingL.lineHeight,
     fontWeight: fontWeight.semibold as '600',
+  },
+  sectionActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.smd,
+  },
+  addCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  empty: {
+    alignItems: 'center',
+    gap: spacing.sm,
+    padding: spacing.lg,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+  },
+  emptyIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: radius.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.xs,
+  },
+  emptyTitle: {
+    fontFamily: fontFamily.display,
+    fontSize: type.headingM.fontSize,
+    lineHeight: type.headingM.lineHeight,
+    fontWeight: fontWeight.semibold as '600',
+    textAlign: 'center',
+  },
+  emptyBody: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
+    textAlign: 'center',
+    maxWidth: 280,
+  },
+  emptyActions: {
+    alignSelf: 'stretch',
+    gap: spacing.xs,
+    marginTop: spacing.smd,
   },
   sectionAction: {
     fontSize: type.bodyS.fontSize,

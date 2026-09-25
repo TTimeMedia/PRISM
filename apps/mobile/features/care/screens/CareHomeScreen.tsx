@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Plus } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMErrorState,
   PRISMSkeleton,
   fontFamily,
   fontWeight,
-  radius,
   spacing,
   type,
   useTheme,
@@ -19,12 +17,12 @@ import { useAppointments, useMedications } from '../../../lib/care/queries';
 import { resolveNextMedicationOccurrence } from '../../../lib/reminders/scheduleResolution';
 import { formatComingUpWhen } from '../../../lib/today/comingUp';
 import {
+  EmptyCard,
   HeroCard,
   ItemRow,
   ScreenGlow,
   SectionTitle,
   StatChip,
-  useTint,
 } from '../../../components/home';
 import { MODULE_STYLE } from '../../../components/home/moduleStyle';
 import { TopBar } from '../../../components/home/TopBar';
@@ -117,38 +115,43 @@ export function CareHomeScreen() {
               <>
                 <SectionTitle
                   title="Medications"
-                  actionLabel={
-                    enabled.has('medications') && activeMeds.length > 0 ? 'See all' : undefined
-                  }
+                  actionLabel={activeMeds.length > 0 ? 'See all' : undefined}
                   onAction={() => router.push('/care/medications')}
+                  onAdd={() => router.push('/care/medications/add')}
+                  addLabel="Add a medication"
                 />
-                <View style={styles.list}>
-                  {activeMeds.slice(0, 3).map((medication) => {
-                    const next = resolveNextMedicationOccurrence(medication);
-                    const schedule = describeFrequency(
-                      medication.frequency_type,
-                      medication.frequency_config,
-                    );
-                    return (
-                      <ItemRow
-                        key={medication.id}
-                        icon={MODULE_STYLE.medications.icon}
-                        tint="cyan"
-                        title={medication.name}
-                        subtitle={
-                          next ? `Next: ${formatComingUpWhen(next.toISOString())}` : schedule
-                        }
-                        onPress={() => router.push(`/care/medications/${medication.id}`)}
-                      />
-                    );
-                  })}
-                  <AddButton
-                    label={
-                      activeMeds.length === 0 ? 'Add your first medication' : 'Add a medication'
-                    }
-                    onPress={() => router.push('/care/medications/add')}
+                {activeMeds.length === 0 ? (
+                  <EmptyCard
+                    icon={MODULE_STYLE.medications.icon}
+                    tint="cyan"
+                    title="No medications yet"
+                    body="Add what you take to see your doses on Today and get reminders when you want them."
+                    primaryLabel="Add medication"
+                    onPrimary={() => router.push('/care/medications/add')}
                   />
-                </View>
+                ) : (
+                  <View style={styles.list}>
+                    {activeMeds.slice(0, 3).map((medication) => {
+                      const next = resolveNextMedicationOccurrence(medication);
+                      const schedule = describeFrequency(
+                        medication.frequency_type,
+                        medication.frequency_config,
+                      );
+                      return (
+                        <ItemRow
+                          key={medication.id}
+                          icon={MODULE_STYLE.medications.icon}
+                          tint="cyan"
+                          title={medication.name}
+                          subtitle={
+                            next ? `Next: ${formatComingUpWhen(next.toISOString())}` : schedule
+                          }
+                          onPress={() => router.push(`/care/medications/${medication.id}`)}
+                        />
+                      );
+                    })}
+                  </View>
+                )}
               </>
             ) : null}
 
@@ -157,36 +160,43 @@ export function CareHomeScreen() {
               <>
                 <SectionTitle
                   title="Appointments"
-                  actionLabel={
-                    enabled.has('appointments') && upcoming.length > 0 ? 'See all' : undefined
-                  }
+                  actionLabel={upcoming.length > 0 ? 'See all' : undefined}
                   onAction={() => router.push('/care/appointments')}
+                  onAdd={() => router.push('/care/appointments/add')}
+                  addLabel="Add an appointment"
                 />
-                <View style={styles.list}>
-                  {upcoming.slice(0, 3).map((appointment) => (
-                    <ItemRow
-                      key={appointment.id}
-                      icon={MODULE_STYLE.appointments.icon}
-                      tint="yellow"
-                      title={appointment.title}
-                      subtitle={[formatComingUpWhen(appointment.starts_at), appointment.provider]
-                        .filter(Boolean)
-                        .join(' · ')}
-                      onPress={() => router.push(`/care/appointments/${appointment.id}`)}
+                {upcoming.length === 0 ? (
+                  <EmptyCard
+                    icon={MODULE_STYLE.appointments.icon}
+                    tint="yellow"
+                    title="No appointments coming up"
+                    body="Add a visit, or bring them in from your phone's calendar."
+                    primaryLabel="Add appointment"
+                    onPrimary={() => router.push('/care/appointments/add')}
+                    secondaryLabel="Import from calendar"
+                    onSecondary={() => setImportOpen(true)}
+                  />
+                ) : (
+                  <View style={styles.list}>
+                    {upcoming.slice(0, 3).map((appointment) => (
+                      <ItemRow
+                        key={appointment.id}
+                        icon={MODULE_STYLE.appointments.icon}
+                        tint="yellow"
+                        title={appointment.title}
+                        subtitle={[formatComingUpWhen(appointment.starts_at), appointment.provider]
+                          .filter(Boolean)
+                          .join(' · ')}
+                        onPress={() => router.push(`/care/appointments/${appointment.id}`)}
+                      />
+                    ))}
+                    <PRISMButton
+                      label="Import from calendar"
+                      variant="tertiary"
+                      onPress={() => setImportOpen(true)}
                     />
-                  ))}
-                  <AddButton
-                    label={
-                      upcoming.length === 0 ? 'Add your next appointment' : 'Add an appointment'
-                    }
-                    onPress={() => router.push('/care/appointments/add')}
-                  />
-                  <PRISMButton
-                    label="Import from calendar"
-                    variant="tertiary"
-                    onPress={() => setImportOpen(true)}
-                  />
-                </View>
+                  </View>
+                )}
               </>
             ) : null}
 
@@ -212,26 +222,6 @@ export function CareHomeScreen() {
       </ScrollView>
       <CalendarImportSheet visible={importOpen} onClose={() => setImportOpen(false)} />
     </SafeAreaView>
-  );
-}
-
-/** The one obvious "+" button at the end of each block. */
-function AddButton({ label, onPress }: { label: string; onPress: () => void }) {
-  const theme = useTheme();
-  const colors = useTint('cyan');
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.add,
-        { borderColor: colors.border, backgroundColor: colors.soft, opacity: pressed ? 0.85 : 1 },
-      ]}
-    >
-      <Plus size={18} color={theme.colors.text.primary} strokeWidth={2.6} />
-      <Text style={[styles.addLabel, { color: theme.colors.text.primary }]}>{label}</Text>
-    </Pressable>
   );
 }
 
@@ -273,21 +263,6 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: spacing.sm,
-  },
-  add: {
-    borderRadius: radius.lg,
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    minHeight: 56,
-  },
-  addLabel: {
-    fontSize: type.bodyM.fontSize,
-    lineHeight: type.bodyM.lineHeight,
-    fontWeight: fontWeight.semibold as '600',
   },
   hero: {
     marginTop: spacing.lg,

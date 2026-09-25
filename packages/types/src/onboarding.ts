@@ -48,13 +48,14 @@ export const CARE_SETUP_OPTIONS = [
 export type CareSetupOption = (typeof CARE_SETUP_OPTIONS)[number];
 
 /**
- * The 12 onboarding screens (Screens 08-19), in default sequence. Screens
+ * The 13 onboarding screens (Screens 08-19, plus Colors), in default sequence. Screens
  * 13-15 (medication/injection/appointment setup) are conditional — see
  * getNextOnboardingStep — so the *actual* path a given user takes is a
  * subsequence of this array, never out of order.
  */
 export const ONBOARDING_STEPS = [
   'philosophy',
+  'colors',
   'intent',
   'identity',
   'care_setup',
@@ -111,6 +112,8 @@ export function getNextOnboardingStep(
 ): OnboardingStep {
   switch (current) {
     case 'philosophy':
+      return 'colors';
+    case 'colors':
       return 'intent';
     case 'intent':
       return 'identity';
@@ -158,8 +161,10 @@ export function getPreviousOnboardingStep(
   switch (current) {
     case 'philosophy':
       return null;
-    case 'intent':
+    case 'colors':
       return 'philosophy';
+    case 'intent':
+      return 'colors';
     case 'identity':
       return 'intent';
     case 'care_setup':

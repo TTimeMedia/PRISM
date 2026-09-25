@@ -12,7 +12,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { spectrum, useReducedMotion, useTheme } from '@prism/ui';
+import { useReducedMotion, useTheme } from '@prism/ui';
 
 const PRISM_IMAGE = require('../../assets/images/prism-mark.png');
 
@@ -79,7 +79,7 @@ export function PrismMark({ size = DEFAULT_SIZE }: PrismMarkProps) {
   const height = size * IMAGE_ASPECT;
   const haloSize = size * 1.5;
   const isDark = theme.scheme === 'dark';
-  const haloColor = isDark ? spectrum.violet : spectrum.cyan;
+  const haloColor = isDark ? theme.spectrum.violet : theme.spectrum.cyan;
 
   return (
     <View

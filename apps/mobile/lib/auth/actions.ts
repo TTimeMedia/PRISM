@@ -1,3 +1,4 @@
+import { removeThisDevicePushToken } from '../push/pushToken';
 import * as Linking from 'expo-linking';
 import { supabase } from '../supabase/client';
 
@@ -46,5 +47,7 @@ export async function resendVerificationEmail(email: string) {
 }
 
 export async function signOut() {
+  // While still signed in, so this phone stops getting server pushes for the account.
+  await removeThisDevicePushToken();
   return supabase.auth.signOut();
 }

@@ -60,16 +60,16 @@ describe('CareHomeScreen', () => {
   it('gives every feature that is on a clear first step when it is empty', () => {
     renderWithProviders(<CareHomeScreen />);
 
-    expect(screen.getByText('Add your first medication')).toBeTruthy();
-    expect(screen.getByText('Add your next appointment')).toBeTruthy();
+    expect(screen.getByText('Add medication')).toBeTruthy();
+    expect(screen.getByText('Add appointment')).toBeTruthy();
   });
 
   it('starts adding from the button under each block', () => {
     renderWithProviders(<CareHomeScreen />);
 
-    fireEvent.press(screen.getByLabelText('Add your first medication'));
+    fireEvent.press(screen.getByLabelText('Add medication'));
     expect(router.push).toHaveBeenCalledWith('/care/medications/add');
-    fireEvent.press(screen.getByLabelText('Add your next appointment'));
+    fireEvent.press(screen.getByLabelText('Add appointment'));
     expect(router.push).toHaveBeenCalledWith('/care/appointments/add');
   });
 
@@ -89,7 +89,9 @@ describe('CareHomeScreen', () => {
 
     renderWithProviders(<CareHomeScreen />);
 
-    expect(screen.getByText('Add a medication')).toBeTruthy();
+    // With something in the list, adding is the + beside the heading, not a big button.
+    expect(screen.getByLabelText('Add a medication')).toBeTruthy();
+    expect(screen.queryByText('No medications yet')).toBeNull();
     fireEvent.press(screen.getByLabelText(/^Estradiol valerate/));
     expect(router.push).toHaveBeenCalledWith('/care/medications/m1');
   });
@@ -104,9 +106,9 @@ describe('CareHomeScreen', () => {
     renderWithProviders(<CareHomeScreen />);
 
     expect(screen.queryByText('Appointments')).toBeNull();
-    expect(screen.queryByText('Add your next appointment')).toBeNull();
+    expect(screen.queryByText('Add appointment')).toBeNull();
     expect(screen.queryByText('Turn on')).toBeNull();
-    expect(screen.getByText('Add your first medication')).toBeTruthy();
+    expect(screen.getByText('Add medication')).toBeTruthy();
   });
 
   it('has no separate injections section, because an injection is a medication', () => {

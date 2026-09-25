@@ -1,5 +1,13 @@
 import React from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { spacing } from '../tokens/spacing';
 import { type } from '../tokens/typography';
@@ -19,6 +27,11 @@ export interface PRISMTimelineEventItem {
 
 export interface PRISMTimelineProps {
   events: PRISMTimelineEventItem[];
+  /** Content shown above the first event, scrolling with the list. */
+  header?: React.ReactElement | null;
+  /** Shown in place of the events when there are none. */
+  empty?: React.ReactElement | null;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 }
 
 /**
@@ -27,12 +40,20 @@ export interface PRISMTimelineProps {
  * distinguish event categories rather than icons alone. See
  * docs/DESIGN_SYSTEM.md §15 and docs/SCREEN_BIBLE.md Screens 42-43.
  */
-export function PRISMTimeline({ events }: PRISMTimelineProps) {
+export function PRISMTimeline({
+  events,
+  header,
+  empty,
+  contentContainerStyle,
+}: PRISMTimelineProps) {
   const theme = useTheme();
 
   return (
     <FlatList
       data={events}
+      ListHeaderComponent={header}
+      ListEmptyComponent={empty}
+      contentContainerStyle={contentContainerStyle}
       keyExtractor={(event) => event.id}
       renderItem={({ item: event, index }) => {
         const isLast = index === events.length - 1;

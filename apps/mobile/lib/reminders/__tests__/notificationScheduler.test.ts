@@ -214,17 +214,44 @@ describe('scheduleMedicationReminders', () => {
     expect(content.body).toBe('Your Prism reminder is ready.');
   });
 
-  it('uses the medication name and dosage as content when notification privacy is off', async () => {
-    const med = medication({
-      name: 'Testosterone',
-      dosage_text: '50mg',
+  const daily = (overrides: Partial<Medication> = {}) =>
+    medication({
+      name: 'Estradiol',
+      dosage_text: '2 mg',
       frequency_type: 'daily',
       frequency_config: { time_of_day: '09:00' },
+      ...overrides,
     });
-    await scheduleMedicationReminders(med, false);
-    const content = mockScheduleNotificationAsync.mock.calls[0][0].content;
-    expect(content.title).toBe('Testosterone');
-    expect(content.body).toBe('50mg');
+  const firstContent = () => mockScheduleNotificationAsync.mock.calls[0][0].content;
+
+  it('says "shot day" for an injection when notification privacy is off', async () => {
+    await scheduleMedicationReminders(daily({ form: 'injection' }), false);
+    expect(firstContent().title).toBe('Prism');
+    expect(firstContent().body).toBe("It's shot day.");
+  });
+
+  it('says the name and time for other medications when notification privacy is off', async () => {
+    await scheduleMedicationReminders(daily({ form: 'pill' }), false);
+    expect(firstContent().body).toMatch(/^Take your Estradiol at [0-9]{1,2}:00/);
+  });
+
+  it('uses the wording the person chose, including their own', async () => {
+    await scheduleMedicationReminders(daily({ form: 'pill' }), false, {
+      messages: {
+        medication: {
+          selected: 'mine',
+          custom: [{ id: 'mine', text: '{name} ({dose}), you got this' }],
+        },
+      },
+    });
+    expect(firstContent().body).toBe('Estradiol (2 mg), you got this');
+  });
+
+  it('stays generic when notification privacy is on, whatever wording was chosen', async () => {
+    await scheduleMedicationReminders(daily({ form: 'pill' }), true, {
+      messages: { medication: { selected: 'time-for', custom: [] } },
+    });
+    expect(firstContent().body).toBe('Your Prism reminder is ready.');
   });
 });
 

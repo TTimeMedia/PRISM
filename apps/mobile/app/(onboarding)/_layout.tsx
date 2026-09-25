@@ -7,7 +7,7 @@ import { ONBOARDING_ROUTE_SEGMENTS } from '../../lib/onboarding/routes';
 import { OnboardingBackButton } from '../../features/onboarding/components/OnboardingBackButton';
 
 /**
- * The 12 Onboarding screens (docs/SCREEN_BIBLE.md §5). Resumes at
+ * The 13 Onboarding screens (docs/SCREEN_BIBLE.md §5). Resumes at
  * profile.onboarding_step so an interrupted flow picks back up where it
  * left off, rather than restarting — see docs/SCREEN_BIBLE.md §5 ("the
  * whole flow can be resumed if interrupted"). The root layout only ever
@@ -23,6 +23,7 @@ export default function OnboardingLayout() {
     <View style={{ flex: 1 }}>
       <Stack initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
         <Stack.Screen name="philosophy" />
+        <Stack.Screen name="colors" />
         <Stack.Screen name="intent" />
         <Stack.Screen name="identity" />
         <Stack.Screen name="care-setup" />

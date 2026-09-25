@@ -33,3 +33,36 @@ Launch-readiness section), then a real end-to-end test: create a test
 account, add a profile photo, delete the account, verify the
 `auth.users` row, every `public` table row, and the storage object are
 all actually gone.
+
+## `send-push`
+
+The one place server push notifications leave from. It is called by Prism
+itself (an admin action, a scheduled job or another function), never by the
+app, so it uses `verify_jwt = false` and requires an `x-push-secret` header
+equal to the `PUSH_ADMIN_SECRET` function secret.
+
+```
+POST /functions/v1/send-push
+x-push-secret: <PUSH_ADMIN_SECRET>
+{ "category": "updates", "title": "...", "body": "...", "all": true }
+{ "category": "security", "title": "...", "body": "...", "userIds": ["<uuid>"] }
+```
+
+Categories are `security`, `updates`, `nudges` and `reminders`. Each person
+chooses which they get in Notification Settings (`settings.push_preferences`;
+security defaults on, the rest are opt-in). Reminders are generic ("Your Prism
+reminder is ready.") while `settings.notification_privacy` is on. Phones are
+found in `push_tokens`, filled by the app (`apps/mobile/lib/push`); tokens Expo
+reports as `DeviceNotRegistered` are deleted.
+
+Before it can send: push the `push_notifications` migration, run
+`supabase secrets set PUSH_ADMIN_SECRET=<long random value>`, then
+`supabase functions deploy send-push`. iOS also needs push credentials on the
+EAS project (`eas credentials`) and a new native build, because the push
+entitlement is baked into the build. **Not deployed and not executed here**
+(no Deno in this environment): the pure rules in `_shared/push.ts` are small,
+but the function itself needs a real end-to-end test on a device.
+
+Server-side scheduled dose and appointment reminders (the `reminders`
+category) are not sent yet: nothing on the server decides *when* a reminder
+is due. Until that job exists, reminders keep running on the phone.

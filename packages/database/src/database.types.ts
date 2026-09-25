@@ -23,6 +23,7 @@ import type {
   Module,
   Procedure,
   Profile,
+  PushToken,
   Reminder,
   Settings,
 } from '@prism/types';
@@ -145,6 +146,11 @@ export interface Database {
         Insertable<Reminder, Generated | 'notification_style' | 'enabled'>,
         Updatable<Reminder, Immutable>
       >;
+      push_tokens: Table<
+        PushToken,
+        Insertable<PushToken, Generated>,
+        Updatable<PushToken, Immutable>
+      >;
       settings: Table<
         Settings,
         Insertable<
@@ -156,6 +162,9 @@ export interface Database {
           | 'reduced_motion'
           | 'calendar_sync_enabled'
           | 'accent_color'
+          | 'palette'
+          | 'push_preferences'
+          | 'reminder_messages'
           | 'created_at'
           | 'updated_at'
         >,

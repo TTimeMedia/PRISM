@@ -33,10 +33,7 @@ export function PRISMChip({ label, selected = false, onPress, disabled = false }
       ]}
     >
       <Text
-        style={[
-          styles.label,
-          { color: selected ? theme.onAccent : theme.colors.text.primary },
-        ]}
+        style={[styles.label, { color: selected ? theme.onAccent : theme.colors.text.primary }]}
       >
         {label}
       </Text>

@@ -294,6 +294,28 @@ export interface Reminder {
   updated_at: ISODateTime;
 }
 
+export const PUSH_CATEGORIES = ['security', 'updates', 'nudges', 'reminders'] as const;
+export type PushCategory = (typeof PUSH_CATEGORIES)[number];
+export type PushPreferences = Record<PushCategory, boolean>;
+
+/** What each kind of push defaults to before the person chooses. */
+export const DEFAULT_PUSH_PREFERENCES: PushPreferences = {
+  security: true,
+  updates: false,
+  nudges: false,
+  reminders: false,
+};
+
+/** A phone Prism can send a push to. The token is an opaque address issued by Expo. */
+export interface PushToken {
+  id: UUID;
+  user_id: UUID;
+  token: string;
+  platform: string;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
 export const THEMES = ['light', 'dark', 'system'] as const;
 export type Theme = (typeof THEMES)[number];
 
@@ -309,6 +331,12 @@ export interface Settings {
   calendar_sync_enabled: boolean;
   /** Accent color theme key (see ACCENT_THEMES in @prism/ui). Unknown values fall back to the default client-side. */
   accent_color: string;
+  /** Whole-app color palette key (see PALETTES in @prism/ui). Unknown values fall back to the default client-side. */
+  palette: string;
+  /** Which kinds of server push the person wants — see PushPreferences. */
+  push_preferences: PushPreferences;
+  /** The wording the person chose for reminders — see reminderMessages.ts. */
+  reminder_messages: Record<string, unknown>;
   accessibility_preferences: Record<string, unknown> | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;

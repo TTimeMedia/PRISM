@@ -10,7 +10,7 @@ import Animated, {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
-import { spectrum, useReducedMotion, useTheme } from '@prism/ui';
+import { useReducedMotion, useTheme } from '@prism/ui';
 
 interface Orb {
   id: string;
@@ -24,7 +24,7 @@ interface Orb {
   drift: number;
 }
 
-const ORBS: Orb[] = [
+const orbsFor = (spectrum: { cyan: string; violet: string; pink: string }): Orb[] => [
   { id: 'prism-orb-cyan', color: spectrum.cyan, x: 0.15, y: 0.18, radius: 0.85, drift: 34 },
   { id: 'prism-orb-violet', color: spectrum.violet, x: 0.9, y: 0.5, radius: 0.8, drift: 42 },
   { id: 'prism-orb-pink', color: spectrum.pink, x: 0.25, y: 0.92, radius: 0.75, drift: 38 },
@@ -130,7 +130,7 @@ export function AmbientBackground({ phase }: AmbientBackgroundProps) {
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
     >
-      {ORBS.map((orb, index) => (
+      {orbsFor(theme.spectrum).map((orb, index) => (
         <OrbView
           key={orb.id}
           orb={orb}

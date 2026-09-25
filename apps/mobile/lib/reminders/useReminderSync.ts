@@ -1,7 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { useAppStore } from '../store/appStore';
-import type { Appointment, Medication, NotificationStyle, Reminder } from '@prism/types';
+import {
+  resolveReminderMessages,
+  type Appointment,
+  type Medication,
+  type NotificationStyle,
+  type Reminder,
+  type ReminderMessages,
+} from '@prism/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules, useSettings } from '../profile/queries';
@@ -48,6 +55,7 @@ export function useReminderSync(): void {
   const medicationsEnabled = !!modules?.find((m) => m.module_key === 'medications')?.enabled;
   const appointmentsEnabled = !!modules?.find((m) => m.module_key === 'appointments')?.enabled;
   const notificationPrivacy = settings?.notification_privacy ?? true;
+  const messagesJson = JSON.stringify(resolveReminderMessages(settings?.reminder_messages));
   const missedDoseNudge = useAppStore((state) => state.missedDoseNudge);
   const leadMinutes = useAppStore((state) => state.appointmentLeadMinutes);
   const [refreshTick, setRefreshTick] = useState(0);
@@ -66,6 +74,7 @@ export function useReminderSync(): void {
     medicationsEnabled,
     appointmentsEnabled,
     notificationPrivacy,
+    messagesJson,
     missedDoseNudge,
     leadMinutes,
     refreshTick,
@@ -110,6 +119,7 @@ export function useReminderSync(): void {
         medications: medicationsEnabled ? medications : [],
         appointments: appointmentsEnabled ? appointments : [],
         notificationPrivacy,
+        messages: resolveReminderMessages(settings.reminder_messages),
         nudgeDelayMinutes: missedDoseNudge ? NUDGE_DELAY_MINUTES : null,
         appointmentLeadMinutes: leadMinutes,
       });
@@ -135,6 +145,7 @@ interface SyncArgs {
   medications: Medication[];
   appointments: Appointment[];
   notificationPrivacy: boolean;
+  messages: ReminderMessages;
   nudgeDelayMinutes: number | null;
   appointmentLeadMinutes: readonly number[];
 }
@@ -144,6 +155,7 @@ async function syncReminders({
   medications,
   appointments,
   notificationPrivacy,
+  messages,
   nudgeDelayMinutes,
   appointmentLeadMinutes,
 }: SyncArgs): Promise<void> {
@@ -196,12 +208,20 @@ async function syncReminders({
   for (const medication of medications) {
     if (!desired.has(`medication:${medication.id}`)) continue;
     await cancelRemindersFor('medication', medication.id);
-    await scheduleMedicationReminders(medication, notificationPrivacy, { nudgeDelayMinutes });
+    await scheduleMedicationReminders(medication, notificationPrivacy, {
+      nudgeDelayMinutes,
+      messages,
+    });
   }
   for (const appointment of appointments) {
     if (!desired.has(`appointment:${appointment.id}`)) continue;
     await cancelRemindersFor('appointment', appointment.id);
-    await scheduleAppointmentReminder(appointment, notificationPrivacy, appointmentLeadMinutes);
+    await scheduleAppointmentReminder(
+      appointment,
+      notificationPrivacy,
+      appointmentLeadMinutes,
+      messages,
+    );
   }
 
   const notificationStyle: NotificationStyle = notificationPrivacy ? 'private' : 'standard';

@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
-import { onAccentColor, resolveAccentColor } from '@prism/ui';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { AppearanceScreen } from '../AppearanceScreen';
 import { useSettings, useUpdateSettings } from '../../../../lib/profile/queries';
@@ -20,10 +19,10 @@ const mockedUseUpdateSettings = useUpdateSettings as jest.MockedFunction<typeof 
 
 const mutate = jest.fn();
 
-describe('AppearanceScreen accent themes', () => {
+describe('AppearanceScreen colors', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    useAppStore.setState({ accentColor: 'cyan' });
+    useAppStore.setState({ palette: 'slate' });
     mockedUseSettings.mockReturnValue({
       data: { theme: 'system' },
       isLoading: false,
@@ -33,27 +32,16 @@ describe('AppearanceScreen accent themes', () => {
     mockedUseUpdateSettings.mockReturnValue({ mutate } as never);
   });
 
-  it('marks the current accent as selected and switches it when another swatch is pressed', () => {
+  it('marks the current palette as selected and switches it when another is pressed', () => {
     renderWithProviders(<AppearanceScreen />);
 
-    expect(screen.getByLabelText('Sky accent').props.accessibilityState.selected).toBe(true);
+    expect(screen.getByLabelText(/^Slate./).props.accessibilityState.selected).toBe(true);
 
-    fireEvent.press(screen.getByLabelText('Coral accent'));
+    fireEvent.press(screen.getByLabelText(/^Ember./));
 
-    expect(useAppStore.getState().accentColor).toBe('coral');
-    expect(mutate).toHaveBeenCalledWith({ accent_color: 'coral' });
-    expect(screen.getByLabelText('Coral accent').props.accessibilityState.selected).toBe(true);
-    expect(screen.getByLabelText('Sky accent').props.accessibilityState.selected).toBe(false);
-  });
-});
-
-describe('accent helpers', () => {
-  it('falls back to the default accent for an unknown key', () => {
-    expect(resolveAccentColor(undefined)).toBe('#5BCFFB');
-  });
-
-  it('picks dark text on light accents and white text on dark accents', () => {
-    expect(onAccentColor('#FFE58A')).toBe('#0B0B0F');
-    expect(onAccentColor('#1A237E')).toBe('#FFFFFF');
+    expect(useAppStore.getState().palette).toBe('ember');
+    expect(mutate).toHaveBeenCalledWith({ palette: 'ember' });
+    expect(screen.getByLabelText(/^Ember./).props.accessibilityState.selected).toBe(true);
+    expect(screen.getByLabelText(/^Slate./).props.accessibilityState.selected).toBe(false);
   });
 });

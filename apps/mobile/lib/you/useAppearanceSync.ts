@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { ACCENT_THEMES, type AccentKey } from '@prism/ui';
+import { PALETTES, type PaletteKey } from '@prism/ui';
 import type { Theme } from '@prism/types';
 import { useAppStore } from '../store/appStore';
 
 const THEMES: readonly string[] = ['light', 'dark', 'system'] satisfies Theme[];
 
-function isAccentKey(value: string | undefined): value is AccentKey {
-  return ACCENT_THEMES.some((theme) => theme.key === value);
+function isPaletteKey(value: string | undefined): value is PaletteKey {
+  return PALETTES.some((palette) => palette.key === value);
 }
 
 function isTheme(value: string | undefined): value is Theme {
@@ -15,7 +15,7 @@ function isTheme(value: string | undefined): value is Theme {
 
 /**
  * Pulls the account's saved appearance (settings.theme and
- * settings.accent_color) into the local store whenever the server value
+ * settings.palette) into the local store whenever the server value
  * changes — that's how a choice made on another device shows up here.
  * Local taps write the store first and the server after
  * (AppearanceScreen), so by the time the server value changes it already
@@ -24,10 +24,10 @@ function isTheme(value: string | undefined): value is Theme {
  */
 export function useAppearanceSync(
   serverTheme: string | undefined,
-  serverAccent: string | undefined,
+  serverPalette: string | undefined,
 ): void {
   const setThemePreference = useAppStore((state) => state.setThemePreference);
-  const setAccentColor = useAppStore((state) => state.setAccentColor);
+  const setPalette = useAppStore((state) => state.setPalette);
 
   useEffect(() => {
     if (isTheme(serverTheme)) {
@@ -36,8 +36,8 @@ export function useAppearanceSync(
   }, [serverTheme, setThemePreference]);
 
   useEffect(() => {
-    if (isAccentKey(serverAccent)) {
-      setAccentColor(serverAccent);
+    if (isPaletteKey(serverPalette)) {
+      setPalette(serverPalette);
     }
-  }, [serverAccent, setAccentColor]);
+  }, [serverPalette, setPalette]);
 }

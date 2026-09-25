@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Theme } from '@prism/types';
-import { DEFAULT_ACCENT_KEY, type AccentKey } from '@prism/ui';
+import { DEFAULT_PALETTE_KEY, type PaletteKey } from '@prism/ui';
 
 /**
  * Persistent, local, non-sensitive app preferences only — see
@@ -16,9 +16,9 @@ import { DEFAULT_ACCENT_KEY, type AccentKey } from '@prism/ui';
 interface AppState {
   themePreference: Theme;
   setThemePreference: (theme: Theme) => void;
-  /** Accent color theme — device-local, like the light/dark cache. */
-  accentColor: AccentKey;
-  setAccentColor: (accent: AccentKey) => void;
+  /** Whole-app color palette — a device-local cache of settings.palette, like the light/dark choice. */
+  palette: PaletteKey;
+  setPalette: (palette: PaletteKey) => void;
   /** One gentle follow-up when a dose isn't marked done. Device-local, like the reminders themselves. */
   missedDoseNudge: boolean;
   setMissedDoseNudge: (on: boolean) => void;
@@ -35,8 +35,8 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       themePreference: 'system',
       setThemePreference: (theme) => set({ themePreference: theme }),
-      accentColor: DEFAULT_ACCENT_KEY,
-      setAccentColor: (accent) => set({ accentColor: accent }),
+      palette: DEFAULT_PALETTE_KEY,
+      setPalette: (palette) => set({ palette }),
       missedDoseNudge: true,
       setMissedDoseNudge: (on) => set({ missedDoseNudge: on }),
       appointmentLeadMinutes: [60],
@@ -47,6 +47,15 @@ export const useAppStore = create<AppState>()(
     {
       name: 'prism-app-preferences',
       storage: createJSONStorage(() => AsyncStorage),
+      // Version 0 saved before palettes existed. Those phones keep the original
+      // colors from the very first frame instead of flashing the new default
+      // while the account's saved choice loads. A fresh install has nothing
+      // saved, so it starts on the calm default.
+      version: 1,
+      migrate: (persisted, version) => {
+        const state = (persisted ?? {}) as Partial<AppState>;
+        return version < 1 ? { ...state, palette: 'prism' as PaletteKey } : state;
+      },
     },
   ),
 );

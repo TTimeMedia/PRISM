@@ -165,8 +165,8 @@ describe('scheduleAppointmentReminder — lead times', () => {
     await scheduleAppointmentReminder(appointment(), false, [1440]);
 
     const { content } = mockSchedule.mock.calls[0]?.[0];
-    expect(content.title).toBe('Endocrinology');
-    expect(content.body).toBe('Tomorrow · Dr. Rivera');
+    expect(content.title).toBe('Prism');
+    expect(content.body).toBe('Endocrinology tomorrow.');
     expect(content.categoryIdentifier).toBe(APPOINTMENT_CATEGORY);
   });
 

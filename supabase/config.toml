@@ -454,3 +454,9 @@ verify_enabled = true
 
 [remotes.production.storage.analytics]
 enabled = true
+
+# send-push is called by Prism itself (an admin action or scheduled job), never
+# by the app, so it authenticates with the PUSH_ADMIN_SECRET header instead of a
+# user JWT. See supabase/functions/send-push/index.ts.
+[functions.send-push]
+verify_jwt = false

@@ -4,31 +4,31 @@ import { useAppStore } from '../../store/appStore';
 
 describe('useAppearanceSync', () => {
   beforeEach(() => {
-    useAppStore.setState({ accentColor: 'cyan', themePreference: 'system' });
+    useAppStore.setState({ palette: 'slate', themePreference: 'system' });
   });
 
-  it("adopts the account's theme and accent when the server values are valid", () => {
-    renderHook(() => useAppearanceSync('dark', 'coral'));
+  it("adopts the account's theme and palette when the server values are valid", () => {
+    renderHook(() => useAppearanceSync('dark', 'ember'));
     expect(useAppStore.getState().themePreference).toBe('dark');
-    expect(useAppStore.getState().accentColor).toBe('coral');
+    expect(useAppStore.getState().palette).toBe('ember');
   });
 
   it('follows a change made on another device', () => {
     let theme: string | undefined = 'dark';
-    let accent: string | undefined = 'coral';
-    const { rerender } = renderHook(() => useAppearanceSync(theme, accent));
+    let palette: string | undefined = 'ember';
+    const { rerender } = renderHook(() => useAppearanceSync(theme, palette));
     theme = 'light';
-    accent = 'violet';
+    palette = 'dusk';
     rerender({});
     expect(useAppStore.getState().themePreference).toBe('light');
-    expect(useAppStore.getState().accentColor).toBe('violet');
+    expect(useAppStore.getState().palette).toBe('dusk');
   });
 
   it('ignores unknown or missing values instead of breaking the theme', () => {
-    useAppStore.setState({ accentColor: 'mint', themePreference: 'dark' });
-    renderHook(() => useAppearanceSync('sepia', 'not-a-real-theme'));
+    useAppStore.setState({ palette: 'forest', themePreference: 'dark' });
+    renderHook(() => useAppearanceSync('sepia', 'not-a-real-palette'));
     renderHook(() => useAppearanceSync(undefined, undefined));
     expect(useAppStore.getState().themePreference).toBe('dark');
-    expect(useAppStore.getState().accentColor).toBe('mint');
+    expect(useAppStore.getState().palette).toBe('forest');
   });
 });

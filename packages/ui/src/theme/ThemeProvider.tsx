@@ -10,6 +10,8 @@ import {
   resolveAccentColor,
 } from '../tokens/colors';
 import type { AccentKey } from '../tokens/colors';
+import { getPalette, paletteTokens } from '../tokens/palettes';
+import type { PaletteKey } from '../tokens/palettes';
 import type { ColorTokens } from '../tokens/colors';
 import { shadow } from '../tokens/shadows';
 import type { ShadowTokens } from '../tokens/shadows';
@@ -23,8 +25,8 @@ export interface ResolvedTheme {
   accent: string;
   /** Readable text/icon color to place on top of an accent fill. */
   onAccent: string;
-  spectrum: typeof spectrum;
-  spectrumGradient: typeof spectrumGradient;
+  spectrum: Record<keyof typeof spectrum, string>;
+  spectrumGradient: readonly string[];
   destructive: string;
   shadow: ShadowTokens;
 }
@@ -42,29 +44,46 @@ export interface ThemeProviderProps {
   preference: Theme;
   /** The user's chosen accent theme; defaults to the original PRISM cyan. */
   accent?: AccentKey;
+  /**
+   * The whole-app color palette. Leave it out for the original Prism
+   * colors. It sets the spectrum, the accent and the ground; an explicit
+   * `accent` still wins for the primary-action color.
+   */
+  palette?: PaletteKey;
   children: React.ReactNode;
 }
 
-export function ThemeProvider({ preference, accent, children }: ThemeProviderProps) {
+export function ThemeProvider({ preference, accent, palette, children }: ThemeProviderProps) {
   const systemScheme = useRNColorScheme();
 
   const value = useMemo<ResolvedTheme>(() => {
     const scheme: 'light' | 'dark' =
       preference === 'system' ? (systemScheme === 'light' ? 'light' : 'dark') : preference;
 
-    const accentColor = resolveAccentColor(accent);
+    const chosen = palette ? getPalette(palette) : null;
+    const accentColor = accent
+      ? resolveAccentColor(accent)
+      : (chosen?.accent ?? resolveAccentColor(undefined));
 
     return {
       scheme,
-      colors: scheme === 'dark' ? darkTokens : lightTokens,
+      colors: chosen ? paletteTokens(chosen, scheme) : scheme === 'dark' ? darkTokens : lightTokens,
       accent: accentColor,
       onAccent: onAccentColor(accentColor),
-      spectrum,
-      spectrumGradient,
+      spectrum: chosen ? chosen.spectrum : spectrum,
+      spectrumGradient: chosen
+        ? [
+            chosen.spectrum.cyan,
+            chosen.spectrum.pink,
+            chosen.spectrum.violet,
+            chosen.spectrum.mint,
+            chosen.spectrum.yellow,
+          ]
+        : spectrumGradient,
       destructive,
       shadow: scheme === 'dark' ? shadow.dark : shadow.light,
     };
-  }, [preference, accent, systemScheme]);
+  }, [preference, accent, palette, systemScheme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

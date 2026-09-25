@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { PRISMHeader, PRISMIconButton, useTheme, useToast } from '@prism/ui';
@@ -18,6 +18,8 @@ import { JournalEntryForm } from '../components/JournalEntryForm';
 export function NewJournalEntryScreen() {
   const theme = useTheme();
   const createJournalEntry = useCreateJournalEntry();
+  // Tapping a mood on the Journey screen starts an entry with it already filled in.
+  const { mood } = useLocalSearchParams<{ mood?: string }>();
   const { session } = useSession();
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
@@ -56,6 +58,7 @@ export function NewJournalEntryScreen() {
         submitLabel="Save entry"
         submitting={createJournalEntry.isPending || uploading}
         showMood={showMood}
+        defaultValues={mood ? { mood } : undefined}
         onSubmit={submit}
       />
     </View>

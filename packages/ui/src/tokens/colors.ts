@@ -138,6 +138,6 @@ function relativeLuminance(hex: string): number {
 export function onAccentColor(accentHex: string): string {
   const luminance = relativeLuminance(accentHex);
   const contrastWithDark = (luminance + 0.05) / (relativeLuminance('#0B0B0F') + 0.05);
-  const contrastWithLight = (1.05) / (luminance + 0.05);
+  const contrastWithLight = 1.05 / (luminance + 0.05);
   return contrastWithDark >= contrastWithLight ? '#0B0B0F' : '#FFFFFF';
 }

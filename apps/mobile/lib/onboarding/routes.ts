@@ -9,6 +9,7 @@ import type { OnboardingStep } from '@prism/types';
  */
 export const ONBOARDING_ROUTE_SEGMENTS: Record<OnboardingStep, string> = {
   philosophy: 'philosophy',
+  colors: 'colors',
   intent: 'intent',
   identity: 'identity',
   care_setup: 'care-setup',
@@ -31,6 +32,7 @@ export const ONBOARDING_ROUTE_SEGMENTS: Record<OnboardingStep, string> = {
  */
 const ONBOARDING_HREFS: Record<OnboardingStep, Href> = {
   philosophy: '/(onboarding)/philosophy',
+  colors: '/(onboarding)/colors',
   intent: '/(onboarding)/intent',
   identity: '/(onboarding)/identity',
   care_setup: '/(onboarding)/care-setup',

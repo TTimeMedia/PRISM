@@ -17,11 +17,7 @@ export function PRISMInput({ label, helperText, error, ...inputProps }: PRISMInp
   const theme = useTheme();
   const [focused, setFocused] = useState(false);
 
-  const borderColor = error
-    ? theme.destructive
-    : focused
-      ? theme.accent
-      : theme.colors.fieldBorder;
+  const borderColor = error ? theme.destructive : focused ? theme.accent : theme.colors.fieldBorder;
 
   return (
     <View style={styles.container}>

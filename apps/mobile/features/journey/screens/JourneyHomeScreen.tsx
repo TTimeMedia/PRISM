@@ -2,8 +2,8 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { Compass, PenLine } from 'lucide-react-native';
-import type { TimelineEvent } from '@prism/types';
+import { PenLine } from 'lucide-react-native';
+import type { JournalEntry, Milestone } from '@prism/types';
 import {
   PRISMButton,
   PRISMErrorState,
@@ -17,22 +17,33 @@ import {
 } from '@prism/ui';
 import { useModules } from '../../../lib/profile/queries';
 import { useJournalEntries, useMilestones } from '../../../lib/journey/queries';
-import { useTimelineEvents } from '../../../lib/journey/timelineQuery';
-import { recordHref } from '../../../lib/journey/recordHref';
-import { HeroCard, ItemRow, ScreenGlow, SectionTitle, useTint } from '../../../components/home';
-import { MODULE_STYLE, moduleStyle } from '../../../components/home/moduleStyle';
+import { EmptyCard, HeroCard, ScreenGlow, SectionTitle, useTint } from '../../../components/home';
+import { MODULE_STYLE } from '../../../components/home/moduleStyle';
 import { TopBar } from '../../../components/home/TopBar';
 import { EntryImage } from '../components/EntryImage';
+import { SUGGESTED_JOURNAL_MOODS } from '../optionLabels';
 
-function formatDay(at: string): string {
-  return new Date(at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+/** A few gentle ways in. Tapping one starts an entry with that word already in the mood box. */
+const CHECK_IN_MOODS = SUGGESTED_JOURNAL_MOODS.slice(0, 6);
+
+function formatDay(date: string): string {
+  return new Date(`${date}T12:00:00`).toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
+function excerpt(text: string, max = 110): string {
+  const clean = text.replace(/\s+/g, ' ').trim();
+  return clean.length > max ? `${clean.slice(0, max).trimEnd()}…` : clean;
 }
 
 /**
- * JOURNEY — Screen 41. Your story: a warm prompt to add to it, the moments
- * you've already kept (with photos), and the timeline. "24 moments
- * recorded," never "24 achievements" — see docs/SCREEN_BIBLE.md Screen 41.
- * A feature that's off says so and can be turned on right here.
+ * JOURNEY — Screen 41. Where you write and reflect: a gentle way in
+ * (how are you today?), your latest entries, and the milestones you've
+ * kept. Everything you've done in order, with the month's counts, lives on
+ * the YOU tab. "24 moments recorded," never "24 achievements" — see
+ * docs/SCREEN_BIBLE.md Screen 41.
  */
 export function JourneyHomeScreen() {
   const theme = useTheme();
@@ -43,13 +54,14 @@ export function JourneyHomeScreen() {
 
   const milestones = useMilestones();
   const journalEntries = useJournalEntries();
-  const timeline = useTimelineEvents();
 
-  const loading = modulesLoading || timeline.isLoading;
-  const momentCount = (milestones.data?.length ?? 0) + (journalEntries.data?.length ?? 0);
-  const events = timeline.data ?? [];
-  // The moments that are stories in themselves: milestones and journal entries.
-  const moments = events.filter((e) => e.moduleKey === 'milestones' || e.moduleKey === 'journal');
+  const loading =
+    modulesLoading ||
+    (milestonesOn && milestones.isLoading) ||
+    (journalOn && journalEntries.isLoading);
+  const entries = [...(journalEntries.data ?? [])].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const kept = [...(milestones.data ?? [])].sort((a, b) => (a.date < b.date ? 1 : -1));
+  const momentCount = entries.length + kept.length;
 
   return (
     <SafeAreaView
@@ -82,96 +94,99 @@ export function JourneyHomeScreen() {
           <PRISMErrorState onRetry={() => refetch()} />
         ) : (
           <>
-            {journalOn || milestonesOn ? (
+            {journalOn ? (
               <HeroCard tint="pink" accentTint="violet">
                 <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]}>
-                  {momentCount > 0 ? 'Add to your story.' : 'Start your story.'}
+                  How are you today?
                 </Text>
                 <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
-                  A few words about today, or a moment you want to keep. It stays private.
+                  Pick a word to start, or just write. It stays private.
                 </Text>
-                <View style={styles.heroActions}>
-                  {journalOn ? (
-                    <View style={styles.heroPrimary}>
-                      <PRISMButton
-                        label="Write an entry"
-                        onPress={() => router.push('/journey/journal/add')}
-                      />
-                    </View>
-                  ) : null}
-                  {milestonesOn ? (
-                    <View style={styles.heroPrimary}>
-                      <PRISMButton
-                        label="Add a milestone"
-                        variant={journalOn ? 'secondary' : 'primary'}
-                        onPress={() => router.push('/journey/milestones/add')}
-                      />
-                    </View>
-                  ) : null}
+                <View style={styles.moods}>
+                  {CHECK_IN_MOODS.map((mood) => (
+                    <MoodChip key={mood} label={mood} />
+                  ))}
                 </View>
+                <PRISMButton
+                  label="Write an entry"
+                  onPress={() => router.push('/journey/journal/add')}
+                />
+              </HeroCard>
+            ) : milestonesOn ? (
+              <HeroCard tint="pink" accentTint="violet">
+                <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]}>
+                  Keep a moment.
+                </Text>
+                <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
+                  A milestone, with a photo if you like. It stays private.
+                </Text>
+                <PRISMButton
+                  label="Add a milestone"
+                  onPress={() => router.push('/journey/milestones/add')}
+                />
               </HeroCard>
             ) : null}
 
-            {moments.length > 0 ? (
+            {journalOn ? (
               <>
                 <SectionTitle
-                  title="Recent moments"
-                  actionLabel="Timeline"
-                  onAction={() => router.push('/you')}
+                  title="Recent entries"
+                  actionLabel={entries.length > 0 ? 'See all' : undefined}
+                  onAction={() => router.push('/journey/journal')}
+                  onAdd={() => router.push('/journey/journal/add')}
+                  addLabel="Write an entry"
                 />
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  style={styles.momentsScroll}
-                  contentContainerStyle={styles.moments}
-                >
-                  {moments.slice(0, 8).map((event) => (
-                    <MomentCard key={event.id} event={event} />
-                  ))}
-                </ScrollView>
+                {entries.length === 0 ? (
+                  <EmptyCard
+                    icon={MODULE_STYLE.journal.icon}
+                    tint="mint"
+                    title="Nothing written yet"
+                    body="A few words about today is a good start. Only you can read it."
+                    primaryLabel="Write an entry"
+                    onPrimary={() => router.push('/journey/journal/add')}
+                  />
+                ) : (
+                  <View style={styles.list}>
+                    {entries.slice(0, 3).map((entry) => (
+                      <EntryCard key={entry.id} entry={entry} />
+                    ))}
+                  </View>
+                )}
               </>
             ) : null}
 
-            <SectionTitle title="Your story" />
-            <View style={styles.list}>
-              <ItemRow
-                icon={Compass}
-                tint="cyan"
-                title="Timeline"
-                subtitle={
-                  events.length > 0
-                    ? `${events.length} thing${events.length === 1 ? '' : 's'}, in order`
-                    : 'Everything you add, in order.'
-                }
-                onPress={() => router.push('/you')}
-              />
-              {milestonesOn ? (
-                <ItemRow
-                  icon={MODULE_STYLE.milestones.icon}
-                  tint="pink"
+            {milestonesOn ? (
+              <>
+                <SectionTitle
                   title="Milestones"
-                  subtitle={
-                    (milestones.data?.length ?? 0) > 0
-                      ? `${milestones.data?.length} kept`
-                      : 'Nothing kept yet. Tap to add one.'
-                  }
-                  onPress={() => router.push('/journey/milestones')}
+                  actionLabel={kept.length > 0 ? 'See all' : undefined}
+                  onAction={() => router.push('/journey/milestones')}
+                  onAdd={() => router.push('/journey/milestones/add')}
+                  addLabel="Add a milestone"
                 />
-              ) : null}
-              {journalOn ? (
-                <ItemRow
-                  icon={MODULE_STYLE.journal.icon}
-                  tint="mint"
-                  title="Journal"
-                  subtitle={
-                    (journalEntries.data?.length ?? 0) > 0
-                      ? `${journalEntries.data?.length} entries`
-                      : 'Nothing written yet. Tap to start.'
-                  }
-                  onPress={() => router.push('/journey/journal')}
-                />
-              ) : null}
-            </View>
+                {kept.length === 0 ? (
+                  <EmptyCard
+                    icon={MODULE_STYLE.milestones.icon}
+                    tint="pink"
+                    title="No milestones yet"
+                    body="Mark the moments that matter, with a photo if you like."
+                    primaryLabel="Add a milestone"
+                    onPrimary={() => router.push('/journey/milestones/add')}
+                  />
+                ) : (
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={styles.momentsScroll}
+                    contentContainerStyle={styles.moments}
+                  >
+                    {kept.slice(0, 8).map((milestone) => (
+                      <MilestoneCard key={milestone.id} milestone={milestone} />
+                    ))}
+                  </ScrollView>
+                )}
+              </>
+            ) : null}
 
             {!journalOn && !milestonesOn ? (
               <View style={styles.hint}>
@@ -193,41 +208,109 @@ export function JourneyHomeScreen() {
   );
 }
 
-/** One kept moment as a small story card: a photo if there is one, otherwise a colored block. */
-function MomentCard({ event }: { event: TimelineEvent }) {
+function MoodChip({ label }: { label: string }) {
   const theme = useTheme();
-  const style = moduleStyle(event.moduleKey);
-  const colors = useTint(style.tint);
-  const Icon = event.moduleKey === 'journal' ? PenLine : style.icon;
-
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${event.title}, ${formatDay(event.at)}`}
-      onPress={() => router.push(recordHref(event.moduleKey, event.sourceId))}
+      accessibilityLabel={`Start an entry feeling ${label.toLowerCase()}`}
+      onPress={() => router.push({ pathname: '/journey/journal/add', params: { mood: label } })}
       style={({ pressed }) => [
-        styles.moment,
+        styles.moodChip,
+        {
+          backgroundColor: theme.colors.field,
+          borderColor: theme.colors.fieldBorder,
+          opacity: pressed ? 0.85 : 1,
+        },
+      ]}
+    >
+      <Text style={[styles.moodLabel, { color: theme.colors.text.primary }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
+/** A journal entry as a small card: its date, its first lines, and the mood if there was one. */
+function EntryCard({ entry }: { entry: JournalEntry }) {
+  const theme = useTheme();
+  const colors = useTint('mint');
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${entry.title?.trim() || 'Journal entry'}, ${formatDay(entry.date)}`}
+      onPress={() => router.push(`/journey/journal/${entry.id}`)}
+      style={({ pressed }) => [
+        styles.entry,
         {
           backgroundColor: theme.colors.surface,
-          borderColor: colors.border,
-          opacity: pressed ? 0.88 : 1,
+          borderColor: theme.colors.border.default,
+          opacity: pressed ? 0.9 : 1,
         },
         theme.scheme === 'light' && theme.shadow,
       ]}
     >
-      {event.imagePath ? (
-        <EntryImage path={event.imagePath} label={event.title} height={104} />
+      <View style={styles.entryTop}>
+        <View style={[styles.entryIcon, { backgroundColor: colors.tile }]}>
+          <PenLine size={16} color={theme.colors.text.primary} strokeWidth={2.2} />
+        </View>
+        <Text style={[styles.entryDate, { color: theme.colors.text.secondary }]}>
+          {formatDay(entry.date)}
+        </Text>
+        {entry.mood ? (
+          <View style={[styles.moodPill, { borderColor: theme.colors.border.default }]}>
+            <Text style={[styles.moodPillText, { color: theme.colors.text.secondary }]}>
+              {entry.mood}
+            </Text>
+          </View>
+        ) : null}
+      </View>
+      {entry.title?.trim() ? (
+        <Text style={[styles.entryTitle, { color: theme.colors.text.primary }]} numberOfLines={1}>
+          {entry.title.trim()}
+        </Text>
+      ) : null}
+      <Text style={[styles.entryBody, { color: theme.colors.text.secondary }]} numberOfLines={2}>
+        {excerpt(entry.content)}
+      </Text>
+    </Pressable>
+  );
+}
+
+/** A kept milestone: its photo if it has one, otherwise a soft colored block. */
+function MilestoneCard({ milestone }: { milestone: Milestone }) {
+  const theme = useTheme();
+  const colors = useTint('pink');
+  const Icon = MODULE_STYLE.milestones.icon;
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${milestone.title}, ${formatDay(milestone.date)}`}
+      onPress={() => router.push(`/journey/milestones/${milestone.id}`)}
+      style={({ pressed }) => [
+        styles.milestone,
+        {
+          backgroundColor: theme.colors.surface,
+          borderColor: theme.colors.border.default,
+          opacity: pressed ? 0.9 : 1,
+        },
+        theme.scheme === 'light' && theme.shadow,
+      ]}
+    >
+      {milestone.image_path ? (
+        <EntryImage path={milestone.image_path} label={milestone.title} height={112} />
       ) : (
-        <View style={[styles.momentArt, { backgroundColor: colors.tile }]}>
+        <View style={[styles.milestoneArt, { backgroundColor: colors.tile }]}>
           <Icon size={30} color={theme.colors.text.primary} strokeWidth={1.8} />
         </View>
       )}
-      <View style={styles.momentText}>
-        <Text style={[styles.momentTitle, { color: theme.colors.text.primary }]} numberOfLines={2}>
-          {event.title}
+      <View style={styles.milestoneText}>
+        <Text
+          style={[styles.milestoneTitle, { color: theme.colors.text.primary }]}
+          numberOfLines={2}
+        >
+          {milestone.title}
         </Text>
-        <Text style={[styles.momentDate, { color: theme.colors.text.secondary }]}>
-          {formatDay(event.at)}
+        <Text style={[styles.milestoneDate, { color: theme.colors.text.secondary }]}>
+          {formatDay(milestone.date)}
         </Text>
       </View>
     </Pressable>
@@ -271,12 +354,70 @@ const styles = StyleSheet.create({
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
   },
-  heroActions: {
-    gap: spacing.smd,
-    marginTop: spacing.sm,
+  moods: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+    marginVertical: spacing.xs,
   },
-  heroPrimary: {
-    alignSelf: 'stretch',
+  moodChip: {
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    paddingHorizontal: spacing.md,
+    minHeight: 40,
+    justifyContent: 'center',
+  },
+  moodLabel: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
+    fontWeight: fontWeight.medium as '500',
+  },
+  list: {
+    gap: spacing.sm,
+  },
+  entry: {
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    padding: spacing.md,
+    gap: spacing.xs,
+  },
+  entryTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  entryIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 9,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  entryDate: {
+    flex: 1,
+    fontSize: type.caption.fontSize,
+    lineHeight: type.caption.lineHeight,
+    fontWeight: fontWeight.semibold as '600',
+  },
+  moodPill: {
+    borderRadius: radius.pill,
+    borderWidth: 1,
+    paddingHorizontal: spacing.smd,
+    paddingVertical: 2,
+  },
+  moodPillText: {
+    fontSize: type.caption.fontSize,
+    lineHeight: type.caption.lineHeight,
+  },
+  entryTitle: {
+    fontFamily: fontFamily.display,
+    fontSize: type.bodyL.fontSize,
+    lineHeight: type.bodyL.lineHeight,
+    fontWeight: fontWeight.semibold as '600',
+  },
+  entryBody: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
   },
   momentsScroll: {
     flexGrow: 0,
@@ -287,33 +428,30 @@ const styles = StyleSheet.create({
     paddingRight: spacing.lg,
     paddingBottom: spacing.xs,
   },
-  moment: {
+  milestone: {
     width: 176,
     borderRadius: radius.lg,
-    borderWidth: 1.5,
+    borderWidth: 1,
     overflow: 'hidden',
   },
-  momentArt: {
-    height: 104,
+  milestoneArt: {
+    height: 112,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  momentText: {
+  milestoneText: {
     padding: spacing.smd,
     gap: 2,
     minHeight: 72,
   },
-  momentTitle: {
+  milestoneTitle: {
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
     fontWeight: fontWeight.semibold as '600',
   },
-  momentDate: {
+  milestoneDate: {
     fontSize: type.caption.fontSize,
     lineHeight: type.caption.lineHeight,
-  },
-  list: {
-    gap: spacing.sm,
   },
   hint: {
     gap: spacing.smd,

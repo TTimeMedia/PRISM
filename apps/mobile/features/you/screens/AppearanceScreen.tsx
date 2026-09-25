@@ -1,11 +1,9 @@
 import React from 'react';
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { ArrowLeft, Check } from 'lucide-react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ArrowLeft } from 'lucide-react-native';
 import {
-  ACCENT_THEMES,
-  type AccentKey,
-  onAccentColor,
+  type PaletteKey,
   PRISMErrorState,
   PRISMHeader,
   PRISMIconButton,
@@ -18,6 +16,7 @@ import {
 import type { Theme } from '@prism/types';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppStore } from '../../../lib/store/appStore';
+import { PalettePicker } from '../components/PalettePicker';
 
 const THEME_OPTIONS = [
   { value: 'light' as const, label: 'Light' },
@@ -36,12 +35,12 @@ export function AppearanceScreen() {
   const { data: settings, isLoading, isError, refetch } = useSettings();
   const updateSettings = useUpdateSettings();
   const setThemePreference = useAppStore((state) => state.setThemePreference);
-  const accentColor = useAppStore((state) => state.accentColor);
-  const setAccentColor = useAppStore((state) => state.setAccentColor);
+  const palette = useAppStore((state) => state.palette);
+  const setPalette = useAppStore((state) => state.setPalette);
 
-  const selectAccent = (key: AccentKey) => {
-    setAccentColor(key);
-    updateSettings.mutate({ accent_color: key });
+  const selectPalette = (key: PaletteKey) => {
+    setPalette(key);
+    updateSettings.mutate({ palette: key });
   };
 
   const setTheme = (value: Theme) => {
@@ -64,45 +63,16 @@ export function AppearanceScreen() {
       ) : isError || !settings ? (
         <PRISMErrorState onRetry={() => refetch()} />
       ) : (
-        <View style={styles.content}>
+        <ScrollView contentContainerStyle={styles.content}>
           <PRISMSelect
             label="Theme"
             options={THEME_OPTIONS}
             value={settings.theme}
             onChange={setTheme}
           />
-          <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>
-            Accent color
-          </Text>
-          <View style={styles.swatches} accessibilityRole="radiogroup">
-            {ACCENT_THEMES.map(({ key, label, color }) => {
-              const selected = key === accentColor;
-              return (
-                <Pressable
-                  key={key}
-                  accessibilityRole="radio"
-                  accessibilityLabel={`${label} accent`}
-                  accessibilityState={{ selected }}
-                  onPress={() => selectAccent(key)}
-                  style={styles.swatchItem}
-                >
-                  <View
-                    style={[
-                      styles.swatch,
-                      { backgroundColor: color },
-                      selected && { borderColor: theme.colors.text.primary },
-                    ]}
-                  >
-                    {selected ? <Check size={20} color={onAccentColor(color)} /> : null}
-                  </View>
-                  <Text style={[styles.swatchLabel, { color: theme.colors.text.tertiary }]}>
-                    {label}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-        </View>
+          <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>Colors</Text>
+          <PalettePicker value={palette} onChange={selectPalette} />
+        </ScrollView>
       )}
     </View>
   );
@@ -122,28 +92,5 @@ const styles = StyleSheet.create({
     lineHeight: type.bodyS.lineHeight,
     marginTop: spacing.md,
     marginBottom: spacing.sm,
-  },
-  swatches: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.md,
-  },
-  swatchItem: {
-    alignItems: 'center',
-    width: 64,
-    gap: spacing.xs,
-  },
-  swatch: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    borderWidth: 3,
-    borderColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  swatchLabel: {
-    fontSize: type.bodyS.fontSize,
-    lineHeight: type.bodyS.lineHeight,
   },
 });
