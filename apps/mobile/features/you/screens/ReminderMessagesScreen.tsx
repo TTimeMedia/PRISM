@@ -7,7 +7,6 @@ import {
   MAX_CUSTOM_MESSAGES,
   MAX_MESSAGE_LENGTH,
   MESSAGE_PLACEHOLDERS,
-  SAMPLE_VARS,
   messageOptions,
   renderMessage,
   resolveReminderMessages,
@@ -28,7 +27,9 @@ import {
   type,
   useTheme,
 } from '@prism/ui';
-import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import { useModules, useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import { useAppointments, useMedications } from '../../../lib/care/queries';
+import { reminderSampleFor, type ReminderSample } from '../../../lib/reminders/sampleVars';
 
 const SECTIONS: { kind: ReminderKind; title: string; hint: string }[] = [
   { kind: 'medication', title: 'Medications', hint: 'Pills, patches, gels and creams.' },
@@ -48,6 +49,23 @@ export function ReminderMessagesScreen() {
   const { data: settings, isLoading, isError, refetch } = useSettings();
   const updateSettings = useUpdateSettings();
   const messages = resolveReminderMessages(settings?.reminder_messages);
+  const { data: modules } = useModules();
+  const { data: medications } = useMedications();
+  const { data: appointments } = useAppointments();
+
+  // Preview each kind on what the person actually has reminders for, and only
+  // show the kinds they use. With none on yet, show all three with neutral examples.
+  const on = (key: string) => !!modules?.find((m) => m.module_key === key)?.enabled;
+  const samples = SECTIONS.map((section) => ({
+    ...section,
+    sample: reminderSampleFor(
+      section.kind,
+      on('medications') ? (medications ?? []) : [],
+      on('appointments') ? (appointments ?? []) : [],
+    ),
+  }));
+  const anyOwn = samples.some(({ sample }) => sample.own);
+  const shown = anyOwn ? samples.filter(({ sample }) => sample.own) : samples;
 
   const save = (
     kind: ReminderKind,
@@ -75,12 +93,17 @@ export function ReminderMessagesScreen() {
               ? 'Private notifications is on, so reminders stay generic. Turn it off in Notifications to use this wording.'
               : 'Pick what your reminders say, or write your own.'}
           </Text>
-          {SECTIONS.map(({ kind, title, hint }) => (
+          {shown.map(({ kind, title, hint, sample }) => (
             <KindSection
               key={kind}
               kind={kind}
               title={title}
-              hint={hint}
+              hint={
+                sample.own
+                  ? `Previewed on ${sample.vars.name}${sample.count > 1 ? ` and ${sample.count - 1} more` : ''}.`
+                  : hint
+              }
+              sample={sample}
               messages={messages}
               onSave={(choice) => save(kind, choice)}
             />
@@ -93,13 +116,14 @@ export function ReminderMessagesScreen() {
 
 interface KindSectionProps {
   kind: ReminderKind;
+  sample: ReminderSample;
   title: string;
   hint: string;
   messages: ReminderMessages;
   onSave: (choice: { selected?: string; custom: { id: string; text: string }[] }) => void;
 }
 
-function KindSection({ kind, title, hint, messages, onSave }: KindSectionProps) {
+function KindSection({ kind, sample, title, hint, messages, onSave }: KindSectionProps) {
   const theme = useTheme();
   const [draft, setDraft] = useState('');
   const options = messageOptions(kind, messages);
@@ -128,7 +152,7 @@ function KindSection({ kind, title, hint, messages, onSave }: KindSectionProps) 
       <View style={styles.list} accessibilityRole="radiogroup">
         {options.map((option) => {
           const selected = option.id === selectedId;
-          const preview = renderMessage(option.text, SAMPLE_VARS[kind]);
+          const preview = renderMessage(option.text, sample.vars);
           const isCustom = !builtInIds.has(option.id);
           return (
             <View
@@ -214,7 +238,7 @@ function KindSection({ kind, title, hint, messages, onSave }: KindSectionProps) 
           </View>
           {draft.trim() ? (
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
-              Looks like: {renderMessage(draft, SAMPLE_VARS[kind])}
+              Looks like: {renderMessage(draft, sample.vars)}
             </Text>
           ) : null}
           <PRISMButton

@@ -210,15 +210,19 @@ export async function scheduleSnooze(source: {
 export async function scheduleTestReminder(
   notificationPrivacy: boolean,
   messages: ReminderMessages = {},
+  /** What the test is about: the person's own medication or appointment when they have one. */
+  sample?: { kind: ReminderKind; vars: ReminderVars },
 ): Promise<void> {
   if (!isNotificationsSupported) return;
   const soon = new Date(Date.now() + 5000);
+  const kind = sample?.kind ?? 'medication';
+  const vars = sample?.vars ?? { name: 'Vitamin D' };
   await Notifications.scheduleNotificationAsync({
     content: {
       ...messageContent(
         notificationPrivacy,
-        'medication',
-        { name: 'Your medication', time: clockLabel(soon), when: 'now' },
+        kind,
+        { ...vars, time: clockLabel(soon), when: 'now' },
         messages,
       ),
       categoryIdentifier: MEDICATION_CATEGORY,

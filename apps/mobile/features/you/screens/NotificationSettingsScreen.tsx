@@ -16,7 +16,9 @@ import {
   useTheme,
 } from '@prism/ui';
 import { resolveReminderMessages, type PushCategory } from '@prism/types';
-import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import { useModules, useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import { useAppointments, useMedications } from '../../../lib/care/queries';
+import { reminderSampleFor } from '../../../lib/reminders/sampleVars';
 import { resolvePushPreferences } from '../../../lib/push/pushToken';
 import { useAppStore } from '../../../lib/store/appStore';
 import {
@@ -43,7 +45,21 @@ export function NotificationSettingsScreen() {
   const setMissedDoseNudge = useAppStore((state) => state.setMissedDoseNudge);
   const leadMinutes = useAppStore((state) => state.appointmentLeadMinutes);
   const setLeadMinutes = useAppStore((state) => state.setAppointmentLeadMinutes);
+  const { data: modules } = useModules();
+  const { data: medications } = useMedications();
+  const { data: appointments } = useAppointments();
   const pushPreferences = resolvePushPreferences(settings?.push_preferences);
+  // The test reminder is about something the person actually has reminders on for.
+  const testSample = () => {
+    const on = (key: string) => !!modules?.find((m) => m.module_key === key)?.enabled;
+    const meds = on('medications') ? (medications ?? []) : [];
+    const appts = on('appointments') ? (appointments ?? []) : [];
+    for (const kind of ['medication', 'injection', 'appointment'] as const) {
+      const sample = reminderSampleFor(kind, meds, appts);
+      if (sample.own) return { kind, vars: sample.vars };
+    }
+    return undefined;
+  };
   const setPush = (category: PushCategory, value: boolean) =>
     updateSettings.mutate({ push_preferences: { ...pushPreferences, [category]: value } });
   const [testSent, setTestSent] = useState(false);
@@ -167,6 +183,7 @@ export function NotificationSettingsScreen() {
                 await scheduleTestReminder(
                   settings.notification_privacy,
                   resolveReminderMessages(settings.reminder_messages),
+                  testSample(),
                 );
                 setTestSent(true);
               }}

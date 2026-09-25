@@ -2,18 +2,28 @@ import React from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { ReminderMessagesScreen } from '../ReminderMessagesScreen';
-import { useSettings, useUpdateSettings } from '../../../../lib/profile/queries';
+import { useModules, useSettings, useUpdateSettings } from '../../../../lib/profile/queries';
+import { useAppointments, useMedications } from '../../../../lib/care/queries';
 
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
 }));
 
 jest.mock('../../../../lib/profile/queries', () => ({
+  useModules: jest.fn(),
   useSettings: jest.fn(),
   useUpdateSettings: jest.fn(),
 }));
 
+jest.mock('../../../../lib/care/queries', () => ({
+  useMedications: jest.fn(),
+  useAppointments: jest.fn(),
+}));
+
 const mockedUseSettings = useSettings as jest.MockedFunction<typeof useSettings>;
+const mockedUseModules = useModules as jest.MockedFunction<typeof useModules>;
+const mockedUseMedications = useMedications as jest.MockedFunction<typeof useMedications>;
+const mockedUseAppointments = useAppointments as jest.MockedFunction<typeof useAppointments>;
 const mockedUseUpdateSettings = useUpdateSettings as jest.MockedFunction<typeof useUpdateSettings>;
 const mutate = jest.fn();
 
@@ -30,6 +40,11 @@ describe('ReminderMessagesScreen', () => {
     jest.clearAllMocks();
     settings();
     mockedUseUpdateSettings.mockReturnValue({ mutate } as never);
+    mockedUseModules.mockReturnValue({
+      data: ['medications', 'appointments'].map((module_key) => ({ module_key, enabled: true })),
+    } as never);
+    mockedUseMedications.mockReturnValue({ data: [] } as never);
+    mockedUseAppointments.mockReturnValue({ data: [] } as never);
   });
 
   it('shows each built-in version as it will read, with the first one chosen', () => {
@@ -98,6 +113,36 @@ describe('ReminderMessagesScreen', () => {
         appointment: { selected: undefined, custom: [] },
       }),
     });
+  });
+
+  it('previews on the medications a person actually has, and only shows the kinds they use', () => {
+    mockedUseMedications.mockReturnValue({
+      data: [
+        {
+          id: 'm1',
+          name: 'Testosterone cypionate',
+          form: 'injection',
+          dosage_text: '0.5 ml',
+          frequency_config: { time_of_day: '20:00' },
+          reminder_enabled: true,
+        },
+        {
+          id: 'm2',
+          name: 'Vitamin D',
+          form: 'pill',
+          frequency_config: null,
+          reminder_enabled: false,
+        },
+      ],
+    } as never);
+    renderWithProviders(<ReminderMessagesScreen />);
+
+    expect(screen.getByLabelText('Shot day: Testosterone cypionate at 8:00 PM.')).toBeTruthy();
+    expect(screen.getByText('Previewed on Testosterone cypionate.')).toBeTruthy();
+    // Nothing they use is a plain medication or an appointment, so those are left out.
+    expect(screen.queryByText('Medications')).toBeNull();
+    expect(screen.queryByText('Appointments')).toBeNull();
+    expect(screen.queryByLabelText(/Vitamin D/)).toBeNull();
   });
 
   it('says reminders stay generic while Private notifications is on', () => {

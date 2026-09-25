@@ -9,8 +9,14 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('../../../../lib/profile/queries', () => ({
+  useModules: jest.fn(() => ({ data: [] })),
   useSettings: jest.fn(),
   useUpdateSettings: jest.fn(),
+}));
+
+jest.mock('../../../../lib/care/queries', () => ({
+  useMedications: jest.fn(() => ({ data: [] })),
+  useAppointments: jest.fn(() => ({ data: [] })),
 }));
 
 jest.mock('../../../../lib/reminders/notificationScheduler', () => ({
