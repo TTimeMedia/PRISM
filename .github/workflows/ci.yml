@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Per docs/SECURITY.md §19 ("before every release, verify... RLS
+# tested... Every attempt must fail") and the Hardening milestone
+# (docs/BUILD_STATUS.md § Hardening) — this is the automated half of
+# that requirement; a real local Supabase stack (`supabase start`) is
+# still the more authoritative pre-release check (see
+# supabase/tests/database/rls_isolation_test.sql's own header).
+jobs:
+  quality:
+    name: Typecheck, lint, test, build
+    runs-on: ubuntu-latest
+    env:
+      # Dummy values — never real secrets. Only needed so mobile's own
+      # requireEnv() fail-fast check doesn't block typecheck/lint/test,
+      # which never make a real Supabase call. See .env.example.
+      EXPO_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm -r typecheck
+
+      - run: pnpm -r lint
+
+      - run: pnpm -r test
+
+      - run: pnpm format:check
+
+      - run: pnpm -r build
+
+  database-rls:
+    name: RLS adversarial test suite
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: prism_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: prism_ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set default search_path (extensions schema for gen_random_uuid())
+        run: psql -c "alter database prism_ci set search_path = public, extensions, auth, storage;"
+
+      - name: Apply the Supabase auth/storage stand-in (test-only — see the file's own header)
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/database/00_ci_standin_schema.sql
+
+      - name: Apply every PRISM migration, in order
+        run: |
+          for f in $(ls supabase/migrations/*.sql | sort); do
+            echo "::group::$f"
+            psql -v ON_ERROR_STOP=1 -f "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Run the RLS adversarial test suite
+        run: psql -v ON_ERROR_STOP=1 -f supabase/tests/database/rls_isolation_test.sql

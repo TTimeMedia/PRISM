@@ -1,0 +1,141 @@
+import React from 'react';
+import { router } from 'expo-router';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import {
+  ArrowLeft,
+  Bell,
+  CalendarDays,
+  Download,
+  HelpCircle,
+  Palette,
+  ShieldCheck,
+  Sliders,
+  UserRound,
+  Accessibility as AccessibilityIcon,
+} from 'lucide-react-native';
+import {
+  PRISMButton,
+  PRISMHeader,
+  PRISMIconButton,
+  PRISMListItem,
+  PRISMSection,
+  spacing,
+  useTheme,
+} from '@prism/ui';
+import { useProfile } from '../../../lib/profile/queries';
+import { signOut } from '../../../lib/auth/actions';
+
+/**
+ * Screen 53 — Settings (opened from the menu; the YOU tab itself shows the
+ * Timeline). Primary settings hub — Me / PRISM / Privacy /
+ * Preferences / Data / About, per docs/SCREEN_BIBLE.md §9. Sign out was
+ * added here in Milestone 02, before the rest of this screen existed; it
+ * stays at the bottom now that the full hub is built.
+ */
+export function YouScreen() {
+  const theme = useTheme();
+  const { data: profile } = useProfile();
+
+  return (
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <PRISMHeader
+        title="Settings."
+        subtitle={profile?.display_name || 'Your information belongs to you.'}
+        leading={
+          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+            <ArrowLeft size={22} color={theme.colors.text.primary} />
+          </PRISMIconButton>
+        }
+      />
+      <ScrollView contentContainerStyle={styles.content}>
+        <PRISMSection title="Me">
+          <PRISMListItem
+            title="Profile"
+            leading={<UserRound size={20} color={theme.accent} />}
+            onPress={() => router.push('/you/profile')}
+          />
+        </PRISMSection>
+
+        <PRISMSection title="Prism">
+          <PRISMListItem
+            title="Customize Prism"
+            subtitle="Choose what shows up for you."
+            leading={<Sliders size={20} color={theme.spectrum.violet} />}
+            onPress={() => router.push('/you/customize')}
+          />
+        </PRISMSection>
+
+        <PRISMSection title="Privacy">
+          <PRISMListItem
+            title="Privacy & security"
+            leading={<ShieldCheck size={20} color={theme.spectrum.mint} />}
+            onPress={() => router.push('/you/privacy')}
+          />
+        </PRISMSection>
+
+        <PRISMSection title="Preferences">
+          <PRISMListItem
+            title="Notifications"
+            leading={<Bell size={20} color={theme.spectrum.yellow} />}
+            onPress={() => router.push('/you/notifications')}
+          />
+          <PRISMListItem
+            title="Appearance"
+            leading={<Palette size={20} color={theme.spectrum.pink} />}
+            onPress={() => router.push('/you/appearance')}
+          />
+          <PRISMListItem
+            title="Accessibility"
+            leading={<AccessibilityIcon size={20} color={theme.accent} />}
+            onPress={() => router.push('/you/accessibility')}
+          />
+          <PRISMListItem
+            title="Calendar"
+            subtitle="Sync appointments to your device calendar."
+            leading={<CalendarDays size={20} color={theme.spectrum.mint} />}
+            onPress={() => router.push('/you/calendar')}
+          />
+        </PRISMSection>
+
+        <PRISMSection title="Data">
+          <PRISMListItem
+            title="Data & export"
+            leading={<Download size={20} color={theme.spectrum.violet} />}
+            onPress={() => router.push('/you/data')}
+          />
+        </PRISMSection>
+
+        <PRISMSection title="About">
+          <PRISMListItem
+            title="How Prism works"
+            leading={<HelpCircle size={20} color={theme.spectrum.cyan} />}
+            onPress={() => router.push('/you/how-it-works')}
+          />
+          <PRISMListItem
+            title="About Prism"
+            leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
+            onPress={() => router.push('/you/about')}
+          />
+          <PRISMListItem
+            title="Support"
+            leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
+            onPress={() => router.push('/you/support')}
+          />
+        </PRISMSection>
+
+        <PRISMButton label="Sign out" variant="secondary" onPress={() => signOut()} />
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flexGrow: 1,
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.xl,
+  },
+});
