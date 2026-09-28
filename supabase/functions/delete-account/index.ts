@@ -69,7 +69,8 @@ Deno.serve(async (req: Request) => {
 });
 
 /**
- * Empties a user's `{userId}/...` prefix in every private bucket. Not
+ * Empties a user's `{userId}/...` prefix in every private bucket,
+ * subfolders included. Not
  * transactional with the `auth.users` deletion below — storage has no
  * such primitive — so this runs first: a storage failure aborts before
  * any account state is destroyed, and a user left with a purged
@@ -81,19 +82,47 @@ async function deleteUserStorageObjects(
   userId: string,
 ): Promise<void> {
   for (const bucket of USER_OWNED_BUCKETS) {
-    // 1000 is Supabase Storage's own max page size; P0 buckets hold at
-    // most a handful of objects per user (a single profile photo today),
-    // so one page is enough.
-    const { data: objects, error: listError } = await adminClient.storage
-      .from(bucket)
-      .list(userId, { limit: 1000 });
-    if (listError) throw listError;
-    if (!objects || objects.length === 0) continue;
-
-    const paths = objects.map((object) => `${userId}/${object.name}`);
-    const { error: removeError } = await adminClient.storage.from(bucket).remove(paths);
-    if (removeError) throw removeError;
+    const paths = await listFilesUnder(adminClient, bucket, userId);
+    for (let i = 0; i < paths.length; i += REMOVE_BATCH) {
+      const { error: removeError } = await adminClient.storage
+        .from(bucket)
+        .remove(paths.slice(i, i + REMOVE_BATCH));
+      if (removeError) throw removeError;
+    }
   }
+}
+
+/** Supabase Storage's own max page size for list(). */
+const LIST_PAGE = 1000;
+/** Kept well under the storage API's per-request limit. */
+const REMOVE_BATCH = 100;
+
+/**
+ * Every file path under `prefix`, including subfolders. `list()` is not
+ * recursive: it returns a subfolder (e.g. `{userId}/milestones`) as an
+ * entry with a null `id`, and removing that name deletes nothing. Photos
+ * for milestones and journal entries live one level down, so they must be
+ * walked into — otherwise they survive the account they belonged to.
+ */
+async function listFilesUnder(
+  adminClient: ReturnType<typeof createClient>,
+  bucket: string,
+  prefix: string,
+): Promise<string[]> {
+  const files: string[] = [];
+  for (let offset = 0; ; offset += LIST_PAGE) {
+    const { data: entries, error } = await adminClient.storage
+      .from(bucket)
+      .list(prefix, { limit: LIST_PAGE, offset });
+    if (error) throw error;
+    for (const entry of entries ?? []) {
+      const path = `${prefix}/${entry.name}`;
+      if (entry.id === null) files.push(...(await listFilesUnder(adminClient, bucket, path)));
+      else files.push(path);
+    }
+    if (!entries || entries.length < LIST_PAGE) break;
+  }
+  return files;
 }
 
 function jsonResponse(body: unknown, status: number): Response {
