@@ -108,14 +108,14 @@ describe('TimelineScreen (the YOU tab)', () => {
     expect(screen.getByText('moments kept')).toBeTruthy();
   });
 
-  it('filters the timeline to one kind of thing', () => {
+  it('shows every kind of thing in one list, with no filters', () => {
     renderWithProviders(<TimelineScreen />);
 
     expect(screen.getAllByText('Estradiol').length).toBe(2);
-    fireEvent.press(screen.getByText('Moments'));
-    expect(screen.queryByText('Estradiol')).toBeNull();
     expect(screen.getByText('Feeling steady')).toBeTruthy();
     expect(screen.getByText('Chose my name')).toBeTruthy();
+    expect(screen.queryByText('Moments')).toBeNull();
+    expect(screen.queryByText('Doses')).toBeNull();
   });
 
   it('opens the original record when an event is tapped', () => {

@@ -1,10 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { router } from 'expo-router';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   PRISMButton,
-  PRISMChipGroup,
   PRISMErrorState,
   PRISMSkeleton,
   PRISMTimeline,
@@ -24,28 +23,6 @@ import { TopBar } from '../../../components/home/TopBar';
 import { eventColor } from '../eventDisplay';
 import { EntryImage } from '../components/EntryImage';
 import { TimelinePrompts } from '../components/TimelinePrompts';
-
-type Filter = 'all' | 'doses' | 'appointments' | 'moments';
-
-const FILTERS: { value: Filter; label: string }[] = [
-  { value: 'all', label: 'All' },
-  { value: 'doses', label: 'Doses' },
-  { value: 'appointments', label: 'Appointments' },
-  { value: 'moments', label: 'Moments' },
-];
-
-function matchesFilter(event: TimelineEvent, filter: Filter): boolean {
-  switch (filter) {
-    case 'doses':
-      return event.moduleKey === 'medications';
-    case 'appointments':
-      return event.moduleKey === 'appointments';
-    case 'moments':
-      return event.moduleKey === 'milestones' || event.moduleKey === 'journal';
-    default:
-      return true;
-  }
-}
 
 /** Counts for the current month: what happened, never how well. */
 export function monthSummary(events: readonly TimelineEvent[], now: Date = new Date()) {
@@ -73,7 +50,7 @@ function initialsOf(name: string | null | undefined): string {
 /**
  * The YOU tab: you, and your record. Who you are (photo, name, how long
  * you've been here), what this month held in plain counts, and the whole
- * Timeline of everything you've kept, filterable. Journey is where you
+ * Timeline of everything you've kept. Journey is where you
  * write and reflect; this is where it all adds up. Tapping an event opens
  * its original record: the Timeline never duplicates data, it's a view.
  */
@@ -83,11 +60,9 @@ export function TimelineScreen() {
   const { data: profile } = useProfile();
   const { data: photoUrl } = useSignedProfilePhotoUrl(profile?.profile_photo_url);
   const { data: events, isLoading, isError, refetch } = useTimelineEvents();
-  const [filter, setFilter] = useState<Filter>('all');
 
   const all = useMemo(() => events ?? [], [events]);
   const summary = useMemo(() => monthSummary(all), [all]);
-  const visible = useMemo(() => all.filter((event) => matchesFilter(event, filter)), [all, filter]);
   const name = profile?.display_name?.trim();
   const since = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
@@ -154,11 +129,6 @@ export function TimelineScreen() {
       </ScrollView>
 
       <Text style={[styles.title, { color: theme.colors.text.primary }]}>Your timeline</Text>
-      <PRISMChipGroup
-        options={FILTERS}
-        value={[filter]}
-        onChange={(next) => setFilter((next[0] as Filter | undefined) ?? 'all')}
-      />
     </View>
   );
 
@@ -187,21 +157,15 @@ export function TimelineScreen() {
           contentContainerStyle={styles.content}
           header={header}
           empty={
-            all.length === 0 ? (
-              <View>
-                <Text style={[styles.emptyBody, { color: theme.colors.text.secondary }]}>
-                  Milestones, journal entries, appointments and doses all land here, in order. Add
-                  one to begin.
-                </Text>
-                <TimelinePrompts variant="list" />
-              </View>
-            ) : (
+            <View>
               <Text style={[styles.emptyBody, { color: theme.colors.text.secondary }]}>
-                Nothing here for this filter yet.
+                Milestones, journal entries, appointments and doses all land here, in order. Add one
+                to begin.
               </Text>
-            )
+              <TimelinePrompts variant="list" />
+            </View>
           }
-          events={visible.map((event) => ({
+          events={all.map((event) => ({
             id: event.id,
             color: eventColor(theme, event.moduleKey),
             title: event.title,
