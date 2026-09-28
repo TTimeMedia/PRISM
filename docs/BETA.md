@@ -69,7 +69,7 @@ With the test account holding a profile photo, a milestone photo and a journal p
 ### 1e. Before the first outside tester
 
 - [x] Confirm `support@ttimemedia.org` receives mail (confirmed by the owner 2026-09-28). Send one from You → Support → Report a problem.
-- [ ] Privacy policy draft names Expo push (see `DECISIONS.md` "Outside services Prism uses") and is published at the URL testers will see. _2026-09-28: Expo push and the push token added to `docs/website/prism.html`; publishing to `www.ttimemedia.org/prism` pending._ External TestFlight requires a privacy policy URL.
+- [x] Privacy policy draft names Expo push (see `DECISIONS.md` "Outside services Prism uses") and is published at the URL testers will see: **https://www.ttimemedia.org/prism** (live 2026-09-28, from `public/prism.html` in `rageinstall/ttimemedia.org`; legal review still required before public launch). External TestFlight requires a privacy policy URL.
 - [x] Choose distribution (§2): **TestFlight** (owner, 2026-09-28).
 
 ---
