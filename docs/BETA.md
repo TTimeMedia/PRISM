@@ -64,8 +64,7 @@ With the test account holding a profile photo, a milestone photo and a journal p
 
 - [x] Delete from You → Data & Export → Delete Account (2026-09-28, throwaway account)
 - [x] Dashboard: the `auth.users` row is gone, and no rows remain for that id in any table. Checked as "no row in any table whose owner no longer exists"; before deletion the account had 12 rows.
-- [ ] Storage: nothing left under that id in `profile-photos` or `memories`. **Failed 2026-09-28:** the profile photo was removed, but the milestone and journal photos were not. `list()` isn't recursive, so files in `{id}/milestones/` and `{id}/journal/` were skipped. The fix walks subfolders and was deployed the same day (`delete-account` version 4). The three photos left behind by already-deleted accounts were removed through the storage API, and no file now belongs to a missing account. **Re-run this check with a fresh throwaway account** to prove the fix.
-- [ ] Signing in again with the old email fails normally, without revealing that the account used to exist
+- [x] Storage: nothing left under that id in `profile-photos` or `memories`. **Passed on re-run 2026-09-28** with a fresh account holding a milestone photo and a journal photo: checked by saved id, 0 rows and 0 files remain, and no file anywhere belongs to a missing account. _First run failed:_ the profile photo was removed, but the milestone and journal photos were not. `list()` isn't recursive, so files in `{id}/milestones/` and `{id}/journal/` were skipped. The fix walks subfolders and was deployed the same day (`delete-account` version 4). The three photos left behind by already-deleted accounts were removed through the storage API, and no file now belongs to a missing account.- [x] Signing in again with the old email fails normally, without revealing that the account used to exist (2026-09-28)
 
 ### 1e. Before the first outside tester
 

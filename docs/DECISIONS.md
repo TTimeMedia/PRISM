@@ -319,7 +319,7 @@ The app includes no analytics, crash-reporting or advertising SDKs.
 **Date:** 2026-09-23
 **Status:** Active (supersedes "Delete Account is real, working UI up to the one boundary only a server can cross")
 **Reason:** The client UI was complete; only the server side was missing.
-**Implications:** `delete-account` is deployed to the hosted project. It identifies the caller from their own JWT, empties their prefixes in every private bucket, then deletes the `auth.users` row, which cascades to every table. It still needs one end-to-end check on a real account before Beta invites go out (see `docs/BETA.md`).
+**Implications:** `delete-account` is deployed to the hosted project. It identifies the caller from their own JWT, empties their prefixes in every private bucket (including subfolders such as `milestones/` and `journal/`), then deletes the `auth.users` row, which cascades to every table. Verified end to end on 2026-09-28 (see `docs/BETA.md` §1d).
 
 ### Colour is a whole-app palette saved to the account and never labelled by gender
 
