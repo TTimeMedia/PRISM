@@ -68,8 +68,28 @@ const timeline = (data: unknown[]) =>
   } as never);
 
 describe('monthSummary', () => {
-  it('counts this month by kind and ignores other months', () => {
-    expect(monthSummary(EVENTS, NOW)).toEqual({ doses: 2, appointments: 1, moments: 1 });
+  // Sept 20, 2026, mid-afternoon on the phone.
+  const today = new Date(2026, 8, 20, 15);
+  const local = (day: number) => new Date(2026, 8, day, 9).toISOString();
+  const dateOnly = (date: string) => `${date}T12:00:00.000Z`;
+
+  const events = [
+    { id: '1', moduleKey: 'medications', at: local(2) },
+    { id: '2', moduleKey: 'medications', at: local(2) }, // same day: counts once
+    { id: '3', moduleKey: 'medications', at: local(5) },
+    { id: '4', moduleKey: 'journal', at: dateOnly('2026-09-05') }, // same day as a dose
+    { id: '5', moduleKey: 'milestones', at: dateOnly('2026-09-10') },
+    { id: '6', moduleKey: 'appointments', at: local(12) }, // not a check-in
+    { id: '7', moduleKey: 'journal', at: dateOnly('2026-09-25') }, // future day: not a check-in
+    { id: '8', moduleKey: 'journal', at: dateOnly('2026-08-31') }, // last month
+  ] as never[];
+
+  it('counts days checked in, entries written and moments kept for this month', () => {
+    expect(monthSummary(events, today)).toEqual({ checkedInDays: 3, entries: 2, moments: 1 });
+  });
+
+  it('is all zeros with nothing logged', () => {
+    expect(monthSummary([], today)).toEqual({ checkedInDays: 0, entries: 0, moments: 0 });
   });
 });
 
@@ -103,9 +123,11 @@ describe('TimelineScreen (the YOU tab)', () => {
     renderWithProviders(<TimelineScreen />);
 
     expect(screen.getByText('This month')).toBeTruthy();
-    expect(screen.getByText('doses logged')).toBeTruthy();
-    expect(screen.getByText('appointments')).toBeTruthy();
+    expect(screen.getByText(/^days? checked in$/)).toBeTruthy();
+    expect(screen.getByText('entry written')).toBeTruthy();
     expect(screen.getByText('moments kept')).toBeTruthy();
+    expect(screen.queryByText('doses logged')).toBeNull();
+    expect(screen.queryByText('appointments')).toBeNull();
   });
 
   it('shows every kind of thing in one list, with no filters', () => {
