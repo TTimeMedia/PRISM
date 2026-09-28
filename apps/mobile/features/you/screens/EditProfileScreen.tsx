@@ -54,8 +54,8 @@ export function EditProfileScreen() {
                 display_name: profile.display_name ?? '',
                 pronouns: profile.pronouns ?? '',
                 gender: profile.gender ?? '',
-                birthday: profile.birthday ?? '',
-                journey_start_date: profile.journey_start_date ?? '',
+                // null, not '': an empty date must never block saving.
+                birthday: profile.birthday ?? null,
                 profile_photo_url: profile.profile_photo_url ?? null,
               }}
               submitting={updateProfile.isPending}

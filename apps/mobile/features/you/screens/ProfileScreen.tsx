@@ -52,7 +52,6 @@ export function ProfileScreen() {
             <DetailRow label="Pronouns" value={profile.pronouns} />
             <DetailRow label="Gender" value={profile.gender} />
             <DetailRow label="Birthday" value={profile.birthday} />
-            <DetailRow label="Journey start date" value={profile.journey_start_date} />
           </PRISMSection>
           <PRISMButton label="Edit profile" onPress={() => router.push('/you/profile/edit')} />
         </ScrollView>

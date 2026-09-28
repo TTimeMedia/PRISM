@@ -120,19 +120,6 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
           />
         )}
       />
-      <Controller
-        control={control}
-        name="journey_start_date"
-        render={({ field, fieldState }) => (
-          <PRISMDateInput
-            label="Journey start date"
-            value={field.value ?? ''}
-            onChangeText={field.onChange}
-            onBlur={field.onBlur}
-            error={fieldState.error?.message}
-          />
-        )}
-      />
       <View style={styles.submit}>
         <PRISMButton label="Save changes" onPress={handleSubmit(onSubmit)} loading={submitting} />
       </View>
