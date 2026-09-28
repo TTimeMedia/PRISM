@@ -118,7 +118,7 @@ All decisions below were extracted from the original PRISM master source documen
 - **Apple MapKit** (appointment location suggestions, iOS only): the text typed into a Location field, sent by the phone's own MapKit with no Prism key.
 
 The app includes no analytics, crash-reporting or advertising SDKs.
-**Implications:** Adding any service to this list needs the same review and an update to the draft privacy policy (`docs/website/prism.html`). That draft currently names Supabase, Resend and Apple Maps but not Expo push.
+**Implications:** Adding any service to this list needs the same review and an update to the draft privacy policy (`docs/website/prism.html`). As of 2026-09-28 the draft names all of them, including Expo push and the push token.
 
 ## Personalization (Onboarding)
 
