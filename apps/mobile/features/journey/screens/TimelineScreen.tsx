@@ -24,18 +24,43 @@ import { eventColor } from '../eventDisplay';
 import { EntryImage } from '../components/EntryImage';
 import { TimelinePrompts } from '../components/TimelinePrompts';
 
-/** Counts for the current month: what happened, never how well. */
+/**
+ * Counts for the current month: what happened, never how well. No
+ * percentages or streaks, so there is nothing to fall behind on.
+ *  - checkedInDays: distinct days with something the person logged (a dose,
+ *    a journal entry, a milestone). Appointments don't count: their date is
+ *    when they happen, not when anyone checked in. Future days don't count.
+ *  - entries: journal entries written.
+ *  - moments: milestones kept.
+ */
 export function monthSummary(events: readonly TimelineEvent[], now: Date = new Date()) {
-  const inMonth = events.filter((event) => {
-    const at = new Date(event.at);
-    return at.getFullYear() === now.getFullYear() && at.getMonth() === now.getMonth();
-  });
+  const month = localDay(now).slice(0, 7);
+  const today = localDay(now);
+  const inMonth = events.filter((event) => dayOf(event).startsWith(month));
+  const checkedIn = new Set(
+    inMonth.filter((e) => e.moduleKey !== 'appointments' && dayOf(e) <= today).map((e) => dayOf(e)),
+  );
   return {
-    doses: inMonth.filter((e) => e.moduleKey === 'medications').length,
-    appointments: inMonth.filter((e) => e.moduleKey === 'appointments').length,
-    moments: inMonth.filter((e) => e.moduleKey === 'milestones' || e.moduleKey === 'journal')
-      .length,
+    checkedInDays: checkedIn.size,
+    entries: inMonth.filter((e) => e.moduleKey === 'journal').length,
+    moments: inMonth.filter((e) => e.moduleKey === 'milestones').length,
   };
+}
+
+/**
+ * The calendar day an event belongs to. Milestones and journal entries are
+ * stored as a bare date (the timeline sorts them at midday UTC), so their
+ * day is that date as written; timed events use the phone's local day.
+ */
+function dayOf(event: TimelineEvent): string {
+  return event.moduleKey === 'milestones' || event.moduleKey === 'journal'
+    ? event.at.slice(0, 10)
+    : localDay(new Date(event.at));
+}
+
+function localDay(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 function initialsOf(name: string | null | undefined): string {
@@ -123,9 +148,21 @@ export function TimelineScreen() {
         style={styles.chipsScroll}
         contentContainerStyle={styles.chips}
       >
-        <StatChip value={String(summary.doses)} label="doses logged" tint="cyan" />
-        <StatChip value={String(summary.appointments)} label="appointments" tint="yellow" />
-        <StatChip value={String(summary.moments)} label="moments kept" tint="pink" />
+        <StatChip
+          value={String(summary.checkedInDays)}
+          label={summary.checkedInDays === 1 ? 'day checked in' : 'days checked in'}
+          tint="cyan"
+        />
+        <StatChip
+          value={String(summary.entries)}
+          label={summary.entries === 1 ? 'entry written' : 'entries written'}
+          tint="yellow"
+        />
+        <StatChip
+          value={String(summary.moments)}
+          label={summary.moments === 1 ? 'moment kept' : 'moments kept'}
+          tint="pink"
+        />
       </ScrollView>
 
       <Text style={[styles.title, { color: theme.colors.text.primary }]}>Your timeline</Text>
