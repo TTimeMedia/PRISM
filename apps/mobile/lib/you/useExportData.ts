@@ -11,6 +11,7 @@ import type {
   Milestone,
   Module,
   Profile,
+  Reminder,
   Settings,
 } from '@prism/types';
 import { supabase } from '../supabase/client';
@@ -40,6 +41,7 @@ export function useExportData() {
         appointments,
         milestones,
         journalEntries,
+        reminders,
       ] = await Promise.all([
         fetchProfile(),
         fetchSettings(),
@@ -50,6 +52,7 @@ export function useExportData() {
         fetchAppointments(),
         fetchMilestones(),
         fetchJournalEntries(),
+        fetchReminders(),
       ]);
 
       const records: DataExportRecords = {
@@ -62,6 +65,7 @@ export function useExportData() {
         appointments,
         milestones,
         journal_entries: journalEntries,
+        reminders,
       };
       const payload = buildDataExport(records);
       const json = JSON.stringify(payload, null, 2);
@@ -130,6 +134,12 @@ async function fetchMilestones(): Promise<Milestone[]> {
 
 async function fetchJournalEntries(): Promise<JournalEntry[]> {
   const { data, error } = await supabase.from('journal_entries').select('*');
+  if (error) throw error;
+  return data;
+}
+
+async function fetchReminders(): Promise<Reminder[]> {
+  const { data, error } = await supabase.from('reminders').select('*');
   if (error) throw error;
   return data;
 }
