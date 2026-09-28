@@ -104,6 +104,22 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** `MASTER_BUILD_SPEC.md` §17 and `SECURITY.md` §1 specify email + password authentication but do not set a minimum length. This is visible to the user (Sign Up and Reset Password's inline validation error), so it is recorded here rather than left as an undocumented implementation detail, per `BUILD_STATUS.md`'s own rule for implementation-level choices.
 **Implications:** `packages/validation`'s `passwordSchema` enforces 8–72 characters client-side; Supabase Auth's own server-side minimum (6 by default) is a backstop, not the enforced policy. No complexity rules (uppercase/symbol requirements) are imposed — PRISM does not sacrifice usability for a false sense of security (`MASTER_BUILD_SPEC.md` §31, Non-Negotiable Rule 12).
 
+### Outside services Prism uses
+
+**Date:** 2026-09-28
+**Status:** Active
+**Reason:** `SECURITY.md` §6 requires every third-party service that touches user data to be reviewed and named. These are the ones in use as of v0.3.0.
+**Decision:**
+
+- **Supabase** (database, auth, storage, Edge Functions): all account data.
+- **Resend** (auth email, sender `no-reply@ttimemedia.org`): email address and auth links only.
+- **Expo push service** (server push): an opaque device token plus the notification title and body. Reminder text is generic while Private notifications is on. Expo passes the notification to Apple or Google.
+- **Expo EAS Update** (app code delivery): no user data.
+- **Apple MapKit** (appointment location suggestions, iOS only): the text typed into a Location field, sent by the phone's own MapKit with no Prism key.
+
+The app includes no analytics, crash-reporting or advertising SDKs.
+**Implications:** Adding any service to this list needs the same review and an update to the draft privacy policy (`docs/website/prism.html`). That draft currently names Supabase, Resend and Apple Maps but not Expo push.
+
 ## Personalization (Onboarding)
 
 ### Onboarding resumability is driven by an explicit `onboarding_step` column
@@ -112,6 +128,20 @@ All decisions below were extracted from the original PRISM master source documen
 **Status:** Active
 **Reason:** A user who closes the app mid-onboarding must resume exactly where they left off, not at the beginning. Inferring position from field-completeness doesn't work — a skipped optional field (e.g. Identity's Name, which is optional and often left blank) is indistinguishable from a field the user simply hasn't reached yet.
 **Implications:** `profiles.onboarding_step` is written after every onboarding screen's Continue/Skip action, and `app/(onboarding)/_layout.tsx`'s `initialRouteName` resolves from it directly. This is implementation-visible (it determines exactly where a returning user lands) so it's recorded here rather than left as an undocumented schema choice.
+
+### Journey stage is no longer asked
+
+**Date:** 2026-09-24
+**Status:** Active
+**Reason:** Not recorded when the screen was removed (commit `e86f65a`). _Product owner: add the reason here._
+**Implications:** The Journey Stage onboarding screen is removed; anyone whose saved progress pointed at it resumes at Identity. `profiles.journey_stage` stays in the schema, unused, and is still included in data export.
+
+### App Lock is turned on only from YOU, never during onboarding
+
+**Date:** 2026-09-03
+**Status:** Active (amends "App Lock and Biometrics default off; Private notifications defaults on")
+**Reason:** Onboarding could save `app_lock_enabled = true` without a PIN ever being set. That would have locked the person out with no way to recover.
+**Implications:** Privacy Setup no longer shows App Lock or Biometrics. YOU → App Lock requires a PIN before the switch can turn on, and tests assert that onboarding never writes either field.
 
 ### Care Setup's raw selection is not persisted — only its module-enablement effect is
 
@@ -154,9 +184,24 @@ All decisions below were extracted from the original PRISM master source documen
 ### "Next scheduled event" is not computed — Medications shows the configured schedule instead
 
 **Date:** 2026-09-02
-**Status:** Active
+**Status:** Superseded (see CARE: Reminders and next doses run on the phone, 2026-09-03)
 **Reason:** Screen 24 (Medications) calls for showing a medication's "Next scheduled event," but no real dose-scheduling-resolution engine exists yet (the same gap already tracked in `docs/BUILD_STATUS.md` Known Technical Risks as blocking TODAY's "medication due today" classification). Inventing a plausible-looking next-occurrence date without a real resolution algorithm would risk showing the user incorrect information about their own medication — worse than not showing it.
 **Implications:** `describeFrequency()` (`apps/mobile/features/care/medicationDisplay.ts`) describes the _configured_ recurrence pattern in plain language ("Daily at 08:00", "Every 3 days") — real, stored data, honestly presented — rather than resolving it into a specific next-dose timestamp. Building the real scheduling-resolution engine is deferred to the same future work that resolves the TODAY gap; when it ships, both surfaces should be updated together.
+
+### Reminders and next doses run on the phone
+
+**Date:** 2026-09-03 (extended 2026-09-24)
+**Status:** Active
+**Reason:** Once a medication's schedule or an appointment's time is known, the phone already knows when a reminder should fire. Local notifications need no server, and no third party sees what is being taken or when. This also unblocks the three surfaces that were waiting on a schedule engine: TODAY's "due today", Medications' "Next dose", and Notification Settings.
+**Decision:** `lib/reminders/scheduleResolution.ts` turns `frequency_config` (daily, weekly, every X days) or `starts_at` into concrete local times. `useReminderSync` keeps the phone's scheduled notifications and the `reminders` table in step with each record's `reminder_enabled` flag (one row per `user_id, type, reference_id`). `reminders.recurrence` holds a copy of the medication's `frequency_config` (validated by `frequencyConfigSchema`) and is null for appointments, so it has no shape of its own. Tapping a reminder opens its record. **Done** logs the dose, and **Snooze** repeats the reminder in 10 minutes. One follow-up comes 30 minutes after a missed dose and is cancelled when the dose is logged. Appointment lead time (at the time, 1 hour or 1 day before) is a device setting. Permission is asked for only when something needs it.
+**Implications:** Reminders keep working with no network and are never sent through Expo's push service. A second phone schedules its own reminders from the same records. `send-push` has a `reminders` category for server-sent reminders, but nothing on the server decides when one is due, so the app has no switch for them yet.
+
+### An injection is a medication
+
+**Date:** 2026-09-24
+**Status:** Active (supersedes the Timeline injection routing under JOURNEY; an injection dose opens its medication's history)
+**Reason:** Injections were a separate feature, but an injection is just one way to take a medication. Two places to log the same kind of thing was confusing.
+**Implications:** There is no separate Injections feature, switch, tile, or screen. An injectable medication (form "Injection") is logged like any other dose, and asks where it went in (optional), stored as `medication_logs.site`. The migration `20260924120000_merge_injections_into_medications.sql` copies existing `injections` rows into `medication_logs` (attaching any that had no medication to a generic "Injection" medication) and switches Medications on for anyone who had Injections on. The `injections` table is kept, unread, for history and export. Care Setup's "Injections" choice now leads to Medication Setup.
 
 ## JOURNEY
 
@@ -170,14 +215,14 @@ All decisions below were extracted from the original PRISM master source documen
 ### Timeline navigates to the closest real record view when a screen from the source inventory doesn't exist
 
 **Date:** 2026-09-02
-**Status:** Active
+**Status:** Superseded (see CARE: An injection is a medication, 2026-09-24; injection doses now open their medication)
 **Reason:** Screen 43 (Timeline Event)'s own description gives "Timeline → Injection → Injection Detail" as an example of "tapping an event opens its original record" — but the actual P0 CARE screen inventory (Screens 29-30) has no Injection Detail screen, only Injection History (a list) and Log Injection (a form). This is an internal inconsistency in the source spec, not a deliberate omission to resolve around.
 **Implications:** Tapping an injection event on Timeline opens Injection History (`/care/injections`) — the closest real view of that record, rather than a screen that doesn't exist. Every other P0 record type already has a real detail screen (Medication → its history view, Appointment/Milestone/Journal → their own Detail screens), so this substitution is needed only for injections. See `recordHref()` in `apps/mobile/features/journey/screens/TimelineScreen.tsx`.
 
 ### Journal entries have no Photo field — the canonical schema doesn't have a column for one
 
 **Date:** 2026-09-02
-**Status:** Active
+**Status:** Superseded (see JOURNEY: Milestones and journal entries can carry one private photo, 2026-09-23)
 **Reason:** Screen 48 (New Journal Entry) lists "Photo (optional)" among its fields, but the canonical `journal_entries` schema (`MASTER_BUILD_SPEC.md` §09: `id, user_id, title, content, mood, date, tags, created_at, updated_at`) has no photo/image column at all — the same category of gap as CARE's missing medication-status column, resolved the same way: don't invent schema beyond what the spec actually defines.
 **Implications:** New/Edit Journal Entry and Journal Entry Detail omit the Photo field entirely rather than adding an unspecified column or wiring up Storage integration beyond what's defined. If a future milestone adds real photo support to Journal, it needs an explicit schema decision first (a `photo_url` or `media_id` column, plus the Storage/RLS policy work that goes with it) — not a client-side-only feature bolted onto a table that has nowhere to persist it.
 
@@ -187,6 +232,21 @@ All decisions below were extracted from the original PRISM master source documen
 **Status:** Active
 **Reason:** `docs/DESIGN_SYSTEM.md` §14 explicitly warns: "Avoid clinical mood trackers, mental-health dashboards, and aggressive mood charts... Mood is optional and must never be a forced rating." The `mood` column itself is a plain nullable string, not an enum — there is no suggested/fixed mood list anywhere in the source material to draw chip options from, and inventing one would risk exactly the clinical-mood-tracker pattern the design system rules out.
 **Implications:** Mood is a single free-text input, matching every other CARE/JOURNEY field with no suggested-values list (e.g. Medication's Dosage, Milestone's Category). A future milestone could add mood _suggestions_ as optional pre-fill chips (mirroring Milestone's suggested-titles pattern) without changing the underlying free-text storage — that would stay compatible with this decision; a hard-coded required selector would not.
+
+### Milestones and journal entries can carry one private photo
+
+**Date:** 2026-09-23
+**Status:** Active (supersedes "Journal entries have no Photo field")
+**Reason:** The earlier decision's only objection was that the schema had nowhere to keep a photo, and it asked for an explicit schema decision first. This is that decision.
+**Decision:** `milestones.image_path` and `journal_entries.image_path` hold an object path in the private `memories` bucket (`{user_id}/milestones/…`, `{user_id}/journal/…`). Photos are read through short-lived signed URLs, the same way profile photos are. They are chosen with the system photo picker, which needs no photo-library permission prompt. Replacing, removing or deleting a photo clears the old file, and a failed save cleans up its upload.
+**Implications:** The data export lists photo paths, not the image files. Account deletion empties the person's `memories` prefix along with every other private bucket.
+
+### Journal mood and tags offer optional suggestions
+
+**Date:** 2026-09-22
+**Status:** Active (extends "Journal's Mood field is free text")
+**Reason:** Came out of early tester feedback (commit `6710326`). The earlier decision already allowed optional pre-fill chips as long as storage stayed free text.
+**Implications:** Suggested moods and tags are tap-to-fill chips above the same free-text fields. Nothing is required, there is no rating scale, and anything typed is kept as written.
 
 ## YOU
 
@@ -201,7 +261,7 @@ All decisions below were extracted from the original PRISM master source documen
 ### Notification Settings offers only "Private notifications" — every reminder-category toggle needs a delivery engine that doesn't exist yet
 
 **Date:** 2026-09-03
-**Status:** Active
+**Status:** Superseded (see YOU: Notification Settings covers real reminders and opt-in messages from Prism, 2026-09-24)
 **Reason:** Screen 58 lists Medication/Injection/Appointment/Lab/Custom reminders as independently configurable, but no notification-scheduling or delivery engine exists anywhere in PRISM yet (no push registration, no local-notification scheduling tied to `medications.reminder_enabled`/`appointments.reminder_enabled`, no `reminders` table writes from any screen). Building toggles for reminder categories that cannot actually deliver a reminder would be exactly the fake-control pattern ruled out project-wide (see CARE's "Next scheduled event" decision) — a toggle that visibly does nothing is worse than no toggle.
 **Decision:** Notification Settings (and Privacy's own "Notifications" section) expose only "Private notifications" (`settings.notification_privacy`, a real column, already defaulting to `true` per `docs/SECURITY.md` §7), plus plain-language copy explaining that per-category reminders aren't available yet.
 **Implications:** Each existing per-item `reminder_enabled` field (Medication, Appointment) still exists and is still collected on their own Add/Edit forms — those are honest, real booleans about the record, just not yet wired to an actual notification. When a real delivery engine ships, Screen 58's full per-category toggle list becomes buildable without any schema change (`reminders.notification_style` already exists per `MASTER_BUILD_SPEC.md` §18).
@@ -225,7 +285,7 @@ All decisions below were extracted from the original PRISM master source documen
 ### Delete Account is real, working UI up to the one boundary only a server can cross
 
 **Date:** 2026-09-03
-**Status:** Active
+**Status:** Superseded (see YOU: Account deletion runs through the deployed delete-account Edge Function, 2026-09-23)
 **Reason:** Deleting a `auth.users` row requires the Supabase service-role key (or equivalent admin API access), which must never ship inside the mobile app (`docs/SECURITY.md` §14-15). No Supabase Edge Function exists yet (`supabase/functions/README.md` — "None exist yet"), so there is currently no safe way for the client to actually delete an account.
 **Decision:** `DeleteAccountScreen` is fully built — heading, plain-language consequences, a type-to-confirm ("DELETE") gate before the destructive button is enabled — and calls `supabase.functions.invoke('delete-account')`. Since that function isn't deployed, the call fails and the screen surfaces the same honest, non-technical error every other PRISM failure uses ("Couldn't delete your account. Please try again later.") rather than a fabricated success.
 **Implications:** A future milestone (or a backend-focused one) must add the `delete-account` Edge Function itself before this screen's primary action can succeed — tracked in `supabase/functions/README.md`. Nothing about the client changes when that ships; this is a real, complete UI blocked on real, documented server-side work, not a placeholder.
@@ -233,7 +293,7 @@ All decisions below were extracted from the original PRISM master source documen
 ### Accessibility, About, and Support show what's real; nothing is faked to fill out the spec's full field list
 
 **Date:** 2026-09-03
-**Status:** Active
+**Status:** Active, amended 2026-09-28: Support's Contact support, Report a problem and Privacy concern rows now open a draft email to `support@ttimemedia.org`, the address published on the Prism page. The draft carries the topic, app version and platform only. Help center is still "not connected yet".
 **Reason:** Three Screen Bible entries describe more than PRISM currently has a real answer for: Screen 61 (Accessibility) lists Text size / Increased contrast / Screen reader optimizations alongside Reduced motion, but only Reduced motion has a `settings` column and an actual code path (`ReducedMotionProvider`) that changes behavior; Screen 65 (About) calls for Privacy Policy / Terms / open-source acknowledgements, none of which have been published anywhere; Screen 66 (Support) calls for Help center / Contact support / Report a problem / Privacy concern, and no support email, ticketing system, or help-center URL has been established anywhere in the source material — inventing one (e.g. a `mailto:` address) would fabricate an organizational detail nobody specified.
 **Decision:** Accessibility ships only the Reduced motion toggle as an interactive control, with plain-language copy explaining that text size already follows the OS setting (default React Native font-scaling behavior, never overridden) and that every PRISM control already carries real accessibility labels/roles. About shows Privacy Policy/Terms/acknowledgements as informational rows marked "Not yet published"/"Not yet compiled" rather than linking anywhere. Support's four rows are real, themed, tappable list items that surface an honest "This isn't connected yet" toast rather than opening a fabricated link or address.
 **Implications:** When a real contrast mode, a published legal page, or a live support channel exists, each becomes a normal wiring task — swap the static row for a real link/toggle. Until then, nothing on these three screens claims to do something it can't.
@@ -245,6 +305,36 @@ All decisions below were extracted from the original PRISM master source documen
 **Reason:** Screen 78 must appear over whatever the user was doing the moment the app is locked (any tab, any nested screen) and disappear back into that exact state on unlock — routing to a dedicated screen would require capturing and restoring the prior navigation state, an unnecessary complication for something that is fundamentally "cover the screen, then uncover it."
 **Decision:** `AppLockScreen` is rendered conditionally inside `app/_layout.tsx`'s `RootNavigator`, absolutely positioned over the entire `<Stack>`, driven by `useAppLockStore` (a new, deliberately non-persisted Zustand store — "is currently locked" must reset to `true` on every fresh process start) and `useAppLockGate()` (locks on first mount when App Lock is enabled, and again whenever `AppState` leaves `'active'`).
 **Implications:** Unlocking never triggers a navigation — the underlying `<Stack>` was never unmounted, so the user resumes on the exact screen they were viewing when the app was backgrounded. Any future screen that needs "cover everything, resume exactly where you were" behavior (e.g. a future biometric re-auth for a single sensitive action) should follow the same overlay-not-route pattern rather than introducing a new one.
+
+### Notification Settings covers real reminders and opt-in messages from Prism
+
+**Date:** 2026-09-24
+**Status:** Active (supersedes "Notification Settings offers only Private notifications")
+**Reason:** Reminders now exist (see CARE), and server push was added for messages that can't be scheduled on the phone.
+**Decision:** Notification Settings shows whether the phone allows notifications, with a way to turn them on. It also has Private notifications, a test reminder, and **Messages from Prism**, stored in `settings.push_preferences`: security alerts are on by default, and nudges and Prism news are opt-in. **Reminder wording** lets each person pick built-in wording per kind ("It's shot day.", "Take your {name} at {time}.") or write their own, previewed on their own medications. That wording is used only while Private notifications is off. The push provider is Expo's push service (see "Outside services Prism uses" under Privacy & Security).
+**Implications:** Push tokens live in `push_tokens` (RLS, own rows only) and are removed on sign-out. `send-push` is the only sender and requires a shared secret. It applies the same privacy rule as the phone: reminders stay "Your Prism reminder is ready." while Private notifications is on.
+
+### Account deletion runs through the deployed delete-account Edge Function
+
+**Date:** 2026-09-23
+**Status:** Active (supersedes "Delete Account is real, working UI up to the one boundary only a server can cross")
+**Reason:** The client UI was complete; only the server side was missing.
+**Implications:** `delete-account` is deployed to the hosted project. It identifies the caller from their own JWT, empties their prefixes in every private bucket, then deletes the `auth.users` row, which cascades to every table. It still needs one end-to-end check on a real account before Beta invites go out (see `docs/BETA.md`).
+
+### Colour is a whole-app palette saved to the account and never labelled by gender
+
+**Date:** 2026-09-24
+**Status:** Active
+**Reason:** Replaces the single accent colour from 2026-09-23 with palettes that recolour the whole app. Colour choices in this space are easily read as gender signals, so none is framed that way.
+**Decision:** Eight palettes (Slate, Mist, Prism, Ocean, Forest, Ember, Dusk, Blossom) recolour accents, icon chips, timeline dots and backgrounds in light and dark mode. The choice is saved in `settings.palette` and offered in Appearance and as an onboarding step. New accounts start on Slate; accounts that existed before palettes keep Prism.
+**Implications:** No palette name or description refers to gender. Theme and palette sync across devices through `useAppearanceSync`.
+
+### Calendar access is opt-in and asked for only on tap
+
+**Date:** 2026-09-22 (import added 2026-09-24)
+**Status:** Active
+**Decision:** When calendar sync is on (`settings.calendar_sync_enabled`), appointments can be added to the phone's calendar. Appointments can also be imported from the calendar or from an `.ics` file. Read access is requested only when the person taps Import. Files are parsed on the phone, and nothing is added until the person confirms. Prism never asks for Reminders access.
+**Implications:** Calendar events written by Prism can be read by anything else that has access to that calendar.
 
 ## Product Structure
 
@@ -376,10 +466,3 @@ The following were found while cross-referencing the five source sections (Produ
 ## Adding New Decisions
 
 When a new explicit product decision is made, append it to the relevant section above (or add a new section) using the same `Decision / Date / Status / Reason / Implications` format. Do not silently edit or remove a past decision's entry — if a decision changes, add a new entry referencing the old one and mark the old one's Status as `Superseded (see [new entry]).`
-
-### An injection is a medication
-
-**Date:** 2026-09-24
-**Status:** Active
-**Reason:** Injections were a separate feature, but an injection is just one way to take a medication. Two places to log the same kind of thing was confusing.
-**Implications:** There is no separate Injections feature, switch, tile, or screen. An injectable medication (form "Injection") is logged like any other dose, and asks where it went in (optional), stored as `medication_logs.site`. The migration `20260924120000_merge_injections_into_medications.sql` copies existing `injections` rows into `medication_logs` (attaching any that had no medication to a generic "Injection" medication) and switches Medications on for anyone who had Injections on. The `injections` table is kept, unread, for history and export. Care Setup's "Injections" choice now leads to Medication Setup.

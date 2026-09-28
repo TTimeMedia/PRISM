@@ -1,9 +1,9 @@
 # PRISM Build Status
 
-**STATUS: MILESTONE 07 (HARDENING) COMPLETE FOR WHAT THIS SANDBOX CAN VERIFY**
-**CURRENT MILESTONE: awaiting instruction to begin 08 — Beta**
+**STATUS: v0.3.0 ON A REAL DEVICE (iOS internal build + EAS Update); MILESTONES 01–07 COMPLETE**
+**CURRENT MILESTONE: 08 — Beta (started 2026-09-28; plan and gates in [`BETA.md`](./BETA.md))**
 
-Last updated: 2026-09-03 (Hardening milestone complete — performance profiling and native E2E remain explicitly deferred pending real-device access; see §15-16)
+Last updated: 2026-09-28 (brought up to date with the Sept 13–24 device-testing work; see §15a)
 
 This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md)'s implementation milestones. It is a living document — update it at the end of every milestone, not just at the start of the project. It does not restate product or technical detail; it points at the document that owns each fact.
 
@@ -12,6 +12,8 @@ This document tracks where PRISM actually is against [`MASTER_BUILD_SPEC.md`](./
 ## 1. Current Project Status
 
 PRISM's Foundation milestone (`01`), Authentication & Identity milestone (`02`), Personalization (Onboarding) milestone (`03`), CARE milestone (`04`), JOURNEY milestone (`05`), YOU milestone (`06`), and Hardening milestone (`07`) are all complete. Foundation established the monorepo, both apps, all shared packages, the full Supabase schema with RLS, the design system foundation, the navigation shell, and cross-cutting infrastructure. Authentication & Identity built the seven Authentication screens with real working session handling, email verification, and password recovery via deep link. Personalization (Onboarding) built all 12 onboarding screens, the resumable onboarding-step routing infrastructure, module selection driven by the user's Care Setup answers, and the personalized TODAY engine with a real, dynamic TODAY screen. CARE built full CRUD for Medications (with dose logging and Pause/Resume), Injections, and Appointments across all 12 P0 CARE screens. JOURNEY built Journey Home, a unified Timeline (medications, injections, appointments, milestones, and journal entries in one chronological view — never a second data store), full CRUD for Milestones and Journal, and two new named design-system components (`PRISMTimeline`, `PRISMMilestone`). YOU built the full settings hub — Profile (with a real profile-photo upload to the private `profile-photos` bucket), Customize PRISM/Module Configuration, Notifications, Privacy, a real device-local App Lock (PIN + biometrics, with a global lock-screen overlay), Accessibility, Appearance (wired to the theme system), Data & Export (a real combined JSON export/share), and Delete Account (real UI, blocked on a not-yet-built server-side Edge Function). Hardening audited and fixed rather than adding features: the RLS test suite now runs for real (extended to cover every P0 table and the `profile-photos` bucket) in a new CI pipeline, a real touch-target accessibility bug and a real offline-detection gap were found and fixed, and a long-standing `format:check` false-positive was fixed at the root cause — see §9 (Foundation), §10 (Authentication & Identity), §11 (Personalization / Onboarding), §12 (CARE), §13 (JOURNEY), §14 (YOU), and §15 (Hardening) below for what was built/fixed and how each was verified.
+
+**Since Hardening (2026-09-13 → 2026-09-24)** the app moved off the sandbox and onto a real iPhone and a hosted Supabase project, and was reworked from that testing. The changes are summarised in §15a: on-device reminders, server push, calendar sync and import, photos, palettes, the redesigned TODAY/CARE/JOURNEY/YOU, and merging injections into medications. v0.3.0 is the current internal iOS build.
 
 ## 2. Documentation Status
 
@@ -51,7 +53,7 @@ The full 15-table database schema and the `modules` table's complete set of modu
 
 ### Current Milestone
 
-None — awaiting instruction to begin **Beta** (milestone `08`, Phase 8).
+**Beta** (milestone `08`, Phase 8), started 2026-09-28. The plan, entry gates, tester flow and exit criteria are in [`BETA.md`](./BETA.md).
 
 ### Completed Milestones
 
@@ -65,15 +67,15 @@ None — awaiting instruction to begin **Beta** (milestone `08`, Phase 8).
 
 ### Remaining Milestones
 
-Two: **Beta** (`08`, Phase 8 — closed-beta process, not primarily build work — the next actionable one, though most of it is process rather than code), **Launch** (`09`, Phase 9 — production infra, app-store submission, and legal review; largely outside what this sandbox can execute).
+Two: **Beta** (`08`, Phase 8, in progress; mostly process rather than code), **Launch** (`09`, Phase 9 — production infra, app-store submission, and legal review; largely outside what this sandbox can execute).
 
 ## 6. Known Open Decisions
 
 The MVP scope contradiction that was open at the end of the initial documentation pass has been resolved (see [`DECISIONS.md`](./DECISIONS.md)). No product-level decisions are currently open. The following are **implementation-level** choices intentionally left to the engineer at the point they're needed, per this specification's own philosophy of not over-specifying (`MASTER_BUILD_SPEC.md` Appendix A): they should be made and then recorded in `DECISIONS.md` (if product-visible) or left as ordinary code, not raised back to the product owner.
 
-- **`reminders.recurrence` JSON shape** — the column exists and its purpose is specified (§`MASTER_BUILD_SPEC.md` §18), but the internal JSON structure is not yet designed; the `reminders` table itself has no CRUD built yet. (`medications.frequency_config`'s shape, by contrast, is already resolved — `frequencyConfigSchema` in `packages/validation/src/care.ts` — and is exercised by real Add/Edit Medication forms as of the CARE milestone.) Design `recurrence`'s shape when the actual reminder-scheduling engine is built (see §15 Known Technical Risks).
-- **Push notification delivery provider** — `TECHNICAL_BIBLE.md` §15 specifies "native push notifications through Expo-supported infrastructure" but doesn't name a specific service. Expo's own push notification service is the natural default given the Expo-based stack; per `SECURITY.md` §6 (security red flags apply to any third-party service touching user data), give it one explicit privacy review before the reminder-scheduling engine work (§16 Known Technical Risks), same as any other third-party dependency — not a blocker, just don't skip the review because it's the "obvious" default.
-- **Icon library** — `DESIGN_SYSTEM.md` §13 describes the required visual characteristics (geometric, rounded, simple, thin-to-medium stroke) but does not name a library. Pick one during the Design System milestone (`04`) and record the choice in `DECISIONS.md` since it affects every screen.
+- ~~**`reminders.recurrence` JSON shape**~~ — **Resolved**: it holds a copy of the medication's `frequency_config` (validated by `frequencyConfigSchema`) and is null for appointments. See `docs/DECISIONS.md` § CARE "Reminders and next doses run on the phone". _Original note:_ the column exists and its purpose is specified (§`MASTER_BUILD_SPEC.md` §18), but the internal JSON structure is not yet designed; the `reminders` table itself has no CRUD built yet. (`medications.frequency_config`'s shape, by contrast, is already resolved — `frequencyConfigSchema` in `packages/validation/src/care.ts` — and is exercised by real Add/Edit Medication forms as of the CARE milestone.) Design `recurrence`'s shape when the actual reminder-scheduling engine is built (see §15 Known Technical Risks).
+- ~~**Push notification delivery provider**~~ — **Resolved**: Expo's push service, used only for server messages. Reminders are local notifications and never go through it. What it receives is recorded in `docs/DECISIONS.md` § Privacy & Security "Outside services Prism uses". _Original note:_ `TECHNICAL_BIBLE.md` §15 specifies "native push notifications through Expo-supported infrastructure" but doesn't name a specific service. Expo's own push notification service is the natural default given the Expo-based stack; per `SECURITY.md` §6 (security red flags apply to any third-party service touching user data), give it one explicit privacy review before the reminder-scheduling engine work (§16 Known Technical Risks), same as any other third-party dependency — not a blocker, just don't skip the review because it's the "obvious" default.
+- ~~**Icon library**~~ — **Resolved in Foundation**: `lucide-react-native` (see §9). _Original note:_ `DESIGN_SYSTEM.md` §13 describes the required visual characteristics (geometric, rounded, simple, thin-to-medium stroke) but does not name a library. Pick one during the Design System milestone (`04`) and record the choice in `DECISIONS.md` since it affects every screen.
 - ~~**Data export file structure**~~ — **Resolved in the YOU milestone (`06`)**: one combined JSON file across every P0 table (`lib/you/dataExport.ts`), not a per-table bundle. See `docs/DECISIONS.md` § YOU.
 - ~~**Biometric/local-auth library**~~ — **Resolved in the YOU milestone (`06`)**: `expo-local-authentication`, matching the installed Expo SDK version.
 
@@ -146,8 +148,8 @@ Unchecked — nothing has been built yet. Update this checklist at the end of ea
 
 - [x] Medications (Add/Detail/Edit/Pause-Resume/Delete)
 - [x] Medication logs (log a dose, chronological history with filters)
-- [ ] Reminders — `reminder_enabled` is stored and editable on medications/appointments, but no push-notification delivery exists yet (see §6 — provider not yet chosen; scheduled alongside the reminder-scheduling engine work, §16 Known Technical Risks)
-- [x] Injections (log + history)
+- [x] Reminders: local notifications with Done/Snooze, tap-through, missed-dose follow-up and appointment lead times (§15a)
+- [x] Injections, now logged as doses of an injectable medication with an optional site (§15a)
 - [x] Appointments (Add/Detail/Edit/Delete)
 
 ### Journey
@@ -158,26 +160,26 @@ Unchecked — nothing has been built yet. Update this checklist at the end of ea
 
 ### YOU
 
-- [ ] Profile
-- [ ] Customize PRISM (P0 module toggles)
-- [ ] Notifications
-- [ ] Privacy
-- [ ] App lock
-- [ ] Accessibility
-- [ ] Appearance
-- [ ] Data export
-- [ ] Account deletion
+- [x] Profile
+- [x] Customize PRISM (P0 module toggles)
+- [x] Notifications (reminders, Messages from Prism, reminder wording)
+- [x] Privacy
+- [x] App lock
+- [x] Accessibility
+- [x] Appearance (light/dark, eight palettes)
+- [x] Data export (every user table, including `reminders` as of 2026-09-28)
+- [x] Account deletion (`delete-account` deployed; end-to-end check is a Beta entry gate, see [`BETA.md`](./BETA.md))
 
 ### Quality
 
-- [ ] Unit tests
-- [ ] Integration tests
+- [x] Unit tests (421 passing as of 2026-09-28)
+- [x] Integration tests (RLS adversarial suite)
 - [ ] E2E tests
-- [ ] Accessibility testing
+- [ ] Accessibility testing (VoiceOver pass is a Beta entry gate)
 - [ ] Security testing
 - [ ] Offline behavior testing
-- [ ] Privacy review
-- [ ] Beta readiness
+- [ ] Privacy review (outside services now listed in `DECISIONS.md`; privacy policy still needs legal review)
+- [ ] Beta readiness (tracked in [`BETA.md`](./BETA.md))
 
 ## 9. Foundation Milestone (01) — Completion Notes
 
@@ -405,24 +407,60 @@ Performance profiling and native E2E testing both genuinely require a physical d
 - `supabase/tests/database/rls_isolation_test.sql` — 12 test blocks, all passing — executed for real against a local PostgreSQL 16 server built from scratch this session (`initdb` → apply `00_ci_standin_schema.sql` → apply all 9 migrations in order → run the test file), not merely re-read for plausibility.
 - Visual re-verification: Add Milestone's suggested-title chips, confirming the touch-target fix renders correctly with no regression (screenshot taken via the same temporary root-guard-bypass methodology as every prior milestone, reverted before commit — confirmed via `git diff` showing zero changes to `app/_layout.tsx`).
 
+## 15a. Device Testing and Rework (2026-09-13 → 2026-09-24)
+
+Not a numbered milestone. This is the work that followed Hardening once the app ran on a real iPhone against the hosted Supabase project. It closed most of the "needs a real device" items in §16 and changed several product decisions (each recorded in `DECISIONS.md`). Commit history has the detail; this is the map.
+
+### Infrastructure
+
+- **EAS**: project `@ttimemedia/prism`, bundle id `ttimemedia.prism`, `development` / `preview` / `production` profiles and channels. **EAS Update** ships JS changes to installed builds; `runtimeVersion` uses the `appVersion` policy (the fingerprint policy computed different values locally and on EAS under pnpm).
+- **Hosted Supabase**: all 18 migrations applied; auth email through Resend (`no-reply@ttimemedia.org`); `[remotes.production]` overrides in `supabase/config.toml` keep `supabase config push` from overwriting hosted-only values. Edge Functions `delete-account` and `send-push` are deployed.
+- **Build fixes found on device**: `react-native-gesture-handler` 3.3.0 (3.2.1 crashed at startup), `babel-preset-expo` declared directly (release builds failed under pnpm's strict layout), the zod v3/v4 override, and the missing `emailRedirectTo` on sign-up.
+
+### Features and changes
+
+- **Reminders** (on-device): schedule resolution, local notifications, `reminders` table sync, Done/Snooze, tap-through, missed-dose follow-up, appointment lead times, test reminder, reminder wording. TODAY and Medications now show real next doses.
+- **Server push**: `push_tokens`, `settings.push_preferences`, the `send-push` function, and "Messages from Prism" switches. Scheduled server-side reminders are not built; see §16.
+- **Injections merged into medications**: doses carry an optional site, and the migration copied existing injections into `medication_logs`.
+- **Calendar**: opt-in sync of appointments to Apple Calendar; import from the calendar (across accounts, with a filter) or an `.ics` file.
+- **Photos**: milestones and journal entries (private `memories` bucket), through the system photo picker.
+- **Appointment locations**: Apple MapKit suggestions via a local Expo module (`modules/prism-location-search`); a plain field on Android.
+- **Look and feel**: eight palettes, synced per account; redesigned TODAY, CARE, JOURNEY and YOU; top bar and side menu; animated Prism mark; brighter light mode.
+- **Onboarding**: new intro and copy, card-style pickers, Reminders, Colors and How-it-works steps, back buttons, list pickers for pronouns, gender and medication name. Journey Stage was removed, and App Lock no longer appears in onboarding.
+- **Native pickers**: `PRISMDateInput`/`PRISMTimeInput` now use `@react-native-community/datetimepicker`.
+- **FlatList**: Timeline and Journal virtualised.
+
+### Verification as of 2026-09-28
+
+- `pnpm -r typecheck` and mobile ESLint are clean. Tests: 323 mobile (54 suites), 61 validation, 35 types, 2 web, all passing.
+- iOS `preview` build 0.3.0 (build 1, commit `8a4216d`) finished on EAS. The two later JS-only commits reached it as EAS Updates on runtime 0.3.0.
+- The hosted migration list matches `supabase/migrations/` exactly.
+- Fixed on 2026-09-28: data export was missing the `reminders` table. Android no longer requests the microphone or camera, and iOS no longer carries unused Reminders, camera or microphone usage strings (native change, so it takes effect in the next build).
+
 ## 16. Known Technical Risks
 
+_Updated 2026-09-28. Items resolved since Hardening are struck through and kept for history._
+
+- **`send-push` on the server is one commit behind.** It was deployed (version 1) before `f4efd5e` changed its reminder wording samples. Redeploy with `supabase functions deploy send-push` before testing server push.
+- **Server push is not yet proven end to end on a device.** Token registration and `send-push` are in place, but nobody has yet confirmed that the EAS project has APNs credentials or that a push sent from the server arrives on a phone. That is the first check in [`BETA.md`](./BETA.md). Android has no FCM credentials (`google-services.json`) yet, so Android push cannot work until they're added.
+- **Scheduled server-side reminders don't exist.** Reminders run on the phone, which is the intended design. The `reminders` push category has no scheduler and no switch in the app. Build it only if a real need appears, such as reminders that must survive the app being deleted and reinstalled.
+
 - **The new CI pipeline (`.github/workflows/ci.yml`) has not actually run successfully on GitHub yet — needs an org admin to check Settings → Actions.** Every live run so far shows `startup_failure` with zero jobs ever dispatched (verified via the GitHub Actions API), which is the signature of Actions being disabled, spending-limited, or policy-restricted at the repo/org level — not a bug in the workflow file, whose exact command sequence passes cleanly when run locally (see §15 above). This is the one Hardening item that genuinely cannot be resolved from inside this sandbox; it needs someone with GitHub org admin access.
-- **No real reminder-scheduling engine exists yet — still open after CARE, and now also blocking YOU.** CARE (`04`) built `reminder_enabled` as a stored, editable boolean on medications and appointments, and full dose/schedule data entry, but no push-notification delivery, and no logic that resolves a `frequency_config` into an actual next-occurrence timestamp. This is now the most consequential open gap, blocking four related things: recurring reminders across timezones/DST (`TECHNICAL_BIBLE.md` §14's "should not move when a user travels" requirement), TODAY's "medication due today" classification (deliberately not fabricated — see `services/personalization/engine.ts`), Medications' "Next scheduled event" (deliberately described in plain language instead — see `docs/DECISIONS.md` § CARE), and now YOU's Notification Settings (deliberately scoped to only "Private notifications" until this engine exists — see `docs/DECISIONS.md` § YOU). Resolve all four together, in one place, when the reminder engine is actually built — not piecemeal per-surface.
-- **The `delete-account` Edge Function does not exist yet.** `DeleteAccountScreen` (YOU, `06`) is real, complete client UI that calls `supabase.functions.invoke('delete-account')` — the function itself is server-side work tracked in `supabase/functions/README.md`, needed before Account Deletion (part of MVP P0 scope, §3 above) can actually work end-to-end. Must ship before Beta.
+- ~~**No real reminder-scheduling engine exists yet**~~ — **Resolved 2026-09-03/24**, see §15a. _Original:_ CARE (`04`) built `reminder_enabled` as a stored, editable boolean on medications and appointments, and full dose/schedule data entry, but no push-notification delivery, and no logic that resolves a `frequency_config` into an actual next-occurrence timestamp. This is now the most consequential open gap, blocking four related things: recurring reminders across timezones/DST (`TECHNICAL_BIBLE.md` §14's "should not move when a user travels" requirement), TODAY's "medication due today" classification (deliberately not fabricated — see `services/personalization/engine.ts`), Medications' "Next scheduled event" (deliberately described in plain language instead — see `docs/DECISIONS.md` § CARE), and now YOU's Notification Settings (deliberately scoped to only "Private notifications" until this engine exists — see `docs/DECISIONS.md` § YOU). Resolve all four together, in one place, when the reminder engine is actually built — not piecemeal per-surface.
+- ~~**The `delete-account` Edge Function does not exist yet.**~~ — **Deployed 2026-09-23.** It still needs one real end-to-end deletion check, which is a Beta entry gate. _Original:_ `DeleteAccountScreen` (YOU, `06`) is real, complete client UI that calls `supabase.functions.invoke('delete-account')` — the function itself is server-side work tracked in `supabase/functions/README.md`, needed before Account Deletion (part of MVP P0 scope, §3 above) can actually work end-to-end. Must ship before Beta.
 - **Offline sync conflict resolution — narrowed during Hardening (`07`).** The basic "queue and retry" half is now real: `lib/queryClient.ts` wires React Query's `onlineManager` to `NetInfo` (it wasn't wired to anything before, so on native it silently never detected offline at all — see §15 below), so a query/mutation fired while offline now genuinely pauses and fires automatically on reconnect, no data loss for the single-device case. What's still open is the harder problem the rule ("never silently overwrite; resolve deterministically; surface conflict when necessary" — `TECHNICAL_BIBLE.md` §14) is actually about: the exact algorithm (last-write-wins vs. field-level merge vs. user-prompted resolution) for two writes to the _same record_ from _different devices_, one of which was offline. That still needs a real design decision before Beta.
-- **Third-party push notification service.** Even the default provider (§6) touches user data in transit and deserves the same "security red flag" review as any other third-party integration before it's wired up alongside the reminder-scheduling engine (see the first bullet above) — don't let "it's the standard Expo default" skip that review.
-- **List virtualization — found, not fixed, during Hardening's performance review.** 14 screens render a list via `ScrollView` + `.map()` (`MedicationsScreen`, `TimelineScreen`, `JournalScreen`, `MilestonesScreen`, `AppointmentsScreen`, `InjectionHistoryScreen`, etc.) rather than `FlatList`, meaning every item mounts at once instead of only the visible ones. Realistic list sizes for most of these are small, but Timeline (accumulates across every enabled record type for the life of the account) and Journal (potentially years of entries) are genuine growth risks. Not converted this milestone: `FlatList` doesn't compose cleanly inside a `ScrollView`-based screen with surrounding header/section content without a real refactor per screen (naive nesting triggers React Native's own "VirtualizedLists should never be nested inside plain ScrollViews" warning), and there's no device/profiler in this sandbox to confirm a refactor actually helps or doesn't regress scroll behavior. Address with real before/after measurements once a device is available.
+- ~~**Third-party push notification service.**~~ — **Reviewed 2026-09-28**: Expo push is used only for server messages; see `DECISIONS.md` "Outside services Prism uses". The privacy policy draft still needs to name it. _Original:_ Even the default provider (§6) touches user data in transit and deserves the same "security red flag" review as any other third-party integration before it's wired up alongside the reminder-scheduling engine (see the first bullet above) — don't let "it's the standard Expo default" skip that review.
+- **List virtualization — partly fixed.** Timeline and Journal (the two growth risks) moved to `FlatList` on 2026-09-03. The other lists are still `ScrollView` + `.map()`. _Original:_ 14 screens render a list via `ScrollView` + `.map()` (`MedicationsScreen`, `TimelineScreen`, `JournalScreen`, `MilestonesScreen`, `AppointmentsScreen`, `InjectionHistoryScreen`, etc.) rather than `FlatList`, meaning every item mounts at once instead of only the visible ones. Realistic list sizes for most of these are small, but Timeline (accumulates across every enabled record type for the life of the account) and Journal (potentially years of entries) are genuine growth risks. Not converted this milestone: `FlatList` doesn't compose cleanly inside a `ScrollView`-based screen with surrounding header/section content without a real refactor per screen (naive nesting triggers React Native's own "VirtualizedLists should never be nested inside plain ScrollViews" warning), and there's no device/profiler in this sandbox to confirm a refactor actually helps or doesn't regress scroll behavior. Address with real before/after measurements once a device is available.
 - **No native E2E test suite exists (Detox, Maestro, or similar).** `.github/workflows/ci.yml`'s new `database-rls` job covers the database layer end-to-end, and every screen has Jest unit/component coverage, but nothing exercises a full user flow (sign up → onboard → add a medication → see it on TODAY) against a running app on a simulator/device. Requires the same physical-device/simulator access already blocking every item in the "growing list of flows" bullet below — set up alongside that real-device pass, not before it.
 - **`frequency_config`/`recurrence` JSON schema drift.** Because these are JSONB with no enforced shape, inconsistent writes across the mobile app and any future web/admin surface are a real risk if the shape isn't validated centrally (see `packages/validation` in `TECHNICAL_BIBLE.md` §4). Define and validate the shape once, in one shared package, not per-call-site — the shape is already centralized in `packages/validation/src/care.ts`'s `frequencyConfigSchema`; the remaining risk is only in the not-yet-built engine that consumes it.
-- **`PRISMDateInput` is a text-entry stand-in, not a native picker.** Used across onboarding's date fields (Medication/Appointment Setup, Journey Date), every CARE date field (Add/Edit Medication, Log Injection, Log a dose, Add/Edit Appointment), and now every JOURNEY date field too (Add/Edit Milestone, New/Edit Journal Entry) — the same sandbox constraint (no device/simulator to verify a native module end-to-end) applies everywhere it's used. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
-- **A growing list of flows need a real-device + live-project pass before shipping**, since none of them can be constructed in this no-backend, no-device sandbox: password-recovery's deep link, the onboarding auto-advance mutation (Building screen), every CARE mutation and populated-data state (medications, injections, appointments), every JOURNEY mutation exercised against real data (creating/editing a milestone, writing/editing a journal entry) and the JOURNEY screens' data-driven states (a populated Timeline actually interleaving multiple record types in the right order, populated Milestones/Journal lists, Milestone/Journal Entry Detail with real records, Journey Home's moment-count summary), and — new in this milestone — every YOU flow that needs a real signed-in session or a real device: the PIN set/verify/change flow and the App Lock Screen's actual lock/unlock cycle (device-local `expo-secure-store`, never exercised against real storage in this sandbox), biometric enrollment/prompting (`expo-local-authentication`, requires a physical device with Face ID/Touch ID/Android biometrics enrolled), the profile-photo picker → upload → signed-URL round trip against a real `profile-photos` bucket, and the data export's actual file-write/share-sheet behavior on native (only the web `Blob`-download path is exercisable in a browser-only sandbox). All are code-complete and covered by unit/schema tests; visual verification this milestone confirmed the _code paths_ render correctly under a session-less bypass (forms, empty states, the approved generic error state) but never exercised a real write, a populated list, or any of the device-native flows above against real hardware. Verify the full write path together the first time a live Supabase project + physical device/simulator is available — this is the single most important pre-Beta verification gap across every milestone so far.
+- ~~**`PRISMDateInput` is a text-entry stand-in, not a native picker.**~~ — **Resolved 2026-09-13**: rebuilt on `@react-native-community/datetimepicker`. _Original:_ Used across onboarding's date fields (Medication/Appointment Setup, Journey Date), every CARE date field (Add/Edit Medication, Log Injection, Log a dose, Add/Edit Appointment), and now every JOURNEY date field too (Add/Edit Milestone, New/Edit Journal Entry) — the same sandbox constraint (no device/simulator to verify a native module end-to-end) applies everywhere it's used. Swap in a real native picker (e.g. `@react-native-community/datetimepicker`) once on-device verification is possible — not a blocker for continued build-out, but tracked so it isn't forgotten before Beta.
+- **Real-device pass — mostly done informally, not yet as a checklist.** The app has run on an iPhone against the hosted project since 2026-09-19, and the fixes in §15a came out of that testing. It was not recorded flow by flow, so [`BETA.md`](./BETA.md) turns it into a written pass before testers are invited. _Original:_ A growing list of flows need a real-device + live-project pass before shipping, since none of them can be constructed in this no-backend, no-device sandbox: password-recovery's deep link, the onboarding auto-advance mutation (Building screen), every CARE mutation and populated-data state (medications, injections, appointments), every JOURNEY mutation exercised against real data (creating/editing a milestone, writing/editing a journal entry) and the JOURNEY screens' data-driven states (a populated Timeline actually interleaving multiple record types in the right order, populated Milestones/Journal lists, Milestone/Journal Entry Detail with real records, Journey Home's moment-count summary), and — new in this milestone — every YOU flow that needs a real signed-in session or a real device: the PIN set/verify/change flow and the App Lock Screen's actual lock/unlock cycle (device-local `expo-secure-store`, never exercised against real storage in this sandbox), biometric enrollment/prompting (`expo-local-authentication`, requires a physical device with Face ID/Touch ID/Android biometrics enrolled), the profile-photo picker → upload → signed-URL round trip against a real `profile-photos` bucket, and the data export's actual file-write/share-sheet behavior on native (only the web `Blob`-download path is exercisable in a browser-only sandbox). All are code-complete and covered by unit/schema tests; visual verification this milestone confirmed the _code paths_ render correctly under a session-less bypass (forms, empty states, the approved generic error state) but never exercised a real write, a populated list, or any of the device-native flows above against real hardware. Verify the full write path together the first time a live Supabase project + physical device/simulator is available — this is the single most important pre-Beta verification gap across every milestone so far.
 
 ## 17. Known Legal/Privacy Review Items
 
 Tracked in full in [`SECURITY.md`](./SECURITY.md) §21 — restated here for build-status visibility, all pre-launch (not pre-Foundation) items:
 
-- Privacy Policy and Terms of Service (text not yet drafted)
+- Privacy Policy and Terms of Service: a privacy policy **draft** exists in `docs/website/prism.html` (unpublished, not legally reviewed, and missing Expo push). Terms of Service are not drafted.
 - Data retention policy — concrete retention window not yet defined
 - Security incident procedure — not yet documented
 - App store privacy disclosures — not yet prepared
