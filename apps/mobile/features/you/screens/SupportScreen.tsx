@@ -1,6 +1,7 @@
 import React from 'react';
 import { router } from 'expo-router';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import Constants from 'expo-constants';
 import { ArrowLeft, CircleAlert, HelpCircle, Mail, ShieldAlert } from 'lucide-react-native';
 import {
   PRISMHeader,
@@ -11,18 +12,31 @@ import {
   useTheme,
   useToast,
 } from '@prism/ui';
+import { SUPPORT_EMAIL, supportMailto, type SupportTopic } from '../../../lib/you/support';
 
 /**
- * Screen 66 — Support. No support channel is wired up yet (no help
- * center, ticketing, or contact address has been established) — tapping
- * a row says so plainly rather than opening a fabricated link, per
- * docs/DECISIONS.md § YOU.
+ * Screen 66 — Support. Contact, problem reports and privacy concerns open
+ * a draft email to the published support address. There is no help center
+ * yet, so that row still says so plainly rather than opening a made-up link.
  */
 export function SupportScreen() {
   const theme = useTheme();
   const { showToast } = useToast();
 
   const notConnected = () => showToast("This isn't connected yet — check back soon.");
+
+  const email = async (topic: SupportTopic) => {
+    const url = supportMailto(topic, {
+      appVersion: Constants.expoConfig?.version ?? 'unknown',
+      platform: Platform.OS,
+      osVersion: Platform.Version,
+    });
+    try {
+      await Linking.openURL(url);
+    } catch {
+      showToast(`No mail app found. Write to ${SUPPORT_EMAIL}.`);
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -43,18 +57,19 @@ export function SupportScreen() {
           />
           <PRISMListItem
             title="Contact support"
+            subtitle={SUPPORT_EMAIL}
             leading={<Mail size={20} color={theme.spectrum.violet} />}
-            onPress={notConnected}
+            onPress={() => email('contact')}
           />
           <PRISMListItem
             title="Report a problem"
             leading={<CircleAlert size={20} color={theme.spectrum.yellow} />}
-            onPress={notConnected}
+            onPress={() => email('problem')}
           />
           <PRISMListItem
             title="Privacy concern"
             leading={<ShieldAlert size={20} color={theme.spectrum.pink} />}
-            onPress={notConnected}
+            onPress={() => email('privacy')}
           />
         </PRISMSection>
       </ScrollView>

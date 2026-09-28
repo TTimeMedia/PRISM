@@ -11,6 +11,7 @@ function records(): DataExportRecords {
     appointments: [],
     milestones: [],
     journal_entries: [],
+    reminders: [],
   };
 }
 
@@ -22,6 +23,7 @@ describe('buildDataExport', () => {
     expect(result.exported_at).toBe('2026-06-01T12:00:00.000Z');
     expect(result.medications).toEqual([]);
     expect(result.journal_entries).toEqual([]);
+    expect(result.reminders).toEqual([]);
   });
 
   it('carries the given records through unchanged', () => {

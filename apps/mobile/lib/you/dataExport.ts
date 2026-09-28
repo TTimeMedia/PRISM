@@ -7,6 +7,7 @@ import type {
   Milestone,
   Module,
   Profile,
+  Reminder,
   Settings,
 } from '@prism/types';
 
@@ -20,6 +21,7 @@ export interface DataExportRecords {
   appointments: Appointment[];
   milestones: Milestone[];
   journal_entries: JournalEntry[];
+  reminders: Reminder[];
 }
 
 export interface DataExportPayload extends DataExportRecords {
