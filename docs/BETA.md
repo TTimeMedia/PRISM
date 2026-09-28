@@ -12,9 +12,9 @@ Everything here is done by the product owner on their own iPhone against the hos
 
 ### 1a. Ship what's already fixed
 
-- [ ] Redeploy `send-push`. The deployed version predates `f4efd5e`: `npx supabase functions deploy send-push`
+- [x] Redeploy `send-push` (2026-09-28, version 2). The deployed version predates `f4efd5e`: `npx supabase functions deploy send-push`
 - [ ] New iOS build: the 2026-09-28 `app.json` changes (removed unused camera, microphone and Reminders usage strings) are native, so they only ship in a build. Bump `version` to `0.3.1` first, because the runtime version follows it and a JS update must not reach a build it wasn't made for.
-- [ ] `eas update --branch preview` for the JS fixes if you test on the 0.3.0 build first (export now includes reminders; Support opens email).
+- [x] `eas update --branch preview` for the JS fixes (2026-09-28, group `c04cba24`) if you test on the 0.3.0 build first (export now includes reminders; Support opens email).
 
 ### 1b. Acceptance pass
 
@@ -41,7 +41,7 @@ Walk [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §29 on the device. Items 
 
 ### 1c. Server push, end to end
 
-Needs `PUSH_ADMIN_SECRET` (already set as a function secret) and your test account's user id (Supabase dashboard → Authentication → Users).
+Needs `PUSH_ADMIN_SECRET` (rotated 2026-09-28; the value is kept in the git-ignored `supabase/.env`) and your test account's user id (Supabase dashboard → Authentication → Users).
 
 1. On the phone: allow notifications, then in You → Notifications turn on **Prism news**.
 2. Confirm a row exists for the account in `push_tokens`.
@@ -55,8 +55,8 @@ Needs `PUSH_ADMIN_SECRET` (already set as a function secret) and your test accou
 5. If it says `sent: 1` but nothing arrives, check `eas credentials` for an iOS push key. If `sent: 0` with `recipients: 1`, the token wasn't saved.
 6. Sign out, send again, and confirm nothing arrives (the token should be removed on sign-out).
 
-- [ ] Push arrives with the app closed
-- [ ] Nothing arrives after sign-out
+- [x] Push arrives with the app closed (2026-09-28, owner's iPhone, `updates` category, `sent: 1`)
+- [x] Nothing arrives after sign-out (2026-09-28: token count went to 0, `sent: 0`)
 
 ### 1d. Account deletion, end to end
 
