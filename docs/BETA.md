@@ -13,7 +13,7 @@ Everything here is done by the product owner on their own iPhone against the hos
 ### 1a. Ship what's already fixed
 
 - [x] Redeploy `send-push` (2026-09-28, version 2). The deployed version predates `f4efd5e`: `npx supabase functions deploy send-push`
-- [ ] New iOS build: the 2026-09-28 `app.json` changes (removed unused camera, microphone and Reminders usage strings) are native, so they only ship in a build. Bump `version` to `0.3.1` first, because the runtime version follows it and a JS update must not reach a build it wasn't made for.
+- [x] New iOS build: the 2026-09-28 `app.json` changes (removed unused camera, microphone and Reminders usage strings) are native, so they only ship in a build. Bump `version` to `0.3.1` first, because the runtime version follows it and a JS update must not reach a build it wasn't made for. _Done 2026-09-28: 0.3.1 build 4 (`production` profile, commit `12c1b47`), auto-submitted to App Store Connect. JS fixes for it go out with `eas update --branch production --environment production`. Build 3 is an unused duplicate from the first attempt._
 - [x] `eas update --branch preview` for the JS fixes (2026-09-28, group `c04cba24`) if you test on the 0.3.0 build first (export now includes reminders; Support opens email).
 
 ### 1b. Acceptance pass
@@ -173,4 +173,7 @@ Listed so it isn't lost; none of it blocks Beta.
 - Android: FCM credentials, a first Android build and a device pass
 - GitHub Actions CI: last known state was `startup_failure` with no jobs run ([`BUILD_STATUS.md`](./BUILD_STATUS.md) §16)
 - Help center (Support's last unconnected row)
+- **App Store seller:** the Apple developer account is an individual account (team `ZP2P9TDS45`), so the App Store would show that person as the seller, while the privacy policy names T-Time Media LLC. Move to an organization account in the LLC's name before public launch.
+- **Store name:** "Prism" is taken; App Store Connect currently has the placeholder "Prism (6edfe8)". Kept on purpose for internal testing (owner, 2026-09-28): testers see "Prism" on the home screen either way. Choose the listing name before external TestFlight (Beta App Review shows it). "Diffract" had no App Store match in a 2026-09-28 search; "Refract" was free as a bare name. A name unrelated to "Prism" also means renaming the app itself (Apple requires the home-screen name to match).
+- **App Store Connect API key:** EAS holds an ADMIN-role key (chosen 2026-09-28). Optionally replace it with an APP_MANAGER key.
 - Multi-device offline conflict resolution ([`BUILD_STATUS.md`](./BUILD_STATUS.md) §16)
