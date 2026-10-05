@@ -163,6 +163,27 @@ export async function cancelRemindersFor(type: string, referenceId: string): Pro
 }
 
 /**
+ * Cancels every scheduled reminder except a pending snooze or test. A full
+ * re-sync calls this before scheduling, so reminders left over from another
+ * account, a deleted record or an older version of the app can't keep firing
+ * beside the current ones.
+ */
+export async function cancelAllReminders(): Promise<void> {
+  if (!isNotificationsSupported) return;
+  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+  const toCancel = scheduled.filter(
+    (request) => request.content.data?.type !== 'snooze' && request.content.data?.type !== 'test',
+  );
+  await cancelScheduledNotifications(toCancel.map((request) => request.identifier));
+}
+
+/** Clears everything this phone has scheduled, snoozes included. Used on sign-out. */
+export async function cancelEveryNotification(): Promise<void> {
+  if (!isNotificationsSupported) return;
+  await Notifications.cancelAllScheduledNotificationsAsync();
+}
+
+/**
  * Logging a dose means its follow-up is no longer needed: cancels the
  * pending follow-up for any dose of this medication that has already come
  * due. Called whenever a dose is logged, in the app or from a notification.

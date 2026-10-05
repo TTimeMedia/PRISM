@@ -4,6 +4,7 @@ import {
   ACTION_SNOOZE,
   APPOINTMENT_CATEGORY,
   MEDICATION_CATEGORY,
+  cancelAllReminders,
   cancelDueNudges,
   cancelRemindersFor,
   registerNotificationCategories,
@@ -179,7 +180,7 @@ describe('scheduleAppointmentReminder — lead times', () => {
   });
 });
 
-describe('cancelRemindersFor and cancelDueNudges', () => {
+describe('cancelRemindersFor, cancelDueNudges and cancelAllReminders', () => {
   const pending = (id: string, data: Record<string, unknown>) => ({
     identifier: id,
     content: { data },
@@ -209,6 +210,24 @@ describe('cancelRemindersFor and cancelDueNudges', () => {
     await cancelDueNudges('m1');
 
     expect(mockCancel.mock.calls.map((c) => c[0])).toEqual(['due']);
+  });
+
+  it('clears reminders from any account or app version, but keeps a snooze or test', async () => {
+    mockGetAll.mockResolvedValue([
+      pending('mine', { type: 'medication', referenceId: 'm1' }),
+      pending('other-account', { type: 'medication', referenceId: 'gone' }),
+      pending('old-version', {}),
+      pending('snoozed', { type: 'snooze' }),
+      pending('test', { type: 'test' }),
+    ]);
+
+    await cancelAllReminders();
+
+    expect(mockCancel.mock.calls.map((c) => c[0]).sort()).toEqual([
+      'mine',
+      'old-version',
+      'other-account',
+    ]);
   });
 });
 

@@ -15,7 +15,7 @@ import { useModules, useSettings } from '../profile/queries';
 import { useAppointments, useMedications } from '../care/queries';
 import {
   NUDGE_DELAY_MINUTES,
-  cancelRemindersFor,
+  cancelAllReminders,
   configureNotificationHandler,
   registerNotificationCategories,
   trimToBudget,
@@ -44,6 +44,8 @@ import {
  * window ahead and need re-syncing on each app open anyway (see
  * notificationScheduler.ts's own header).
  */
+let syncQueue: Promise<void> = Promise.resolve();
+
 export function useReminderSync(): void {
   const { session } = useSession();
   const userId = session?.user.id;
@@ -114,7 +116,7 @@ export function useReminderSync(): void {
         const granted = await requestNotificationPermissions();
         if (!granted || cancelled) return;
       }
-      await syncReminders({
+      const args: SyncArgs = {
         userId,
         medications: medicationsEnabled ? medications : [],
         appointments: appointmentsEnabled ? appointments : [],
@@ -122,8 +124,15 @@ export function useReminderSync(): void {
         messages: resolveReminderMessages(settings.reminder_messages),
         nudgeDelayMinutes: missedDoseNudge ? NUDGE_DELAY_MINUTES : null,
         appointmentLeadMinutes: leadMinutes,
-      });
-      await trimToBudget();
+      };
+      // One sync at a time: two overlapping ones would each clear, then each schedule, doubling every reminder.
+      syncQueue = syncQueue
+        .catch(() => undefined)
+        .then(async () => {
+          await syncReminders(args);
+          await trimToBudget();
+        });
+      await syncQueue;
     })();
     return () => {
       cancelled = true;
@@ -196,7 +205,6 @@ async function syncReminders({
 
   for (const [key, reminder] of existing) {
     if (desired.has(key) || !reminder.reference_id) continue;
-    await cancelRemindersFor(reminder.type, reminder.reference_id);
     await supabase
       .from('reminders')
       .delete()
@@ -205,9 +213,11 @@ async function syncReminders({
       .eq('reference_id', reminder.reference_id);
   }
 
+  // The phone's whole schedule is rebuilt from what this account wants, so
+  // nothing scheduled by another account or an older app version survives.
+  await cancelAllReminders();
   for (const medication of medications) {
     if (!desired.has(`medication:${medication.id}`)) continue;
-    await cancelRemindersFor('medication', medication.id);
     await scheduleMedicationReminders(medication, notificationPrivacy, {
       nudgeDelayMinutes,
       messages,
@@ -215,7 +225,6 @@ async function syncReminders({
   }
   for (const appointment of appointments) {
     if (!desired.has(`appointment:${appointment.id}`)) continue;
-    await cancelRemindersFor('appointment', appointment.id);
     await scheduleAppointmentReminder(
       appointment,
       notificationPrivacy,
