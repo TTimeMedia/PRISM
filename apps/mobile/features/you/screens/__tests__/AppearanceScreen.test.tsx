@@ -14,6 +14,13 @@ jest.mock('../../../../lib/profile/queries', () => ({
   useUpdateSettings: jest.fn(),
 }));
 
+const mockSetIcon = jest.fn();
+jest.mock('expo-alternate-app-icons', () => ({
+  supportsAlternateIcons: true,
+  setAlternateAppIcon: (...args: unknown[]) => mockSetIcon(...args),
+  getAppIconName: () => null,
+}));
+
 const mockedUseSettings = useSettings as jest.MockedFunction<typeof useSettings>;
 const mockedUseUpdateSettings = useUpdateSettings as jest.MockedFunction<typeof useUpdateSettings>;
 
@@ -35,13 +42,25 @@ describe('AppearanceScreen colors', () => {
   it('marks the current palette as selected and switches it when another is pressed', () => {
     renderWithProviders(<AppearanceScreen />);
 
-    expect(screen.getByLabelText(/^Slate./).props.accessibilityState.selected).toBe(true);
+    expect(screen.getByLabelText(/^Slate\./).props.accessibilityState.selected).toBe(true);
 
-    fireEvent.press(screen.getByLabelText(/^Ember./));
+    fireEvent.press(screen.getByLabelText(/^Ember\./));
 
     expect(useAppStore.getState().palette).toBe('ember');
     expect(mutate).toHaveBeenCalledWith({ palette: 'ember' });
-    expect(screen.getByLabelText(/^Ember./).props.accessibilityState.selected).toBe(true);
-    expect(screen.getByLabelText(/^Slate./).props.accessibilityState.selected).toBe(false);
+    expect(screen.getByLabelText(/^Ember\./).props.accessibilityState.selected).toBe(true);
+    expect(screen.getByLabelText(/^Slate\./).props.accessibilityState.selected).toBe(false);
+  });
+
+  it('shows the app icons with Slate chosen, and switches the icon when another is pressed', () => {
+    mockSetIcon.mockResolvedValue('Dusk');
+    renderWithProviders(<AppearanceScreen />);
+
+    expect(screen.getByLabelText('Slate icon').props.accessibilityState.selected).toBe(true);
+
+    fireEvent.press(screen.getByLabelText('Dusk icon'));
+
+    expect(mockSetIcon).toHaveBeenCalledWith('Dusk');
+    expect(screen.getByLabelText('Dusk icon').props.accessibilityState.selected).toBe(true);
   });
 });

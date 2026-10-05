@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
@@ -16,6 +16,8 @@ import {
 import type { Theme } from '@prism/types';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppStore } from '../../../lib/store/appStore';
+import { canChangeAppIcon, currentAppIcon, setAppIcon } from '../../../lib/you/appIcon';
+import { AppIconPicker } from '../components/AppIconPicker';
 import { PalettePicker } from '../components/PalettePicker';
 
 const THEME_OPTIONS = [
@@ -37,6 +39,15 @@ export function AppearanceScreen() {
   const setThemePreference = useAppStore((state) => state.setThemePreference);
   const palette = useAppStore((state) => state.palette);
   const setPalette = useAppStore((state) => state.setPalette);
+
+  const [appIcon, setAppIconState] = useState<PaletteKey>(() => currentAppIcon());
+
+  const selectAppIcon = (key: PaletteKey) => {
+    const previous = appIcon;
+    setAppIconState(key);
+    // iOS shows its own "You have changed the icon" alert; if it refuses, show what's really there.
+    setAppIcon(key).catch(() => setAppIconState(previous));
+  };
 
   const selectPalette = (key: PaletteKey) => {
     setPalette(key);
@@ -72,6 +83,14 @@ export function AppearanceScreen() {
           />
           <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>Colors</Text>
           <PalettePicker value={palette} onChange={selectPalette} />
+          {canChangeAppIcon() ? (
+            <>
+              <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>
+                App icon
+              </Text>
+              <AppIconPicker value={appIcon} onChange={selectAppIcon} />
+            </>
+          ) : null}
         </ScrollView>
       )}
     </View>
