@@ -1,4 +1,5 @@
 import { removeThisDevicePushToken } from '../push/pushToken';
+import { cancelEveryNotification } from '../reminders/notificationScheduler';
 import * as Linking from 'expo-linking';
 import { supabase } from '../supabase/client';
 
@@ -49,5 +50,7 @@ export async function resendVerificationEmail(email: string) {
 export async function signOut() {
   // While still signed in, so this phone stops getting server pushes for the account.
   await removeThisDevicePushToken();
+  // Reminders belong to the account, so the next person to sign in doesn't get them.
+  await cancelEveryNotification().catch(() => undefined);
   return supabase.auth.signOut();
 }
