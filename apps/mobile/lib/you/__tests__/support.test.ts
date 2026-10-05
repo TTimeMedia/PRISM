@@ -1,26 +1,62 @@
-import { SUPPORT_EMAIL, supportMailto } from '../support';
+import { isSupportKind, submitSupportRequest } from '../support';
 
-const device = { appVersion: '0.3.0', platform: 'ios', osVersion: '18.2' };
+const mockInvoke = jest.fn();
+const mockUpload = jest.fn();
 
-function parse(url: string) {
-  const [address, query] = url.replace('mailto:', '').split('?');
-  const params = new URLSearchParams(query);
-  return { address, subject: params.get('subject'), body: params.get('body') ?? '' };
-}
+jest.mock('../../supabase/client', () => ({
+  supabase: {
+    functions: { invoke: (...args: unknown[]) => mockInvoke(...args) },
+    storage: { from: () => ({ upload: (...args: unknown[]) => mockUpload(...args) }) },
+  },
+}));
 
-describe('supportMailto', () => {
-  it('addresses the published support email with a subject per topic', () => {
-    expect(parse(supportMailto('contact', device))).toMatchObject({
-      address: SUPPORT_EMAIL,
-      subject: 'Prism support',
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockInvoke.mockResolvedValue({ data: { emailed: true }, error: null });
+  mockUpload.mockResolvedValue({ error: null });
+  globalThis.fetch = jest.fn().mockResolvedValue({
+    arrayBuffer: () => Promise.resolve(new ArrayBuffer(4)),
+  }) as never;
+});
+
+describe('submitSupportRequest', () => {
+  it('sends the request to submit-support, trimmed, with no screenshot', async () => {
+    await expect(
+      submitSupportRequest({ userId: 'u1', kind: 'contact', message: '  Hello  ' }),
+    ).resolves.toEqual({ emailed: true });
+
+    expect(mockUpload).not.toHaveBeenCalled();
+    const [name, { body }] = mockInvoke.mock.calls[0];
+    expect(name).toBe('submit-support');
+    expect(body).toMatchObject({ kind: 'contact', message: 'Hello', screenshotPath: null });
+  });
+
+  it("uploads an attached screenshot into the person's own support folder first", async () => {
+    await submitSupportRequest({
+      userId: 'u1',
+      kind: 'problem',
+      message: 'Broken',
+      screen: '/care',
+      screenshotUri: 'file:///shot.jpg',
     });
-    expect(parse(supportMailto('problem', device)).subject).toBe('Prism problem report');
-    expect(parse(supportMailto('privacy', device)).subject).toBe('Prism privacy concern');
+
+    const path = mockUpload.mock.calls[0][0] as string;
+    expect(path).toMatch(/^u1\/support\/.+\.jpg$/);
+    expect(mockInvoke.mock.calls[0][1].body).toMatchObject({
+      screenshotPath: path,
+      screen: '/care',
+    });
   });
 
-  it('adds the app version and platform, and nothing else about the person', () => {
-    const { body } = parse(supportMailto('problem', device));
-    expect(body).toContain('Prism 0.3.0 · ios 18.2');
-    expect(body).toContain('Please leave out anything about your medications or health.');
+  it('fails loudly when the function refuses', async () => {
+    mockInvoke.mockResolvedValue({ data: null, error: new Error('429') });
+    await expect(
+      submitSupportRequest({ userId: 'u1', kind: 'privacy', message: 'Hi' }),
+    ).rejects.toThrow('429');
   });
+});
+
+it('knows the three kinds of request', () => {
+  expect(['contact', 'problem', 'privacy'].every(isSupportKind)).toBe(true);
+  expect(isSupportKind('billing')).toBe(false);
 });

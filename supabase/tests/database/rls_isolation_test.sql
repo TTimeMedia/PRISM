@@ -279,6 +279,41 @@ end $$;
 
 reset role;
 
+-- TEST 13: support requests are private to their sender, can't be sent in
+-- someone else's name, and can't be edited or deleted from the app.
+set session role test_authenticated;
+set request.jwt.claim.sub = '11111111-1111-1111-1111-111111111111';
+insert into public.support_requests (user_id, kind, message) values
+  ('11111111-1111-1111-1111-111111111111', 'problem', 'The menu lags.');
+
+do $$
+declare changed int;
+begin
+  update public.support_requests set message = 'edited';
+  get diagnostics changed = row_count;
+  assert changed = 0, 'FAIL: a sender could edit their support request';
+  delete from public.support_requests;
+  get diagnostics changed = row_count;
+  assert changed = 0, 'FAIL: a sender could delete their support request';
+  raise notice 'PASS: support requests cannot be edited or deleted from the app.';
+end $$;
+
+set request.jwt.claim.sub = '22222222-2222-2222-2222-222222222222';
+do $$
+declare visible_count int;
+begin
+  select count(*) into visible_count from public.support_requests;
+  assert visible_count = 0, format('FAIL: user B can see %s of user A''s support requests', visible_count);
+  begin
+    insert into public.support_requests (user_id, kind, message) values
+      ('11111111-1111-1111-1111-111111111111', 'contact', 'Impersonating.');
+    raise exception 'FAIL: user B sent a support request as user A';
+  exception when insufficient_privilege then
+    raise notice 'PASS: support requests are private, and only sent in your own name.';
+  end;
+end $$;
+reset role;
+
 do $$
 begin
   raise notice '=== ALL RLS ADVERSARIAL TESTS PASSED ===';

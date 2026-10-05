@@ -1,42 +1,30 @@
 import React from 'react';
-import { router } from 'expo-router';
-import { Linking, Platform, ScrollView, StyleSheet, View } from 'react-native';
-import Constants from 'expo-constants';
+import { router, type Href } from 'expo-router';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, CircleAlert, HelpCircle, Mail, ShieldAlert } from 'lucide-react-native';
 import {
   PRISMHeader,
   PRISMIconButton,
   PRISMListItem,
   PRISMSection,
+  PRISMSwitch,
   spacing,
+  type,
   useTheme,
-  useToast,
 } from '@prism/ui';
-import { SUPPORT_EMAIL, supportMailto, type SupportTopic } from '../../../lib/you/support';
+import { useAppStore } from '../../../lib/store/appStore';
+import { SUPPORT_EMAIL } from '../../../lib/you/support';
 
 /**
- * Screen 66 — Support. Contact, problem reports and privacy concerns open
- * a draft email to the published support address. There is no help center
- * yet, so that row still says so plainly rather than opening a made-up link.
+ * Screen 66 — Support. The Help center answers the common questions in the
+ * app; Contact support, Report a problem and Privacy concern are forms sent
+ * from the app (lib/you/support.ts), answered by email.
  */
 export function SupportScreen() {
   const theme = useTheme();
-  const { showToast } = useToast();
-
-  const notConnected = () => showToast("This isn't connected yet — check back soon.");
-
-  const email = async (topic: SupportTopic) => {
-    const url = supportMailto(topic, {
-      appVersion: Constants.expoConfig?.version ?? 'unknown',
-      platform: Platform.OS,
-      osVersion: Platform.Version,
-    });
-    try {
-      await Linking.openURL(url);
-    } catch {
-      showToast(`No mail app found. Write to ${SUPPORT_EMAIL}.`);
-    }
-  };
+  const shakeToReport = useAppStore((state) => state.shakeToReport);
+  const setShakeToReport = useAppStore((state) => state.setShakeToReport);
+  const go = (href: Href) => router.push(href);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -52,26 +40,40 @@ export function SupportScreen() {
         <PRISMSection>
           <PRISMListItem
             title="Help center"
+            subtitle="Answers to common questions"
             leading={<HelpCircle size={20} color={theme.accent} />}
-            onPress={notConnected}
+            onPress={() => go('/you/help')}
           />
           <PRISMListItem
             title="Contact support"
-            subtitle={SUPPORT_EMAIL}
+            subtitle="Ask us anything"
             leading={<Mail size={20} color={theme.spectrum.violet} />}
-            onPress={() => email('contact')}
+            onPress={() => go('/you/support/contact')}
           />
           <PRISMListItem
             title="Report a problem"
+            subtitle="Something isn't working"
             leading={<CircleAlert size={20} color={theme.spectrum.yellow} />}
-            onPress={() => email('problem')}
+            onPress={() => go('/you/support/problem')}
           />
           <PRISMListItem
             title="Privacy concern"
+            subtitle="About your data"
             leading={<ShieldAlert size={20} color={theme.spectrum.pink} />}
-            onPress={() => email('privacy')}
+            onPress={() => go('/you/support/privacy')}
           />
         </PRISMSection>
+        <PRISMSection>
+          <PRISMSwitch
+            label="Shake to report a problem"
+            description="Shake your phone anywhere in Prism to open a problem report, with an optional screenshot."
+            value={shakeToReport}
+            onValueChange={setShakeToReport}
+          />
+        </PRISMSection>
+        <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
+          We reply by email to the address on your account. You can also write to {SUPPORT_EMAIL}.
+        </Text>
       </ScrollView>
     </View>
   );
@@ -85,5 +87,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
+  },
+  note: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
   },
 });

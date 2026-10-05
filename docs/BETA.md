@@ -172,7 +172,7 @@ Listed so it isn't lost; none of it blocks Beta.
 - App Store privacy "nutrition label" (the outside-services list in `DECISIONS.md` is the input)
 - Android: FCM credentials, a first Android build and a device pass
 - GitHub Actions CI: last known state was `startup_failure` with no jobs run ([`BUILD_STATUS.md`](./BUILD_STATUS.md) §16)
-- Help center (Support's last unconnected row)
+- ~~Help center (Support's last unconnected row)~~ Built 2026-10-05: in-app articles, support forms and shake to report (`DECISIONS.md`)
 - **App Store seller:** the Apple developer account is an individual account (team `ZP2P9TDS45`), so the App Store would show that person as the seller, while the privacy policy names T-Time Media LLC. Move to an organization account in the LLC's name before public launch.
 - **Store name:** "Prism" is taken; App Store Connect currently has the placeholder "Prism (6edfe8)". Kept on purpose for internal testing (owner, 2026-09-28): testers see "Prism" on the home screen either way. Choose the listing name before external TestFlight (Beta App Review shows it). "Diffract" had no App Store match in a 2026-09-28 search; "Refract" was free as a bare name. A name unrelated to "Prism" also means renaming the app itself (Apple requires the home-screen name to match).
 - **App Store Connect API key:** EAS holds an ADMIN-role key (chosen 2026-09-28). Optionally replace it with an APP_MANAGER key.

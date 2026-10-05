@@ -1,39 +1,96 @@
+import { Platform } from 'react-native';
+import Constants from 'expo-constants';
+import { supabase } from '../supabase/client';
+
 /**
- * Support contact for Screen 66. The address is the one published on the
- * Prism page (docs/website/prism.html). The draft email carries only what
- * helps triage (topic, app version, platform), never anything about the
- * person's care, so opening it can't leak health data to a mail provider.
+ * Support requests (Screen 66). Contact support, Report a problem and
+ * Privacy concern are in-app forms: each request is saved to
+ * `support_requests` and emailed to the support address by the
+ * `submit-support` Edge Function, with Reply-To set to the sender's account
+ * email, so support answers by replying. The address is the one published on
+ * the Prism page (docs/website/prism.html) and is still shown for people who
+ * would rather write directly.
  */
 export const SUPPORT_EMAIL = 'support@ttimemedia.org';
 
-export type SupportTopic = 'contact' | 'problem' | 'privacy';
+export type SupportKind = 'contact' | 'problem' | 'privacy';
 
-const SUBJECTS: Record<SupportTopic, string> = {
-  contact: 'Prism support',
-  problem: 'Prism problem report',
-  privacy: 'Prism privacy concern',
+export const SUPPORT_KINDS: Record<
+  SupportKind,
+  { title: string; intro: string; placeholder: string; sent: string }
+> = {
+  contact: {
+    title: 'Contact support',
+    intro: 'Ask anything about Prism. We reply by email, usually within two working days.',
+    placeholder: 'How can we help?',
+    sent: "Sent. We'll reply to the email on your account.",
+  },
+  problem: {
+    title: 'Report a problem',
+    intro:
+      "Tell us what happened and what you expected. Please leave out details about your medications or health; we don't need them to fix things.",
+    placeholder: 'What happened?',
+    sent: 'Thanks. Your report reached us, and we may email you about it.',
+  },
+  privacy: {
+    title: 'Privacy concern',
+    intro:
+      'Questions or worries about your data, or a request about it. Privacy messages are read first.',
+    placeholder: 'What would you like us to know?',
+    sent: "Sent. We'll reply to the email on your account.",
+  },
 };
 
-const PROMPTS: Record<SupportTopic, string> = {
-  contact: 'How can we help?',
-  problem:
-    'What happened, and what did you expect to happen? Please leave out anything about your medications or health.',
-  privacy: 'What would you like us to know?',
-};
+export const MAX_SUPPORT_MESSAGE = 5000;
 
-export interface SupportDevice {
-  appVersion: string;
-  platform: string;
-  osVersion: string | number;
+export function isSupportKind(value: unknown): value is SupportKind {
+  return value === 'contact' || value === 'problem' || value === 'privacy';
 }
 
-export function supportMailto(topic: SupportTopic, device: SupportDevice): string {
-  const body = [
-    PROMPTS[topic],
-    '',
-    '',
-    '---',
-    `Prism ${device.appVersion} · ${device.platform} ${device.osVersion}`,
-  ].join('\n');
-  return `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(SUBJECTS[topic])}&body=${encodeURIComponent(body)}`;
+export interface SupportRequestInput {
+  userId: string;
+  kind: SupportKind;
+  message: string;
+  /** The screen it was sent about, e.g. "/care/medications". */
+  screen?: string | null;
+  /** A local screenshot file to attach, only when the person chose to. */
+  screenshotUri?: string | null;
+}
+
+/**
+ * Sends a request. Resolves when it's saved; `emailed` is false if saving
+ * worked but the email to support didn't (it is still in the table).
+ */
+export async function submitSupportRequest(
+  input: SupportRequestInput,
+): Promise<{ emailed: boolean }> {
+  const screenshotPath = input.screenshotUri
+    ? await uploadScreenshot(input.userId, input.screenshotUri)
+    : null;
+  const { data, error } = await supabase.functions.invoke<{ emailed: boolean }>('submit-support', {
+    body: {
+      kind: input.kind,
+      message: input.message.trim(),
+      screen: input.screen ?? null,
+      appVersion: Constants.expoConfig?.version ?? 'unknown',
+      platform: Platform.OS,
+      osVersion: String(Platform.Version),
+      screenshotPath,
+    },
+  });
+  if (error) throw error;
+  return { emailed: !!data?.emailed };
+}
+
+/** Screenshots go in the private `attachments` bucket, so deleting the account removes them. */
+async function uploadScreenshot(userId: string, uri: string): Promise<string> {
+  const response = await fetch(uri);
+  const arrayBuffer = await response.arrayBuffer();
+  const unique = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const path = `${userId}/support/${unique}.jpg`;
+  const { error } = await supabase.storage
+    .from('attachments')
+    .upload(path, arrayBuffer, { contentType: 'image/jpeg' });
+  if (error) throw error;
+  return path;
 }
