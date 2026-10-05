@@ -3,6 +3,7 @@ import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { renderWithProviders } from '../../../test-utils/renderWithProviders';
 import { TopBar } from '../TopBar';
+import { SideMenuProvider } from '../SideMenu';
 import { useModules, useProfile } from '../../../lib/profile/queries';
 import { useReminderAttention } from '../../../lib/reminders/useReminderAttention';
 
@@ -29,6 +30,13 @@ const modules = (off: string[] = []) =>
     enabled: !off.includes(module_key),
   }));
 
+const renderBar = (title: string) =>
+  renderWithProviders(
+    <SideMenuProvider>
+      <TopBar title={title} />
+    </SideMenuProvider>,
+  );
+
 describe('TopBar', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -38,7 +46,7 @@ describe('TopBar', () => {
   });
 
   it('names the screen and offers the menu and reminders', () => {
-    renderWithProviders(<TopBar title="Care" />);
+    renderBar('Care');
 
     expect(screen.getByText('Care')).toBeTruthy();
     expect(screen.getByLabelText('Open menu')).toBeTruthy();
@@ -48,14 +56,14 @@ describe('TopBar', () => {
   });
 
   it('opens reminders from the bar', () => {
-    renderWithProviders(<TopBar title="Care" />);
+    renderBar('Care');
 
     fireEvent.press(screen.getByLabelText('Reminders'));
     expect(router.push).toHaveBeenCalledWith('/you/notifications');
   });
 
   it('shows no dot on the bell when reminders are fine', () => {
-    renderWithProviders(<TopBar title="Today" />);
+    renderBar('Today');
 
     expect(screen.queryByTestId('reminder-dot')).toBeNull();
   });
@@ -63,14 +71,14 @@ describe('TopBar', () => {
   it('shows a dot on the bell when reminders need a look', () => {
     mockedAttention.mockReturnValue(true);
 
-    renderWithProviders(<TopBar title="Today" />);
+    renderBar('Today');
 
     expect(screen.getByTestId('reminder-dot')).toBeTruthy();
     expect(screen.getByLabelText('Reminders, needs attention')).toBeTruthy();
   });
 
   it('opens a menu with the features that are on, setup, help, and the profile', () => {
-    renderWithProviders(<TopBar title="Today" />);
+    renderBar('Today');
 
     fireEvent.press(screen.getByLabelText('Open menu'));
 
@@ -79,20 +87,27 @@ describe('TopBar', () => {
     expect(screen.getByLabelText('Journal')).toBeTruthy();
     // Injections is off, so it is not listed.
     expect(screen.queryByLabelText('Injections')).toBeNull();
-    // The bell and the menu entry both lead to Reminders.
-    expect(screen.getAllByLabelText('Reminders')).toHaveLength(2);
+    // The menu has its own Reminders entry; the bell behind it is hidden while the menu is open.
+    expect(screen.getAllByLabelText('Reminders')).toHaveLength(1);
     expect(screen.getByLabelText('How Prism works')).toBeTruthy();
     expect(screen.getByLabelText('Your profile, Dominic Perignon')).toBeTruthy();
     expect(screen.getByText('DP')).toBeTruthy();
   });
 
   it('goes to a menu item and closes the menu', () => {
-    renderWithProviders(<TopBar title="Today" />);
+    renderBar('Today');
 
     fireEvent.press(screen.getByLabelText('Open menu'));
     fireEvent.press(screen.getByLabelText('Privacy'));
 
     expect(router.push).toHaveBeenCalledWith('/you/privacy');
     expect(screen.queryByText('Your Prism')).toBeNull();
+  });
+
+  it('keeps the closed menu out of reach, and the bar usable', () => {
+    renderBar('Today');
+
+    expect(screen.queryByText('Your Prism')).toBeNull();
+    expect(screen.getAllByLabelText('Reminders')).toHaveLength(1);
   });
 });

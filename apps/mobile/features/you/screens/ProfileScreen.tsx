@@ -13,6 +13,7 @@ import {
   type,
   useTheme,
 } from '@prism/ui';
+import { capitalizeFirst, formatBirthday } from '../../../lib/profile/display';
 import { useProfile } from '../../../lib/profile/queries';
 import { useSignedProfilePhotoUrl } from '../../../lib/you/useSignedProfilePhotoUrl';
 
@@ -49,9 +50,9 @@ export function ProfileScreen() {
           </View>
           <PRISMSection>
             <DetailRow label="Name" value={profile.display_name} />
-            <DetailRow label="Pronouns" value={profile.pronouns} />
+            <DetailRow label="Pronouns" value={capitalizeFirst(profile.pronouns)} />
             <DetailRow label="Gender" value={profile.gender} />
-            <DetailRow label="Birthday" value={profile.birthday} />
+            <DetailRow label="Birthday" value={formatBirthday(profile.birthday)} />
           </PRISMSection>
           <PRISMButton label="Edit profile" onPress={() => router.push('/you/profile/edit')} />
         </ScrollView>
