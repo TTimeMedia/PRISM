@@ -3,7 +3,7 @@
     "name": "Prism",
     "slug": "prism",
     "owner": "ttimemedia",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "prism",
@@ -28,10 +28,9 @@
     "android": {
       "package": "ttimemedia.prism",
       "adaptiveIcon": {
-        "backgroundColor": "#0B0B0F",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#16263F",
+        "foregroundImage": "./assets/images/app-icons/android-slate.png",
+        "monochromeImage": "./assets/images/app-icons/android-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
       "permissions": ["android.permission.USE_BIOMETRIC", "android.permission.USE_FINGERPRINT"],
@@ -84,7 +83,68 @@
           "remindersPermission": false
         }
       ],
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-alternate-app-icons",
+        [
+          {
+            "name": "Mist",
+            "ios": "./assets/images/app-icons/icon-mist.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-mist.png",
+              "backgroundColor": "#2B3138"
+            }
+          },
+          {
+            "name": "Prism",
+            "ios": "./assets/images/app-icons/icon-prism.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-prism.png",
+              "backgroundColor": "#231B3A"
+            }
+          },
+          {
+            "name": "Ocean",
+            "ios": "./assets/images/app-icons/icon-ocean.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-ocean.png",
+              "backgroundColor": "#0B2A35"
+            }
+          },
+          {
+            "name": "Forest",
+            "ios": "./assets/images/app-icons/icon-forest.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-forest.png",
+              "backgroundColor": "#17281C"
+            }
+          },
+          {
+            "name": "Ember",
+            "ios": "./assets/images/app-icons/icon-ember.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-ember.png",
+              "backgroundColor": "#3A1A12"
+            }
+          },
+          {
+            "name": "Dusk",
+            "ios": "./assets/images/app-icons/icon-dusk.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-dusk.png",
+              "backgroundColor": "#2B1D3F"
+            }
+          },
+          {
+            "name": "Blossom",
+            "ios": "./assets/images/app-icons/icon-blossom.png",
+            "android": {
+              "foregroundImage": "./assets/images/app-icons/android-blossom.png",
+              "backgroundColor": "#FFF0EC"
+            }
+          }
+        ]
+      ]
     ],
     "experiments": {
       "typedRoutes": true
