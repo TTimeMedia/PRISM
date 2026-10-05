@@ -73,6 +73,9 @@ export function ListPickerField({
     const needle = trimmedQuery.toLowerCase();
     return options.filter((option) => option.toLowerCase().includes(needle));
   }, [options, searchable, trimmedQuery]);
+  // Case doesn't matter, so a value saved as 'he/him' still shows as the 'He/him' option.
+  const isOption = (text: string) =>
+    options.some((option) => option.toLowerCase() === text.toLowerCase());
   const exactMatch = options.some((option) => option.toLowerCase() === trimmedQuery.toLowerCase());
 
   const borderColor = error ? theme.destructive : open ? theme.accent : theme.colors.fieldBorder;
@@ -84,7 +87,7 @@ export function ListPickerField({
         accessibilityRole="button"
         accessibilityLabel={`${label}: ${value || placeholder}`}
         onPress={() => {
-          setDraft(value && !options.includes(value) ? value : '');
+          setDraft(value && !isOption(value) ? value : '');
           setOpen(true);
         }}
         style={[styles.field, { backgroundColor: theme.colors.field, borderColor }]}
@@ -96,7 +99,9 @@ export function ListPickerField({
             { color: value ? theme.colors.text.primary : theme.colors.text.tertiary },
           ]}
         >
-          {value || placeholder}
+          {(value && options.find((option) => option.toLowerCase() === value.toLowerCase())) ||
+            value ||
+            placeholder}
         </Text>
         <ChevronDown size={20} color={theme.colors.text.tertiary} />
       </Pressable>
@@ -169,14 +174,14 @@ export function ListPickerField({
                 <Row
                   key={option}
                   label={option}
-                  selected={option === value}
+                  selected={!!value && option.toLowerCase() === value.toLowerCase()}
                   onPress={() => choose(option)}
                 />
               ))}
               {!searchable ? (
                 <Row
                   label={customLabel}
-                  selected={!!value && !options.includes(value)}
+                  selected={!!value && !isOption(value)}
                   leading={<Plus size={18} color={theme.accent} />}
                   onPress={() => setWritingOwn(true)}
                 />

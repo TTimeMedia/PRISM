@@ -23,6 +23,7 @@ import { useAppLockStore } from '../lib/store/appLockStore';
 import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
 import { useAppearanceSync } from '../lib/you/useAppearanceSync';
+import { useShakeToReport } from '../lib/you/useShakeToReport';
 import { usePushRegistration } from '../lib/push/usePushRegistration';
 import { useReminderSync } from '../lib/reminders/useReminderSync';
 import { useNotificationResponses } from '../lib/reminders/useNotificationResponses';
@@ -110,6 +111,7 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const isLocked = useAppLockStore((state) => state.isLocked);
   const unlock = useAppLockStore((state) => state.unlock);
   const showAppLockScreen = appLockEnabled && isLocked;
+  useShakeToReport(showTabs && !showAppLockScreen);
 
   if (!ready) {
     return null;

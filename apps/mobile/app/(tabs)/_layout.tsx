@@ -2,6 +2,7 @@ import React from 'react';
 import { Tabs } from 'expo-router';
 import { Sun, HeartPulse, Compass, CircleUserRound } from 'lucide-react-native';
 import { PRISMBottomNav, type PRISMBottomNavItem } from '@prism/ui';
+import { SideMenuProvider } from '../../components/home/SideMenu';
 
 // Derived from <Tabs>'s own `tabBar` prop rather than imported from
 // @react-navigation/bottom-tabs directly — expo-router wraps that
@@ -50,40 +51,42 @@ function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
 
 export default function TabLayout() {
   return (
-    <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
-      // Leaving a tab returns it to its home screen, so tapping a tab always
-      // shows that tab's main page, not whichever screen was open last.
-      screenOptions={{ headerShown: false, popToTopOnBlur: true }}
-    >
-      <Tabs.Screen
-        name="today"
-        options={{
-          title: 'Today',
-          tabBarIcon: ({ color, size }) => <Sun color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="care"
-        options={{
-          title: 'Care',
-          tabBarIcon: ({ color, size }) => <HeartPulse color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="journey"
-        options={{
-          title: 'Journey',
-          tabBarIcon: ({ color, size }) => <Compass color={color} size={size} />,
-        }}
-      />
-      <Tabs.Screen
-        name="you"
-        options={{
-          title: 'You',
-          tabBarIcon: ({ color, size }) => <CircleUserRound color={color} size={size} />,
-        }}
-      />
-    </Tabs>
+    <SideMenuProvider>
+      <Tabs
+        tabBar={(props) => <CustomTabBar {...props} />}
+        // Leaving a tab returns it to its home screen, so tapping a tab always
+        // shows that tab's main page, not whichever screen was open last.
+        screenOptions={{ headerShown: false, popToTopOnBlur: true }}
+      >
+        <Tabs.Screen
+          name="today"
+          options={{
+            title: 'Today',
+            tabBarIcon: ({ color, size }) => <Sun color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="care"
+          options={{
+            title: 'Care',
+            tabBarIcon: ({ color, size }) => <HeartPulse color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="journey"
+          options={{
+            title: 'Journey',
+            tabBarIcon: ({ color, size }) => <Compass color={color} size={size} />,
+          }}
+        />
+        <Tabs.Screen
+          name="you"
+          options={{
+            title: 'You',
+            tabBarIcon: ({ color, size }) => <CircleUserRound color={color} size={size} />,
+          }}
+        />
+      </Tabs>
+    </SideMenuProvider>
   );
 }

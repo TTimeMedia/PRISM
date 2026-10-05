@@ -112,7 +112,7 @@ All decisions below were extracted from the original PRISM master source documen
 **Decision:**
 
 - **Supabase** (database, auth, storage, Edge Functions): all account data.
-- **Resend** (auth email, sender `no-reply@ttimemedia.org`): email address and auth links only.
+- **Resend** (auth email and support requests, sender `no-reply@ttimemedia.org`): email address, auth links, and the text of support requests with any screenshot the person chose to attach.
 - **Expo push service** (server push): an opaque device token plus the notification title and body. Reminder text is generic while Private notifications is on. Expo passes the notification to Apple or Google.
 - **Expo EAS Update** (app code delivery): no user data.
 - **Apple MapKit** (appointment location suggestions, iOS only): the text typed into a Location field, sent by the phone's own MapKit with no Prism key.
@@ -297,6 +297,21 @@ The app includes no analytics, crash-reporting or advertising SDKs.
 **Reason:** Three Screen Bible entries describe more than PRISM currently has a real answer for: Screen 61 (Accessibility) lists Text size / Increased contrast / Screen reader optimizations alongside Reduced motion, but only Reduced motion has a `settings` column and an actual code path (`ReducedMotionProvider`) that changes behavior; Screen 65 (About) calls for Privacy Policy / Terms / open-source acknowledgements, none of which have been published anywhere; Screen 66 (Support) calls for Help center / Contact support / Report a problem / Privacy concern, and no support email, ticketing system, or help-center URL has been established anywhere in the source material — inventing one (e.g. a `mailto:` address) would fabricate an organizational detail nobody specified.
 **Decision:** Accessibility ships only the Reduced motion toggle as an interactive control, with plain-language copy explaining that text size already follows the OS setting (default React Native font-scaling behavior, never overridden) and that every PRISM control already carries real accessibility labels/roles. About shows Privacy Policy/Terms/acknowledgements as informational rows marked "Not yet published"/"Not yet compiled" rather than linking anywhere. Support's four rows are real, themed, tappable list items that surface an honest "This isn't connected yet" toast rather than opening a fabricated link or address.
 **Implications:** When a real contrast mode, a published legal page, or a live support channel exists, each becomes a normal wiring task — swap the static row for a real link/toggle. Until then, nothing on these three screens claims to do something it can't.
+
+### Support is answered in the app; legal pages live on the website
+
+**Date:** 2026-10-05
+**Status:** Active. Supersedes the About and Support parts of the 2026-09-03 decision above.
+**Reason:** The owner asked for Support and About to work the way other apps do: real forms instead of email drafts, a real Help center, shake to report, and properly published legal pages.
+**Decision:**
+
+- **Support forms.** Contact support, Report a problem and Privacy concern are in-app forms. The `submit-support` Edge Function saves each one to `support_requests` (RLS: insert and read your own, no edits) and emails it to support@ttimemedia.org through Resend, Reply-To the sender's account email, so support answers by replying. At most 10 a person an hour. Chosen over a helpdesk service (Zendesk, Intercom, Help Scout) so no new company receives tester data.
+- **Shake to report.** Shaking the phone (two jolts over 2.4 g within 600 ms) opens Report a problem with a screenshot of the screen. The screenshot is shown, and attached only if the person turns that on, because screens show medications. It is stored in the private `attachments` bucket under `{user_id}/support/`, so account deletion removes it. On by default, with a switch in Support. Needs `expo-sensors` (motion permission off: the accelerometer needs none) and `react-native-view-shot`, so 0.3.3 is a new build.
+- **Help center.** Articles ship inside the app (`lib/you/helpArticles.ts`): searchable, readable offline, updated over the air. Each ends with Contact support. When a feature changes, its article changes in the same commit.
+- **Legal pages.** The Privacy Policy (`docs/website/prism.html` → /prism) and Terms of Service (`docs/website/prism-terms.html` → /prism-terms) are web pages opened inside Prism, so updating them never needs an app update and they match what the App Store links to. Open-source acknowledgements are generated from the app's dependencies by `scripts/generate-acknowledgements.mjs` and shown in the app.
+- **Forgot PIN.** The lock screen offers "Forgot your PIN?": it turns App Lock off for the account, forgets the phone's PIN and signs out. Getting back in needs the email and password, so it never bypasses the lock.
+
+**Implications:** Resend now also carries support messages, and the privacy policy says so. The Terms of Service are a draft for legal review before launch; they name no governing law yet. The function needs the `RESEND_API_KEY` secret. Run the acknowledgements script after changing dependencies.
 
 ### The App Lock Screen (78) is a global overlay from the root layout, not a route
 

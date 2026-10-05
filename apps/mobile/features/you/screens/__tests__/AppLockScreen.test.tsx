@@ -4,6 +4,7 @@ import { renderWithProviders } from '../../../../test-utils/renderWithProviders'
 import { AppLockScreen } from '../AppLockScreen';
 import { isBiometricAvailable } from '../../../../lib/you/biometrics';
 import { verifyPin } from '../../../../lib/you/pinStorage';
+import { resetPinAndSignOut } from '../../../../lib/you/forgotPin';
 
 jest.mock('../../../../lib/you/biometrics', () => ({
   isBiometricAvailable: jest.fn(),
@@ -12,6 +13,14 @@ jest.mock('../../../../lib/you/biometrics', () => ({
 
 jest.mock('../../../../lib/you/pinStorage', () => ({
   verifyPin: jest.fn(),
+}));
+
+jest.mock('../../../../lib/you/forgotPin', () => ({
+  resetPinAndSignOut: jest.fn(),
+}));
+
+jest.mock('../../../../lib/auth/AuthProvider', () => ({
+  useSession: () => ({ session: { user: { id: 'u1' } } }),
 }));
 
 const mockedIsBiometricAvailable = isBiometricAvailable as jest.MockedFunction<
@@ -66,5 +75,16 @@ describe('AppLockScreen', () => {
     fireEvent.press(screen.getByText('Unlock'));
 
     await waitFor(() => expect(onUnlock).toHaveBeenCalledTimes(1));
+  });
+
+  it('offers a way out when the PIN is forgotten: sign out, after saying what happens', async () => {
+    renderWithProviders(<AppLockScreen biometricEnabled={false} onUnlock={jest.fn()} />);
+
+    fireEvent.press(screen.getByText('Forgot your PIN?'));
+    expect(screen.getByText(/Your data stays in your account/)).toBeTruthy();
+    expect(resetPinAndSignOut).not.toHaveBeenCalled();
+
+    fireEvent.press(screen.getByText('Sign out and reset PIN'));
+    await waitFor(() => expect(resetPinAndSignOut).toHaveBeenCalledWith('u1'));
   });
 });

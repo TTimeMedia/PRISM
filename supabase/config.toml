@@ -405,6 +405,11 @@ deno_version = 2
 [functions.delete-account]
 verify_jwt = true
 
+# submit-support (see supabase/functions/submit-support/index.ts) is called by
+# the signed-in person sending a support request.
+[functions.submit-support]
+verify_jwt = true
+
 [analytics]
 enabled = true
 port = 54327

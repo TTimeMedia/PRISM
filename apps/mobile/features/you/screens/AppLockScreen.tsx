@@ -11,6 +11,8 @@ import {
   useTheme,
 } from '@prism/ui';
 import { authenticateWithBiometrics, isBiometricAvailable } from '../../../lib/you/biometrics';
+import { useSession } from '../../../lib/auth/AuthProvider';
+import { resetPinAndSignOut } from '../../../lib/you/forgotPin';
 import { verifyPin } from '../../../lib/you/pinStorage';
 
 export interface AppLockScreenProps {
@@ -47,6 +49,20 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
     // Only auto-prompt once, when biometrics become known-available.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [biometricAvailable]);
+
+  const { session } = useSession();
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const resetPin = async () => {
+    if (!session) return;
+    setResetting(true);
+    try {
+      await resetPinAndSignOut(session.user.id);
+    } catch {
+      setError("Couldn't sign out. Check your connection and try again.");
+      setResetting(false);
+    }
+  };
 
   const submitPin = async () => {
     const valid = await verifyPin(pin);
@@ -95,6 +111,28 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
           />
           <PRISMButton label="Unlock" variant="secondary" onPress={submitPin} disabled={!pin} />
         </View>
+
+        {forgotOpen ? (
+          <View style={styles.forgot}>
+            <Text style={[styles.forgotText, { color: theme.colors.text.secondary }]}>
+              Sign out to reset your PIN. Your data stays in your account. Sign back in with your
+              email and password, then set up App Lock again.
+            </Text>
+            <PRISMButton
+              label="Sign out and reset PIN"
+              variant="secondary"
+              loading={resetting}
+              onPress={resetPin}
+            />
+            <PRISMButton label="Cancel" variant="tertiary" onPress={() => setForgotOpen(false)} />
+          </View>
+        ) : (
+          <PRISMButton
+            label="Forgot your PIN?"
+            variant="tertiary"
+            onPress={() => setForgotOpen(true)}
+          />
+        )}
       </View>
     </KeyboardAvoidingView>
   );
@@ -128,5 +166,13 @@ const styles = StyleSheet.create({
   },
   pinBlock: {
     gap: spacing.sm,
+  },
+  forgot: {
+    gap: spacing.sm,
+  },
+  forgotText: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
+    textAlign: 'center',
   },
 });

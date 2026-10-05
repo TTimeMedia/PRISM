@@ -2,6 +2,7 @@ import React from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
+import * as WebBrowser from 'expo-web-browser';
 import { ArrowLeft } from 'lucide-react-native';
 import {
   PRISMHeader,
@@ -13,17 +14,30 @@ import {
   spacing,
   type,
   useTheme,
+  useToast,
 } from '@prism/ui';
+import { LEGAL_LINKS } from '../../../lib/you/legal';
 
 /**
- * Screen 65 — About. Privacy Policy / Terms / open-source
- * acknowledgements have no published destination yet — shown as
- * informational rows rather than a fabricated link, per
- * docs/DECISIONS.md § YOU.
+ * Screen 65 — About. The Privacy Policy and Terms of Service are web pages
+ * on ttimemedia.org, opened inside Prism, so they can be updated without an
+ * app update and match what the App Store links to. Open-source
+ * acknowledgements are built into the app from its dependencies.
  */
 export function AboutScreen() {
   const theme = useTheme();
+  const { showToast } = useToast();
   const version = Constants.expoConfig?.version ?? '0.1.0';
+
+  const open = async (url: string) => {
+    try {
+      await WebBrowser.openBrowserAsync(url, {
+        presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+      });
+    } catch {
+      showToast("Couldn't open that page. Check your connection.", 'error');
+    }
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -48,18 +62,16 @@ export function AboutScreen() {
           it; it never interprets, recommends, or diagnoses.
         </Text>
         <PRISMSection title="Legal">
-          <PRISMListItem title="Privacy Policy" subtitle="Not yet published" showChevron={false} />
-          <PRISMListItem
-            title="Terms of Service"
-            subtitle="Not yet published"
-            showChevron={false}
-          />
+          <PRISMListItem title="Privacy Policy" onPress={() => open(LEGAL_LINKS.privacy)} />
+          <PRISMListItem title="Terms of Service" onPress={() => open(LEGAL_LINKS.terms)} />
           <PRISMListItem
             title="Open-source acknowledgements"
-            subtitle="Not yet compiled"
-            showChevron={false}
+            onPress={() => router.push('/you/acknowledgements')}
           />
         </PRISMSection>
+        <Text style={[styles.copyright, { color: theme.colors.text.tertiary }]}>
+          © {new Date().getFullYear()} T-Time Media LLC
+        </Text>
       </ScrollView>
     </View>
   );
@@ -93,5 +105,10 @@ const styles = StyleSheet.create({
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
     marginBottom: spacing.lg,
+  },
+  copyright: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
+    textAlign: 'center',
   },
 });

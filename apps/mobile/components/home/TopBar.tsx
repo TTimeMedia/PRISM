@@ -1,65 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Bell, Menu } from 'lucide-react-native';
 import { fontFamily, fontWeight, spacing, type, useTheme } from '@prism/ui';
 import { useReminderAttention } from '../../lib/reminders/useReminderAttention';
-import { SideMenu } from './SideMenu';
+import { useSideMenu } from './SideMenu';
 
 /**
  * The bar across the top of Today, Care and Journey: the menu on the left, a
  * bell for reminders (with a dot when reminders are on but this phone isn't
- * allowing them) and the screen's name in the middle.
+ * allowing them) and the screen's name in the middle. The menu itself is the
+ * one `SideMenuProvider` keeps ready over the tabs.
  */
 export function TopBar({ title }: { title: string }) {
   const theme = useTheme();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const menu = useSideMenu();
   const needsAttention = useReminderAttention();
 
   return (
-    <>
-      <View style={styles.bar}>
-        <View style={styles.side}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Open menu"
-            onPress={() => setMenuOpen(true)}
-            style={styles.button}
-            hitSlop={6}
-          >
-            <Menu size={26} color={theme.colors.text.primary} />
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={needsAttention ? 'Reminders, needs attention' : 'Reminders'}
-            onPress={() => router.push('/you/notifications')}
-            style={styles.button}
-            hitSlop={6}
-          >
-            <Bell size={24} color={theme.colors.text.primary} />
-            {needsAttention ? (
-              <View
-                testID="reminder-dot"
-                style={[
-                  styles.dot,
-                  { backgroundColor: theme.destructive, borderColor: theme.colors.background },
-                ]}
-              />
-            ) : null}
-          </Pressable>
-        </View>
-        <Text
-          accessibilityRole="header"
-          style={[styles.title, { color: theme.colors.text.primary }]}
-          numberOfLines={1}
+    <View style={styles.bar}>
+      <View style={styles.side}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Open menu"
+          onPress={() => menu?.open()}
+          style={styles.button}
+          hitSlop={6}
         >
-          {title}
-        </Text>
-        {/* Keeps the title centered. */}
-        <View style={styles.side} />
+          <Menu size={26} color={theme.colors.text.primary} />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={needsAttention ? 'Reminders, needs attention' : 'Reminders'}
+          onPress={() => router.push('/you/notifications')}
+          style={styles.button}
+          hitSlop={6}
+        >
+          <Bell size={24} color={theme.colors.text.primary} />
+          {needsAttention ? (
+            <View
+              testID="reminder-dot"
+              style={[
+                styles.dot,
+                { backgroundColor: theme.destructive, borderColor: theme.colors.background },
+              ]}
+            />
+          ) : null}
+        </Pressable>
       </View>
-      <SideMenu visible={menuOpen} onClose={() => setMenuOpen(false)} />
-    </>
+      <Text
+        accessibilityRole="header"
+        style={[styles.title, { color: theme.colors.text.primary }]}
+        numberOfLines={1}
+      >
+        {title}
+      </Text>
+      {/* Keeps the title centered. */}
+      <View style={styles.side} />
+    </View>
   );
 }
 

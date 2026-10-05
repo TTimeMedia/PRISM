@@ -28,6 +28,9 @@ interface AppState {
   /** The one-time "choose what shows" tip on Today has been dismissed. Device-local. */
   customizeTipDismissed: boolean;
   dismissCustomizeTip: () => void;
+  /** Shaking the phone opens Report a problem. Device-local. */
+  shakeToReport: boolean;
+  setShakeToReport: (on: boolean) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -43,6 +46,8 @@ export const useAppStore = create<AppState>()(
       setAppointmentLeadMinutes: (minutes) => set({ appointmentLeadMinutes: minutes }),
       customizeTipDismissed: false,
       dismissCustomizeTip: () => set({ customizeTipDismissed: true }),
+      shakeToReport: true,
+      setShakeToReport: (on) => set({ shakeToReport: on }),
     }),
     {
       name: 'prism-app-preferences',

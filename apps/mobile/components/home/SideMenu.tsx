@@ -1,8 +1,23 @@
-import React from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  BackHandler,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
-import Animated, { SlideInLeft } from 'react-native-reanimated';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import {
   Bell,
   CalendarSync,
@@ -69,14 +84,88 @@ function initialsOf(name: string | null | undefined): string {
     .join('');
 }
 
+const SideMenuContext = createContext<{ open: () => void } | null>(null);
+
+/** Opens the menu. Null outside `SideMenuProvider`. */
+export function useSideMenu() {
+  return useContext(SideMenuContext);
+}
+
+/**
+ * Holds the one side menu for the tabs, drawn over them. The menu stays
+ * built while closed, so opening it is only an animation, with no screen
+ * to build and no native modal to present first.
+ */
+export function SideMenuProvider({ children }: { children: React.ReactNode }) {
+  const [visible, setVisible] = useState(false);
+  const value = useMemo(() => ({ open: () => setVisible(true) }), []);
+  return (
+    <SideMenuContext.Provider value={value}>
+      <View style={styles.flex}>
+        {children}
+        <SideMenu visible={visible} onClose={() => setVisible(false)} />
+      </View>
+    </SideMenuContext.Provider>
+  );
+}
+
+const OPEN_MS = 260;
+const CLOSE_MS = 200;
+const SCRIM_OPACITY = 0.45;
+
 /**
  * A slide-out menu for everything that isn't a main tab: shortcuts to each
  * feature that's on, then setup, then help, with your profile at the bottom.
  * Keeps the four tabs simple without hiding anything.
+ *
+ * Always mounted: `visible` only drives the slide, which runs on the UI
+ * thread. It follows a finger dragging it closed, and taps pass through to
+ * the screen the moment it starts closing.
  */
 export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const theme = useTheme();
   const reducedMotion = useReducedMotion();
+  const { width } = useWindowDimensions();
+  const panelWidth = Math.min(width * 0.82, 340);
+  const progress = useSharedValue(0);
+
+  useEffect(() => {
+    progress.value = withTiming(visible ? 1 : 0, {
+      duration: reducedMotion ? 0 : visible ? OPEN_MS : CLOSE_MS,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [visible, reducedMotion, progress]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      onClose();
+      return true;
+    });
+    return () => subscription.remove();
+  }, [visible, onClose]);
+
+  // Drag left to close: the panel follows the finger, then finishes whichever way it was flung.
+  const drag = Gesture.Pan()
+    .enabled(visible)
+    .activeOffsetX([-12, 12])
+    .failOffsetY([-16, 16])
+    .onUpdate((event) => {
+      progress.value = Math.min(1, Math.max(0, 1 + event.translationX / panelWidth));
+    })
+    .onEnd((event) => {
+      if (event.velocityX < -400 || progress.value < 0.6) {
+        scheduleOnRN(onClose);
+      } else {
+        progress.value = withTiming(1, { duration: 160, easing: Easing.out(Easing.cubic) });
+      }
+    });
+
+  const panelStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: (progress.value - 1) * (panelWidth + 2) }],
+  }));
+  const scrimStyle = useAnimatedStyle(() => ({ opacity: progress.value * SCRIM_OPACITY }));
+
   const { data: modules } = useModules();
   const { data: profile } = useProfile();
   const enabled = new Set(modules?.filter((m) => m.enabled).map((m) => m.module_key));
@@ -97,13 +186,31 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
   };
 
   return (
-    <Modal visible={visible} transparent animationType="none" onRequestClose={onClose}>
-      <View style={styles.root}>
+    <GestureDetector gesture={drag}>
+      <View
+        style={StyleSheet.absoluteFill}
+        pointerEvents={visible ? 'auto' : 'none'}
+        accessibilityViewIsModal={visible}
+        accessibilityElementsHidden={!visible}
+        importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+      >
+        <Animated.View style={[StyleSheet.absoluteFill, styles.scrimColor, scrimStyle]}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Close menu"
+            onPress={onClose}
+            style={styles.flex}
+          />
+        </Animated.View>
         <Animated.View
-          entering={reducedMotion ? undefined : SlideInLeft.duration(240)}
           style={[
             styles.panel,
-            { backgroundColor: theme.colors.background, borderColor: theme.colors.border.subtle },
+            {
+              width: panelWidth,
+              backgroundColor: theme.colors.background,
+              borderColor: theme.colors.border.subtle,
+            },
+            panelStyle,
           ]}
         >
           <SafeAreaView style={styles.flex} edges={['top', 'bottom']}>
@@ -156,14 +263,8 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
             </Pressable>
           </SafeAreaView>
         </Animated.View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Close menu"
-          onPress={onClose}
-          style={styles.scrim}
-        />
       </View>
-    </Modal>
+    </GestureDetector>
   );
 }
 
@@ -203,18 +304,15 @@ const styles = StyleSheet.create({
   flex: {
     flex: 1,
   },
-  root: {
-    flex: 1,
-    flexDirection: 'row',
-  },
   panel: {
-    width: '82%',
-    maxWidth: 340,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
     borderRightWidth: 1,
   },
-  scrim: {
-    flex: 1,
-    backgroundColor: 'rgba(10,10,20,0.45)',
+  scrimColor: {
+    backgroundColor: 'rgb(10,10,20)',
   },
   header: {
     flexDirection: 'row',

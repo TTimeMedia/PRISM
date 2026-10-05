@@ -5,14 +5,14 @@
  */
 
 export const PRONOUN_OPTIONS = [
-  'she/her',
-  'he/him',
-  'they/them',
-  'she/they',
-  'he/they',
-  'any pronouns',
-  'ask me',
-  'prefer not to say',
+  'She/her',
+  'He/him',
+  'They/them',
+  'She/they',
+  'He/they',
+  'Any pronouns',
+  'Ask me',
+  'Prefer not to say',
 ] as const;
 
 export const GENDER_OPTIONS = [
