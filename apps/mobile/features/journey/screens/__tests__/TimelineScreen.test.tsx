@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
-import { TimelineScreen, monthSummary } from '../TimelineScreen';
+import { TimelineScreen, totalsSummary } from '../TimelineScreen';
 import { useProfile } from '../../../../lib/profile/queries';
 import { useTimelineEvents } from '../../../../lib/journey/timelineQuery';
 
@@ -27,7 +27,7 @@ jest.mock('../../../../lib/journey/timelineQuery', () => ({
 }));
 
 // Photos are signed with the Supabase client, which these tests don't need.
-jest.mock('../../components/EntryImage', () => ({ EntryImage: () => null }));
+jest.mock('../../components/PhotoBubbles', () => ({ PhotoBubbles: () => null }));
 
 const mockedUseProfile = useProfile as jest.MockedFunction<typeof useProfile>;
 const mockedUseTimeline = useTimelineEvents as jest.MockedFunction<typeof useTimelineEvents>;
@@ -67,7 +67,7 @@ const timeline = (data: unknown[]) =>
     refetch: jest.fn(),
   } as never);
 
-describe('monthSummary', () => {
+describe('totalsSummary', () => {
   // Sept 20, 2026, mid-afternoon on the phone.
   const today = new Date(2026, 8, 20, 15);
   const local = (day: number) => new Date(2026, 8, day, 9).toISOString();
@@ -81,15 +81,15 @@ describe('monthSummary', () => {
     { id: '5', moduleKey: 'milestones', at: dateOnly('2026-09-10') },
     { id: '6', moduleKey: 'appointments', at: local(12) }, // not a check-in
     { id: '7', moduleKey: 'journal', at: dateOnly('2026-09-25') }, // future day: not a check-in
-    { id: '8', moduleKey: 'journal', at: dateOnly('2026-08-31') }, // last month
+    { id: '8', moduleKey: 'journal', at: dateOnly('2026-08-31') }, // last month: still counts
   ] as never[];
 
-  it('counts days checked in, entries written and moments kept for this month', () => {
-    expect(monthSummary(events, today)).toEqual({ checkedInDays: 3, entries: 2, moments: 1 });
+  it('counts every day checked in, entry written and moment kept, not just this month', () => {
+    expect(totalsSummary(events, today)).toEqual({ checkedInDays: 4, entries: 3, moments: 1 });
   });
 
   it('is all zeros with nothing logged', () => {
-    expect(monthSummary([], today)).toEqual({ checkedInDays: 0, entries: 0, moments: 0 });
+    expect(totalsSummary([], today)).toEqual({ checkedInDays: 0, entries: 0, moments: 0 });
   });
 });
 
@@ -119,13 +119,14 @@ describe('TimelineScreen (the YOU tab)', () => {
     expect(router.push).toHaveBeenCalledWith('/you/settings');
   });
 
-  it('sums up the month in plain counts, never a score', () => {
+  it('sums up everything so far in plain counts, never a score', () => {
     renderWithProviders(<TimelineScreen />);
 
-    expect(screen.getByText('This month')).toBeTruthy();
+    expect(screen.getByText('All time')).toBeTruthy();
     expect(screen.getByText(/^days? checked in$/)).toBeTruthy();
     expect(screen.getByText('entry written')).toBeTruthy();
-    expect(screen.getByText('moments kept')).toBeTruthy();
+    // Last year's milestone counts too: these are all-time totals.
+    expect(screen.getByText('moment kept')).toBeTruthy();
     expect(screen.queryByText('doses logged')).toBeNull();
     expect(screen.queryByText('appointments')).toBeNull();
   });

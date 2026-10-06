@@ -21,6 +21,7 @@ import { EmptyCard, HeroCard, ScreenGlow, SectionTitle, useTint } from '../../..
 import { MODULE_STYLE } from '../../../components/home/moduleStyle';
 import { TopBar } from '../../../components/home/TopBar';
 import { EntryImage } from '../components/EntryImage';
+import { entryPhotos } from '../../../lib/journey/entryPhotos';
 import { SUGGESTED_JOURNAL_MOODS } from '../optionLabels';
 
 /** A few gentle ways in. Tapping one starts an entry with that word already in the mood box. */
@@ -295,8 +296,12 @@ function MilestoneCard({ milestone }: { milestone: Milestone }) {
         theme.scheme === 'light' && theme.shadow,
       ]}
     >
-      {milestone.image_path ? (
-        <EntryImage path={milestone.image_path} label={milestone.title} height={112} />
+      {entryPhotos(milestone)[0] ? (
+        <EntryImage
+          path={entryPhotos(milestone)[0] as string}
+          label={milestone.title}
+          height={112}
+        />
       ) : (
         <View style={[styles.milestoneArt, { backgroundColor: colors.tile }]}>
           <Icon size={30} color={theme.colors.text.primary} strokeWidth={1.8} />

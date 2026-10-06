@@ -313,6 +313,14 @@ The app includes no analytics, crash-reporting or advertising SDKs.
 
 **Implications:** Resend now also carries support messages, and the privacy policy says so. The Terms of Service are a draft for legal review before launch; they name no governing law yet. The function needs the `RESEND_API_KEY` secret. Run the acknowledgements script after changing dependencies.
 
+### Journal entries and milestones hold up to five photos
+
+**Date:** 2026-10-05
+**Status:** Active
+**Reason:** The owner asked for more than one photo per entry (at most 5), shown on the Timeline as small bubbles.
+**Decision:** `image_paths text[]` (at most 5, enforced in the database and in `@prism/validation`) on `milestones` and `journal_entries`. `image_path` stays, always equal to the first photo, so builds from before this change keep working. A trigger (`sync_entry_image_paths`) keeps the two in step whichever one a build writes. Saving uploads new photos first, writes the row, and only then deletes removed photos; a failed save removes the new uploads and loses no saved photo (`saveWithPhotos`). The Timeline shows the photos as overlapping round bubbles that spring in (still with reduced motion), and entry screens show a swipeable gallery.
+**Implications:** Deploy the migration (`20261005130000_entry_photos.sql`) before any app version that writes `image_paths`. An older build editing a multi-photo entry's photo replaces the list with its one photo, which is acceptable while testers update.
+
 ### The App Lock Screen (78) is a global overlay from the root layout, not a route
 
 **Date:** 2026-09-03

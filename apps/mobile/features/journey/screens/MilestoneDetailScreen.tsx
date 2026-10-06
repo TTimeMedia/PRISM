@@ -17,7 +17,8 @@ import {
 } from '@prism/ui';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useDeleteMilestone } from '../../../lib/journey/mutations';
-import { EntryImage } from '../components/EntryImage';
+import { EntryGallery } from '../components/EntryGallery';
+import { entryPhotos } from '../../../lib/journey/entryPhotos';
 
 /** Screen 46 — Milestone Detail. */
 export function MilestoneDetailScreen() {
@@ -54,9 +55,9 @@ export function MilestoneDetailScreen() {
         <PRISMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          {milestone.image_path ? (
+          {entryPhotos(milestone).length > 0 ? (
             <View style={styles.photo}>
-              <EntryImage path={milestone.image_path} label={milestone.title} height={240} />
+              <EntryGallery paths={entryPhotos(milestone)} label={milestone.title} />
             </View>
           ) : null}
           <PRISMSection>

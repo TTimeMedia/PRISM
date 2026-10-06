@@ -5,7 +5,8 @@ import type { JournalEntryCreateInput, MilestoneCreateInput } from '@prism/valid
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { journalEntriesKey, journalEntryKey, milestoneKey, milestonesKey } from './queries';
-import { removeEntryImage } from './entryImage';
+import { removeEntryImages } from './entryImage';
+import { entryPhotos } from './entryPhotos';
 
 type MilestoneUpdate = Database['public']['Tables']['milestones']['Update'];
 type JournalEntryUpdate = Database['public']['Tables']['journal_entries']['Update'];
@@ -76,7 +77,7 @@ export function useDeleteMilestone() {
       if (!userId) throw new Error('No authenticated session.');
       const { data: existing } = await supabase
         .from('milestones')
-        .select('image_path')
+        .select('image_path, image_paths')
         .eq('id', id)
         .eq('user_id', userId)
         .maybeSingle();
@@ -86,7 +87,7 @@ export function useDeleteMilestone() {
         .eq('id', id)
         .eq('user_id', userId);
       if (error) throw error;
-      await removeEntryImage(existing?.image_path);
+      await removeEntryImages(existing ? entryPhotos(existing) : []);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: milestonesKey(userId) });
@@ -155,7 +156,7 @@ export function useDeleteJournalEntry() {
       if (!userId) throw new Error('No authenticated session.');
       const { data: existing } = await supabase
         .from('journal_entries')
-        .select('image_path')
+        .select('image_path, image_paths')
         .eq('id', id)
         .eq('user_id', userId)
         .maybeSingle();
@@ -165,7 +166,7 @@ export function useDeleteJournalEntry() {
         .eq('id', id)
         .eq('user_id', userId);
       if (error) throw error;
-      await removeEntryImage(existing?.image_path);
+      await removeEntryImages(existing ? entryPhotos(existing) : []);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: journalEntriesKey(userId) });

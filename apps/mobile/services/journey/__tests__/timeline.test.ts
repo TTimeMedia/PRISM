@@ -76,6 +76,7 @@ function milestone(overrides: Partial<Milestone> = {}): Milestone {
     category: null,
     icon: null,
     image_path: null,
+    image_paths: [],
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,
@@ -92,6 +93,7 @@ function journalEntry(overrides: Partial<JournalEntry> = {}): JournalEntry {
     date: '2026-06-12',
     tags: [],
     image_path: null,
+    image_paths: [],
     created_at: NOW.toISOString(),
     updated_at: NOW.toISOString(),
     ...overrides,
@@ -153,26 +155,29 @@ describe('buildTimelineEvents', () => {
     expect(events[0]).toMatchObject({ moduleKey: 'milestones', title: 'Started HRT' });
   });
 
-  it("carries a milestone's photo path onto its timeline event, and omits it when there is none", () => {
+  it("carries a milestone's photos onto its timeline event, in order", () => {
     const events = buildTimelineEvents({
       ...emptyRecords(),
       milestones: [
-        milestone({ id: 'with', image_path: 'u1/milestones/photo.jpg' }),
-        milestone({ id: 'without', image_path: null }),
+        milestone({ id: 'with', image_paths: ['u1/milestones/a.jpg', 'u1/milestones/b.jpg'] }),
+        milestone({ id: 'without' }),
       ],
     });
 
-    expect(events.find((e) => e.sourceId === 'with')?.imagePath).toBe('u1/milestones/photo.jpg');
-    expect(events.find((e) => e.sourceId === 'without')?.imagePath).toBeUndefined();
+    expect(events.find((e) => e.sourceId === 'with')?.imagePaths).toEqual([
+      'u1/milestones/a.jpg',
+      'u1/milestones/b.jpg',
+    ]);
+    expect(events.find((e) => e.sourceId === 'without')?.imagePaths).toEqual([]);
   });
 
-  it("carries a journal entry's photo path onto its timeline event", () => {
+  it("carries a journal entry's photo onto its timeline event, including one saved before entries had several", () => {
     const events = buildTimelineEvents({
       ...emptyRecords(),
-      journalEntries: [journalEntry({ image_path: 'u1/journal/photo.jpg' })],
+      journalEntries: [journalEntry({ image_path: 'u1/journal/photo.jpg', image_paths: [] })],
     });
 
-    expect(events[0]?.imagePath).toBe('u1/journal/photo.jpg');
+    expect(events[0]?.imagePaths).toEqual(['u1/journal/photo.jpg']);
   });
 
   it('includes a journal entry event, falling back to a generic title when untitled', () => {
