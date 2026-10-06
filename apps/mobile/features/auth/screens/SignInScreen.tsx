@@ -60,7 +60,7 @@ export function SignInScreen() {
             autoComplete="email"
             keyboardType="email-address"
             textContentType="emailAddress"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
@@ -77,7 +77,7 @@ export function SignInScreen() {
             autoCapitalize="none"
             autoComplete="current-password"
             textContentType="password"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}

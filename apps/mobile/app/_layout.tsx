@@ -23,6 +23,7 @@ import { useAppLockStore } from '../lib/store/appLockStore';
 import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
 import { useAppearanceSync } from '../lib/you/useAppearanceSync';
+import { useLaunchUpdate } from '../lib/updates/useLaunchUpdate';
 import { useShakeToReport } from '../lib/you/useShakeToReport';
 import { usePushRegistration } from '../lib/push/usePushRegistration';
 import { useReminderSync } from '../lib/reminders/useReminderSync';
@@ -84,7 +85,9 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   // itself no-ops (enabled: false) until there's a session to scope it to.
   const { data: profile, isLoading: profileLoading } = useProfile();
 
-  const authReady = fontsLoaded && !authLoading;
+  // A waiting update is applied before anything shows (lib/updates/useLaunchUpdate.ts).
+  const updateReady = useLaunchUpdate();
+  const authReady = fontsLoaded && !authLoading && updateReady;
   const needsProfile = authReady && !showAuth;
   const ready = authReady && (!needsProfile || !profileLoading);
 

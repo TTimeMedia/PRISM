@@ -55,7 +55,7 @@ export function ResetPasswordScreen() {
             autoCapitalize="none"
             autoComplete="new-password"
             textContentType="newPassword"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
@@ -72,7 +72,7 @@ export function ResetPasswordScreen() {
             autoCapitalize="none"
             autoComplete="new-password"
             textContentType="newPassword"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}

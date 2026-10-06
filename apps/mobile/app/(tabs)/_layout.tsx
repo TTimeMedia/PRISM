@@ -16,6 +16,9 @@ type TabBarProps =
     ? P
     : never;
 
+/** Tabs that hold a stack of screens, whose main page is 'index'. */
+const STACK_TABS = new Set(['care', 'journey', 'you']);
+
 /**
  * PRISM has exactly four primary destinations — TODAY / CARE / JOURNEY /
  * YOU — and no fifth tab is added without revising the specification.
@@ -39,7 +42,12 @@ function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
           target: route.key,
           canPreventDefault: true,
         });
-        if (!focused && !event.defaultPrevented) {
+        if (event.defaultPrevented) return;
+        // A tab always opens on its own main page, never on a screen left open
+        // inside it (a settings page reached from the menu, for example).
+        if (STACK_TABS.has(route.name)) {
+          navigation.navigate(route.name, { screen: 'index' });
+        } else if (!focused) {
           navigation.navigate(route.name);
         }
       },
