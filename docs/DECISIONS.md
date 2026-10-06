@@ -349,7 +349,7 @@ The app includes no analytics, crash-reporting or advertising SDKs.
 - The free / PRISM+ tag is kept in the theme data but does nothing yet: every theme is available.
 - The eight app icons keep their names; they are chosen separately from the theme.
 
-**Implications:** Paper's serif headings are not applied yet: headings read a fixed font in about 19 files, so a per-theme heading font is its own change. `docs/design/themes.css` holds the web version for reference. The launch screen background is now Prism's (#F8F8FA light, #0B0B0F dark), from the next build.
+**Implications:** Headings take their typeface from the theme (`theme.fonts.display`): Sora, or the phone's own serif (Georgia on iOS) for Paper, so no font file ships. Brand wordmarks and initials stay in Sora. `docs/design/themes.css` holds the web version for reference. The launch screen background is now Prism's (#F8F8FA light, #0B0B0F dark), from the next build.
 
 ### The App Lock Screen (78) is a global overlay from the root layout, not a route
 

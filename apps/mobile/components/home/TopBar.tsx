@@ -50,7 +50,11 @@ export function TopBar({ title }: { title: string }) {
       </View>
       <Text
         accessibilityRole="header"
-        style={[styles.title, { color: theme.colors.text.primary }]}
+        style={[
+          styles.title,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
         numberOfLines={1}
       >
         {title}

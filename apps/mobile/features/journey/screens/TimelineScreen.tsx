@@ -110,7 +110,11 @@ export function TimelineScreen() {
         <View style={styles.profileText}>
           <Text
             accessibilityRole="header"
-            style={[styles.name, { color: theme.colors.text.primary }]}
+            style={[
+              styles.name,
+              { fontFamily: theme.fonts.display },
+              { color: theme.colors.text.primary },
+            ]}
             numberOfLines={1}
           >
             {name || 'You'}
@@ -163,7 +167,15 @@ export function TimelineScreen() {
         />
       </ScrollView>
 
-      <Text style={[styles.title, { color: theme.colors.text.primary }]}>Your timeline</Text>
+      <Text
+        style={[
+          styles.title,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
+      >
+        Your timeline
+      </Text>
     </View>
   );
 

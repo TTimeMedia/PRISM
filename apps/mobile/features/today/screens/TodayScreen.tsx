@@ -106,7 +106,11 @@ export function TodayScreen() {
         <View style={styles.header}>
           <Text
             accessibilityRole="header"
-            style={[styles.greeting, { color: theme.colors.text.primary }]}
+            style={[
+              styles.greeting,
+              { fontFamily: theme.fonts.display },
+              { color: theme.colors.text.primary },
+            ]}
           >
             {greeting}
           </Text>
@@ -128,7 +132,13 @@ export function TodayScreen() {
               <NextUpCard item={next} marking={marking} onMarkDone={() => markDone(next)} />
             ) : (
               <HeroCard tint="mint" accentTint="cyan">
-                <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.heroTitle,
+                    { fontFamily: theme.fonts.display },
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   You&apos;re all caught up.
                 </Text>
                 <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
@@ -239,7 +249,14 @@ function NextUpCard({
           {formatRelativeTime(item.at)}
         </Text>
       </View>
-      <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]} numberOfLines={2}>
+      <Text
+        style={[
+          styles.heroTitle,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
+        numberOfLines={2}
+      >
         {item.title}
       </Text>
       <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>

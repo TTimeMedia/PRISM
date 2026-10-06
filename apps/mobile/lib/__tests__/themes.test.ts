@@ -1,5 +1,9 @@
+import React from 'react';
+import { renderHook } from '@testing-library/react-native';
 import {
   LEGACY_PALETTE_KEYS,
+  ThemeProvider,
+  useTheme,
   PALETTES,
   THEME_IDS,
   knownPaletteKey,
@@ -62,5 +66,17 @@ describe('color themes', () => {
     const coral = themeTokens('coral-reef', 'light');
     expect(coral.accent).not.toBe('#D44A2E');
     expect(contrast(coral.accent, coral.bg)).toBeGreaterThanOrEqual(3);
+  });
+
+  it('gives Paper serif headings and keeps Sora everywhere else', () => {
+    const headingFont = (palette: string) =>
+      renderHook(() => useTheme(), {
+        wrapper: ({ children }: { children: React.ReactNode }) =>
+          React.createElement(ThemeProvider, { preference: 'light', palette, children }),
+      }).result.current.fonts.display;
+
+    expect(headingFont('paper')).not.toBe('Sora');
+    expect(headingFont('prism')).toBe('Sora');
+    expect(headingFont('midnight-ink')).toBe('Sora');
   });
 });

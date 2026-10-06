@@ -136,7 +136,11 @@ export function TourSlides({
                   <Reveal index={1}>
                     <Text
                       accessibilityRole="header"
-                      style={[styles.title, { color: theme.colors.text.primary }]}
+                      style={[
+                        styles.title,
+                        { fontFamily: theme.fonts.display },
+                        { color: theme.colors.text.primary },
+                      ]}
                     >
                       {slide.title}
                     </Text>

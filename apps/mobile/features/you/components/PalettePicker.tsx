@@ -59,7 +59,13 @@ export function PalettePicker({ value, onChange }: PalettePickerProps) {
               ))}
             </View>
             <View style={styles.text}>
-              <Text style={[styles.label, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.label,
+                  { fontFamily: theme.fonts.display },
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 {palette.label}
               </Text>
               <Text style={[styles.blurb, { color: theme.colors.text.secondary }]}>
