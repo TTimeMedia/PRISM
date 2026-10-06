@@ -216,7 +216,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
       },
       {
         type: 'p',
-        text: 'To bring appointments in, tap Import from calendar on the Appointments screen, or open an invite file (.ics) from email or Files and choose Prism.',
+        text: 'To bring appointments in, tap the calendar icon at the top of Appointments and pick the events to add, or open an invite file (.ics) from email or Files and choose Prism.',
       },
     ],
   },

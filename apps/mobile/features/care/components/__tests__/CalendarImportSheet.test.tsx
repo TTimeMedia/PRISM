@@ -85,17 +85,22 @@ describe('CalendarImportSheet', () => {
   const open = () =>
     renderWithProviders(<CalendarImportSheet visible onClose={onClose} onImported={onImported} />);
 
-  it('reads nothing until the person chooses to', () => {
-    open();
-
-    expect(screen.getByText('Choose from my calendar')).toBeTruthy();
+  it('reads nothing while closed, and reads the calendar as soon as it opens', async () => {
+    const closed = renderWithProviders(
+      <CalendarImportSheet visible={false} onClose={onClose} onImported={onImported} />,
+    );
     expect(provider.requestReadPermission).not.toHaveBeenCalled();
     expect(provider.listUpcomingEvents).not.toHaveBeenCalled();
+    closed.unmount();
+
+    open();
+
+    await waitFor(() => expect(provider.listUpcomingEvents).toHaveBeenCalled());
+    expect(await screen.findByText(/Only the events you pick are added/)).toBeTruthy();
   });
 
   it('adds only the events that were ticked', async () => {
     open();
-    fireEvent.press(screen.getByText('Choose from my calendar'));
 
     fireEvent.press(await screen.findByLabelText('Endocrinology'));
     fireEvent.press(screen.getByText('Add 1 appointment'));
@@ -117,7 +122,6 @@ describe('CalendarImportSheet', () => {
 
   it('cannot add an appointment that is already in Prism', async () => {
     open();
-    fireEvent.press(screen.getByText('Choose from my calendar'));
 
     expect(await screen.findByText('Already in Prism')).toBeTruthy();
     expect(screen.getByLabelText('Primary care').props.accessibilityState.disabled).toBe(true);
@@ -126,7 +130,6 @@ describe('CalendarImportSheet', () => {
 
   it('filters the list as the person searches', async () => {
     open();
-    fireEvent.press(screen.getByText('Choose from my calendar'));
     await screen.findByLabelText('Team lunch');
 
     fireEvent.changeText(screen.getByLabelText('Search events'), 'clinic');
@@ -138,7 +141,6 @@ describe('CalendarImportSheet', () => {
   it('explains what to do when calendar access is refused, and reads nothing', async () => {
     provider.requestReadPermission.mockResolvedValue(false);
     open();
-    fireEvent.press(screen.getByText('Choose from my calendar'));
 
     expect(await screen.findByText(/Calendar access wasn.t allowed/)).toBeTruthy();
     expect(provider.listUpcomingEvents).not.toHaveBeenCalled();
@@ -146,7 +148,6 @@ describe('CalendarImportSheet', () => {
 
   it('lists events from every account, says which calendar each is on, and can filter by one', async () => {
     open();
-    fireEvent.press(screen.getByText('Choose from my calendar'));
 
     expect(await screen.findByText('Showing events from 2 calendars')).toBeTruthy();
     expect(screen.getAllByText('Calendar · iCloud').length).toBeGreaterThan(0);
@@ -163,7 +164,6 @@ describe('CalendarImportSheet', () => {
       { ...EVENTS[0], id: 'e1-copy', calendarId: 'c-google', calendarName: 'Work' },
     ] as never);
     open();
-    fireEvent.press(screen.getByText('Choose from my calendar'));
 
     await screen.findByLabelText('Endocrinology');
     expect(screen.getAllByLabelText('Endocrinology')).toHaveLength(1);
