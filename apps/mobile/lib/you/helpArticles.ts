@@ -154,6 +154,33 @@ export const HELP_ARTICLES: HelpArticle[] = [
     ],
   },
   {
+    slug: 'apple-watch',
+    title: 'Prism on Apple Watch',
+    category: 'Reminders',
+    summary: "See today's doses and your next appointment, and log a dose from your wrist.",
+    blocks: [
+      {
+        type: 'p',
+        text: "Prism on Apple Watch shows today's doses and your next appointment. Tap a dose and choose Taken to log it, or press Done on a reminder.",
+      },
+      {
+        type: 'steps',
+        items: [
+          'On your iPhone, open the Watch app, find Prism under Available Apps, and tap Install.',
+          'Open Prism on your iPhone once, so it can send your day to the watch.',
+        ],
+      },
+      {
+        type: 'p',
+        text: 'Your watch gets everything from your iPhone, never from the internet. With Private notifications on, it shows "Dose" and "Appointment" instead of names.',
+      },
+      {
+        type: 'tip',
+        text: 'A dose logged while your iPhone is out of reach shows as taken on the watch straight away, and is saved the next time you open Prism on your iPhone.',
+      },
+    ],
+  },
+  {
     slug: 'medications-and-doses',
     title: 'Medications and doses',
     category: 'Care',

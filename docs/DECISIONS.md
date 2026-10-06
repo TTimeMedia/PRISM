@@ -313,6 +313,21 @@ The app includes no analytics, crash-reporting or advertising SDKs.
 
 **Implications:** Resend now also carries support messages, and the privacy policy says so. The Terms of Service are a draft for legal review before launch; they name no governing law yet. The function needs the `RESEND_API_KEY` secret. Run the acknowledgements script after changing dependencies.
 
+### The Apple Watch app gets everything from the iPhone
+
+**Date:** 2026-10-05
+**Status:** Active
+**Reason:** The owner asked for Prism on Apple Watch: today's doses with logging, the next appointment, and a nicer reminder screen, following Private notifications.
+**Decision:**
+
+- A SwiftUI watchOS app (`apps/mobile/targets/watch`, watchOS 10+, built by `@bacons/apple-targets`, bundle id `ttimemedia.prism.watchkitapp`).
+- The watch never signs in or talks to Supabase. The iPhone works out today's doses and the next appointment (`lib/watch/watchContext.ts`) and sends them over WatchConnectivity (`modules/prism-watch`). Doses marked taken on the watch come back the same way and are saved by the phone through the same mutation as Done on a reminder. A dose logged while the phone is out of reach is queued by the system and saved when Prism next runs on the phone.
+- With Private notifications on, no names, doses or places reach the watch: "Dose" and "Appointment" only.
+- Reminders get a custom long look on the watch for the `prism-medication` and `prism-appointment` categories. It shows only the reminder's own words, so private reminders stay private. With the watch app installed, Done on a reminder is handled by the watch app, which logs the dose through the phone.
+- `plugins/withWatchVersion.js` writes the watch app's version and build number from the app config on every prebuild, because App Store Connect rejects a watch app whose version differs from its iPhone app.
+
+**Implications:** WatchConnectivity is Apple's device-to-device channel, so no new company receives data. The first build with the watch app needs new signing credentials for its bundle id, which EAS creates in an interactive build. The Swift code can only be compiled by EAS Build or Xcode on a Mac, so the first build is its first compile.
+
 ### The App Lock Screen (78) is a global overlay from the root layout, not a route
 
 **Date:** 2026-09-03

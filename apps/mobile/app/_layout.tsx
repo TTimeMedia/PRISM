@@ -24,6 +24,7 @@ import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
 import { useAppearanceSync } from '../lib/you/useAppearanceSync';
 import { useShakeToReport } from '../lib/you/useShakeToReport';
+import { useWatchSync } from '../lib/watch/useWatchSync';
 import { usePushRegistration } from '../lib/push/usePushRegistration';
 import { useReminderSync } from '../lib/reminders/useReminderSync';
 import { useNotificationResponses } from '../lib/reminders/useNotificationResponses';
@@ -112,6 +113,8 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const unlock = useAppLockStore((state) => state.unlock);
   const showAppLockScreen = appLockEnabled && isLocked;
   useShakeToReport(showTabs && !showAppLockScreen);
+  // The Apple Watch app: see lib/watch/useWatchSync.ts.
+  useWatchSync(showTabs);
 
   if (!ready) {
     return null;

@@ -131,6 +131,8 @@ export function useCreateMedicationLog() {
       queryClient.invalidateQueries({
         queryKey: medicationLogsKey(userId, data.medication_id),
       });
+      // Today's logs, which tick doses off on the Apple Watch.
+      queryClient.invalidateQueries({ queryKey: ['medication-logs', userId, 'today'] });
       // A dose that's been logged no longer needs its follow-up reminder.
       void cancelDueNudges(data.medication_id).catch(() => undefined);
     },

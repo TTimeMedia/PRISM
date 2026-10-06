@@ -3,7 +3,7 @@
     "name": "Prism",
     "slug": "prism",
     "owner": "ttimemedia",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "prism",
@@ -23,7 +23,8 @@
             "LSItemContentTypes": ["public.calendar-event", "com.apple.ical.ics"]
           }
         ]
-      }
+      },
+      "appleTeamId": "ZP2P9TDS45"
     },
     "android": {
       "package": "ttimemedia.prism",
@@ -150,7 +151,9 @@
             }
           }
         ]
-      ]
+      ],
+      "@bacons/apple-targets",
+      "./plugins/withWatchVersion"
     ],
     "experiments": {
       "typedRoutes": true
