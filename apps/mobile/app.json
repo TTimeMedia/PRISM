@@ -3,7 +3,7 @@
     "name": "Prism",
     "slug": "prism",
     "owner": "ttimemedia",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "prism",
@@ -58,8 +58,13 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
+          "imageWidth": 120,
           "resizeMode": "contain",
-          "backgroundColor": "#0B0B0F"
+          "backgroundColor": "#F1F6FB",
+          "dark": {
+            "image": "./assets/images/splash-icon.png",
+            "backgroundColor": "#0F151D"
+          }
         }
       ],
       [
