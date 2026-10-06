@@ -240,18 +240,23 @@ export function HeroCard({
   );
 }
 
-/** One record in a list: a colored icon tile, a title, a line of detail, and a chevron. */
+/**
+ * One record in a list: a colored icon tile, a title, a line of detail, and a
+ * chevron. `media` (a photo) fills the tile in place of the icon.
+ */
 export function ItemRow({
   icon: Icon,
   tint,
   title,
   subtitle,
+  media,
   onPress,
 }: {
   icon: LucideIcon;
   tint: Tint;
   title: string;
   subtitle?: string;
+  media?: React.ReactNode;
   onPress: () => void;
 }) {
   const theme = useTheme();
@@ -272,7 +277,7 @@ export function ItemRow({
       ]}
     >
       <View style={[styles.rowIcon, { backgroundColor: colors.tile }]}>
-        <Icon size={20} color={theme.colors.text.primary} strokeWidth={2.2} />
+        {media ?? <Icon size={20} color={theme.colors.text.primary} strokeWidth={2.2} />}
       </View>
       <View style={styles.rowText}>
         <Text style={[styles.rowTitle, { color: theme.colors.text.primary }]} numberOfLines={1}>
@@ -434,6 +439,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
+    overflow: 'hidden',
   },
   rowText: {
     flex: 1,

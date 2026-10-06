@@ -26,8 +26,16 @@ jest.mock('../../../../lib/today/queries', () => ({
   useTodayItems: jest.fn(),
 }));
 
+const mockUndo = jest.fn();
 jest.mock('../../../../lib/care/mutations', () => ({
   useCreateMedicationLog: jest.fn(),
+  useUndoMedicationLog: () => ({ mutate: mockUndo }),
+}));
+
+jest.mock('../../../../lib/journey/useSignedEntryImageUrl', () => ({
+  useSignedEntryImageUrl: (path: string | null) => ({
+    data: path ? `https://example.com/${path}` : undefined,
+  }),
 }));
 
 const mockedUseProfile = useProfile as jest.MockedFunction<typeof useProfile>;
@@ -106,14 +114,25 @@ describe('TodayScreen', () => {
     expect(screen.getByText(/^Good (morning|afternoon|evening), Alex\.$/)).toBeTruthy();
   });
 
-  it('puts the next thing on top with one button that does it', async () => {
+  it('puts the next thing on top, with View first', () => {
     todayResult([item()]);
 
     renderWithProviders(<TodayScreen />);
 
     expect(screen.getByText('Estradiol valerate')).toBeTruthy();
     expect(screen.getByText('Due today')).toBeTruthy();
-    fireEvent.press(screen.getByText('Mark done'));
+    expect(screen.queryByText('Mark done')).toBeNull();
+    fireEvent.press(screen.getByText('View'));
+    expect(router.push).toHaveBeenCalledWith('/care/medications/m1');
+    expect(createLog).not.toHaveBeenCalled();
+  });
+
+  it('logs a dose due today, with an Undo that removes it', async () => {
+    createLog.mockResolvedValue({ id: 'log-1' });
+    todayResult([item()]);
+
+    renderWithProviders(<TodayScreen />);
+    fireEvent.press(screen.getByText('Log dose'));
 
     await waitFor(() =>
       expect(createLog).toHaveBeenCalledWith(
@@ -125,9 +144,49 @@ describe('TodayScreen', () => {
         }),
       ),
     );
+    fireEvent.press(await screen.findByText('Undo'));
+    expect(mockUndo).toHaveBeenCalledWith('log-1', expect.any(Object));
   });
 
-  it('opens an appointment instead of marking it done', () => {
+  it("doesn't offer to log a dose that isn't due today", () => {
+    todayResult([item({ bucket: 'upcoming' })]);
+
+    renderWithProviders(<TodayScreen />);
+
+    expect(screen.getByText('View')).toBeTruthy();
+    expect(screen.queryByText('Log dose')).toBeNull();
+  });
+
+  it("shows a milestone's photo under Lately, or the icon that fits it", () => {
+    todayResult([
+      item({
+        id: 'milestone-ms1',
+        moduleKey: 'milestones',
+        bucket: 'meaningful',
+        sourceId: 'ms1',
+        title: 'Name change',
+        subtitle: 'Legal',
+        imagePath: 'u1/milestones/a.jpg',
+        at: new Date(Date.now() - 86400000).toISOString(),
+      }),
+      item({
+        id: 'milestone-ms2',
+        moduleKey: 'milestones',
+        bucket: 'meaningful',
+        sourceId: 'ms2',
+        title: 'First shot',
+        subtitle: 'Care',
+        at: new Date(Date.now() - 2 * 86400000).toISOString(),
+      }),
+    ]);
+
+    renderWithProviders(<TodayScreen />);
+
+    expect(screen.getByLabelText('Photo for Name change')).toBeTruthy();
+    expect(screen.queryByLabelText('Photo for First shot')).toBeNull();
+  });
+
+  it('opens an appointment instead of logging anything', () => {
     todayResult([
       item({
         id: 'appointment-a1',
@@ -140,8 +199,8 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    expect(screen.queryByText('Mark done')).toBeNull();
-    fireEvent.press(screen.getByText('Open'));
+    expect(screen.queryByText('Log dose')).toBeNull();
+    fireEvent.press(screen.getByText('View'));
     expect(router.push).toHaveBeenCalledWith('/care/appointments/a1');
   });
 

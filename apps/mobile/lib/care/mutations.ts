@@ -139,6 +139,28 @@ export function useCreateMedicationLog() {
   });
 }
 
+/** Removes a dose just logged by mistake (Undo). Refreshes every view of dose logs. */
+export function useUndoMedicationLog() {
+  const { session } = useSession();
+  const userId = session?.user.id;
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string): Promise<void> => {
+      if (!userId) throw new Error('No authenticated session.');
+      const { error } = await supabase
+        .from('medication_logs')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', userId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['medication-logs', userId] });
+    },
+  });
+}
+
 export function useDeleteMedicationLog(medicationId: string) {
   const { session } = useSession();
   const userId = session?.user.id;

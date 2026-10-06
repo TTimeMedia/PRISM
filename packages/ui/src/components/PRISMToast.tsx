@@ -1,22 +1,33 @@
 import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, Text, View } from 'react-native';
+import { AccessibilityInfo, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../theme/ThemeProvider';
 import { componentRadius } from '../tokens/radius';
 import { spacing } from '../tokens/spacing';
-import { type } from '../tokens/typography';
+import { fontWeight, type } from '../tokens/typography';
 
 export type PRISMToastTone = 'default' | 'success' | 'error';
+
+/** One button on a toast, such as Undo. A toast with an action stays up longer. */
+export interface PRISMToastAction {
+  label: string;
+  onPress: () => void;
+}
 
 interface ToastState {
   id: number;
   message: string;
   tone: PRISMToastTone;
+  action?: PRISMToastAction;
 }
 
 interface ToastContextValue {
-  showToast: (message: string, tone?: PRISMToastTone) => void;
+  showToast: (message: string, tone?: PRISMToastTone, action?: PRISMToastAction) => void;
 }
+
+const TOAST_MS = 3000;
+/** Long enough to read the message and reach the button. */
+const TOAST_WITH_ACTION_MS = 6000;
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
@@ -27,16 +38,22 @@ export function PRISMToastProvider({ children }: { children: React.ReactNode }) 
   const [toast, setToast] = useState<ToastState | null>(null);
   const idRef = useRef(0);
 
-  const showToast = useCallback((message: string, tone: PRISMToastTone = 'default') => {
-    idRef.current += 1;
-    const id = idRef.current;
-    setToast({ id, message, tone });
-    // Announce to screen readers — a visual-only toast is inaccessible otherwise.
-    AccessibilityInfo.announceForAccessibility(message);
-    setTimeout(() => {
-      setToast((current) => (current?.id === id ? null : current));
-    }, 3000);
-  }, []);
+  const showToast = useCallback(
+    (message: string, tone: PRISMToastTone = 'default', action?: PRISMToastAction) => {
+      idRef.current += 1;
+      const id = idRef.current;
+      setToast({ id, message, tone, action });
+      // Announce to screen readers — a visual-only toast is inaccessible otherwise.
+      AccessibilityInfo.announceForAccessibility(message);
+      setTimeout(
+        () => {
+          setToast((current) => (current?.id === id ? null : current));
+        },
+        action ? TOAST_WITH_ACTION_MS : TOAST_MS,
+      );
+    },
+    [],
+  );
 
   const toneColor = (tone: PRISMToastTone) => {
     if (tone === 'success') return theme.success;
@@ -49,7 +66,7 @@ export function PRISMToastProvider({ children }: { children: React.ReactNode }) 
       {children}
       {toast ? (
         <View
-          pointerEvents="none"
+          pointerEvents="box-none"
           accessibilityLiveRegion="polite"
           style={[styles.container, { bottom: insets.bottom + spacing.lg }]}
         >
@@ -58,6 +75,23 @@ export function PRISMToastProvider({ children }: { children: React.ReactNode }) 
             <Text style={[styles.message, { color: theme.colors.text.primary }]}>
               {toast.message}
             </Text>
+            {toast.action ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={toast.action.label}
+                hitSlop={10}
+                onPress={() => {
+                  const action = toast.action;
+                  setToast(null);
+                  action?.onPress();
+                }}
+                style={styles.action}
+              >
+                <Text style={[styles.actionText, { color: theme.accentText }]}>
+                  {toast.action.label}
+                </Text>
+              </Pressable>
+            ) : null}
           </View>
         </View>
       ) : null}
@@ -93,6 +127,14 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginRight: spacing.sm,
+  },
+  action: {
+    marginLeft: spacing.md,
+  },
+  actionText: {
+    fontSize: type.bodyM.fontSize,
+    lineHeight: type.bodyM.lineHeight,
+    fontWeight: fontWeight.semibold as '600',
   },
   message: {
     fontSize: type.bodyM.fontSize,

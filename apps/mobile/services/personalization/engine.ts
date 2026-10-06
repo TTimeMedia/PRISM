@@ -11,6 +11,7 @@ import {
   resolveMedicationOccurrences,
   resolveNextMedicationOccurrence,
 } from '../../lib/reminders/scheduleResolution';
+import { entryPhotos } from '../../lib/journey/entryPhotos';
 
 /**
  * The TODAY personalization engine — see docs/TECHNICAL_BIBLE.md §10 and
@@ -120,6 +121,8 @@ function classifyMilestones(milestones: Milestone[], now: Date): TodayItem[] {
         sourceId: milestone.id,
         title: milestone.title,
         subtitle: milestone.category ?? undefined,
+        imagePath: entryPhotos(milestone)[0],
+        icon: milestone.icon ?? undefined,
         at: milestone.date,
       };
     })
