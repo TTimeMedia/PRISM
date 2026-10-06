@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
 import type { P0ModuleKey, TodayItem } from '@prism/types';
@@ -17,7 +17,9 @@ import {
 } from '@prism/ui';
 import { useModules, useProfile } from '../../../lib/profile/queries';
 import { useTodayItems } from '../../../lib/today/queries';
-import { useCreateMedicationLog } from '../../../lib/care/mutations';
+import { useCreateMedicationLog, useUndoMedicationLog } from '../../../lib/care/mutations';
+import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
+import { milestoneIconFor } from '../../journey/milestoneIcons';
 import {
   comingUpItemHref,
   formatComingUpWhen,
@@ -65,6 +67,7 @@ export function TodayScreen() {
   const { data: modules } = useModules();
   const { data: items, isLoading, isError, refetch } = useTodayItems();
   const createLog = useCreateMedicationLog();
+  const undoLog = useUndoMedicationLog();
   const [marking, setMarking] = useState(false);
 
   const name = profile?.display_name?.trim();
@@ -78,18 +81,27 @@ export function TodayScreen() {
     (item) => item.moduleKey !== 'medications' && !comingUp.some((c) => c.id === item.id),
   );
 
-  const markDone = async (item: TodayItem) => {
+  // Logging from Today is one tap, so a mis-tap is one tap to reverse: Undo on the toast.
+  const logDose = async (item: TodayItem) => {
     setMarking(true);
     try {
-      await createLog.mutateAsync({
+      const log = await createLog.mutateAsync({
         medication_id: item.sourceId,
         scheduled_at: item.at,
         completed_at: new Date().toISOString(),
         status: 'completed',
       });
-      showToast('Marked as done.');
+      showToast('Dose logged.', 'success', {
+        label: 'Undo',
+        onPress: () => {
+          undoLog.mutate(log.id, {
+            onSuccess: () => showToast('Removed.'),
+            onError: () => showToast("Couldn't undo that. Open the medication to fix it.", 'error'),
+          });
+        },
+      });
     } catch {
-      showToast("Couldn't mark that as done. Open it to log it.", 'error');
+      showToast("Couldn't log that. Open it to log it.", 'error');
     } finally {
       setMarking(false);
     }
@@ -129,7 +141,7 @@ export function TodayScreen() {
         ) : (
           <>
             {next ? (
-              <NextUpCard item={next} marking={marking} onMarkDone={() => markDone(next)} />
+              <NextUpCard item={next} logging={marking} onLogDose={() => logDose(next)} />
             ) : (
               <HeroCard tint="mint" accentTint="cyan">
                 <Text
@@ -198,10 +210,17 @@ export function TodayScreen() {
                 <View style={styles.list}>
                   {recent.slice(0, 3).map((item) => {
                     const style = moduleStyle(item.moduleKey);
+                    const milestone = item.moduleKey === 'milestones';
                     return (
                       <ItemRow
                         key={item.id}
-                        icon={style.icon}
+                        // A milestone shows its first photo, or the icon that fits it.
+                        icon={milestone ? milestoneIconFor(item.icon, item.subtitle) : style.icon}
+                        media={
+                          milestone && item.imagePath ? (
+                            <TilePhoto path={item.imagePath} label={item.title} />
+                          ) : undefined
+                        }
                         tint={style.tint}
                         title={item.title}
                         subtitle={item.subtitle}
@@ -221,21 +240,38 @@ export function TodayScreen() {
   );
 }
 
-/** The single most important thing right now, with the one button that does it. */
+/** A milestone's photo, filling a list row's icon tile. */
+function TilePhoto({ path, label }: { path: string; label: string }) {
+  const { data: uri } = useSignedEntryImageUrl(path);
+  return uri ? (
+    <Image
+      source={{ uri }}
+      style={styles.tilePhoto}
+      resizeMode="cover"
+      accessibilityLabel={`Photo for ${label}`}
+    />
+  ) : null;
+}
+
+/**
+ * The single most important thing right now. View opens it; a dose due today
+ * also offers Log dose, as the smaller button so it isn't tapped by accident.
+ * A dose that isn't due today can't be logged from here.
+ */
 function NextUpCard({
   item,
-  marking,
-  onMarkDone,
+  logging,
+  onLogDose,
 }: {
   item: TodayItem;
-  marking: boolean;
-  onMarkDone: () => void;
+  logging: boolean;
+  onLogDose: () => void;
 }) {
   const theme = useTheme();
   const style = moduleStyle(item.moduleKey);
   const colors = useTint(style.tint);
   const Icon = style.icon;
-  const isDose = item.moduleKey === 'medications';
+  const canLog = item.moduleKey === 'medications' && item.bucket === 'due_today';
   const label = item.bucket === 'due_today' ? 'Due today' : 'Up next';
 
   return (
@@ -264,22 +300,12 @@ function NextUpCard({
         {item.subtitle ? ` · ${item.subtitle}` : ''}
       </Text>
       <View style={styles.heroActions}>
-        {isDose ? (
-          <>
-            <View style={styles.heroPrimary}>
-              <PRISMButton label="Mark done" loading={marking} onPress={onMarkDone} />
-            </View>
-            <PRISMButton
-              label="Details"
-              variant="secondary"
-              onPress={() => router.push(comingUpItemHref(item))}
-            />
-          </>
-        ) : (
-          <View style={styles.heroPrimary}>
-            <PRISMButton label="Open" onPress={() => router.push(comingUpItemHref(item))} />
-          </View>
-        )}
+        <View style={styles.heroPrimary}>
+          <PRISMButton label="View" onPress={() => router.push(comingUpItemHref(item))} />
+        </View>
+        {canLog ? (
+          <PRISMButton label="Log dose" variant="secondary" loading={logging} onPress={onLogDose} />
+        ) : null}
       </View>
     </HeroCard>
   );
@@ -288,6 +314,10 @@ function NextUpCard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  tilePhoto: {
+    width: '100%',
+    height: '100%',
   },
   content: {
     flexGrow: 1,

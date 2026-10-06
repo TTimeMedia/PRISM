@@ -71,8 +71,11 @@ describe('color themes', () => {
   it('gives Paper serif headings and keeps Sora everywhere else', () => {
     const headingFont = (palette: string) =>
       renderHook(() => useTheme(), {
-        wrapper: ({ children }: { children: React.ReactNode }) =>
-          React.createElement(ThemeProvider, { preference: 'light', palette, children }),
+        wrapper: ({ children }: { children: React.ReactNode }) => (
+          <ThemeProvider preference="light" palette={palette}>
+            {children}
+          </ThemeProvider>
+        ),
       }).result.current.fonts.display;
 
     expect(headingFont('paper')).not.toBe('Sora');

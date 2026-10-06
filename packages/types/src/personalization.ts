@@ -17,4 +17,8 @@ export interface TodayItem {
   subtitle?: string;
   /** ISO datetime this item is relevant at/around, used for ranking. */
   at: string;
+  /** Milestones: the first photo (a private `memories` path), shown as the item's picture. */
+  imagePath?: string;
+  /** Milestones: the icon the person picked (`milestones.icon`). */
+  icon?: string;
 }
