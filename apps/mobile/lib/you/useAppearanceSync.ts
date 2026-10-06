@@ -1,13 +1,9 @@
 import { useEffect } from 'react';
-import { PALETTES, type PaletteKey } from '@prism/ui';
+import { knownPaletteKey } from '@prism/ui';
 import type { Theme } from '@prism/types';
 import { useAppStore } from '../store/appStore';
 
 const THEMES: readonly string[] = ['light', 'dark', 'system'] satisfies Theme[];
-
-function isPaletteKey(value: string | undefined): value is PaletteKey {
-  return PALETTES.some((palette) => palette.key === value);
-}
 
 function isTheme(value: string | undefined): value is Theme {
   return value !== undefined && THEMES.includes(value);
@@ -20,7 +16,8 @@ function isTheme(value: string | undefined): value is Theme {
  * Local taps write the store first and the server after
  * (AppearanceScreen), so by the time the server value changes it already
  * matches and this is a no-op for the device that made the change.
- * Unknown or missing values are ignored, never applied.
+ * Unknown or missing values are ignored, never applied. A theme from before
+ * the themes were replaced is applied as its closest current theme.
  */
 export function useAppearanceSync(
   serverTheme: string | undefined,
@@ -36,8 +33,7 @@ export function useAppearanceSync(
   }, [serverTheme, setThemePreference]);
 
   useEffect(() => {
-    if (isPaletteKey(serverPalette)) {
-      setPalette(serverPalette);
-    }
+    const known = knownPaletteKey(serverPalette);
+    if (known) setPalette(known);
   }, [serverPalette, setPalette]);
 }

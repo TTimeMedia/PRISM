@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Theme } from '@prism/types';
-import { DEFAULT_PALETTE_KEY, type PaletteKey } from '@prism/ui';
+import { DEFAULT_PALETTE_KEY, resolvePaletteKey, type PaletteKey } from '@prism/ui';
 
 /**
  * Persistent, local, non-sensitive app preferences only — see
@@ -56,10 +56,13 @@ export const useAppStore = create<AppState>()(
       // colors from the very first frame instead of flashing the new default
       // while the account's saved choice loads. A fresh install has nothing
       // saved, so it starts on the calm default.
-      version: 1,
+      // Version 2 replaced the color themes; an old saved theme becomes its closest new one.
+      version: 2,
       migrate: (persisted, version) => {
         const state = (persisted ?? {}) as Partial<AppState>;
-        return version < 1 ? { ...state, palette: 'prism' as PaletteKey } : state;
+        if (version < 1) return { ...state, palette: 'prism' as PaletteKey };
+        if (version < 2) return { ...state, palette: resolvePaletteKey(state.palette) };
+        return state;
       },
     },
   ),

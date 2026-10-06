@@ -7,6 +7,7 @@ import {
   fontWeight,
   radius,
   spacing,
+  themeTokens,
   type,
   useTheme,
   type PaletteKey,
@@ -18,9 +19,9 @@ interface PalettePickerProps {
 }
 
 /**
- * Choose the colors for the whole app. Each option shows its five colors and
- * a one-line feel, never a label about who it's for. The choice applies
- * everywhere at once.
+ * Choose the colors for the whole app. Each option shows its ground and its
+ * two colors in the current light or dark mode, and a one-line feel, never a
+ * label about who it's for. The choice applies everywhere at once.
  */
 export function PalettePicker({ value, onChange }: PalettePickerProps) {
   const theme = useTheme();
@@ -47,13 +48,7 @@ export function PalettePicker({ value, onChange }: PalettePickerProps) {
             ]}
           >
             <View style={styles.swatches}>
-              {[
-                palette.accent,
-                palette.spectrum.pink,
-                palette.spectrum.violet,
-                palette.spectrum.mint,
-                palette.spectrum.yellow,
-              ].map((color, index) => (
+              {swatches(palette.key, theme.scheme).map((color, index) => (
                 <View
                   key={index}
                   style={[
@@ -81,6 +76,12 @@ export function PalettePicker({ value, onChange }: PalettePickerProps) {
       })}
     </View>
   );
+}
+
+/** The theme's ground, then its two colors. */
+function swatches(key: PaletteKey, scheme: 'light' | 'dark'): string[] {
+  const t = themeTokens(key, scheme);
+  return [t.bg, t.accent, t.accent2];
 }
 
 const styles = StyleSheet.create({

@@ -1,14 +1,18 @@
 import { Platform, type ImageSourcePropType } from 'react-native';
-import type { PaletteKey } from '@prism/ui';
 
 /**
- * The home-screen icon, one per palette. Slate is the app's own icon; the
- * others are alternate icons set up by the `expo-alternate-app-icons` plugin
- * in app.json, named the palette's label (iOS wants PascalCase names).
+ * The home-screen icon. Slate is the app's own icon; the others are
+ * alternate icons set up by the `expo-alternate-app-icons` plugin in
+ * app.json, named by their label (iOS wants PascalCase names). The icons
+ * were drawn for the first set of color themes and keep those names; they
+ * are chosen separately from the theme.
  * The choice lives on the phone itself, not in settings.
  */
 
-export const APP_ICONS: { key: PaletteKey; label: string; image: ImageSourcePropType }[] = [
+export type AppIconKey =
+  'slate' | 'mist' | 'prism' | 'ocean' | 'forest' | 'ember' | 'dusk' | 'blossom';
+
+export const APP_ICONS: { key: AppIconKey; label: string; image: ImageSourcePropType }[] = [
   { key: 'slate', label: 'Slate', image: require('../../assets/images/app-icons/icon-slate.png') },
   { key: 'mist', label: 'Mist', image: require('../../assets/images/app-icons/icon-mist.png') },
   { key: 'prism', label: 'Prism', image: require('../../assets/images/app-icons/icon-prism.png') },
@@ -27,7 +31,7 @@ export const APP_ICONS: { key: PaletteKey; label: string; image: ImageSourceProp
   },
 ];
 
-const DEFAULT_ICON: PaletteKey = 'slate';
+const DEFAULT_ICON: AppIconKey = 'slate';
 
 type IconModule = typeof import('expo-alternate-app-icons');
 
@@ -48,12 +52,12 @@ export function canChangeAppIcon(): boolean {
 }
 
 /** The icon on the home screen right now. */
-export function currentAppIcon(): PaletteKey {
+export function currentAppIcon(): AppIconKey {
   const name = iconModule()?.getAppIconName();
   return APP_ICONS.find((icon) => icon.label === name)?.key ?? DEFAULT_ICON;
 }
 
-export async function setAppIcon(key: PaletteKey): Promise<void> {
+export async function setAppIcon(key: AppIconKey): Promise<void> {
   const mod = iconModule();
   if (!mod) return;
   const icon = APP_ICONS.find((entry) => entry.key === key);

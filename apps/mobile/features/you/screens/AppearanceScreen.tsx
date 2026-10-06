@@ -16,7 +16,12 @@ import {
 import type { Theme } from '@prism/types';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppStore } from '../../../lib/store/appStore';
-import { canChangeAppIcon, currentAppIcon, setAppIcon } from '../../../lib/you/appIcon';
+import {
+  canChangeAppIcon,
+  currentAppIcon,
+  setAppIcon,
+  type AppIconKey,
+} from '../../../lib/you/appIcon';
 import { AppIconPicker } from '../components/AppIconPicker';
 import { PalettePicker } from '../components/PalettePicker';
 
@@ -40,9 +45,9 @@ export function AppearanceScreen() {
   const palette = useAppStore((state) => state.palette);
   const setPalette = useAppStore((state) => state.setPalette);
 
-  const [appIcon, setAppIconState] = useState<PaletteKey>(() => currentAppIcon());
+  const [appIcon, setAppIconState] = useState<AppIconKey>(() => currentAppIcon());
 
-  const selectAppIcon = (key: PaletteKey) => {
+  const selectAppIcon = (key: AppIconKey) => {
     const previous = appIcon;
     setAppIconState(key);
     // iOS shows its own "You have changed the icon" alert; if it refuses, show what's really there.

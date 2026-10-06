@@ -34,9 +34,9 @@ export function OfflineBanner() {
   return (
     <View
       accessibilityRole="alert"
-      style={[styles.banner, { backgroundColor: theme.spectrum.yellow }]}
+      style={[styles.banner, { backgroundColor: theme.warningSubtle, borderColor: theme.warning }]}
     >
-      <Text style={[styles.text, { color: theme.colors.text.inverse }]}>
+      <Text style={[styles.text, { color: theme.colors.text.primary }]}>
         {OFFLINE_COPY.banner} {OFFLINE_COPY.syncNotice}
       </Text>
     </View>
@@ -45,6 +45,7 @@ export function OfflineBanner() {
 
 const styles = StyleSheet.create({
   banner: {
+    borderBottomWidth: 1,
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.md,
     alignItems: 'center',
