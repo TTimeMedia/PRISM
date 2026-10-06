@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ArrowLeft, Plus } from 'lucide-react-native';
+import { ArrowLeft, CalendarArrowDown, Plus } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMEmptyState,
@@ -40,22 +40,23 @@ export function AppointmentsScreen() {
           </PRISMIconButton>
         }
         trailing={
-          <PRISMIconButton
-            accessibilityLabel="Add appointment"
-            onPress={() => router.push('/care/appointments/add')}
-          >
-            <Plus size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          <View style={styles.headerActions}>
+            <PRISMIconButton
+              accessibilityLabel="Import from calendar"
+              onPress={() => setImportOpen(true)}
+            >
+              <CalendarArrowDown size={22} color={theme.colors.text.primary} />
+            </PRISMIconButton>
+            <PRISMIconButton
+              accessibilityLabel="Add appointment"
+              onPress={() => router.push('/care/appointments/add')}
+            >
+              <Plus size={22} color={theme.colors.text.primary} />
+            </PRISMIconButton>
+          </View>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.importRow}>
-          <PRISMButton
-            label="Import from calendar"
-            variant="secondary"
-            onPress={() => setImportOpen(true)}
-          />
-        </View>
         {isLoading ? (
           <View style={styles.skeletons}>
             <PRISMSkeleton height={56} />
@@ -64,14 +65,23 @@ export function AppointmentsScreen() {
         ) : isError ? (
           <PRISMErrorState onRetry={() => refetch()} />
         ) : (appointments ?? []).length === 0 ? (
-          <PRISMEmptyState
-            title="No appointments yet."
-            subtitle="Add one whenever you're ready."
-            action={{
-              label: 'Add appointment',
-              onPress: () => router.push('/care/appointments/add'),
-            }}
-          />
+          <View>
+            <PRISMEmptyState
+              title="No appointments yet."
+              subtitle="Add one, or bring them in from your calendar."
+            />
+            <View style={styles.emptyActions}>
+              <PRISMButton
+                label="Add appointment"
+                onPress={() => router.push('/care/appointments/add')}
+              />
+              <PRISMButton
+                label="Import from calendar"
+                variant="secondary"
+                onPress={() => setImportOpen(true)}
+              />
+            </View>
+          </View>
         ) : (
           <>
             <PRISMSection title="Upcoming">
@@ -123,8 +133,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.xl,
   },
-  importRow: {
-    marginBottom: spacing.md,
+  headerActions: {
+    flexDirection: 'row',
+  },
+  emptyActions: {
+    gap: spacing.sm,
   },
   skeletons: {
     gap: spacing.sm,

@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
   PRISMButton,
   PRISMChipGroup,
@@ -23,7 +23,7 @@ import { useAppointments } from '../../../lib/care/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
 import { ImportableEventRow } from './ImportableEventRow';
 
-type Phase = 'intro' | 'loading' | 'list' | 'denied' | 'error';
+type Phase = 'loading' | 'list' | 'denied' | 'error';
 
 export interface CalendarImportSheetProps {
   visible: boolean;
@@ -33,17 +33,18 @@ export interface CalendarImportSheetProps {
 }
 
 /**
- * Import from calendar. Nothing is read until the person taps "Choose from
- * my calendar"; they then see their upcoming events and tick the ones that
- * are appointments. Only ticked events are copied into Prism; the rest are
- * never stored.
+ * Import from calendar. Opening the sheet is the choice to look: it reads the
+ * upcoming events then (the first time, iOS asks for calendar access with
+ * Prism's own explanation), and the person ticks the ones that are
+ * appointments. Only ticked events are copied into Prism; the rest are never
+ * stored.
  */
 export function CalendarImportSheet({ visible, onClose, onImported }: CalendarImportSheetProps) {
   const theme = useTheme();
   const { showToast } = useToast();
   const { data: existing } = useAppointments();
   const createAppointment = useCreateAppointment();
-  const [phase, setPhase] = useState<Phase>('intro');
+  const [phase, setPhase] = useState<Phase>('loading');
   const [events, setEvents] = useState<CalendarEventSummary[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState('');
@@ -52,7 +53,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
   const [errorDetail, setErrorDetail] = useState<string | null>(null);
 
   const close = () => {
-    setPhase('intro');
+    setPhase('loading');
     setEvents([]);
     setSelected(new Set());
     setQuery('');
@@ -78,6 +79,11 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
       setPhase('error');
     }
   };
+
+  // Read the calendar as the sheet opens; there's no separate "choose" step.
+  useEffect(() => {
+    if (visible) void choose();
+  }, [visible]);
 
   const calendars = useMemo(() => calendarsOf(events), [events]);
   const visibleEvents = useMemo(
@@ -128,19 +134,12 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
 
   return (
     <PRISMSheet visible={visible} title="Import from calendar" onRequestClose={close}>
-      {phase === 'intro' || phase === 'loading' ? (
-        <View style={styles.block}>
+      {phase === 'loading' ? (
+        <View style={[styles.block, styles.loading]}>
+          <ActivityIndicator color={theme.accent} />
           <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
-            Pick appointments from your phone&apos;s calendar, including ones from your email
-            accounts. Prism reads your calendar only now, on this phone, so you can choose. Only the
-            ones you pick are added, and nothing else is kept.
+            Looking at your calendar…
           </Text>
-          <PRISMButton
-            label="Choose from my calendar"
-            loading={phase === 'loading'}
-            onPress={choose}
-          />
-          <PRISMButton label="Not now" variant="tertiary" onPress={close} />
         </View>
       ) : null}
 
@@ -180,6 +179,9 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
           </View>
         ) : (
           <View style={styles.block}>
+            <Text style={[styles.detail, { color: theme.colors.text.tertiary }]}>
+              Only the events you pick are added. Nothing else is kept.
+            </Text>
             <TextInput
               accessibilityLabel="Search events"
               value={query}
@@ -257,6 +259,10 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
 const styles = StyleSheet.create({
   block: {
     gap: spacing.smd,
+  },
+  loading: {
+    alignItems: 'center',
+    paddingVertical: spacing.lg,
   },
   body: {
     fontSize: type.bodyM.fontSize,
