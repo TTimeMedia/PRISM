@@ -7,6 +7,7 @@ import type {
   JournalEntry,
   TimelineEvent,
 } from '@prism/types';
+import { entryPhotos } from '../../lib/journey/entryPhotos';
 
 const MEDICATION_LOG_STATUS_LABELS: Record<MedicationLogStatus, string> = {
   scheduled: 'Scheduled',
@@ -71,7 +72,7 @@ export function buildTimelineEvents(records: TimelineRecords): TimelineEvent[] {
     sourceId: milestone.id,
     title: milestone.title,
     subtitle: milestone.category ?? undefined,
-    imagePath: milestone.image_path ?? undefined,
+    imagePaths: entryPhotos(milestone),
     at: dateToSortKey(milestone.date),
   }));
 
@@ -81,7 +82,7 @@ export function buildTimelineEvents(records: TimelineRecords): TimelineEvent[] {
     sourceId: entry.id,
     title: entry.title?.trim() || 'Journal entry',
     subtitle: entry.mood ?? undefined,
-    imagePath: entry.image_path ?? undefined,
+    imagePaths: entryPhotos(entry),
     at: dateToSortKey(entry.date),
   }));
 

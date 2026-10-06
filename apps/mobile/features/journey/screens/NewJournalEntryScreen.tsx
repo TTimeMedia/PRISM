@@ -7,11 +7,7 @@ import type { JournalEntryCreateInput } from '@prism/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useModules } from '../../../lib/profile/queries';
 import { useCreateJournalEntry } from '../../../lib/journey/mutations';
-import {
-  removeEntryImage,
-  uploadEntryImage,
-  type EntryImageChange,
-} from '../../../lib/journey/entryImage';
+import { saveWithPhotos, type EntryPhotoChange } from '../../../lib/journey/entryImage';
 import { JournalEntryForm } from '../components/JournalEntryForm';
 
 /** Screen 48 — New Journal Entry. */
@@ -27,17 +23,18 @@ export function NewJournalEntryScreen() {
   const journalModule = modules?.find((m) => m.module_key === 'journal');
   const showMood = journalModule?.configuration.mood_tracking_enabled !== false;
 
-  const submit = async (values: JournalEntryCreateInput, image: EntryImageChange) => {
-    let imagePath: string | null = null;
+  const submit = async (values: JournalEntryCreateInput, photos: EntryPhotoChange) => {
+    setUploading(true);
     try {
-      if (image.asset && session?.user.id) {
-        setUploading(true);
-        imagePath = await uploadEntryImage(session.user.id, image.asset, 'journal');
-      }
-      await createJournalEntry.mutateAsync({ ...values, image_path: imagePath });
+      await saveWithPhotos({
+        userId: session?.user.id,
+        folder: 'journal',
+        change: photos,
+        previous: [],
+        save: (columns) => createJournalEntry.mutateAsync({ ...values, ...columns }),
+      });
       router.back();
     } catch {
-      await removeEntryImage(imagePath);
       showToast("Couldn't save this entry. Please try again.", 'error');
     } finally {
       setUploading(false);

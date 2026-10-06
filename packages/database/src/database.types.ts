@@ -119,12 +119,13 @@ export interface Database {
       >;
       milestones: Table<
         Milestone,
-        Insertable<Milestone, Generated>,
+        // image_paths defaults to an empty list.
+        Insertable<Milestone, Generated | 'image_paths'>,
         Updatable<Milestone, Immutable>
       >;
       journal_entries: Table<
         JournalEntry,
-        Insertable<JournalEntry, Generated | 'tags'>,
+        Insertable<JournalEntry, Generated | 'tags' | 'image_paths'>,
         Updatable<JournalEntry, Immutable>
       >;
       /** P1 — see docs/DECISIONS.md. */

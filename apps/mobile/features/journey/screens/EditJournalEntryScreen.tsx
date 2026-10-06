@@ -15,11 +15,8 @@ import { useSession } from '../../../lib/auth/AuthProvider';
 import { useModules } from '../../../lib/profile/queries';
 import { useJournalEntry } from '../../../lib/journey/queries';
 import { useUpdateJournalEntry } from '../../../lib/journey/mutations';
-import {
-  removeEntryImage,
-  uploadEntryImage,
-  type EntryImageChange,
-} from '../../../lib/journey/entryImage';
+import { saveWithPhotos, type EntryPhotoChange } from '../../../lib/journey/entryImage';
+import { entryPhotos } from '../../../lib/journey/entryPhotos';
 import { JournalEntryForm } from '../components/JournalEntryForm';
 
 /** Edit Journal Entry — same fields as New, per docs/SCREEN_BIBLE.md Screen 49's Edit action. */
@@ -35,25 +32,18 @@ export function EditJournalEntryScreen() {
   const journalModule = modules?.find((m) => m.module_key === 'journal');
   const showMood = journalModule?.configuration.mood_tracking_enabled !== false;
 
-  const submit = async (values: JournalEntryCreateInput, image: EntryImageChange) => {
-    // undefined = photo unchanged; string = replaced; null = removed.
-    let newPath: string | null | undefined;
-    let uploadedPath: string | null = null;
+  const submit = async (values: JournalEntryCreateInput, photos: EntryPhotoChange) => {
+    setUploading(true);
     try {
-      if (image.asset && session?.user.id) {
-        setUploading(true);
-        uploadedPath = await uploadEntryImage(session.user.id, image.asset, 'journal');
-        newPath = uploadedPath;
-      } else if (image.removed) {
-        newPath = null;
-      }
-      await updateJournalEntry.mutateAsync(
-        newPath === undefined ? values : { ...values, image_path: newPath },
-      );
-      if (newPath !== undefined) await removeEntryImage(entry?.image_path);
+      await saveWithPhotos({
+        userId: session?.user.id,
+        folder: 'journal',
+        change: photos,
+        previous: entry ? entryPhotos(entry) : [],
+        save: (columns) => updateJournalEntry.mutateAsync({ ...values, ...columns }),
+      });
       router.back();
     } catch {
-      await removeEntryImage(uploadedPath);
       showToast("Couldn't save your changes. Please try again.", 'error');
     } finally {
       setUploading(false);
@@ -83,7 +73,7 @@ export function EditJournalEntryScreen() {
             date: entry.date,
             tags: entry.tags,
           }}
-          existingImagePath={entry.image_path}
+          existingImagePaths={entryPhotos(entry)}
           submitLabel="Save changes"
           submitting={updateJournalEntry.isPending || uploading}
           showMood={showMood}

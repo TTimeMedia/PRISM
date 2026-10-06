@@ -207,8 +207,10 @@ export interface Milestone {
   date: ISODate;
   category: string | null;
   icon: string | null;
-  /** Object path in the private `memories` bucket ({user_id}/milestones/...), not a URL. */
+  /** The first photo, kept for older app builds; always image_paths[0]. */
   image_path: string | null;
+  /** Up to 5 photos, in order: object paths in the private `memories` bucket ({user_id}/milestones/...), not URLs. */
+  image_paths: string[];
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
@@ -222,8 +224,10 @@ export interface JournalEntry {
   mood: string | null;
   date: ISODate;
   tags: string[];
-  /** Object path in the private `memories` bucket ({user_id}/journal/...), not a URL. */
+  /** The first photo, kept for older app builds; always image_paths[0]. */
   image_path: string | null;
+  /** Up to 5 photos, in order: object paths in the private `memories` bucket ({user_id}/journal/...), not URLs. */
+  image_paths: string[];
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }

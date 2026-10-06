@@ -280,18 +280,16 @@ export function ItemRow({
   );
 }
 
-/** A small number with a label — "3 medications", "1 coming up". */
+/**
+ * A small number with a label — "3 medications", "1 coming up". Flat, with
+ * no shadow: its tint and border are enough, and a shadow is cut off where
+ * chips sit in a sideways-scrolling row.
+ */
 export function StatChip({ value, label, tint }: { value: string; label: string; tint: Tint }) {
   const theme = useTheme();
   const colors = useTint(tint);
   return (
-    <View
-      style={[
-        styles.chip,
-        { backgroundColor: colors.soft, borderColor: colors.border },
-        theme.scheme === 'light' && theme.shadow,
-      ]}
-    >
+    <View style={[styles.chip, { backgroundColor: colors.soft, borderColor: colors.border }]}>
       <Text style={[styles.chipValue, { color: theme.colors.text.primary }]}>{value}</Text>
       <Text style={[styles.chipLabel, { color: theme.colors.text.secondary }]}>{label}</Text>
     </View>

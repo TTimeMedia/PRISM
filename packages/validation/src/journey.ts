@@ -1,6 +1,10 @@
 import { z } from 'zod';
 import { isoDateSchema, notesSchema, titleSchema } from './common';
 
+/** A journal entry or milestone holds at most this many photos. */
+export const MAX_ENTRY_PHOTOS = 5;
+const imagePathsSchema = z.array(z.string().max(500)).max(MAX_ENTRY_PHOTOS).optional();
+
 /** Suggested milestones are optional and always paired with a custom title — see docs/SCREEN_BIBLE.md Screen 45. */
 export const milestoneCreateSchema = z.object({
   title: titleSchema,
@@ -9,6 +13,7 @@ export const milestoneCreateSchema = z.object({
   category: z.string().max(100).nullable().optional(),
   icon: z.string().max(50).nullable().optional(),
   image_path: z.string().max(500).nullable().optional(),
+  image_paths: imagePathsSchema,
 });
 export type MilestoneCreateInput = z.infer<typeof milestoneCreateSchema>;
 
@@ -23,6 +28,7 @@ export const journalEntryCreateSchema = z.object({
   date: isoDateSchema,
   tags: z.array(z.string().max(50)).max(20).default([]),
   image_path: z.string().max(500).nullable().optional(),
+  image_paths: imagePathsSchema,
 });
 export type JournalEntryCreateInput = z.infer<typeof journalEntryCreateSchema>;
 

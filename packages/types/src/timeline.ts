@@ -14,8 +14,8 @@ export interface TimelineEvent {
   sourceId: string;
   title: string;
   subtitle?: string;
-  /** Private `memories` bucket path of a photo to show with the event (milestones). */
-  imagePath?: string;
+  /** Private `memories` bucket paths of the photos on a milestone or journal entry, in order. */
+  imagePaths?: string[];
   /** ISO datetime this event occurred at, used for chronological ordering. */
   at: string;
 }

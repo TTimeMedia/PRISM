@@ -14,11 +14,8 @@ import type { MilestoneCreateInput } from '@prism/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useUpdateMilestone } from '../../../lib/journey/mutations';
-import {
-  removeEntryImage,
-  uploadEntryImage,
-  type EntryImageChange,
-} from '../../../lib/journey/entryImage';
+import { saveWithPhotos, type EntryPhotoChange } from '../../../lib/journey/entryImage';
+import { entryPhotos } from '../../../lib/journey/entryPhotos';
 import { MilestoneForm } from '../components/MilestoneForm';
 
 /** Edit Milestone — same fields as Add, per docs/SCREEN_BIBLE.md Screen 46's Edit action. */
@@ -31,25 +28,18 @@ export function EditMilestoneScreen() {
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
 
-  const submit = async (values: MilestoneCreateInput, image: EntryImageChange) => {
-    // undefined = photo unchanged; string = replaced; null = removed.
-    let newPath: string | null | undefined;
-    let uploadedPath: string | null = null;
+  const submit = async (values: MilestoneCreateInput, photos: EntryPhotoChange) => {
+    setUploading(true);
     try {
-      if (image.asset && session?.user.id) {
-        setUploading(true);
-        uploadedPath = await uploadEntryImage(session.user.id, image.asset, 'milestones');
-        newPath = uploadedPath;
-      } else if (image.removed) {
-        newPath = null;
-      }
-      await updateMilestone.mutateAsync(
-        newPath === undefined ? values : { ...values, image_path: newPath },
-      );
-      if (newPath !== undefined) await removeEntryImage(milestone?.image_path);
+      await saveWithPhotos({
+        userId: session?.user.id,
+        folder: 'milestones',
+        change: photos,
+        previous: milestone ? entryPhotos(milestone) : [],
+        save: (columns) => updateMilestone.mutateAsync({ ...values, ...columns }),
+      });
       router.back();
     } catch {
-      await removeEntryImage(uploadedPath);
       showToast("Couldn't save your changes. Please try again.", 'error');
     } finally {
       setUploading(false);
@@ -79,7 +69,7 @@ export function EditMilestoneScreen() {
             category: milestone.category,
             icon: milestone.icon ?? 'sparkles',
           }}
-          existingImagePath={milestone.image_path}
+          existingImagePaths={entryPhotos(milestone)}
           submitLabel="Save changes"
           submitting={updateMilestone.isPending || uploading}
           onSubmit={submit}

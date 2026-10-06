@@ -21,29 +21,27 @@ import { recordHref } from '../../../lib/journey/recordHref';
 import { ScreenGlow, StatChip, useTint } from '../../../components/home';
 import { TopBar } from '../../../components/home/TopBar';
 import { eventColor } from '../eventDisplay';
-import { EntryImage } from '../components/EntryImage';
+import { PhotoBubbles } from '../components/PhotoBubbles';
 import { TimelinePrompts } from '../components/TimelinePrompts';
 
 /**
- * Counts for the current month: what happened, never how well. No
- * percentages or streaks, so there is nothing to fall behind on.
+ * All-time counts: what happened, never how well. No percentages or
+ * streaks, so there is nothing to fall behind on.
  *  - checkedInDays: distinct days with something the person logged (a dose,
  *    a journal entry, a milestone). Appointments don't count: their date is
  *    when they happen, not when anyone checked in. Future days don't count.
  *  - entries: journal entries written.
  *  - moments: milestones kept.
  */
-export function monthSummary(events: readonly TimelineEvent[], now: Date = new Date()) {
-  const month = localDay(now).slice(0, 7);
+export function totalsSummary(events: readonly TimelineEvent[], now: Date = new Date()) {
   const today = localDay(now);
-  const inMonth = events.filter((event) => dayOf(event).startsWith(month));
   const checkedIn = new Set(
-    inMonth.filter((e) => e.moduleKey !== 'appointments' && dayOf(e) <= today).map((e) => dayOf(e)),
+    events.filter((e) => e.moduleKey !== 'appointments' && dayOf(e) <= today).map((e) => dayOf(e)),
   );
   return {
     checkedInDays: checkedIn.size,
-    entries: inMonth.filter((e) => e.moduleKey === 'journal').length,
-    moments: inMonth.filter((e) => e.moduleKey === 'milestones').length,
+    entries: events.filter((e) => e.moduleKey === 'journal').length,
+    moments: events.filter((e) => e.moduleKey === 'milestones').length,
   };
 }
 
@@ -74,7 +72,7 @@ function initialsOf(name: string | null | undefined): string {
 
 /**
  * The YOU tab: you, and your record. Who you are (photo, name, how long
- * you've been here), what this month held in plain counts, and the whole
+ * you've been here), everything so far in plain counts, and the whole
  * Timeline of everything you've kept. Journey is where you
  * write and reflect; this is where it all adds up. Tapping an event opens
  * its original record: the Timeline never duplicates data, it's a view.
@@ -87,7 +85,7 @@ export function TimelineScreen() {
   const { data: events, isLoading, isError, refetch } = useTimelineEvents();
 
   const all = useMemo(() => events ?? [], [events]);
-  const summary = useMemo(() => monthSummary(all), [all]);
+  const summary = useMemo(() => totalsSummary(all), [all]);
   const name = profile?.display_name?.trim();
   const since = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
@@ -141,7 +139,7 @@ export function TimelineScreen() {
         </View>
       </View>
 
-      <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>This month</Text>
+      <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>All time</Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -208,8 +206,8 @@ export function TimelineScreen() {
             title: event.title,
             subtitle: event.subtitle,
             date: formatEventDate(event.at),
-            media: event.imagePath ? (
-              <EntryImage path={event.imagePath} label={event.title} />
+            media: event.imagePaths?.length ? (
+              <PhotoBubbles paths={event.imagePaths} label={event.title} />
             ) : undefined,
             onPress: () => router.push(recordHref(event.moduleKey, event.sourceId)),
           }))}

@@ -224,11 +224,11 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'journey',
     title: 'Milestones, journal and photos',
     category: 'Journey',
-    summary: 'Keep your story, with photos only you can see.',
+    summary: 'Keep your story, with up to five photos each that only you can see.',
     blocks: [
       {
         type: 'p',
-        text: 'Milestones mark the moments that matter to you. The journal is for anything else. Both can have a photo, and your Timeline shows everything in order.',
+        text: 'Milestones mark the moments that matter to you. The journal is for anything else. Each can hold up to five photos: swipe through them on the entry, and they pop up as small bubbles on your Timeline, which shows everything in order.',
       },
       {
         type: 'p',
