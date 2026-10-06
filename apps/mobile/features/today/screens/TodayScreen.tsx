@@ -20,6 +20,8 @@ import { useTodayItems } from '../../../lib/today/queries';
 import { useCreateMedicationLog, useUndoMedicationLog } from '../../../lib/care/mutations';
 import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 import { milestoneIconFor } from '../../journey/milestoneIcons';
+import { useCalendarSuggestions } from '../../../lib/calendar/useCalendarSuggestions';
+import { CalendarSuggestions } from '../components/CalendarSuggestions';
 import {
   comingUpItemHref,
   formatComingUpWhen,
@@ -74,6 +76,7 @@ export function TodayScreen() {
   const greeting = name ? `${timeOfDayGreeting()}, ${name}.` : `${timeOfDayGreeting()}.`;
   const enabled = new Set(modules?.filter((m) => m.enabled).map((m) => m.module_key));
   const actions = ADD_ACTIONS.filter((action) => enabled.has(action.module));
+  const calendar = useCalendarSuggestions(enabled.has('appointments'));
 
   const comingUp = selectComingUpItems(items ?? [], 5);
   const [next, ...after] = comingUp;
@@ -178,6 +181,12 @@ export function TodayScreen() {
                 </View>
               </>
             ) : null}
+
+            <CalendarSuggestions
+              suggestions={calendar.suggestions}
+              onAdd={calendar.add}
+              onDismiss={calendar.dismiss}
+            />
 
             {after.length > 0 ? (
               <>

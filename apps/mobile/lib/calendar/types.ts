@@ -34,8 +34,10 @@ export interface CalendarProvider {
   requestPermission(): Promise<boolean>;
   /** Adds an appointment to the calendar, returning the created event's id. */
   addAppointment(appointment: CalendarAppointmentInput): Promise<string>;
-  /** Requests full read access. Only ever called when someone taps Import from calendar. */
+  /** Requests full read access: when someone imports, or turns on calendar suggestions. */
   requestReadPermission(): Promise<boolean>;
+  /** Whether read access was already given. Never prompts. */
+  hasReadPermission(): Promise<boolean>;
   /** Upcoming events across the person's calendars, soonest first. Needs read access. */
   listUpcomingEvents(days?: number): Promise<CalendarEventSummary[]>;
 }

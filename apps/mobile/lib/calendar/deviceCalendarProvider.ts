@@ -24,6 +24,11 @@ export const deviceCalendarProvider: CalendarProvider = {
     return granted;
   },
 
+  async hasReadPermission() {
+    const { granted } = await Calendar.getCalendarPermissions(false);
+    return granted;
+  },
+
   async listUpcomingEvents(days = 120) {
     const start = new Date();
     const end = new Date(start.getTime() + days * 24 * 60 * 60 * 1000);

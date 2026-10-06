@@ -16,6 +16,7 @@ import {
 } from '@prism/ui';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { calendarProvider } from '../../../lib/calendar';
+import { useAppStore } from '../../../lib/store/appStore';
 
 /**
  * Calendar sync settings — opt-in device-calendar (Apple Calendar on
@@ -29,6 +30,24 @@ export function CalendarSettingsScreen() {
   const updateSettings = useUpdateSettings();
   const { showToast } = useToast();
   const available = Platform.OS === 'ios';
+  const suggestionsOn = useAppStore((state) => state.calendarSuggestions);
+  const setSuggestionsOn = useAppStore((state) => state.setCalendarSuggestions);
+
+  // Turning suggestions on is the moment Prism asks to read the calendar.
+  const toggleSuggestions = async (value: boolean) => {
+    if (value) {
+      try {
+        if (!(await calendarProvider.requestReadPermission())) {
+          showToast("Calendar access wasn't allowed, so there's nothing to suggest.", 'error');
+          return;
+        }
+      } catch {
+        showToast("Calendar isn't available in this build of Prism.", 'error');
+        return;
+      }
+    }
+    setSuggestionsOn(value);
+  };
 
   const toggleCalendarSync = async (value: boolean) => {
     if (value) {
@@ -78,6 +97,19 @@ export function CalendarSettingsScreen() {
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
             Once this is on, open any appointment to add it to your calendar.
           </Text>
+          <PRISMSection>
+            <PRISMSwitch
+              label="Suggest appointments from my calendar"
+              description={
+                available
+                  ? 'When you open Prism, it looks at upcoming events on this phone and offers the ones that look like appointments on Today. Nothing is kept unless you add it.'
+                  : 'Not available on this device.'
+              }
+              value={suggestionsOn}
+              disabled={!available}
+              onValueChange={toggleSuggestions}
+            />
+          </PRISMSection>
         </ScrollView>
       )}
     </View>

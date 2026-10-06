@@ -32,6 +32,17 @@ jest.mock('../../../../lib/care/mutations', () => ({
   useUndoMedicationLog: () => ({ mutate: mockUndo }),
 }));
 
+let mockSuggestions: unknown[] = [];
+const mockAddSuggestion = jest.fn().mockResolvedValue(undefined);
+const mockDismissSuggestion = jest.fn();
+jest.mock('../../../../lib/calendar/useCalendarSuggestions', () => ({
+  useCalendarSuggestions: () => ({
+    suggestions: mockSuggestions,
+    add: mockAddSuggestion,
+    dismiss: mockDismissSuggestion,
+  }),
+}));
+
 jest.mock('../../../../lib/journey/useSignedEntryImageUrl', () => ({
   useSignedEntryImageUrl: (path: string | null) => ({
     data: path ? `https://example.com/${path}` : undefined,
@@ -82,6 +93,7 @@ describe('TodayScreen', () => {
     mockedUseModules.mockReturnValue({ data: ALL_MODULES } as never);
     mockedUseCreateLog.mockReturnValue({ mutateAsync: createLog } as never);
     createLog.mockResolvedValue({});
+    mockSuggestions = [];
   });
 
   it('says so plainly, without inventing content, when nothing is due', () => {
@@ -278,5 +290,30 @@ describe('TodayScreen', () => {
     renderWithProviders(<TodayScreen />);
 
     expect(screen.queryByText("You're all caught up.")).toBeNull();
+  });
+
+  it('offers an appointment from the calendar, to add or to wave off', async () => {
+    const suggestion = {
+      id: 'ev1',
+      title: '2nd session at Studio Sashiko',
+      location: '690 Imperial Street',
+      notes: null,
+      startsAt: new Date(Date.now() + 3 * 86400000).toISOString(),
+      endsAt: null,
+      allDay: false,
+      calendarId: 'c1',
+      calendarName: 'Calendar',
+      accountName: null,
+    };
+    mockSuggestions = [suggestion];
+    todayResult([]);
+
+    renderWithProviders(<TodayScreen />);
+
+    expect(screen.getByText('From your calendar')).toBeTruthy();
+    fireEvent.press(screen.getByText('Add to Prism'));
+    await waitFor(() => expect(mockAddSuggestion).toHaveBeenCalledWith(suggestion));
+    fireEvent.press(screen.getByText('Not this one'));
+    expect(mockDismissSuggestion).toHaveBeenCalledWith(suggestion);
   });
 });
