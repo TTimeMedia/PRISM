@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import type { Theme } from '@prism/types';
 import { DEFAULT_PALETTE_KEY, resolvePaletteKey, type PaletteKey } from '@prism/ui';
+import { MAX_DISMISSED } from '../calendar/suggestions';
 
 /**
  * Persistent, local, non-sensitive app preferences only — see
@@ -31,6 +32,12 @@ interface AppState {
   /** Shaking the phone opens Report a problem. Device-local. */
   shakeToReport: boolean;
   setShakeToReport: (on: boolean) => void;
+  /** Today suggests calendar events that look like appointments. Off until turned on. Device-local. */
+  calendarSuggestions: boolean;
+  setCalendarSuggestions: (on: boolean) => void;
+  /** Suggestions dismissed with "Not this one" (lib/calendar/suggestions.ts keys). */
+  dismissedSuggestions: string[];
+  dismissSuggestion: (key: string) => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -48,6 +55,13 @@ export const useAppStore = create<AppState>()(
       dismissCustomizeTip: () => set({ customizeTipDismissed: true }),
       shakeToReport: true,
       setShakeToReport: (on) => set({ shakeToReport: on }),
+      calendarSuggestions: false,
+      setCalendarSuggestions: (on) => set({ calendarSuggestions: on }),
+      dismissedSuggestions: [],
+      dismissSuggestion: (key) =>
+        set((state) => ({
+          dismissedSuggestions: [...state.dismissedSuggestions, key].slice(-MAX_DISMISSED),
+        })),
     }),
     {
       name: 'prism-app-preferences',

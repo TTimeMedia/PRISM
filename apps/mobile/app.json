@@ -22,7 +22,8 @@
             "LSHandlerRank": "Alternate",
             "LSItemContentTypes": ["public.calendar-event", "com.apple.ical.ics"]
           }
-        ]
+        ],
+        "LSSupportsOpeningDocumentsInPlace": false
       },
       "appleTeamId": "ZP2P9TDS45"
     },
@@ -85,7 +86,7 @@
       [
         "expo-calendar",
         {
-          "calendarPermission": "Prism reads your calendar only when you tap Import, so you can choose which appointments to add. It also adds appointments you choose to sync.",
+          "calendarPermission": "Prism reads your calendar when you import, or to suggest appointments if you turn that on, so you can choose which to add. Only the ones you choose are saved. It also adds appointments you choose to sync.",
           "remindersPermission": false
         }
       ],

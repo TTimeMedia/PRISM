@@ -218,6 +218,10 @@ export const HELP_ARTICLES: HelpArticle[] = [
         type: 'p',
         text: 'To bring appointments in, tap the calendar icon at the top of Appointments and pick the events to add, or open an invite file (.ics) from email or Files and choose Prism.',
       },
+      {
+        type: 'tip',
+        text: "Turn on Suggest appointments from my calendar (menu, then Calendar) and Today will offer bookings you've added to your calendar, for example with Gmail's Add to Calendar, so adding them to Prism is one tap.",
+      },
     ],
   },
   {
