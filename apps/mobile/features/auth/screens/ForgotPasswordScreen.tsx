@@ -68,7 +68,7 @@ export function ForgotPasswordScreen() {
             autoComplete="email"
             keyboardType="email-address"
             textContentType="emailAddress"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}

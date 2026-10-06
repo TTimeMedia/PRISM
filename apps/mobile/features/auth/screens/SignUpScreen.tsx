@@ -60,7 +60,7 @@ export function SignUpScreen() {
             autoComplete="email"
             keyboardType="email-address"
             textContentType="emailAddress"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
@@ -77,7 +77,7 @@ export function SignUpScreen() {
             autoCapitalize="none"
             autoComplete="new-password"
             textContentType="newPassword"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}
@@ -94,7 +94,7 @@ export function SignUpScreen() {
             autoCapitalize="none"
             autoComplete="new-password"
             textContentType="newPassword"
-            value={field.value}
+            defaultValue={field.value}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             error={fieldState.error?.message}

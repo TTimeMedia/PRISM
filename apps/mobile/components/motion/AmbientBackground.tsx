@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Keyboard, StyleSheet, View, useWindowDimensions } from 'react-native';
 import Svg, { Circle, Defs, RadialGradient, Stop } from 'react-native-svg';
 import Animated, {
   Easing,
@@ -100,11 +100,27 @@ export function AmbientBackground({ phase }: AmbientBackgroundProps) {
   const drift = useSharedValue(0);
   const shift = useSharedValue(lastPhase);
   const glow = theme.scheme === 'dark' ? 0.34 : 0.26;
+  // While someone is typing, the light holds still, so the keyboard and the
+  // text field get the phone's full attention.
+  const [typing, setTyping] = useState(false);
+
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardWillShow', () => setTyping(true));
+    const hide = Keyboard.addListener('keyboardWillHide', () => setTyping(false));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (reducedMotion) {
       cancelAnimation(drift);
       drift.value = 0.5;
+      return;
+    }
+    if (typing) {
+      cancelAnimation(drift);
       return;
     }
     drift.value = withRepeat(
@@ -113,7 +129,7 @@ export function AmbientBackground({ phase }: AmbientBackgroundProps) {
       true,
     );
     return () => cancelAnimation(drift);
-  }, [reducedMotion, drift]);
+  }, [reducedMotion, typing, drift]);
 
   useEffect(() => {
     if (phase === undefined) return;
