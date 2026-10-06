@@ -40,7 +40,11 @@ export function AuthScreenLayout({
           <Reveal index={0}>
             <Text
               accessibilityRole="header"
-              style={[styles.title, { color: theme.colors.text.primary }]}
+              style={[
+                styles.title,
+                { fontFamily: theme.fonts.display },
+                { color: theme.colors.text.primary },
+              ]}
             >
               {title}
             </Text>

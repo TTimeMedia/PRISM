@@ -77,7 +77,15 @@ function PromptCard({ prompt }: { prompt: Prompt }) {
         <Icon size={22} color={theme.colors.text.primary} strokeWidth={2} />
       </View>
       <View style={styles.cardText}>
-        <Text style={[styles.cardTitle, { color: theme.colors.text.primary }]}>{prompt.label}</Text>
+        <Text
+          style={[
+            styles.cardTitle,
+            { fontFamily: theme.fonts.display },
+            { color: theme.colors.text.primary },
+          ]}
+        >
+          {prompt.label}
+        </Text>
         <Text style={[styles.cardHint, { color: theme.colors.text.secondary }]}>{prompt.hint}</Text>
       </View>
     </Pressable>

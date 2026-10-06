@@ -34,7 +34,10 @@ export function HelpArticleScreen({ article }: { article: HelpArticle }) {
         <Text style={[styles.category, { color: theme.colors.text.tertiary }]}>
           {article.category}
         </Text>
-        <Text accessibilityRole="header" style={[styles.title, body]}>
+        <Text
+          accessibilityRole="header"
+          style={[styles.title, { fontFamily: theme.fonts.display }, body]}
+        >
           {article.title}
         </Text>
         {article.blocks.map((block, index) => {

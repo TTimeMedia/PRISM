@@ -61,7 +61,11 @@ export function SectionTitle({
     <View style={styles.sectionRow}>
       <Text
         accessibilityRole="header"
-        style={[styles.sectionTitle, { color: theme.colors.text.primary }]}
+        style={[
+          styles.sectionTitle,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
       >
         {title}
       </Text>
@@ -128,7 +132,15 @@ export function EmptyCard({
       <View style={[styles.emptyIcon, { backgroundColor: colors.tile }]}>
         <Icon size={26} color={theme.colors.text.primary} strokeWidth={1.9} />
       </View>
-      <Text style={[styles.emptyTitle, { color: theme.colors.text.primary }]}>{title}</Text>
+      <Text
+        style={[
+          styles.emptyTitle,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
+      >
+        {title}
+      </Text>
       <Text style={[styles.emptyBody, { color: theme.colors.text.secondary }]}>{body}</Text>
       <View style={styles.emptyActions}>
         <PRISMButton label={primaryLabel} onPress={onPrimary} />
@@ -290,7 +302,15 @@ export function StatChip({ value, label, tint }: { value: string; label: string;
   const colors = useTint(tint);
   return (
     <View style={[styles.chip, { backgroundColor: colors.soft, borderColor: colors.border }]}>
-      <Text style={[styles.chipValue, { color: theme.colors.text.primary }]}>{value}</Text>
+      <Text
+        style={[
+          styles.chipValue,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
+      >
+        {value}
+      </Text>
       <Text style={[styles.chipLabel, { color: theme.colors.text.secondary }]}>{label}</Text>
     </View>
   );

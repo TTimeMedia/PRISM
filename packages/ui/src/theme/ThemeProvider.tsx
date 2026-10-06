@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { useColorScheme as useRNColorScheme } from 'react-native';
+import { Platform, useColorScheme as useRNColorScheme } from 'react-native';
 import { spectrumGradient, onAccentColor, resolveAccentColor } from '../tokens/colors';
+import { fontFamily } from '../tokens/typography';
+import { themes } from '../tokens/themes';
 import type { AccentKey, ColorTokens } from '../tokens/colors';
 import { paletteSpectrum, paletteTokens, resolvePaletteKey, themeTokens } from '../tokens/palettes';
 import type { PaletteKey, Spectrum } from '../tokens/palettes';
@@ -36,7 +38,15 @@ export interface ResolvedTheme {
   destructive: string;
   destructiveSubtle: string;
   shadow: ShadowTokens;
+  /**
+   * Typefaces for this theme. `display` is for headings: Sora, or a serif in
+   * themes with serif headings (Paper). Brand wordmarks stay in Sora.
+   */
+  fonts: { display: string };
 }
+
+/** The phone's own serif, so no font file is needed. */
+const SERIF = Platform.select({ ios: 'Georgia', android: 'serif', default: 'Georgia' });
 
 const ThemeContext = createContext<ResolvedTheme | null>(null);
 
@@ -83,6 +93,9 @@ export function ThemeProvider({ preference, accent, palette, children }: ThemePr
       destructive: t.danger,
       destructiveSubtle: t.dangerSubtle,
       shadow: scheme === 'dark' ? shadow.dark : shadow.light,
+      fonts: {
+        display: themes[key].displayFont === 'serif' ? SERIF : fontFamily.display,
+      },
     };
   }, [preference, accent, palette, systemScheme]);
 

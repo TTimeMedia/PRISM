@@ -65,6 +65,7 @@ export function OnboardingScreenLayout({
               accessibilityRole="header"
               style={[
                 styles.title,
+                { fontFamily: theme.fonts.display },
                 { color: theme.colors.text.primary },
                 !subtitle && styles.titleAlone,
               ]}

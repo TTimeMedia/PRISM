@@ -68,7 +68,11 @@ export function CareHomeScreen() {
         <View style={styles.header}>
           <Text
             accessibilityRole="header"
-            style={[styles.title, { color: theme.colors.text.primary }]}
+            style={[
+              styles.title,
+              { fontFamily: theme.fonts.display },
+              { color: theme.colors.text.primary },
+            ]}
           >
             Care
           </Text>
@@ -203,7 +207,13 @@ export function CareHomeScreen() {
             {!anyOn ? (
               <View style={styles.hero}>
                 <HeroCard tint="mint" accentTint="cyan">
-                  <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]}>
+                  <Text
+                    style={[
+                      styles.heroTitle,
+                      { fontFamily: theme.fonts.display },
+                      { color: theme.colors.text.primary },
+                    ]}
+                  >
                     Care is switched off.
                   </Text>
                   <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>

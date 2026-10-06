@@ -208,7 +208,13 @@ export function AppointmentSetupScreen() {
 
           {showForm ? (
             <Animated.View entering={reveal} style={styles.form}>
-              <Text style={[styles.formTitle, { color: theme.colors.text.primary }]}>
+              <Text
+                style={[
+                  styles.formTitle,
+                  { fontFamily: theme.fonts.display },
+                  { color: theme.colors.text.primary },
+                ]}
+              >
                 Your next appointment
               </Text>
               <Controller

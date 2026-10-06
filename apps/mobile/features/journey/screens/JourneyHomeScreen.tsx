@@ -75,7 +75,11 @@ export function JourneyHomeScreen() {
         <View style={styles.header}>
           <Text
             accessibilityRole="header"
-            style={[styles.title, { color: theme.colors.text.primary }]}
+            style={[
+              styles.title,
+              { fontFamily: theme.fonts.display },
+              { color: theme.colors.text.primary },
+            ]}
           >
             Your journey
           </Text>
@@ -97,7 +101,13 @@ export function JourneyHomeScreen() {
           <>
             {journalOn ? (
               <HeroCard tint="pink" accentTint="violet">
-                <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.heroTitle,
+                    { fontFamily: theme.fonts.display },
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   How are you today?
                 </Text>
                 <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
@@ -115,7 +125,13 @@ export function JourneyHomeScreen() {
               </HeroCard>
             ) : milestonesOn ? (
               <HeroCard tint="pink" accentTint="violet">
-                <Text style={[styles.heroTitle, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.heroTitle,
+                    { fontFamily: theme.fonts.display },
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   Keep a moment.
                 </Text>
                 <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
@@ -265,7 +281,14 @@ function EntryCard({ entry }: { entry: JournalEntry }) {
         ) : null}
       </View>
       {entry.title?.trim() ? (
-        <Text style={[styles.entryTitle, { color: theme.colors.text.primary }]} numberOfLines={1}>
+        <Text
+          style={[
+            styles.entryTitle,
+            { fontFamily: theme.fonts.display },
+            { color: theme.colors.text.primary },
+          ]}
+          numberOfLines={1}
+        >
           {entry.title.trim()}
         </Text>
       ) : null}

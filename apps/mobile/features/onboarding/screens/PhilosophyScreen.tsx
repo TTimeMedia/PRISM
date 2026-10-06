@@ -77,7 +77,13 @@ export function PhilosophyScreen() {
                 <Icon size={24} color={theme.colors.text.primary} strokeWidth={2} />
               </View>
               <View style={styles.pillarText}>
-                <Text style={[styles.heading, { color: theme.colors.text.primary }]}>
+                <Text
+                  style={[
+                    styles.heading,
+                    { fontFamily: theme.fonts.display },
+                    { color: theme.colors.text.primary },
+                  ]}
+                >
                   {pillar.heading}
                 </Text>
                 <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
@@ -94,7 +100,13 @@ export function PhilosophyScreen() {
             <View key={color} style={[styles.spectrumSegment, { backgroundColor: color }]} />
           ))}
         </View>
-        <Text style={[styles.emphasis, { color: theme.colors.text.primary }]}>
+        <Text
+          style={[
+            styles.emphasis,
+            { fontFamily: theme.fonts.display },
+            { color: theme.colors.text.primary },
+          ]}
+        >
           Prism fits around you.
         </Text>
       </Reveal>
