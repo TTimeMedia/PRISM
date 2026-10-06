@@ -29,7 +29,7 @@ const mutate = jest.fn();
 describe('AppearanceScreen colors', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    useAppStore.setState({ palette: 'slate' });
+    useAppStore.setState({ palette: 'prism' });
     mockedUseSettings.mockReturnValue({
       data: { theme: 'system' },
       isLoading: false,
@@ -42,14 +42,14 @@ describe('AppearanceScreen colors', () => {
   it('marks the current palette as selected and switches it when another is pressed', () => {
     renderWithProviders(<AppearanceScreen />);
 
-    expect(screen.getByLabelText(/^Slate\./).props.accessibilityState.selected).toBe(true);
+    expect(screen.getByLabelText(/^Prism\./).props.accessibilityState.selected).toBe(true);
 
     fireEvent.press(screen.getByLabelText(/^Ember\./));
 
     expect(useAppStore.getState().palette).toBe('ember');
     expect(mutate).toHaveBeenCalledWith({ palette: 'ember' });
     expect(screen.getByLabelText(/^Ember\./).props.accessibilityState.selected).toBe(true);
-    expect(screen.getByLabelText(/^Slate\./).props.accessibilityState.selected).toBe(false);
+    expect(screen.getByLabelText(/^Prism\./).props.accessibilityState.selected).toBe(false);
   });
 
   it('shows the app icons with Slate chosen, and switches the icon when another is pressed', () => {

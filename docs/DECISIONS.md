@@ -336,6 +336,21 @@ The app includes no analytics, crash-reporting or advertising SDKs.
 **Decision:** `image_paths text[]` (at most 5, enforced in the database and in `@prism/validation`) on `milestones` and `journal_entries`. `image_path` stays, always equal to the first photo, so builds from before this change keep working. A trigger (`sync_entry_image_paths`) keeps the two in step whichever one a build writes. Saving uploads new photos first, writes the row, and only then deletes removed photos; a failed save removes the new uploads and loses no saved photo (`saveWithPhotos`). The Timeline shows the photos as overlapping round bubbles that spring in (still with reduced motion), and entry screens show a swipeable gallery.
 **Implications:** Deploy the migration (`20261005130000_entry_photos.sql`) before any app version that writes `image_paths`. An older build editing a multi-photo entry's photo replaces the list with its one photo, which is acceptable while testers update.
 
+### Fifteen hand-checked color themes replace the eight palettes
+
+**Date:** 2026-10-06
+**Status:** Active
+**Reason:** The owner supplied a new theme system (`themes.ts` / `themes.css`, generated outside this repo): fifteen themes, each a full set of semantic tokens for light and dark with contrast checked by script, and asked for it to replace the eight palettes, keeping all fifteen and every theme free for now.
+**Decision:**
+
+- `packages/ui/src/tokens/themes.ts` is the source of every theme's colors. One change from the supplied file: Coral reef's light accent moved from #D44A2E to #D06A35 (text #A9501F), because the original read as an error red. It still meets every contrast rule.
+- `palettes.ts` turns a theme into what screens read: grounds, text and borders, plus five role colors. Prism keeps its five-color spectrum; every other theme is single-color by design, so its roles use its two accents, and feature tiles use the theme's subtle accent shades so text on them stays readable (checked for all 30 theme and mode pairs in `lib/__tests__/themes.test.ts`). Status colors (success, warning) are used only for status: the toast and the offline banner.
+- The default theme is Prism. Saved themes from the old set are read as the closest new theme (slate → Midnight ink, mist → Mono, ocean → Tidepool, forest → Moss, blossom → Rosewater). The database default for new accounts is now 'prism' (migration `20261006120000_theme_default.sql`).
+- The free / PRISM+ tag is kept in the theme data but does nothing yet: every theme is available.
+- The eight app icons keep their names; they are chosen separately from the theme.
+
+**Implications:** Paper's serif headings are not applied yet: headings read a fixed font in about 19 files, so a per-theme heading font is its own change. `docs/design/themes.css` holds the web version for reference. The launch screen background is now Prism's (#F8F8FA light, #0B0B0F dark), from the next build.
+
 ### The App Lock Screen (78) is a global overlay from the root layout, not a route
 
 **Date:** 2026-09-03

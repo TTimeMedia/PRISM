@@ -5,3 +5,4 @@ export * from './radius';
 export * from './shadows';
 export * from './motion';
 export * from './palettes';
+export * from './themes';

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { radius, spacing, type, useTheme, type PaletteKey } from '@prism/ui';
-import { APP_ICONS } from '../../../lib/you/appIcon';
+import { radius, spacing, type, useTheme } from '@prism/ui';
+import { APP_ICONS, type AppIconKey } from '../../../lib/you/appIcon';
 
 interface AppIconPickerProps {
-  value: PaletteKey;
-  onChange: (key: PaletteKey) => void;
+  value: AppIconKey;
+  onChange: (key: AppIconKey) => void;
 }
 
 /** Choose the home-screen icon. Four to a row, each with its name underneath. */

@@ -1,18 +1,9 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
-import {
-  darkTokens,
-  lightTokens,
-  spectrum,
-  spectrumGradient,
-  destructive,
-  onAccentColor,
-  resolveAccentColor,
-} from '../tokens/colors';
-import type { AccentKey } from '../tokens/colors';
-import { getPalette, paletteTokens } from '../tokens/palettes';
-import type { PaletteKey } from '../tokens/palettes';
-import type { ColorTokens } from '../tokens/colors';
+import { spectrumGradient, onAccentColor, resolveAccentColor } from '../tokens/colors';
+import type { AccentKey, ColorTokens } from '../tokens/colors';
+import { paletteSpectrum, paletteTokens, resolvePaletteKey, themeTokens } from '../tokens/palettes';
+import type { PaletteKey, Spectrum } from '../tokens/palettes';
 import { shadow } from '../tokens/shadows';
 import type { ShadowTokens } from '../tokens/shadows';
 import type { Theme } from './types';
@@ -20,36 +11,46 @@ import type { Theme } from './types';
 export interface ResolvedTheme {
   /** The theme actually rendered right now — never 'system'. */
   scheme: 'light' | 'dark';
+  /** The color theme in use (themes.ts). */
+  palette: PaletteKey;
   colors: ColorTokens;
-  /** The user's chosen primary-action color — see ACCENT_THEMES. */
+  /** The theme's main color: buttons, active tab, selected chips, rings. Not for text. */
   accent: string;
+  /** The accent for text and small icons that must read as text (4.5:1). */
+  accentText: string;
   /** Readable text/icon color to place on top of an accent fill. */
   onAccent: string;
-  spectrum: Record<keyof typeof spectrum, string>;
+  /** The theme's second color, used sparingly. */
+  accent2: string;
+  /** Role colors screens use (care, milestones, journal…), and the soft wash behind their icons. */
+  spectrum: Spectrum;
+  spectrumSubtle: Spectrum;
+  /** The original Prism spectrum, for onboarding's brand moments. */
   spectrumGradient: readonly string[];
+  /** Status colors keep their meaning in every theme. Pair them with an icon and words. */
+  success: string;
+  successSubtle: string;
+  warning: string;
+  warningSubtle: string;
+  /** Genuinely destructive actions and errors only. Never a missed dose. */
   destructive: string;
+  destructiveSubtle: string;
   shadow: ShadowTokens;
 }
 
 const ThemeContext = createContext<ResolvedTheme | null>(null);
 
 export interface ThemeProviderProps {
-  /**
-   * The user's stored preference (settings.theme — see @prism/types).
-   * 'system' resolves via the OS color scheme. Foundation does not yet
-   * persist this — see PrismApp in apps/mobile for the temporary
-   * in-memory default; the YOU/Appearance milestone wires it to
-   * @prism/database settings.
-   */
+  /** The stored light/dark preference (settings.theme); 'system' follows the phone. */
   preference: Theme;
-  /** The user's chosen accent theme; defaults to the original PRISM cyan. */
+  /** Legacy override for the primary-action color. Leave it out to use the theme's own. */
   accent?: AccentKey;
   /**
-   * The whole-app color palette. Leave it out for the original Prism
-   * colors. It sets the spectrum, the accent and the ground; an explicit
-   * `accent` still wins for the primary-action color.
+   * The color theme (settings.palette). Any saved value works: a current
+   * theme, one from before the themes were replaced (mapped to the closest),
+   * or nothing (the default).
    */
-  palette?: PaletteKey;
+  palette?: string;
   children: React.ReactNode;
 }
 
@@ -59,28 +60,28 @@ export function ThemeProvider({ preference, accent, palette, children }: ThemePr
   const value = useMemo<ResolvedTheme>(() => {
     const scheme: 'light' | 'dark' =
       preference === 'system' ? (systemScheme === 'light' ? 'light' : 'dark') : preference;
-
-    const chosen = palette ? getPalette(palette) : null;
-    const accentColor = accent
-      ? resolveAccentColor(accent)
-      : (chosen?.accent ?? resolveAccentColor(undefined));
+    const key = resolvePaletteKey(palette);
+    const t = themeTokens(key, scheme);
+    const roles = paletteSpectrum(key, scheme);
+    const accentColor = accent ? resolveAccentColor(accent) : t.accent;
 
     return {
       scheme,
-      colors: chosen ? paletteTokens(chosen, scheme) : scheme === 'dark' ? darkTokens : lightTokens,
+      palette: key,
+      colors: paletteTokens(key, scheme),
       accent: accentColor,
-      onAccent: onAccentColor(accentColor),
-      spectrum: chosen ? chosen.spectrum : spectrum,
-      spectrumGradient: chosen
-        ? [
-            chosen.spectrum.cyan,
-            chosen.spectrum.pink,
-            chosen.spectrum.violet,
-            chosen.spectrum.mint,
-            chosen.spectrum.yellow,
-          ]
-        : spectrumGradient,
-      destructive,
+      accentText: accent ? accentColor : t.accentText,
+      onAccent: accent ? onAccentColor(accentColor) : t.accentOn,
+      accent2: t.accent2,
+      spectrum: roles.solid,
+      spectrumSubtle: roles.subtle,
+      spectrumGradient,
+      success: t.success,
+      successSubtle: t.successSubtle,
+      warning: t.warning,
+      warningSubtle: t.warningSubtle,
+      destructive: t.danger,
+      destructiveSubtle: t.dangerSubtle,
       shadow: scheme === 'dark' ? shadow.dark : shadow.light,
     };
   }, [preference, accent, palette, systemScheme]);

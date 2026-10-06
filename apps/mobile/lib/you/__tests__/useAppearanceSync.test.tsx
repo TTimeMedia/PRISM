@@ -4,7 +4,7 @@ import { useAppStore } from '../../store/appStore';
 
 describe('useAppearanceSync', () => {
   beforeEach(() => {
-    useAppStore.setState({ palette: 'slate', themePreference: 'system' });
+    useAppStore.setState({ palette: 'prism', themePreference: 'system' });
   });
 
   it("adopts the account's theme and palette when the server values are valid", () => {
@@ -25,10 +25,15 @@ describe('useAppearanceSync', () => {
   });
 
   it('ignores unknown or missing values instead of breaking the theme', () => {
-    useAppStore.setState({ palette: 'forest', themePreference: 'dark' });
+    useAppStore.setState({ palette: 'moss', themePreference: 'dark' });
     renderHook(() => useAppearanceSync('sepia', 'not-a-real-palette'));
     renderHook(() => useAppearanceSync(undefined, undefined));
     expect(useAppStore.getState().themePreference).toBe('dark');
-    expect(useAppStore.getState().palette).toBe('forest');
+    expect(useAppStore.getState().palette).toBe('moss');
+  });
+
+  it('reads a theme saved before the themes were replaced as its closest new one', () => {
+    renderHook(() => useAppearanceSync('system', 'slate'));
+    expect(useAppStore.getState().palette).toBe('midnight-ink');
   });
 });

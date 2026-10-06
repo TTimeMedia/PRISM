@@ -39,7 +39,7 @@ export function PRISMToastProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const toneColor = (tone: PRISMToastTone) => {
-    if (tone === 'success') return theme.spectrum.mint;
+    if (tone === 'success') return theme.success;
     if (tone === 'error') return theme.destructive;
     return theme.colors.text.primary;
   };
