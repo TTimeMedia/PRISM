@@ -9,6 +9,7 @@ import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { signIn } from '../../../lib/auth/actions';
 import { getAuthErrorMessage, isEmailNotConfirmedError } from '../../../lib/auth/errors';
+import { rememberPendingSignUp } from '../../../lib/auth/pendingSignUp';
 
 /** Screen 04 — Sign In. See docs/SCREEN_BIBLE.md §4. */
 export function SignInScreen() {
@@ -28,6 +29,7 @@ export function SignInScreen() {
     const { error } = await signIn(values.email, values.password);
     if (error) {
       if (isEmailNotConfirmedError(error)) {
+        rememberPendingSignUp(values.email, values.password);
         router.push({ pathname: '/(auth)/verify-email', params: { email: values.email } });
         return;
       }

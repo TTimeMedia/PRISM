@@ -9,6 +9,7 @@ import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { signUp } from '../../../lib/auth/actions';
 import { getAuthErrorMessage } from '../../../lib/auth/errors';
+import { rememberPendingSignUp } from '../../../lib/auth/pendingSignUp';
 
 /** Screen 03 — Sign Up. See docs/SCREEN_BIBLE.md §4. */
 export function SignUpScreen() {
@@ -33,6 +34,7 @@ export function SignUpScreen() {
     if (!data.session) {
       // Email confirmation required — the normal path. A session means
       // auto-confirm is on (e.g. local dev) and the root gate takes over.
+      rememberPendingSignUp(values.email, values.password);
       router.replace({ pathname: '/(auth)/verify-email', params: { email: values.email } });
     }
   };
