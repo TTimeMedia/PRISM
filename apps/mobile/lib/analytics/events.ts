@@ -20,7 +20,6 @@ export type AnalyticsEvent =
   | 'milestone_added'
   | 'support_request_sent'
   | 'theme_changed'
-  | 'euphoria_saved'
   | 'question_added'
   | 'supply_added';
 

@@ -12,7 +12,6 @@ import type {
   Appointment,
   AppointmentQuestion,
   Document,
-  EuphoriaMoment,
   FrequencyConfig,
   Injection,
   JournalEntry,
@@ -149,11 +148,6 @@ export interface Database {
         Reminder,
         Insertable<Reminder, Generated | 'notification_style' | 'enabled'>,
         Updatable<Reminder, Immutable>
-      >;
-      euphoria_moments: Table<
-        EuphoriaMoment,
-        Insertable<EuphoriaMoment, 'id' | 'created_at'>,
-        Updatable<EuphoriaMoment, Immutable>
       >;
       appointment_questions: Table<
         AppointmentQuestion,

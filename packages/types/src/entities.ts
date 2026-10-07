@@ -346,14 +346,6 @@ export interface Settings {
   updated_at: ISODateTime;
 }
 
-/** Euphoria jar: a small good moment, brought back at random on a hard day. */
-export interface EuphoriaMoment {
-  id: UUID;
-  user_id: UUID;
-  text: string;
-  created_at: ISODateTime;
-}
-
 /**
  * A question to ask at an appointment. With no appointment it belongs to the
  * next upcoming one.

@@ -291,20 +291,6 @@ export function demoTables(): Record<string, Record<string, unknown>[]> {
     memories: [],
     attachments: [],
     push_tokens: [],
-    euphoria_moments: [
-      {
-        ...base,
-        id: id(601),
-        text: 'A stranger complimented my earrings and I glowed all day.',
-        created_at: at(-3, 18),
-      },
-      {
-        ...base,
-        id: id(602),
-        text: 'My sister used my name without thinking about it.',
-        created_at: at(-20, 20),
-      },
-    ],
     appointment_questions: [
       {
         ...base,
@@ -514,21 +500,6 @@ function eliTables(): Record<string, Record<string, unknown>[]> {
         icon: 'party-popper',
         image_path: null,
         image_paths: [],
-      },
-    ],
-    euphoria_moments: [
-      { ...base, id: id(611), text: 'Got called “sir” at the coffee shop.', created_at: at(-2, 9) },
-      {
-        ...base,
-        id: id(612),
-        text: 'Voice cracked low on the phone and I laughed out loud.',
-        created_at: at(-15, 19),
-      },
-      {
-        ...base,
-        id: id(613),
-        text: 'First swim in a binder-friendly shirt. Felt free.',
-        created_at: at(-40, 16),
       },
     ],
     appointment_questions: [

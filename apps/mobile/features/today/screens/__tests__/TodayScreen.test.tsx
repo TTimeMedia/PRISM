@@ -260,10 +260,9 @@ describe('TodayScreen', () => {
     renderWithProviders(<TodayScreen />);
 
     expect(screen.getByLabelText('Write in my journal')).toBeTruthy();
-    // Doses, appointments and the Euphoria jar aren't started from Today.
+    // Doses and appointments aren't started from Today.
     expect(screen.queryByLabelText('Log a dose')).toBeNull();
     expect(screen.queryByLabelText('Add an appointment')).toBeNull();
-    expect(screen.queryByLabelText('Euphoria jar')).toBeNull();
     expect(screen.queryByLabelText('Log an injection')).toBeNull();
     expect(screen.queryByLabelText('Add a milestone')).toBeNull();
   });

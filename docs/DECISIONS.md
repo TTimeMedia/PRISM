@@ -240,7 +240,7 @@ The app still includes no crash-reporting or advertising SDKs.
 ### The "Log a dose" tile on Today became the Euphoria jar
 
 **Date:** 2026-10-07
-**Status:** Active
+**Status:** Superseded (see "Today offers only journal and milestone tiles; the Euphoria jar is removed").
 **Reason:** The owner didn't like "Log a dose" on Today, and the tile only opened the medications list. Logging stays on the Up next card (View first, Log dose only when due) and on each medication's page.
 **Decision:** Today's "Add something" tiles are: Euphoria jar, Add an appointment, Write in my journal, Add a milestone.
 
@@ -249,6 +249,19 @@ The app still includes no crash-reporting or advertising SDKs.
 - It always shows; it isn't a feature you switch on.
 
 **Implications:** Lab levels were discussed for the side menu and set aside for now; the owner wasn't sure how yet. The unused `labs` table is unchanged.
+
+### Today offers only journal and milestone tiles; the Euphoria jar is removed
+
+**Date:** 2026-10-07
+**Status:** Active
+**Reason:** After trying it, the owner asked for the Euphoria jar and "Add an appointment" to come off Today, and for the jar to be deleted entirely.
+**Decision:** Today's "Add something" tiles are "Write in my journal" and "Add a milestone", each shown while its feature is on.
+
+- Appointments are added from Care.
+- The jar's screen and code are removed. Migration `20261007130000_drop_euphoria_jar.sql` drops `euphoria_moments` along with anything saved in it.
+- The privacy policy no longer mentions the jar.
+
+**Implications:** None for other features. Questions for the doctor and supplies are unaffected.
 
 ## JOURNEY
 

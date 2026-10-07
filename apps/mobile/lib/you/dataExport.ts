@@ -1,7 +1,6 @@
 import type {
   Appointment,
   AppointmentQuestion,
-  EuphoriaMoment,
   Injection,
   JournalEntry,
   Medication,
@@ -25,7 +24,6 @@ export interface DataExportRecords {
   milestones: Milestone[];
   journal_entries: JournalEntry[];
   reminders: Reminder[];
-  euphoria_moments: EuphoriaMoment[];
   appointment_questions: AppointmentQuestion[];
   supplies: Supply[];
 }
