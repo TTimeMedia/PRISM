@@ -122,7 +122,7 @@ export function demoTables(): Record<string, Record<string, unknown>[]> {
     });
   }
 
-  return {
+  const tables = {
     profiles: [
       {
         ...base,
@@ -291,5 +291,212 @@ export function demoTables(): Record<string, Record<string, unknown>[]> {
     memories: [],
     attachments: [],
     push_tokens: [],
+  };
+  return demoParams.get('persona') === 'eli' ? { ...tables, ...eliTables() } : tables;
+}
+
+/**
+ * A second made-up person (?persona=eli): a trans man about ten months on
+ * testosterone. Same account and settings as Sam; only the records differ.
+ */
+function eliTables(): Record<string, Record<string, unknown>[]> {
+  const today = day(0).getDay();
+  const medications = [
+    {
+      ...base,
+      id: id(111),
+      name: 'Testosterone cypionate',
+      form: 'injection',
+      dosage_text: '50 mg (0.25 mL)',
+      frequency_type: 'weekly',
+      frequency_config: { days_of_week: [today], time_of_day: '08:00' },
+      start_date: isoDate(-300),
+      end_date: null,
+      reminder_enabled: true,
+      notes: 'Alternate thighs.',
+    },
+    {
+      ...base,
+      id: id(112),
+      name: 'Vitamin D',
+      form: 'pill',
+      dosage_text: '2,000 IU',
+      frequency_type: 'daily',
+      frequency_config: { time_of_day: '12:00' },
+      start_date: isoDate(-90),
+      end_date: null,
+      reminder_enabled: false,
+      notes: null,
+    },
+  ];
+
+  const medication_logs: Record<string, unknown>[] = [];
+  let logId = 800;
+  for (const offset of [-7, -14, -21, -28]) {
+    medication_logs.push({
+      ...base,
+      id: id(logId++),
+      medication_id: id(111),
+      scheduled_at: at(offset, 8),
+      completed_at: at(offset, 8, 6),
+      status: 'completed',
+      notes: null,
+      site: offset % 14 === 0 ? 'right_thigh' : 'left_thigh',
+    });
+  }
+  for (let offset = -12; offset < 0; offset += 1) {
+    medication_logs.push({
+      ...base,
+      id: id(logId++),
+      medication_id: id(112),
+      scheduled_at: at(offset, 12),
+      completed_at: at(offset, 12, 20),
+      status: 'completed',
+      notes: null,
+      site: null,
+    });
+  }
+
+  return {
+    profiles: [
+      {
+        ...base,
+        id: id(1),
+        display_name: 'Eli',
+        pronouns: 'he/him',
+        gender: 'Trans man',
+        birthday: '1996-09-14',
+        journey_start_date: isoDate(-300),
+        profile_photo_url: null,
+        onboarding_completed: true,
+        journey_stage: null,
+        intent: ['medications', 'appointments', 'milestones', 'journal'],
+        onboarding_step: 'ready',
+      },
+    ],
+    medications,
+    medication_logs,
+    appointments: [
+      {
+        ...base,
+        id: id(211),
+        title: 'Top surgery consult',
+        provider: 'Dr. Okafor',
+        category: 'Surgery',
+        starts_at: at(3, 14, 0),
+        ends_at: at(3, 15, 0),
+        location: 'Bayview Surgical Associates',
+        notes: 'Ask about recovery time and binder after.',
+        reminder_enabled: true,
+      },
+      {
+        ...base,
+        id: id(212),
+        title: 'T levels lab draw',
+        provider: null,
+        category: 'Labs',
+        starts_at: at(6, 7, 45),
+        ends_at: null,
+        location: 'Quest Diagnostics',
+        notes: 'Midway between shots.',
+        reminder_enabled: true,
+      },
+      {
+        ...base,
+        id: id(213),
+        title: 'Check-in with Dr. Shah',
+        provider: 'Dr. Shah',
+        category: 'Primary care',
+        starts_at: at(13, 10, 0),
+        ends_at: at(13, 10, 30),
+        location: 'Community Health Center',
+        notes: null,
+        reminder_enabled: true,
+      },
+    ],
+    milestones: [
+      {
+        ...base,
+        id: id(311),
+        title: 'First T shot',
+        description: 'Hands shaking, heart full.',
+        date: isoDate(-300),
+        category: 'First steps',
+        icon: 'flag',
+        image_path: null,
+        image_paths: [],
+      },
+      {
+        ...base,
+        id: id(312),
+        title: 'Did my own shot',
+        description: 'No nurse, just me and a deep breath.',
+        date: isoDate(-280),
+        category: 'Achievement',
+        icon: 'award',
+        image_path: null,
+        image_paths: [],
+      },
+      {
+        ...base,
+        id: id(313),
+        title: 'Voice dropped',
+        description: 'Answered the phone and Mom asked who this was.',
+        date: isoDate(-150),
+        category: 'Changes',
+        icon: 'sparkles',
+        image_path: null,
+        image_paths: [],
+      },
+      {
+        ...base,
+        id: id(314),
+        title: 'Name change approved',
+        description: 'New license in my wallet.',
+        date: isoDate(-40),
+        category: 'Legal',
+        icon: 'party-popper',
+        image_path: null,
+        image_paths: [],
+      },
+    ],
+    journal_entries: [
+      {
+        ...base,
+        id: id(411),
+        title: 'Sir',
+        content:
+          'The barista said "thanks, sir" without a second look. Grinned the whole walk home.',
+        mood: 'Proud',
+        date: isoDate(-2),
+        tags: ['Self-care'],
+        image_path: null,
+        image_paths: [],
+      },
+      {
+        ...base,
+        id: id(412),
+        title: null,
+        content:
+          'Shot day tomorrow. Laid out everything tonight so morning-me just has to show up.',
+        mood: 'Peaceful',
+        date: isoDate(-1),
+        tags: ['HRT'],
+        image_path: null,
+        image_paths: [],
+      },
+      {
+        ...base,
+        id: id(413),
+        title: 'Consult booked',
+        content:
+          'Top surgery consult is on the calendar. Writing my questions here so I remember them.',
+        mood: 'Excited',
+        date: isoDate(-9),
+        tags: ['Appointment'],
+        image_path: null,
+        image_paths: [],
+      },
+    ],
   };
 }
