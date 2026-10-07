@@ -24,6 +24,7 @@ import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
 import { useAppearanceSync } from '../lib/you/useAppearanceSync';
 import { useLaunchUpdate } from '../lib/updates/useLaunchUpdate';
+import { useAnalytics } from '../lib/analytics/useAnalytics';
 import { useShakeToReport } from '../lib/you/useShakeToReport';
 import { useWatchSync } from '../lib/watch/useWatchSync';
 import { usePushRegistration } from '../lib/push/usePushRegistration';
@@ -118,6 +119,8 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   useShakeToReport(showTabs && !showAppLockScreen);
   // The Apple Watch app: see lib/watch/useWatchSync.ts.
   useWatchSync(showTabs);
+  // Anonymous usage, only after a yes: lib/analytics.
+  useAnalytics();
 
   if (!ready) {
     return null;

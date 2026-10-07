@@ -22,6 +22,7 @@ import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImage
 import { milestoneIconFor } from '../../journey/milestoneIcons';
 import { useCalendarSuggestions } from '../../../lib/calendar/useCalendarSuggestions';
 import { CalendarSuggestions } from '../components/CalendarSuggestions';
+import { AnalyticsPrompt } from '../components/AnalyticsPrompt';
 import {
   comingUpItemHref,
   formatComingUpWhen,
@@ -241,6 +242,7 @@ export function TodayScreen() {
               </>
             ) : null}
 
+            <AnalyticsPrompt />
             <CustomizeTip />
           </>
         )}

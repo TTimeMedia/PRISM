@@ -16,6 +16,7 @@ import {
 import type { Theme } from '@prism/types';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppStore } from '../../../lib/store/appStore';
+import { track } from '../../../lib/analytics/events';
 import {
   canChangeAppIcon,
   currentAppIcon,
@@ -57,6 +58,7 @@ export function AppearanceScreen() {
   const selectPalette = (key: PaletteKey) => {
     setPalette(key);
     updateSettings.mutate({ palette: key });
+    track('theme_changed', { theme: key });
   };
 
   const setTheme = (value: Theme) => {

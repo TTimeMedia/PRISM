@@ -88,7 +88,7 @@ describe('TodayScreen', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    useAppStore.setState({ customizeTipDismissed: false });
+    useAppStore.setState({ customizeTipDismissed: false, analyticsConsent: 'declined' });
     mockedUseProfile.mockReturnValue({ data: undefined } as never);
     mockedUseModules.mockReturnValue({ data: ALL_MODULES } as never);
     mockedUseCreateLog.mockReturnValue({ mutateAsync: createLog } as never);
@@ -106,6 +106,18 @@ describe('TodayScreen', () => {
     expect(screen.getByText(/^Good (morning|afternoon|evening)\.$/)).toBeTruthy();
     expect(screen.getByText("You're all caught up.")).toBeTruthy();
     expect(screen.queryByText('Coming up')).toBeNull();
+  });
+
+  it('asks once about anonymous usage, and remembers the answer', () => {
+    useAppStore.setState({ analyticsConsent: 'unasked' });
+    todayResult([]);
+
+    renderWithProviders(<TodayScreen />);
+
+    expect(screen.getByText('Help improve Prism?')).toBeTruthy();
+    fireEvent.press(screen.getByText('No thanks'));
+    expect(useAppStore.getState().analyticsConsent).toBe('declined');
+    expect(screen.queryByText('Help improve Prism?')).toBeNull();
   });
 
   it('still shows the full screen while the data has not loaded yet', () => {

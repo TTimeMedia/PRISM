@@ -4,6 +4,7 @@ import type { Database } from '@prism/database';
 import type { JournalEntryCreateInput, MilestoneCreateInput } from '@prism/validation';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
+import { track } from '../analytics/events';
 import { journalEntriesKey, journalEntryKey, milestoneKey, milestonesKey } from './queries';
 import { removeEntryImages } from './entryImage';
 import { entryPhotos } from './entryPhotos';
@@ -34,6 +35,7 @@ export function useCreateMilestone() {
       return data;
     },
     onSuccess: () => {
+      track('milestone_added');
       queryClient.invalidateQueries({ queryKey: milestonesKey(userId) });
       // TODAY classifies milestones — see services/personalization/engine.ts.
       queryClient.invalidateQueries({ queryKey: ['today-items'] });
@@ -113,6 +115,7 @@ export function useCreateJournalEntry() {
       return data;
     },
     onSuccess: () => {
+      track('journal_entry_added');
       queryClient.invalidateQueries({ queryKey: journalEntriesKey(userId) });
       // TODAY classifies journal entries — see services/personalization/engine.ts.
       queryClient.invalidateQueries({ queryKey: ['today-items'] });

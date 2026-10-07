@@ -107,7 +107,7 @@ All decisions below were extracted from the original PRISM master source documen
 ### Outside services Prism uses
 
 **Date:** 2026-09-28
-**Status:** Active
+**Status:** Superseded (see "Outside services Prism uses: adds PostHog for opt-in anonymous usage").
 **Reason:** `SECURITY.md` §6 requires every third-party service that touches user data to be reviewed and named. These are the ones in use as of v0.3.0.
 **Decision:**
 
@@ -119,6 +119,27 @@ All decisions below were extracted from the original PRISM master source documen
 
 The app includes no analytics, crash-reporting or advertising SDKs.
 **Implications:** Adding any service to this list needs the same review and an update to the draft privacy policy (`docs/website/prism.html`). As of 2026-09-28 the draft names all of them, including Expo push and the push token.
+
+### Outside services Prism uses: adds PostHog for opt-in anonymous usage
+
+**Date:** 2026-10-06
+**Status:** Active
+**Reason:** The owner wants to know which screens and features get used. Prism holds health information, so usage counts must carry none of it, and are sent only after a clear yes.
+**Decision:** The 2026-09-28 list above stays the same, with one addition: **PostHog Cloud, EU region**. It receives the event names from `lib/analytics/events.ts`, the app version, the platform and OS version, and a random per-install ID.
+
+- **Ask first.** Nothing is sent until the person says yes, either on Today's one-time "Help improve Prism?" card or in Privacy & security. The choice is stored in `appStore.analyticsConsent` (`unasked` / `granted` / `declined`).
+- **No SDK.** `lib/analytics/analytics.ts` posts to PostHog's batch HTTP API. The React Native SDK needs native code and captures more than wanted automatically.
+- **Only fixed values.** Properties are counts or fixed values, such as a theme key or a support kind, never text the person wrote. Screen names have record IDs replaced with `:id`.
+- **Anonymous.** Events are sent with `$process_person_profile: false` and `$geoip_disable: true`, and "Discard client IP data" is on in the PostHog project. The install ID is deleted when analytics is turned off.
+- **Development builds send nothing.**
+
+The app still includes no crash-reporting or advertising SDKs.
+
+**Implications:**
+
+- A new event has to be added to `events.ts`, and the privacy policy checked to make sure it still describes it.
+- The App Store privacy label changes from "Data Not Collected" to Usage Data → Product Interaction (not linked to identity, not used for tracking).
+- Appointments created by calendar import or by suggestions also count as `appointment_added`.
 
 ## Personalization (Onboarding)
 

@@ -94,7 +94,7 @@
 
     <section id="privacy">
       <h2>Privacy Policy</h2>
-      <p class="muted">Last updated: October 5, 2026</p>
+      <p class="muted">Last updated: October 6, 2026</p>
       <p>
         Prism is made by T-Time Media LLC (&ldquo;we&rdquo;, &ldquo;us&rdquo;). Privacy is central to what Prism is:
         the information you put in Prism belongs to you. This policy explains what we collect, how it is used, who
@@ -116,6 +116,7 @@
         <li><strong>Settings:</strong> preferences such as theme, color palette, private notifications, which messages from Prism you want, the wording you choose for reminders, and whether calendar sync is on.</li>
         <li><strong>Support requests:</strong> when you use Contact support, Report a problem or Privacy concern, we keep what you write, your account email address (so we can reply), the Prism version, your phone&rsquo;s system version, and, if you reported by shaking your phone, the screen you were on. A screenshot is sent only if you choose to attach it. Support requests are deleted with your account.</li>
         <li><strong>A notification address for your phone:</strong> if you allow notifications, your phone gives Prism a push token, a random address that lets us send it a notification. It says nothing about you. It is removed when you sign out.</li>
+        <li><strong>Anonymous usage, only if you say yes:</strong> Prism asks once whether you&rsquo;d like to share anonymous usage, and you can change your answer any time in <em>You → Settings → Privacy &amp; security</em>. If you say yes, Prism counts which screens are opened and which features are used (for example &ldquo;a dose was logged&rdquo; or &ldquo;a theme was changed&rdquo;), with the Prism version, your phone&rsquo;s system and version, and a random number made for this install. It never includes your name, email, account, or anything you write or record about your care, and it is not linked to your account. Turning it off deletes that random number from your phone.</li>
       </ul>
       <p>
         Some information stays only on your device and is never sent to us, including your App Lock PIN. Shake to report reads your phone&rsquo;s motion sensor on the device to notice a shake; those readings are never stored or sent.
@@ -126,18 +127,18 @@
       <p>
         We use your information only to provide Prism to you: to sign you in, to store and show your records, to send
         account emails (such as confirming your email address or resetting your password), and to respond when you
-        contact support.
+        contact support. If you said yes to anonymous usage, we also use those counts to see which parts of Prism get used, so we can improve it.
       </p>
       <p>
         <strong>We do not sell your information.</strong> We do not show advertising in Prism, we do not use your health,
-        identity, or journal information for advertising, and Prism does not include third-party advertising or
-        analytics tools.
+        identity, or journal information for advertising, and Prism does not include third-party advertising tools. The only usage counting is the anonymous, opt-in kind described above.
       </p>
 
       <h3>Who helps us run Prism</h3>
       <ul>
         <li><strong>Supabase</strong> hosts our database, sign-in system, and private file storage, on servers in the United States. Your records and photos are stored there.</li>
         <li><strong>Resend</strong> delivers our account emails and forwards your support requests to our support inbox. It receives your email address and the content of the message being sent, including a screenshot if you attached one.</li>
+        <li><strong>PostHog</strong> receives the anonymous usage counts described above, only if you said yes. It stores them on servers in the European Union, without your IP address or location, and they can&rsquo;t be connected to your account.</li>
         <li><strong>Apple.</strong> If you use the location search when adding an appointment, the text you type into that field is sent to Apple Maps to suggest places. This happens only in that field, and Apple&rsquo;s privacy policy applies to it.</li>
         <li><strong>Expo</strong> delivers messages from Prism that you turn on (such as security alerts or news). It receives your phone&rsquo;s push token and the title and text of the message, and passes them to Apple to show on your phone. If Private notifications is on, reminder messages say only &ldquo;Your Prism reminder is ready.&rdquo;</li>
         <li><strong>Your device calendar and notifications.</strong> If you turn on calendar sync, appointments you choose are added to your own Apple Calendar on your device. If you import from your calendar, or turn on appointment suggestions, Prism reads the upcoming events on your phone to show them to you there; only the ones you choose are saved, and the rest never leave your phone. Medication and appointment reminders are scheduled on your device itself and do not go through Expo.</li>

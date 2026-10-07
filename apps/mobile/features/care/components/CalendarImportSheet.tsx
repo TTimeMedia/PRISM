@@ -21,6 +21,7 @@ import {
 } from '../../../lib/calendar/importCandidates';
 import { useAppointments } from '../../../lib/care/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
+import { track } from '../../../lib/analytics/events';
 import { ImportableEventRow } from './ImportableEventRow';
 
 type Phase = 'loading' | 'list' | 'denied' | 'error';
@@ -123,6 +124,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
       showToast(
         chosen.length === 1 ? 'Added 1 appointment.' : `Added ${chosen.length} appointments.`,
       );
+      track('appointments_imported', { count: chosen.length });
       onImported?.(chosen.length);
       close();
     } catch {

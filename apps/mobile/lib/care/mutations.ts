@@ -8,6 +8,7 @@ import type {
 } from '@prism/validation';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
+import { track } from '../analytics/events';
 import { cancelDueNudges } from '../reminders/notificationScheduler';
 import {
   appointmentKey,
@@ -43,6 +44,7 @@ export function useCreateMedication() {
       return data;
     },
     onSuccess: () => {
+      track('medication_added');
       queryClient.invalidateQueries({ queryKey: medicationsKey(userId) });
     },
   });
@@ -128,6 +130,7 @@ export function useCreateMedicationLog() {
       return data;
     },
     onSuccess: (data) => {
+      track('dose_logged');
       queryClient.invalidateQueries({
         queryKey: medicationLogsKey(userId, data.medication_id),
       });
@@ -199,6 +202,7 @@ export function useCreateAppointment() {
       return data;
     },
     onSuccess: () => {
+      track('appointment_added');
       queryClient.invalidateQueries({ queryKey: appointmentsKey(userId) });
       // TODAY classifies appointments — see services/personalization/engine.ts.
       queryClient.invalidateQueries({ queryKey: ['today-items'] });

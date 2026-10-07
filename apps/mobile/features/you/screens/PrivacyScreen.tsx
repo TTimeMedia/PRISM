@@ -15,12 +15,15 @@ import {
   useTheme,
 } from '@prism/ui';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
+import { useAppStore } from '../../../lib/store/appStore';
 
 /** Screen 59 — Privacy. See docs/SCREEN_BIBLE.md Screen 59. */
 export function PrivacyScreen() {
   const theme = useTheme();
   const { data: settings, isLoading, isError, refetch } = useSettings();
   const updateSettings = useUpdateSettings();
+  const analyticsConsent = useAppStore((state) => state.analyticsConsent);
+  const setAnalyticsConsent = useAppStore((state) => state.setAnalyticsConsent);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -60,6 +63,12 @@ export function PrivacyScreen() {
 
           <PRISMSection title="Data">
             <PRISMListItem title="Data & export" onPress={() => router.push('/you/data')} />
+            <PRISMSwitch
+              label="Share anonymous usage"
+              description="Which screens and features get used, so Prism can be improved. Never your name, health details or anything you write."
+              value={analyticsConsent === 'granted'}
+              onValueChange={(value) => setAnalyticsConsent(value ? 'granted' : 'declined')}
+            />
           </PRISMSection>
 
           <PRISMSection title="Security information">
@@ -69,7 +78,8 @@ export function PrivacyScreen() {
                 Your information is scoped to your account at the database level — no other Prism
                 user can query, guess into, or read it. Sensitive files (photos, documents) live in
                 private storage, never a public link. Prism doesn&rsquo;t sell your information or
-                share it with third parties for advertising.
+                share it with third parties for advertising. Anonymous usage counts are only sent if
+                you turn them on above.
               </Text>
             </View>
           </PRISMSection>

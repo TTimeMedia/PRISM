@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PrismMark } from '../../../components/motion';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { useUpdateProfile } from '../../../lib/profile/queries';
+import { track } from '../../../lib/analytics/events';
 
 /**
  * Screen 19 — PRISM Ready. `onboarding_completed` is set here, on the
@@ -17,6 +18,7 @@ export function ReadyScreen() {
     // The root layout's Stack.Protected guards react to this and route
     // to (tabs) automatically — no explicit navigation call needed.
     await updateProfile.mutateAsync({ onboarding_completed: true, onboarding_step: 'ready' });
+    track('onboarding_completed');
     setIsSubmitting(false);
   };
 
