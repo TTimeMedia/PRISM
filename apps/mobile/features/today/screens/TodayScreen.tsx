@@ -3,7 +3,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
 import type { P0ModuleKey, TodayItem } from '@prism/types';
-import { Sparkles, type LucideIcon } from 'lucide-react-native';
+import type { LucideIcon } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMErrorState,
@@ -57,13 +57,6 @@ interface AddAction {
 
 /** What each feature offers to start from Today, in the order they appear. */
 const ADD_ACTIONS: AddAction[] = [
-  { key: 'jar', label: 'Euphoria jar', href: '/journey/jar', icon: Sparkles, tint: 'violet' },
-  {
-    key: 'appointment',
-    module: 'appointments',
-    label: 'Add an appointment',
-    href: '/care/appointments/add',
-  },
   { key: 'journal', module: 'journal', label: 'Write in my journal', href: '/journey/journal/add' },
   {
     key: 'milestone',
