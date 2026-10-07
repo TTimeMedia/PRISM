@@ -15,7 +15,9 @@ import {
   useTheme,
   useToast,
 } from '@prism/ui';
-import { useAppointment } from '../../../lib/care/queries';
+import { useAppointment, useAppointments } from '../../../lib/care/queries';
+import { nextAppointment, questionsFor, useQuestions } from '../../../lib/care/questions';
+import { QuestionsList } from '../components/QuestionsList';
 import { useDeleteAppointment } from '../../../lib/care/mutations';
 import { useSettings } from '../../../lib/profile/queries';
 import { calendarProvider } from '../../../lib/calendar';
@@ -26,6 +28,10 @@ export function AppointmentDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: appointment, isLoading, isError, refetch } = useAppointment(id);
   const { data: settings } = useSettings();
+  const { data: appointments } = useAppointments();
+  const { data: questions } = useQuestions();
+  const nextId = nextAppointment(appointments)?.id ?? null;
+  const isPast = appointment ? new Date(appointment.starts_at).getTime() < Date.now() : false;
   const deleteAppointment = useDeleteAppointment();
   const { showToast } = useToast();
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -86,6 +92,13 @@ export function AppointmentDetailScreen() {
             <DetailRow label="Location" value={appointment.location} />
             <DetailRow label="Reminder" value={appointment.reminder_enabled ? 'On' : 'Off'} />
             <DetailRow label="Notes" value={appointment.notes} />
+          </PRISMSection>
+          <PRISMSection title={isPast ? 'Questions you brought' : 'Questions to ask'}>
+            <QuestionsList
+              questions={questionsFor(id, questions, nextId)}
+              appointmentId={id}
+              placeholder="Add a question for this visit"
+            />
           </PRISMSection>
           <View style={styles.actions}>
             <PRISMButton

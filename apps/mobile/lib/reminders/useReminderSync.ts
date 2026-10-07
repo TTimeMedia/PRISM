@@ -8,11 +8,14 @@ import {
   type NotificationStyle,
   type Reminder,
   type ReminderMessages,
+  type Supply,
 } from '@prism/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules, useSettings } from '../profile/queries';
 import { useAppointments, useMedications } from '../care/queries';
+import { useSupplies } from '../care/supplies';
+import { supplyReminderTimes } from '../care/supplyOutlook';
 import {
   NUDGE_DELAY_MINUTES,
   cancelAllReminders,
@@ -22,6 +25,7 @@ import {
   requestNotificationPermissions,
   scheduleAppointmentReminder,
   scheduleMedicationReminders,
+  scheduleSupplyReminders,
 } from './notificationScheduler';
 import {
   resolveNextAppointmentOccurrence,
@@ -53,6 +57,7 @@ export function useReminderSync(): void {
   const { data: settings } = useSettings();
   const { data: medications } = useMedications();
   const { data: appointments } = useAppointments();
+  const { data: supplies } = useSupplies();
 
   const medicationsEnabled = !!modules?.find((m) => m.module_key === 'medications')?.enabled;
   const appointmentsEnabled = !!modules?.find((m) => m.module_key === 'appointments')?.enabled;
@@ -73,6 +78,14 @@ export function useReminderSync(): void {
       m.end_date,
     ]),
     appts: appointments?.map((a) => [a.id, a.reminder_enabled, a.starts_at]),
+    supplies: supplies?.map((s) => [
+      s.id,
+      s.name,
+      s.quantity,
+      s.per_dose,
+      s.medication_id,
+      s.refill_on,
+    ]),
     medicationsEnabled,
     appointmentsEnabled,
     notificationPrivacy,
@@ -107,7 +120,15 @@ export function useReminderSync(): void {
 
     let cancelled = false;
     void (async () => {
+      const supplyList = medicationsEnabled ? (supplies ?? []) : [];
       const wantsReminders =
+        supplyList.some(
+          (s) =>
+            supplyReminderTimes(
+              s,
+              medications.find((m) => m.id === s.medication_id),
+            ).length > 0,
+        ) ||
         (medicationsEnabled && medications.some((m) => m.reminder_enabled)) ||
         (appointmentsEnabled && appointments.some((a) => a.reminder_enabled));
       // Only ask for permission when something actually needs it; the clean-up of
@@ -120,6 +141,7 @@ export function useReminderSync(): void {
         userId,
         medications: medicationsEnabled ? medications : [],
         appointments: appointmentsEnabled ? appointments : [],
+        supplies: supplyList,
         notificationPrivacy,
         messages: resolveReminderMessages(settings.reminder_messages),
         nudgeDelayMinutes: missedDoseNudge ? NUDGE_DELAY_MINUTES : null,
@@ -153,6 +175,8 @@ interface SyncArgs {
   userId: string;
   medications: Medication[];
   appointments: Appointment[];
+  /** Supplies to remind about before they run out or need a refill. */
+  supplies: Supply[];
   notificationPrivacy: boolean;
   messages: ReminderMessages;
   nudgeDelayMinutes: number | null;
@@ -163,6 +187,7 @@ async function syncReminders({
   userId,
   medications,
   appointments,
+  supplies,
   notificationPrivacy,
   messages,
   nudgeDelayMinutes,
@@ -230,6 +255,14 @@ async function syncReminders({
       notificationPrivacy,
       appointmentLeadMinutes,
       messages,
+    );
+  }
+  for (const supply of supplies) {
+    const medication = medications.find((m) => m.id === supply.medication_id);
+    await scheduleSupplyReminders(
+      supply,
+      supplyReminderTimes(supply, medication),
+      notificationPrivacy,
     );
   }
 

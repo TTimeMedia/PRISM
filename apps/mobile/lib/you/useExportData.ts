@@ -42,6 +42,9 @@ export function useExportData() {
         milestones,
         journalEntries,
         reminders,
+        euphoriaMoments,
+        appointmentQuestions,
+        supplies,
       ] = await Promise.all([
         fetchProfile(),
         fetchSettings(),
@@ -53,6 +56,9 @@ export function useExportData() {
         fetchMilestones(),
         fetchJournalEntries(),
         fetchReminders(),
+        fetchAll('euphoria_moments'),
+        fetchAll('appointment_questions'),
+        fetchAll('supplies'),
       ]);
 
       const records: DataExportRecords = {
@@ -66,6 +72,9 @@ export function useExportData() {
         milestones,
         journal_entries: journalEntries,
         reminders,
+        euphoria_moments: euphoriaMoments,
+        appointment_questions: appointmentQuestions,
+        supplies,
       };
       const payload = buildDataExport(records);
       const json = JSON.stringify(payload, null, 2);
@@ -140,6 +149,14 @@ async function fetchJournalEntries(): Promise<JournalEntry[]> {
 
 async function fetchReminders(): Promise<Reminder[]> {
   const { data, error } = await supabase.from('reminders').select('*');
+  if (error) throw error;
+  return data;
+}
+
+async function fetchAll<T extends 'euphoria_moments' | 'appointment_questions' | 'supplies'>(
+  table: T,
+) {
+  const { data, error } = await supabase.from(table).select('*');
   if (error) throw error;
   return data;
 }

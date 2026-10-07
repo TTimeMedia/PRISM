@@ -259,8 +259,11 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    expect(screen.getByLabelText('Log a dose')).toBeTruthy();
+    // The Euphoria jar isn't a feature you switch on, so it always shows.
+    expect(screen.getByLabelText('Euphoria jar')).toBeTruthy();
     expect(screen.getByLabelText('Write in my journal')).toBeTruthy();
+    expect(screen.queryByLabelText('Log a dose')).toBeNull();
+    expect(screen.queryByLabelText('Add an appointment')).toBeNull();
     expect(screen.queryByLabelText('Log an injection')).toBeNull();
     expect(screen.queryByLabelText('Add a milestone')).toBeNull();
   });
@@ -270,8 +273,8 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    fireEvent.press(screen.getByLabelText('Log a dose'));
-    expect(router.push).toHaveBeenCalledWith('/care/medications');
+    fireEvent.press(screen.getByLabelText('Euphoria jar'));
+    expect(router.push).toHaveBeenCalledWith('/journey/jar');
     // An injection is a medication, so there is no separate tile for it.
     expect(screen.queryByLabelText('Log an injection')).toBeNull();
   });

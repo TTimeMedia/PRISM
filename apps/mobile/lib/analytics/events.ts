@@ -19,7 +19,10 @@ export type AnalyticsEvent =
   | 'journal_entry_added'
   | 'milestone_added'
   | 'support_request_sent'
-  | 'theme_changed';
+  | 'theme_changed'
+  | 'euphoria_saved'
+  | 'question_added'
+  | 'supply_added';
 
 type SafeProperties = Record<string, string | number | boolean>;
 

@@ -12,6 +12,9 @@ function records(): DataExportRecords {
     milestones: [],
     journal_entries: [],
     reminders: [],
+    euphoria_moments: [],
+    appointment_questions: [],
+    supplies: [],
   };
 }
 

@@ -453,3 +453,35 @@ export async function scheduleAppointmentReminder(
     }),
   );
 }
+
+/**
+ * Supply reminders: a week before a supply is expected to run out, and a
+ * week before its refill date (see lib/care/supplyOutlook.ts). With private
+ * notifications on, the text stays generic like every other reminder.
+ */
+export async function scheduleSupplyReminders(
+  supply: { id: string; name: string },
+  reminders: readonly { kind: 'running-low' | 'refill'; date: Date }[],
+  notificationPrivacy: boolean,
+): Promise<string[]> {
+  if (!isNotificationsSupported) return [];
+  return Promise.all(
+    reminders.map(({ kind, date }) =>
+      Notifications.scheduleNotificationAsync({
+        content: {
+          ...(notificationPrivacy
+            ? { title: PRIVATE_TITLE, body: PRIVATE_BODY }
+            : {
+                title: 'Prism',
+                body:
+                  kind === 'running-low'
+                    ? `${supply.name} is running low: about a week left.`
+                    : `${supply.name} is due for a refill in a week.`,
+              }),
+          data: { type: 'supply', referenceId: supply.id },
+        },
+        trigger: { type: Notifications.SchedulableTriggerInputTypes.DATE, date },
+      }),
+    ),
+  );
+}

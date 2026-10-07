@@ -3,6 +3,7 @@ import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
 import type { P0ModuleKey, TodayItem } from '@prism/types';
+import { Sparkles, type LucideIcon } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMErrorState,
@@ -36,6 +37,7 @@ import {
   ScreenGlow,
   SectionTitle,
   useTint,
+  type Tint,
 } from '../../../components/home';
 import { CustomizeTip } from '../../../components/home/CustomizeTip';
 import { TopBar } from '../../../components/home/TopBar';
@@ -43,17 +45,32 @@ import { MODULE_STYLE, moduleStyle } from '../../../components/home/moduleStyle'
 import { formatTodayDate, timeOfDayGreeting } from '../greeting';
 
 interface AddAction {
-  module: P0ModuleKey;
+  key: string;
+  /** Shown only while this feature is on; actions without one always show. */
+  module?: P0ModuleKey;
   label: string;
   href: Href;
+  /** Defaults to the feature's own look. */
+  icon?: LucideIcon;
+  tint?: Tint;
 }
 
 /** What each feature offers to start from Today, in the order they appear. */
 const ADD_ACTIONS: AddAction[] = [
-  { module: 'medications', label: 'Log a dose', href: '/care/medications' },
-  { module: 'appointments', label: 'Add an appointment', href: '/care/appointments/add' },
-  { module: 'journal', label: 'Write in my journal', href: '/journey/journal/add' },
-  { module: 'milestones', label: 'Add a milestone', href: '/journey/milestones/add' },
+  { key: 'jar', label: 'Euphoria jar', href: '/journey/jar', icon: Sparkles, tint: 'violet' },
+  {
+    key: 'appointment',
+    module: 'appointments',
+    label: 'Add an appointment',
+    href: '/care/appointments/add',
+  },
+  { key: 'journal', module: 'journal', label: 'Write in my journal', href: '/journey/journal/add' },
+  {
+    key: 'milestone',
+    module: 'milestones',
+    label: 'Add a milestone',
+    href: '/journey/milestones/add',
+  },
 ];
 
 /**
@@ -76,7 +93,7 @@ export function TodayScreen() {
   const name = profile?.display_name?.trim();
   const greeting = name ? `${timeOfDayGreeting()}, ${name}.` : `${timeOfDayGreeting()}.`;
   const enabled = new Set(modules?.filter((m) => m.enabled).map((m) => m.module_key));
-  const actions = ADD_ACTIONS.filter((action) => enabled.has(action.module));
+  const actions = ADD_ACTIONS.filter((action) => !action.module || enabled.has(action.module));
   const calendar = useCalendarSuggestions(enabled.has('appointments'));
 
   const comingUp = selectComingUpItems(items ?? [], 5);
@@ -168,12 +185,12 @@ export function TodayScreen() {
                 <SectionTitle title="Add something" />
                 <View style={styles.tiles}>
                   {actions.map((action) => {
-                    const style = MODULE_STYLE[action.module];
+                    const style = action.module ? MODULE_STYLE[action.module] : null;
                     return (
                       <ActionTile
-                        key={action.module}
-                        icon={style.icon}
-                        tint={style.tint}
+                        key={action.key}
+                        icon={action.icon ?? style!.icon}
+                        tint={action.tint ?? style!.tint}
                         label={action.label}
                         onPress={() => router.push(action.href)}
                       />

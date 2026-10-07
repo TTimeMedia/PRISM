@@ -134,6 +134,8 @@ export function useCreateMedicationLog() {
       queryClient.invalidateQueries({
         queryKey: medicationLogsKey(userId, data.medication_id),
       });
+      // A linked supply was just counted down by the database.
+      queryClient.invalidateQueries({ queryKey: ['supplies', userId] });
       // A dose that's been logged no longer needs its follow-up reminder.
       void cancelDueNudges(data.medication_id).catch(() => undefined);
     },
@@ -158,6 +160,7 @@ export function useUndoMedicationLog() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['medication-logs', userId] });
+      queryClient.invalidateQueries({ queryKey: ['supplies', userId] });
     },
   });
 }
@@ -179,6 +182,7 @@ export function useDeleteMedicationLog(medicationId: string) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: medicationLogsKey(userId, medicationId) });
+      queryClient.invalidateQueries({ queryKey: ['supplies', userId] });
     },
   });
 }
