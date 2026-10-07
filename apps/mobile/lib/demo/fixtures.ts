@@ -452,7 +452,7 @@ function eliTables(): Record<string, Record<string, unknown>[]> {
         starts_at: at(13, 10, 0),
         ends_at: at(13, 10, 30),
         location: 'Community Health Center',
-        notes: null,
+        notes: 'Video visit: https://telehealth.example.com/dr-shah\nFront desk: (415) 555-0142',
         reminder_enabled: true,
       },
     ],

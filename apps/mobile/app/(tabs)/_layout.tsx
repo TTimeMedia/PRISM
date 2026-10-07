@@ -43,11 +43,15 @@ function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
           canPreventDefault: true,
         });
         if (event.defaultPrevented) return;
-        // A tab always opens on its own main page, never on a screen left open
-        // inside it (a settings page reached from the menu, for example).
-        if (STACK_TABS.has(route.name)) {
-          navigation.navigate(route.name, { screen: 'index' });
-        } else if (!focused) {
+        // A tab always shows exactly its own main page: anything opened inside
+        // it is closed back to that page, and tapping the tab you're on does
+        // nothing more. (Navigating to the main page by name could add a copy
+        // of it, or land elsewhere, depending on what had been opened before.)
+        const inner = route.state as { key?: string; index?: number } | undefined;
+        if (STACK_TABS.has(route.name) && inner?.key && (inner.index ?? 0) > 0) {
+          navigation.dispatch({ type: 'POP_TO_TOP', target: inner.key });
+        }
+        if (!focused) {
           navigation.navigate(route.name);
         }
       },
