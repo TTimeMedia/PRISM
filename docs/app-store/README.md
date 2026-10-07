@@ -3,6 +3,7 @@
 `screenshots/` holds the images uploaded to App Store Connect for version 1.0 (2026-10-06):
 
 - `iphone-*.png`: 1206 × 2622, the "iPhone with Dynamic Island (medium display)" slot. Apple scales them for other iPhones.
+- `duo-*.png`: 1398 × 2034, the iPhone Duo slot (the unfolded screen; captured at 699 × 1017 points, 2x).
 - `ipad-*.png`: 2064 × 2752, the iPad 13" slot. iPad screenshots are required because `supportsTablet` is on.
 
 They show the real app, not mockups, filled with made-up sample data.
@@ -46,7 +47,7 @@ MSYS_NO_PATHCONV=1 SHOTS=../../docs/app-store/screenshots W=402 H=874 DPR=3 \
   node scripts/app-store-screenshots.mjs iphone-1-today=/today iphone-2-care=/care
 ```
 
-For iPad, use `W=1032 H=1376 DPR=2`. The script drives headless Chrome through the DevTools protocol, because Chrome's `--window-size` flag doesn't give the exact page size.
+For iPad, use `W=1032 H=1376 DPR=2`. For iPhone Duo, use `W=699 H=1017 DPR=2`. The script drives headless Chrome through the DevTools protocol, because Chrome's `--window-size` flag doesn't give the exact page size.
 
 ## Notes
 
