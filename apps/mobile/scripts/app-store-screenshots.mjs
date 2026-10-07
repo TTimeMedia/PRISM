@@ -1,5 +1,6 @@
 // App Store screenshots from demo mode. See docs/app-store/README.md.
 // Usage: SHOTS=<out dir> [W=402 H=874 DPR=3] node scripts/app-store-screenshots.mjs name=/path ...
+import { Buffer } from 'node:buffer';
 import { spawn } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
