@@ -1,6 +1,6 @@
 # App Store screenshots
 
-`screenshots/` holds the images uploaded to App Store Connect for version 1.0 (2026-10-06):
+`screenshots/` holds the images uploaded to App Store Connect for version 1.0 (retaken 2026-10-07, after Today went down to two tiles):
 
 - `iphone-*.png`: 1206 × 2622, the "iPhone with Dynamic Island (medium display)" slot. Apple scales them for other iPhones.
 - `duo-*.png`: 1398 × 2034, the iPhone Duo slot (the unfolded screen; captured at 699 × 1017 points, 2x).
@@ -62,6 +62,8 @@ For iPad, use `W=1032 H=1376 DPR=2`. For iPhone Duo, use `W=699 H=1017 DPR=2`. T
 
 - Run the server with `--no-dev`. In dev mode Expo can draw a ⚡ tools button in the corner, and it ends up in the shot.
 - After the server starts, the first page or two may come out blank while the bundle builds. Retake them.
+- With the default 9 s wait, many shots came out blank (the dark background only). `WAIT=15000` fixes that. A blank shot is easy to spot by its size: under 20 KB.
+- Give `SHOTS` a Windows path (`cygpath -w`). With `MSYS_NO_PATHCONV=1`, a Git Bash path like `/c/Users/...` ends up in `C:\c\Users\...`.
 
 - Apple accepts PNG without transparency. These are RGB.
 - On the version page, the upload control is under "App Previews and Screenshots". Choose a device tab first.
