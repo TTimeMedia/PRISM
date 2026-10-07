@@ -13,6 +13,15 @@ They show the real app, not mockups, filled with made-up sample data.
 
 This is how they were made.
 
+## Header and Search Results artwork
+
+`artwork/` holds the two creative assets (5244 × 2950) on the version page:
+
+- `header-5244x2950.png`: no text, because the App Store draws the app name and icon over the header.
+- `search-results-5244x2950.png`: the icon and "Your journey. Your way.".
+
+Both show three real screenshots: Sam's Journey, Sam's Today and Eli's Today. They're built from `artwork/banner.html` (add `#search` for the version with text), rendered at 2622 × 1475 points, 2x.
+
 ## Demo mode
 
 `apps/mobile/lib/demo/` is demo mode. It is only active when both of these are true:
