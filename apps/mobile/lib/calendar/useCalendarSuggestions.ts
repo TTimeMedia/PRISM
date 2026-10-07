@@ -3,6 +3,7 @@ import { AppState, Platform } from 'react-native';
 import { useAppStore } from '../store/appStore';
 import { useAppointments } from '../care/queries';
 import { useCreateAppointment } from '../care/mutations';
+import { track } from '../analytics/events';
 import { calendarProvider, type CalendarEventSummary } from './index';
 import { SUGGESTION_WINDOW_DAYS, pickSuggestions, suggestionKey } from './suggestions';
 
@@ -58,6 +59,7 @@ export function useCalendarSuggestions(active: boolean) {
       ends_at: event.endsAt,
       reminder_enabled: false,
     });
+    track('calendar_suggestion_added');
   };
 
   const dismiss = (event: CalendarEventSummary) => dismissSuggestion(suggestionKey(event));

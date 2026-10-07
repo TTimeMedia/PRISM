@@ -17,6 +17,7 @@ import {
 } from '@prism/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { useSession } from '../../../lib/auth/AuthProvider';
+import { track } from '../../../lib/analytics/events';
 import {
   MAX_SUPPORT_MESSAGE,
   SUPPORT_EMAIL,
@@ -58,6 +59,7 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
         screen: fromScreen,
         screenshotUri: attachScreenshot ? screenshotUri : null,
       });
+      track('support_request_sent', { kind });
       showToast(copy.sent);
       router.back();
     } catch {

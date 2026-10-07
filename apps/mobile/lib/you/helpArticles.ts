@@ -241,11 +241,16 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'who-sees-my-data',
     title: 'Who can see my data',
     category: 'Privacy and security',
-    summary: 'Your account is yours alone. No ads, no analytics, nothing sold.',
+    summary:
+      'Your account is yours alone. No ads, nothing sold, and usage counts only if you say yes.',
     blocks: [
       {
         type: 'p',
-        text: 'Everything you add is stored in your Prism account, and the database only lets your account read it. Prism has no advertising or analytics, and never sells your data.',
+        text: 'Everything you add is stored in your Prism account, and the database only lets your account read it. Prism has no advertising and never sells your data.',
+      },
+      {
+        type: 'p',
+        text: 'If you said yes to sharing anonymous usage, Prism counts which screens and features get used, never what you write or record, and not linked to your account. Turn it off any time in Privacy & security.',
       },
       {
         type: 'p',

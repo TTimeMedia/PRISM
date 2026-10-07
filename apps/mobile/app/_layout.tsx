@@ -24,6 +24,7 @@ import { useProfile, useSettings } from '../lib/profile/queries';
 import { useAppLockGate } from '../lib/you/useAppLockGate';
 import { useAppearanceSync } from '../lib/you/useAppearanceSync';
 import { useLaunchUpdate } from '../lib/updates/useLaunchUpdate';
+import { useAnalytics } from '../lib/analytics/useAnalytics';
 import { useShakeToReport } from '../lib/you/useShakeToReport';
 import { usePushRegistration } from '../lib/push/usePushRegistration';
 import { useReminderSync } from '../lib/reminders/useReminderSync';
@@ -115,6 +116,8 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   const unlock = useAppLockStore((state) => state.unlock);
   const showAppLockScreen = appLockEnabled && isLocked;
   useShakeToReport(showTabs && !showAppLockScreen);
+  // Anonymous usage, only after a yes: lib/analytics.
+  useAnalytics();
 
   if (!ready) {
     return null;

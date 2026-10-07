@@ -38,7 +38,15 @@ interface AppState {
   /** Suggestions dismissed with "Not this one" (lib/calendar/suggestions.ts keys). */
   dismissedSuggestions: string[];
   dismissSuggestion: (key: string) => void;
+  /**
+   * Anonymous usage analytics (lib/analytics). Nothing is sent until the person
+   * says yes; 'unasked' shows the one-time card on Today. Device-local.
+   */
+  analyticsConsent: AnalyticsConsent;
+  setAnalyticsConsent: (consent: AnalyticsConsent) => void;
 }
+
+export type AnalyticsConsent = 'unasked' | 'granted' | 'declined';
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -58,6 +66,8 @@ export const useAppStore = create<AppState>()(
       calendarSuggestions: false,
       setCalendarSuggestions: (on) => set({ calendarSuggestions: on }),
       dismissedSuggestions: [],
+      analyticsConsent: 'unasked',
+      setAnalyticsConsent: (consent) => set({ analyticsConsent: consent }),
       dismissSuggestion: (key) =>
         set((state) => ({
           dismissedSuggestions: [...state.dismissedSuggestions, key].slice(-MAX_DISMISSED),
