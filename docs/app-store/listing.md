@@ -53,7 +53,11 @@ trans,transgender,HRT,hormone,injection,shot,dose,medication,reminder,nonbinary,
 
 Prism is a private record-keeping app for medications and injections, appointments, milestones and a journal. It is not a medical device and gives no medical advice: every medication, dose and schedule is entered by the person using it.
 
-Demo account: see Sign-In Information. It already has sample records, so Today, Care and Journey are filled in.
+Demo account: see Sign-In Information. It is filled with sample records for a made-up person, Eli, about ten months into testosterone therapy:
+- Today: his weekly testosterone shot is due, with the next medication and appointments under Coming up.
+- Care: two medications (testosterone cypionate, vitamin D) with dose history, and three upcoming appointments (top surgery consult, lab draw, primary care check-in).
+- Journey: journal entries and four milestones. You > Timeline shows everything in date order.
+- You > Appearance: 15 color themes.
 
 Permissions, all asked only when the related feature is first used:
 - Notifications: dose and appointment reminders.
