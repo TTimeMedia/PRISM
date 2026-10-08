@@ -33,7 +33,10 @@
       "zod": "^3.24.1",
       "eas-cli>zod": "^4.6.5",
       "@expo/eas-build-job>zod": "^4.6.5",
-      "@expo/steps>zod": "^4.6.5"
+      "@expo/steps>zod": "^4.6.5",
+      "shell-quote": "^1.11.0",
+      "compression": "^1.8.2",
+      "source-map-js": "^1.2.2"
     }
   }
 }
