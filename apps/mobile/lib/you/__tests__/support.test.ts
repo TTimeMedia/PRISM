@@ -23,7 +23,7 @@ describe('submitSupportRequest', () => {
   it('sends the request to submit-support, trimmed, with no screenshot', async () => {
     await expect(
       submitSupportRequest({ userId: 'u1', kind: 'contact', message: '  Hello  ' }),
-    ).resolves.toEqual({ emailed: true });
+    ).resolves.toEqual({ emailed: true, screenshotDropped: false });
 
     expect(mockUpload).not.toHaveBeenCalled();
     const [name, { body }] = mockInvoke.mock.calls[0];
@@ -46,6 +46,34 @@ describe('submitSupportRequest', () => {
       screenshotPath: path,
       screen: '/care',
     });
+  });
+
+  it('reads the bare path iOS screenshots come back as through a file:// URI', async () => {
+    await submitSupportRequest({
+      userId: 'u1',
+      kind: 'problem',
+      message: 'Broken',
+      screenshotUri: '/private/var/mobile/tmp/ReactNative/shot.jpg',
+    });
+
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      'file:///private/var/mobile/tmp/ReactNative/shot.jpg',
+    );
+    expect(mockUpload).toHaveBeenCalled();
+  });
+
+  it('still sends the report when the screenshot cannot be uploaded', async () => {
+    mockUpload.mockResolvedValue({ error: new Error('storage down') });
+
+    await expect(
+      submitSupportRequest({
+        userId: 'u1',
+        kind: 'problem',
+        message: 'Broken',
+        screenshotUri: 'file:///shot.jpg',
+      }),
+    ).resolves.toEqual({ emailed: true, screenshotDropped: true });
+    expect(mockInvoke.mock.calls[0][1].body).toMatchObject({ screenshotPath: null });
   });
 
   it('fails loudly when the function refuses', async () => {

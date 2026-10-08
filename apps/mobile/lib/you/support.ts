@@ -60,13 +60,21 @@ export interface SupportRequestInput {
 /**
  * Sends a request. Resolves when it's saved; `emailed` is false if saving
  * worked but the email to support didn't (it is still in the table).
+ * A screenshot that can't be uploaded never stops the report: it is sent
+ * without one, and `screenshotDropped` says so.
  */
 export async function submitSupportRequest(
   input: SupportRequestInput,
-): Promise<{ emailed: boolean }> {
-  const screenshotPath = input.screenshotUri
-    ? await uploadScreenshot(input.userId, input.screenshotUri)
-    : null;
+): Promise<{ emailed: boolean; screenshotDropped: boolean }> {
+  let screenshotPath: string | null = null;
+  let screenshotDropped = false;
+  if (input.screenshotUri) {
+    try {
+      screenshotPath = await uploadScreenshot(input.userId, input.screenshotUri);
+    } catch {
+      screenshotDropped = true;
+    }
+  }
   const { data, error } = await supabase.functions.invoke<{ emailed: boolean }>('submit-support', {
     body: {
       kind: input.kind,
@@ -79,12 +87,20 @@ export async function submitSupportRequest(
     },
   });
   if (error) throw error;
-  return { emailed: !!data?.emailed };
+  return { emailed: !!data?.emailed, screenshotDropped };
+}
+
+/**
+ * The screenshot library returns a bare path on iOS ("/private/var/…/x.jpg").
+ * `<Image>` shows that fine, but `fetch` can only read it as a file:// URI.
+ */
+export function toFileUri(uri: string): string {
+  return uri.startsWith('/') ? `file://${uri}` : uri;
 }
 
 /** Screenshots go in the private `attachments` bucket, so deleting the account removes them. */
 async function uploadScreenshot(userId: string, uri: string): Promise<string> {
-  const response = await fetch(uri);
+  const response = await fetch(toFileUri(uri));
   const arrayBuffer = await response.arrayBuffer();
   const unique = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const path = `${userId}/support/${unique}.jpg`;
