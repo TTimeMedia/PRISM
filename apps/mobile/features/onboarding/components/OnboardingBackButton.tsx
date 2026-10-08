@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getPreviousOnboardingStep, ONBOARDING_STEPS, type OnboardingStep } from '@prism/types';
 import { PRISMIconButton, spacing, useTheme } from '@prism/ui';
-import { onboardingStepHref, ONBOARDING_ROUTE_SEGMENTS } from '../../../lib/onboarding/routes';
+import { onboardingBackHref, ONBOARDING_ROUTE_SEGMENTS } from '../../../lib/onboarding/routes';
 import { careSetupSignalFromModules } from '../../../lib/onboarding/careSetupSignal';
 import { useModules, useProfile, useUpdateProfile } from '../../../lib/profile/queries';
 
@@ -41,7 +41,9 @@ export function OnboardingBackButton() {
   if (!previous) return null;
 
   const goBack = () => {
-    router.replace(onboardingStepHref(previous));
+    // `back` makes the onboarding stack slide this replace the way Back
+    // looks everywhere else (app/(onboarding)/_layout.tsx).
+    router.replace(onboardingBackHref(previous));
     // Keep the resume point in step with what's on screen. Fire and forget:
     // moving back should never wait on the network.
     updateProfile.mutate({ onboarding_step: previous });

@@ -72,6 +72,18 @@ describe('PrivacySetupScreen', () => {
     await waitFor(() => expect(router.replace).toHaveBeenCalledWith('/(onboarding)/reminders'));
   });
 
+  it('shows on this screen what the lock screen will say, following the switch', () => {
+    renderWithProviders(<PrivacySetupScreen />);
+    const hidden = { includeHiddenElements: true };
+
+    expect(screen.getByText('Your Prism reminder is ready.', hidden)).toBeTruthy();
+
+    fireEvent(screen.getByLabelText('Private notifications'), 'valueChange', false);
+
+    expect(screen.queryByText('Your Prism reminder is ready.', hidden)).toBeNull();
+    expect(screen.getByText('Take your Vitamin D at 9:00 AM.', hidden)).toBeTruthy();
+  });
+
   it('toggling private notifications off is reflected in the submitted settings', async () => {
     renderWithProviders(<PrivacySetupScreen />);
 
