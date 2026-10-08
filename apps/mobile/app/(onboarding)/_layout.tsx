@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { normalizeOnboardingStep } from '@prism/types';
 import { useProfile } from '../../lib/profile/queries';
-import { ONBOARDING_ROUTE_SEGMENTS } from '../../lib/onboarding/routes';
+import { isOnboardingBack, ONBOARDING_ROUTE_SEGMENTS } from '../../lib/onboarding/routes';
 import { OnboardingBackButton } from '../../features/onboarding/components/OnboardingBackButton';
 
 /**
@@ -21,7 +21,15 @@ export default function OnboardingLayout() {
 
   return (
     <View style={{ flex: 1 }}>
-      <Stack initialRouteName={initialRouteName} screenOptions={{ headerShown: false }}>
+      <Stack
+        initialRouteName={initialRouteName}
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          // Onboarding moves by replacing screens. Next slides forward;
+          // Back (OnboardingBackButton) slides backward.
+          animationTypeForReplace: isOnboardingBack(route.params) ? 'pop' : 'push',
+        })}
+      >
         <Stack.Screen name="philosophy" />
         <Stack.Screen name="colors" />
         <Stack.Screen name="intent" />

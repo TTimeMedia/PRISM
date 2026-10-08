@@ -49,3 +49,13 @@ const ONBOARDING_HREFS: Record<OnboardingStep, Href> = {
 export function onboardingStepHref(step: OnboardingStep): Href {
   return ONBOARDING_HREFS[step];
 }
+
+/** The same screen reached by Back: the `back` param makes it slide in from the left. */
+export function onboardingBackHref(step: OnboardingStep): Href {
+  return `${ONBOARDING_HREFS[step] as string}?back=1` as Href;
+}
+
+/** Whether a screen was reached by Back (see onboardingBackHref). */
+export function isOnboardingBack(params: object | undefined): boolean {
+  return (params as { back?: unknown } | undefined)?.back === '1';
+}
