@@ -14,6 +14,9 @@ import {
 } from '@prism/ui';
 import { useModules } from '../../../lib/profile/queries';
 import { useAppointments, useMedications } from '../../../lib/care/queries';
+import { useSupplies } from '../../../lib/care/supplies';
+import { outlookLabel, supplyOutlook } from '../../../lib/care/supplyOutlook';
+import { Package } from 'lucide-react-native';
 import { resolveNextMedicationOccurrence } from '../../../lib/reminders/scheduleResolution';
 import { formatComingUpWhen } from '../../../lib/today/comingUp';
 import {
@@ -44,6 +47,18 @@ export function CareHomeScreen() {
   const [importOpen, setImportOpen] = useState(false);
   const medications = useMedications();
   const appointments = useAppointments();
+  const supplies = useSupplies();
+  const supplyRows = (supplies.data ?? [])
+    .map((supply) => {
+      const medication = medications.data?.find((m) => m.id === supply.medication_id);
+      const outlook = supplyOutlook(supply, medication);
+      return { supply, outlook, label: outlookLabel(supply, outlook) };
+    })
+    .sort(
+      (a, b) =>
+        Number(b.outlook.low || b.outlook.refillSoon) -
+        Number(a.outlook.low || a.outlook.refillSoon),
+    );
 
   const loading =
     modulesLoading ||
@@ -199,6 +214,42 @@ export function CareHomeScreen() {
                       variant="tertiary"
                       onPress={() => setImportOpen(true)}
                     />
+                  </View>
+                )}
+              </>
+            ) : null}
+
+            {/* Supplies */}
+            {enabled.has('medications') ? (
+              <>
+                <SectionTitle
+                  title="Supplies"
+                  actionLabel={supplyRows.length > 0 ? 'See all' : undefined}
+                  onAction={() => router.push('/care/supplies')}
+                  onAdd={() => router.push('/care/supplies/add')}
+                  addLabel="Add a supply"
+                />
+                {supplyRows.length === 0 ? (
+                  <EmptyCard
+                    icon={Package}
+                    tint="violet"
+                    title="Keep track of supplies"
+                    body="Vials, syringes, pills, patches. Prism counts them down as you log doses and reminds you before you run out."
+                    primaryLabel="Add a supply"
+                    onPrimary={() => router.push('/care/supplies/add')}
+                  />
+                ) : (
+                  <View style={styles.list}>
+                    {supplyRows.slice(0, 3).map(({ supply, outlook, label }) => (
+                      <ItemRow
+                        key={supply.id}
+                        icon={Package}
+                        tint={outlook.low || outlook.refillSoon ? 'pink' : 'violet'}
+                        title={outlook.low ? `${supply.name} · running low` : supply.name}
+                        subtitle={label}
+                        onPress={() => router.push(`/care/supplies/${supply.id}`)}
+                      />
+                    ))}
                   </View>
                 )}
               </>

@@ -6,9 +6,11 @@ import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { resendVerificationEmail } from '../../../lib/auth/actions';
 import { getAuthErrorMessage } from '../../../lib/auth/errors';
+import { useSignInWhenConfirmed } from '../../../lib/auth/pendingSignUp';
 
 /** Screen 07 — Email Verification. See docs/SCREEN_BIBLE.md §4. */
 export function VerifyEmailScreen() {
+  useSignInWhenConfirmed();
   const params = useLocalSearchParams<{ email?: string }>();
   const email = params.email ?? '';
   const { showToast } = useToast();
@@ -37,7 +39,7 @@ export function VerifyEmailScreen() {
   return (
     <AuthScreenLayout
       title="Check your email."
-      subtitle="We sent a link to confirm it's you. Tap it on this phone and you'll come right back to Prism."
+      subtitle="We sent a link to confirm it's you. Tap it, then come back here: Prism signs you in as soon as it's confirmed."
     >
       {resendError ? <FormError message={resendError} /> : null}
       <View style={styles.actions}>

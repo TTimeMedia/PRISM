@@ -345,3 +345,36 @@ export interface Settings {
   created_at: ISODateTime;
   updated_at: ISODateTime;
 }
+
+/**
+ * A question to ask at an appointment. With no appointment it belongs to the
+ * next upcoming one.
+ */
+export interface AppointmentQuestion {
+  id: UUID;
+  user_id: UUID;
+  appointment_id: UUID | null;
+  question: string;
+  asked: boolean;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}
+
+/**
+ * A supply to keep track of (a vial, syringes, pills). When linked to a
+ * medication with an amount per dose, logging a dose counts it down.
+ */
+export interface Supply {
+  id: UUID;
+  user_id: UUID;
+  name: string;
+  medication_id: UUID | null;
+  quantity: number;
+  unit: string | null;
+  per_dose: number | null;
+  refill_on: ISODate | null;
+  pharmacy: string | null;
+  notes: string | null;
+  created_at: ISODateTime;
+  updated_at: ISODateTime;
+}

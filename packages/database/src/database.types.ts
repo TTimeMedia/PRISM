@@ -10,6 +10,7 @@
  */
 import type {
   Appointment,
+  AppointmentQuestion,
   Document,
   FrequencyConfig,
   Injection,
@@ -26,6 +27,7 @@ import type {
   PushToken,
   Reminder,
   Settings,
+  Supply,
 } from '@prism/types';
 
 /** Every key of Row whose value type is nullable — a nullable column can always be omitted on insert, same as an explicit null. */
@@ -146,6 +148,16 @@ export interface Database {
         Reminder,
         Insertable<Reminder, Generated | 'notification_style' | 'enabled'>,
         Updatable<Reminder, Immutable>
+      >;
+      appointment_questions: Table<
+        AppointmentQuestion,
+        Insertable<AppointmentQuestion, Generated | 'asked'>,
+        Updatable<AppointmentQuestion, Immutable>
+      >;
+      supplies: Table<
+        Supply,
+        Insertable<Supply, Generated | 'quantity'>,
+        Updatable<Supply, Immutable>
       >;
       push_tokens: Table<
         PushToken,

@@ -1,9 +1,14 @@
 import 'react-native-reanimated';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Stack } from 'expo-router';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Stack,
+  ThemeProvider as NavigationThemeProvider,
+} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import {
@@ -13,7 +18,7 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { Sora_600SemiBold, Sora_700Bold } from '@expo-google-fonts/sora';
-import { ThemeProvider, ReducedMotionProvider, PRISMToastProvider } from '@prism/ui';
+import { ThemeProvider, ReducedMotionProvider, PRISMToastProvider, useTheme } from '@prism/ui';
 import { GlobalErrorFallback } from '../components/GlobalErrorFallback';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { AuthProvider, useSession } from '../lib/auth/AuthProvider';
@@ -121,6 +126,7 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
   useWatchSync(showTabs);
   // Anonymous usage, only after a yes: lib/analytics.
   useAnalytics();
+  const navigationTheme = useNavigationTheme();
 
   if (!ready) {
     return null;
@@ -128,20 +134,47 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
 
   return (
     <ReducedMotionProvider preference={!!settings?.reduced_motion}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={showTabs}>
-          <Stack.Screen name="(tabs)" />
-        </Stack.Protected>
-        <Stack.Protected guard={showOnboarding}>
-          <Stack.Screen name="(onboarding)" />
-        </Stack.Protected>
-        <Stack.Protected guard={showAuth}>
-          <Stack.Screen name="(auth)" />
-        </Stack.Protected>
-      </Stack>
+      <NavigationThemeProvider value={navigationTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Protected guard={showTabs}>
+            <Stack.Screen name="(tabs)" />
+          </Stack.Protected>
+          <Stack.Protected guard={showOnboarding}>
+            <Stack.Screen name="(onboarding)" />
+          </Stack.Protected>
+          <Stack.Protected guard={showAuth}>
+            <Stack.Screen name="(auth)" />
+          </Stack.Protected>
+        </Stack>
+      </NavigationThemeProvider>
       {showAppLockScreen ? (
         <AppLockScreen biometricEnabled={!!settings?.biometric_lock} onUnlock={unlock} />
       ) : null}
     </ReducedMotionProvider>
   );
+}
+
+/**
+ * Screens and transitions use Prism's colors instead of React Navigation's
+ * default near-white. Without this, the space behind a screen while it
+ * slides in or out (for example tapping You from Appearance) flashes white,
+ * most visibly in dark themes.
+ */
+function useNavigationTheme() {
+  const theme = useTheme();
+  return useMemo(() => {
+    const base = theme.scheme === 'dark' ? DarkTheme : DefaultTheme;
+    return {
+      ...base,
+      dark: theme.scheme === 'dark',
+      colors: {
+        ...base.colors,
+        primary: theme.accent,
+        background: theme.colors.background,
+        card: theme.colors.surface,
+        text: theme.colors.text.primary,
+        border: theme.colors.border.subtle,
+      },
+    };
+  }, [theme]);
 }

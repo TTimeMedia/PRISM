@@ -23,6 +23,10 @@ jest.mock('../../../../lib/care/queries', () => ({
   useAppointments: jest.fn(),
 }));
 
+jest.mock('../../../../lib/care/supplies', () => ({
+  useSupplies: jest.fn(() => ({ data: [], isLoading: false, isError: false })),
+}));
+
 // The import sheet lives on this screen but stays closed; it needs the queries and mutations above.
 jest.mock('../../../../lib/care/mutations', () => ({
   useCreateAppointment: jest.fn(() => ({ mutateAsync: jest.fn() })),

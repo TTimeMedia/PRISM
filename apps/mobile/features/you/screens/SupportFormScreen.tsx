@@ -52,7 +52,7 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
     if (!userId || !message.trim()) return;
     setSending(true);
     try {
-      await submitSupportRequest({
+      const { screenshotDropped } = await submitSupportRequest({
         userId,
         kind,
         message,
@@ -60,7 +60,9 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
         screenshotUri: attachScreenshot ? screenshotUri : null,
       });
       track('support_request_sent', { kind });
-      showToast(copy.sent);
+      showToast(
+        screenshotDropped ? `${copy.sent} The screenshot couldn't be attached.` : copy.sent,
+      );
       router.back();
     } catch {
       showToast("Couldn't send that. Check your connection and try again.", 'error');

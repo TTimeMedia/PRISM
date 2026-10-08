@@ -5,7 +5,7 @@
     "moduleResolution": "Bundler",
     "noEmit": true,
     "rootDir": "src",
-    "types": []
+    "types": ["node"]
   },
   "include": ["src"]
 }

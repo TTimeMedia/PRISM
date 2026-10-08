@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ArrowLeft, CalendarArrowDown, Plus } from 'lucide-react-native';
+import { ArrowLeft, CalendarArrowDown, MessageCircleQuestion, Plus } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMEmptyState,
@@ -16,6 +16,7 @@ import {
 } from '@prism/ui';
 import type { Appointment } from '@prism/types';
 import { useAppointments } from '../../../lib/care/queries';
+import { useQuestions } from '../../../lib/care/questions';
 import { CalendarImportSheet } from '../components/CalendarImportSheet';
 
 /** Screen 31 — Appointments. Upcoming shown first. */
@@ -23,6 +24,8 @@ export function AppointmentsScreen() {
   const theme = useTheme();
   const { data: appointments, isLoading, isError, refetch } = useAppointments();
   const [importOpen, setImportOpen] = useState(false);
+  const { data: questions } = useQuestions();
+  const openQuestions = (questions ?? []).filter((q) => !q.asked).length;
 
   const now = new Date().toISOString();
   const upcoming = (appointments ?? []).filter((a) => a.starts_at >= now);
@@ -57,6 +60,19 @@ export function AppointmentsScreen() {
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
+        <PRISMListItem
+          title="Questions for my doctor"
+          subtitle={
+            openQuestions === 0
+              ? 'Jot one down whenever it comes to mind.'
+              : openQuestions === 1
+                ? '1 question to ask'
+                : `${openQuestions} questions to ask`
+          }
+          leading={<MessageCircleQuestion size={22} color={theme.colors.text.secondary} />}
+          onPress={() => router.push('/care/appointments/questions')}
+          showChevron
+        />
         {isLoading ? (
           <View style={styles.skeletons}>
             <PRISMSkeleton height={56} />

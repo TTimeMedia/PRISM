@@ -224,6 +224,45 @@ The app still includes no crash-reporting or advertising SDKs.
 **Reason:** Injections were a separate feature, but an injection is just one way to take a medication. Two places to log the same kind of thing was confusing.
 **Implications:** There is no separate Injections feature, switch, tile, or screen. An injectable medication (form "Injection") is logged like any other dose, and asks where it went in (optional), stored as `medication_logs.site`. The migration `20260924120000_merge_injections_into_medications.sql` copies existing `injections` rows into `medication_logs` (attaching any that had no medication to a generic "Injection" medication) and switches Medications on for anyone who had Injections on. The `injections` table is kept, unread, for history and export. Care Setup's "Injections" choice now leads to Medication Setup.
 
+### Supplies and refills, and questions for the doctor
+
+**Date:** 2026-10-07
+**Status:** Active
+**Reason:** The owner chose these over other ideas as things people would actually use. Running out of a hormone is a real fear, and questions get forgotten in the exam room.
+**Decision:**
+
+- **Supplies** (table `supplies`) can be linked to a medication with an amount per dose. A database trigger on `medication_logs` counts the supply down when a dose is logged and back up on Undo, so it works the same from Today, the medication's page or a notification.
+- **Supply estimates and reminders.** `lib/care/supplyOutlook.ts` estimates when a supply runs out from the medication's schedule. The reminder sync schedules a reminder a week before that date and a week before the refill date, both at 10:00. They follow Private notifications.
+- **Questions** (table `appointment_questions`) belong to an appointment, or to none. A question with none shows on whichever appointment is next. If an appointment is deleted, its questions go back to that pool (`on delete set null`).
+
+**Implications:** Both tables are in the data export and are removed with the account. The privacy policy's list of what Prism keeps includes supplies and questions.
+
+### The "Log a dose" tile on Today became the Euphoria jar
+
+**Date:** 2026-10-07
+**Status:** Superseded (see "Today offers only journal and milestone tiles; the Euphoria jar is removed").
+**Reason:** The owner didn't like "Log a dose" on Today, and the tile only opened the medications list. Logging stays on the Up next card (View first, Log dose only when due) and on each medication's page.
+**Decision:** Today's "Add something" tiles are: Euphoria jar, Add an appointment, Write in my journal, Add a milestone.
+
+- The jar (table `euphoria_moments`, screen `/journey/jar`) saves short good moments, and "Shake the jar" brings back a random one, never the same one twice in a row.
+- It's a button, not a physical shake, because shaking the phone already opens "Report a problem".
+- It always shows; it isn't a feature you switch on.
+
+**Implications:** Lab levels were discussed for the side menu and set aside for now; the owner wasn't sure how yet. The unused `labs` table is unchanged.
+
+### Today offers only journal and milestone tiles; the Euphoria jar is removed
+
+**Date:** 2026-10-07
+**Status:** Active
+**Reason:** After trying it, the owner asked for the Euphoria jar and "Add an appointment" to come off Today, and for the jar to be deleted entirely.
+**Decision:** Today's "Add something" tiles are "Write in my journal" and "Add a milestone", each shown while its feature is on.
+
+- Appointments are added from Care.
+- The jar's screen and code are removed. Migration `20261007130000_drop_euphoria_jar.sql` drops `euphoria_moments` along with anything saved in it.
+- The privacy policy no longer mentions the jar.
+
+**Implications:** None for other features. Questions for the doctor and supplies are unaffected.
+
 ## JOURNEY
 
 ### Timeline's "medications" events are real logged doses, not a predicted schedule

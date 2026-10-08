@@ -25,7 +25,7 @@ const mockedSubmit = submitSupportRequest as jest.MockedFunction<typeof submitSu
 describe('SupportFormScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockedSubmit.mockResolvedValue({ emailed: true });
+    mockedSubmit.mockResolvedValue({ emailed: true, screenshotDropped: false });
   });
 
   it('sends the message from inside the app and goes back', async () => {

@@ -1,5 +1,6 @@
 import type {
   Appointment,
+  AppointmentQuestion,
   Injection,
   JournalEntry,
   Medication,
@@ -9,6 +10,7 @@ import type {
   Profile,
   Reminder,
   Settings,
+  Supply,
 } from '@prism/types';
 
 export interface DataExportRecords {
@@ -22,6 +24,8 @@ export interface DataExportRecords {
   milestones: Milestone[];
   journal_entries: JournalEntry[];
   reminders: Reminder[];
+  appointment_questions: AppointmentQuestion[];
+  supplies: Supply[];
 }
 
 export interface DataExportPayload extends DataExportRecords {

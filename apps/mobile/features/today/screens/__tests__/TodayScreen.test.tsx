@@ -259,8 +259,10 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    expect(screen.getByLabelText('Log a dose')).toBeTruthy();
     expect(screen.getByLabelText('Write in my journal')).toBeTruthy();
+    // Doses and appointments aren't started from Today.
+    expect(screen.queryByLabelText('Log a dose')).toBeNull();
+    expect(screen.queryByLabelText('Add an appointment')).toBeNull();
     expect(screen.queryByLabelText('Log an injection')).toBeNull();
     expect(screen.queryByLabelText('Add a milestone')).toBeNull();
   });
@@ -270,8 +272,9 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    fireEvent.press(screen.getByLabelText('Log a dose'));
-    expect(router.push).toHaveBeenCalledWith('/care/medications');
+    fireEvent.press(screen.getByLabelText('Write in my journal'));
+    expect(router.push).toHaveBeenCalledWith('/journey/journal/add');
+    expect(screen.queryByLabelText('Add an appointment')).toBeNull();
     // An injection is a medication, so there is no separate tile for it.
     expect(screen.queryByLabelText('Log an injection')).toBeNull();
   });
