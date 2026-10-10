@@ -32,6 +32,9 @@ interface AppState {
   /** Shaking the phone opens Report a problem. Device-local. */
   shakeToReport: boolean;
   setShakeToReport: (on: boolean) => void;
+  /** Today celebrates LGBTQ+ days under the greeting (features/today/observances). Device-local. */
+  celebrationDays: boolean;
+  setCelebrationDays: (on: boolean) => void;
   /** Today suggests calendar events that look like appointments. Off until turned on. Device-local. */
   calendarSuggestions: boolean;
   setCalendarSuggestions: (on: boolean) => void;
@@ -63,6 +66,8 @@ export const useAppStore = create<AppState>()(
       dismissCustomizeTip: () => set({ customizeTipDismissed: true }),
       shakeToReport: true,
       setShakeToReport: (on) => set({ shakeToReport: on }),
+      celebrationDays: true,
+      setCelebrationDays: (on) => set({ celebrationDays: on }),
       calendarSuggestions: false,
       setCalendarSuggestions: (on) => set({ calendarSuggestions: on }),
       dismissedSuggestions: [],

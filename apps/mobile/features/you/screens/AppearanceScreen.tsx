@@ -9,6 +9,7 @@ import {
   PRISMIconButton,
   PRISMSelect,
   PRISMSkeleton,
+  PRISMSwitch,
   spacing,
   type,
   useTheme,
@@ -45,6 +46,8 @@ export function AppearanceScreen() {
   const setThemePreference = useAppStore((state) => state.setThemePreference);
   const palette = useAppStore((state) => state.palette);
   const setPalette = useAppStore((state) => state.setPalette);
+  const celebrationDays = useAppStore((state) => state.celebrationDays);
+  const setCelebrationDays = useAppStore((state) => state.setCelebrationDays);
 
   const [appIcon, setAppIconState] = useState<AppIconKey>(() => currentAppIcon());
 
@@ -98,6 +101,13 @@ export function AppearanceScreen() {
               <AppIconPicker value={appIcon} onChange={selectAppIcon} />
             </>
           ) : null}
+          <Text style={[styles.sectionLabel, { color: theme.colors.text.secondary }]}>Today</Text>
+          <PRISMSwitch
+            label="Show celebration days"
+            description="A note on Today for days like National Coming Out Day and Trans Day of Visibility."
+            value={celebrationDays}
+            onValueChange={setCelebrationDays}
+          />
         </ScrollView>
       )}
     </View>
