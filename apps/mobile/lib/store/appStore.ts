@@ -32,13 +32,6 @@ interface AppState {
   /** Shaking the phone opens Report a problem. Device-local. */
   shakeToReport: boolean;
   setShakeToReport: (on: boolean) => void;
-  /**
-   * Today celebrates LGBTQ+ days under the greeting (features/today/observances).
-   * Nothing shows until the person answers; 'unasked' shows the one-time
-   * pop-up on Today. Device-local.
-   */
-  celebrationDays: CelebrationDays;
-  setCelebrationDays: (choice: CelebrationDays) => void;
   /** Today suggests calendar events that look like appointments. Off until turned on. Device-local. */
   calendarSuggestions: boolean;
   setCalendarSuggestions: (on: boolean) => void;
@@ -54,7 +47,6 @@ interface AppState {
 }
 
 export type AnalyticsConsent = 'unasked' | 'granted' | 'declined';
-export type CelebrationDays = 'unasked' | 'on' | 'off';
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -71,8 +63,6 @@ export const useAppStore = create<AppState>()(
       dismissCustomizeTip: () => set({ customizeTipDismissed: true }),
       shakeToReport: true,
       setShakeToReport: (on) => set({ shakeToReport: on }),
-      celebrationDays: 'unasked',
-      setCelebrationDays: (choice) => set({ celebrationDays: choice }),
       calendarSuggestions: false,
       setCalendarSuggestions: (on) => set({ calendarSuggestions: on }),
       dismissedSuggestions: [],
