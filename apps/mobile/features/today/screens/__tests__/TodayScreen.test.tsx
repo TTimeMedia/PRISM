@@ -43,9 +43,6 @@ jest.mock('../../../../lib/calendar/useCalendarSuggestions', () => ({
   }),
 }));
 
-let mockObservance: string | null = null;
-jest.mock('../../observances', () => ({ observanceFor: () => mockObservance }));
-
 jest.mock('../../../../lib/journey/useSignedEntryImageUrl', () => ({
   useSignedEntryImageUrl: (path: string | null) => ({
     data: path ? `https://example.com/${path}` : undefined,
@@ -91,12 +88,7 @@ describe('TodayScreen', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    useAppStore.setState({
-      customizeTipDismissed: false,
-      analyticsConsent: 'declined',
-      celebrationDays: true,
-    });
-    mockObservance = null;
+    useAppStore.setState({ customizeTipDismissed: false, analyticsConsent: 'declined' });
     mockedUseProfile.mockReturnValue({ data: undefined } as never);
     mockedUseModules.mockReturnValue({ data: ALL_MODULES } as never);
     mockedUseCreateLog.mockReturnValue({ mutateAsync: createLog } as never);
@@ -114,19 +106,6 @@ describe('TodayScreen', () => {
     expect(screen.getByText(/^Good (morning|afternoon|evening)\.$/)).toBeTruthy();
     expect(screen.getByText("You're all caught up.")).toBeTruthy();
     expect(screen.queryByText('Coming up')).toBeNull();
-  });
-
-  it('celebrates the day under the greeting, unless turned off', () => {
-    mockObservance = 'Happy National Coming Out Day!';
-    todayResult([]);
-
-    const { unmount } = renderWithProviders(<TodayScreen />);
-    expect(screen.getByText('Happy National Coming Out Day!')).toBeTruthy();
-    unmount();
-
-    useAppStore.setState({ celebrationDays: false });
-    renderWithProviders(<TodayScreen />);
-    expect(screen.queryByText('Happy National Coming Out Day!')).toBeNull();
   });
 
   it('asks once about anonymous usage, and remembers the answer', () => {

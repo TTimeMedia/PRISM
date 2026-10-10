@@ -42,9 +42,7 @@ import {
 import { CustomizeTip } from '../../../components/home/CustomizeTip';
 import { TopBar } from '../../../components/home/TopBar';
 import { MODULE_STYLE, moduleStyle } from '../../../components/home/moduleStyle';
-import { useAppStore } from '../../../lib/store/appStore';
 import { formatTodayDate, timeOfDayGreeting } from '../greeting';
-import { observanceFor } from '../observances';
 
 interface AddAction {
   key: string;
@@ -87,8 +85,6 @@ export function TodayScreen() {
 
   const name = profile?.display_name?.trim();
   const greeting = name ? `${timeOfDayGreeting()}, ${name}.` : `${timeOfDayGreeting()}.`;
-  const celebrationDays = useAppStore((state) => state.celebrationDays);
-  const observance = celebrationDays ? observanceFor() : null;
   const enabled = new Set(modules?.filter((m) => m.enabled).map((m) => m.module_key));
   const actions = ADD_ACTIONS.filter((action) => !action.module || enabled.has(action.module));
   const calendar = useCalendarSuggestions(enabled.has('appointments'));
@@ -147,9 +143,6 @@ export function TodayScreen() {
           <Text style={[styles.date, { color: theme.colors.text.secondary }]}>
             {formatTodayDate()}
           </Text>
-          {observance ? (
-            <Text style={[styles.observance, { color: theme.accent }]}>{observance}</Text>
-          ) : null}
         </View>
 
         {isLoading ? (
@@ -366,12 +359,6 @@ const styles = StyleSheet.create({
     fontSize: type.bodyM.fontSize,
     lineHeight: type.bodyM.lineHeight,
     marginTop: spacing.xs,
-  },
-  observance: {
-    fontSize: type.bodyL.fontSize,
-    lineHeight: type.bodyL.lineHeight,
-    fontWeight: fontWeight.semibold as '600',
-    marginTop: spacing.sm,
   },
   skeletons: {
     gap: spacing.sm,
