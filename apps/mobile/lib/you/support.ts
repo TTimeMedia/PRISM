@@ -13,12 +13,19 @@ import { supabase } from '../supabase/client';
  */
 export const SUPPORT_EMAIL = 'support@ttimemedia.org';
 
-export type SupportKind = 'contact' | 'problem' | 'privacy';
+export type SupportKind = 'contact' | 'problem' | 'privacy' | 'feedback';
 
 export const SUPPORT_KINDS: Record<
   SupportKind,
   { title: string; intro: string; placeholder: string; sent: string }
 > = {
+  feedback: {
+    title: 'Feedback',
+    intro:
+      "You're on the beta. Tell us what's working, what's confusing, or what you wish Prism did. We read every message.",
+    placeholder: "What's on your mind?",
+    sent: 'Thanks for the feedback. It goes straight to the team building this.',
+  },
   contact: {
     title: 'Contact support',
     intro: 'Ask anything about Prism. We reply by email, usually within two working days.',
@@ -44,7 +51,9 @@ export const SUPPORT_KINDS: Record<
 export const MAX_SUPPORT_MESSAGE = 5000;
 
 export function isSupportKind(value: unknown): value is SupportKind {
-  return value === 'contact' || value === 'problem' || value === 'privacy';
+  return (
+    value === 'contact' || value === 'problem' || value === 'privacy' || value === 'feedback'
+  );
 }
 
 export interface SupportRequestInput {

@@ -28,6 +28,7 @@ import {
   Info,
   LayoutGrid,
   Lock,
+  MessageCircle,
   Palette,
   Settings,
   X,
@@ -70,6 +71,7 @@ const SET_UP_ITEMS: MenuItem[] = [
 ];
 
 const HELP_ITEMS: MenuItem[] = [
+  { label: 'Feedback', icon: MessageCircle, href: '/you/support/feedback' },
   { label: 'How Prism works', icon: CircleHelp, href: '/you/how-it-works' },
   { label: 'Support', icon: Eye, href: '/you/support' },
   { label: 'About Prism', icon: Info, href: '/you/about' },

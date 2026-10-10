@@ -22,6 +22,7 @@ import { corsHeaders } from '../_shared/cors.ts';
 const SUPPORT_TO = 'support@ttimemedia.org';
 const FROM = 'Prism Support <no-reply@ttimemedia.org>';
 const KINDS = {
+  feedback: 'Beta feedback',
   contact: 'Contact',
   problem: 'Problem report',
   privacy: 'Privacy concern',
