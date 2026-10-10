@@ -105,8 +105,8 @@ export function AppearanceScreen() {
           <PRISMSwitch
             label="Show celebration days"
             description="A note on Today for days like National Coming Out Day and Trans Day of Visibility."
-            value={celebrationDays === 'on'}
-            onValueChange={(on) => setCelebrationDays(on ? 'on' : 'off')}
+            value={celebrationDays}
+            onValueChange={setCelebrationDays}
           />
         </ScrollView>
       )}

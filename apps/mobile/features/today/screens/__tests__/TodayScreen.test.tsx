@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import type { TodayItem } from '@prism/types';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
@@ -8,7 +8,6 @@ import { useModules, useProfile } from '../../../../lib/profile/queries';
 import { useTodayItems } from '../../../../lib/today/queries';
 import { useCreateMedicationLog } from '../../../../lib/care/mutations';
 import { useAppStore } from '../../../../lib/store/appStore';
-import { useAppLockStore } from '../../../../lib/store/appLockStore';
 
 // The top bar and menu have their own tests.
 jest.mock('../../../../components/home/TopBar', () => ({ TopBar: () => null }));
@@ -95,9 +94,8 @@ describe('TodayScreen', () => {
     useAppStore.setState({
       customizeTipDismissed: false,
       analyticsConsent: 'declined',
-      celebrationDays: 'off',
+      celebrationDays: true,
     });
-    useAppLockStore.setState({ isLocked: false });
     mockObservance = null;
     mockedUseProfile.mockReturnValue({ data: undefined } as never);
     mockedUseModules.mockReturnValue({ data: ALL_MODULES } as never);
@@ -120,44 +118,15 @@ describe('TodayScreen', () => {
 
   it('celebrates the day under the greeting, unless turned off', () => {
     mockObservance = 'Happy National Coming Out Day!';
-    useAppStore.setState({ celebrationDays: 'on' });
     todayResult([]);
 
     const { unmount } = renderWithProviders(<TodayScreen />);
     expect(screen.getByText('Happy National Coming Out Day!')).toBeTruthy();
     unmount();
 
-    useAppStore.setState({ celebrationDays: 'off' });
+    useAppStore.setState({ celebrationDays: false });
     renderWithProviders(<TodayScreen />);
     expect(screen.queryByText('Happy National Coming Out Day!')).toBeNull();
-  });
-
-  it('asks once whether to celebrate LGBTQ+ days, and shows nothing until answered', () => {
-    mockObservance = 'Happy National Coming Out Day!';
-    useAppStore.setState({ celebrationDays: 'unasked' });
-    todayResult([]);
-
-    renderWithProviders(<TodayScreen />);
-
-    expect(screen.getByText('Celebrate LGBTQ+ days?')).toBeTruthy();
-    expect(screen.queryByText('Happy National Coming Out Day!')).toBeNull();
-    fireEvent.press(screen.getByText('Turn on'));
-    expect(useAppStore.getState().celebrationDays).toBe('on');
-    expect(screen.queryByText('Celebrate LGBTQ+ days?')).toBeNull();
-    expect(screen.getByText('Happy National Coming Out Day!')).toBeTruthy();
-  });
-
-  it('remembers Keep off, and never asks over the lock screen', () => {
-    useAppStore.setState({ celebrationDays: 'unasked' });
-    useAppLockStore.setState({ isLocked: true });
-    todayResult([]);
-
-    renderWithProviders(<TodayScreen />);
-    expect(screen.queryByText('Celebrate LGBTQ+ days?')).toBeNull();
-
-    act(() => useAppLockStore.setState({ isLocked: false }));
-    fireEvent.press(screen.getByText('Keep off'));
-    expect(useAppStore.getState().celebrationDays).toBe('off');
   });
 
   it('asks once about anonymous usage, and remembers the answer', () => {

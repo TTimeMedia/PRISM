@@ -24,7 +24,6 @@ import { milestoneIconFor } from '../../journey/milestoneIcons';
 import { useCalendarSuggestions } from '../../../lib/calendar/useCalendarSuggestions';
 import { CalendarSuggestions } from '../components/CalendarSuggestions';
 import { AnalyticsPrompt } from '../components/AnalyticsPrompt';
-import { CelebrationDaysPrompt } from '../components/CelebrationDaysPrompt';
 import {
   comingUpItemHref,
   formatComingUpWhen,
@@ -89,7 +88,7 @@ export function TodayScreen() {
   const name = profile?.display_name?.trim();
   const greeting = name ? `${timeOfDayGreeting()}, ${name}.` : `${timeOfDayGreeting()}.`;
   const celebrationDays = useAppStore((state) => state.celebrationDays);
-  const observance = celebrationDays === 'on' ? observanceFor() : null;
+  const observance = celebrationDays ? observanceFor() : null;
   const enabled = new Set(modules?.filter((m) => m.enabled).map((m) => m.module_key));
   const actions = ADD_ACTIONS.filter((action) => !action.module || enabled.has(action.module));
   const calendar = useCalendarSuggestions(enabled.has('appointments'));
@@ -133,7 +132,6 @@ export function TodayScreen() {
     >
       <ScreenGlow colors={['cyan', 'violet']} />
       <TopBar title="Today" />
-      <CelebrationDaysPrompt />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Text
