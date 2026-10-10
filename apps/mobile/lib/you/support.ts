@@ -3,8 +3,8 @@ import Constants from 'expo-constants';
 import { supabase } from '../supabase/client';
 
 /**
- * Support requests (Screen 66). Contact support, Report a problem and
- * Privacy concern are in-app forms: each request is saved to
+ * Support requests (Screen 66). Contact support, Report a problem, Privacy
+ * concern and Send feedback are in-app forms: each request is saved to
  * `support_requests` and emailed to the support address by the
  * `submit-support` Edge Function, with Reply-To set to the sender's account
  * email, so support answers by replying. The address is the one published on
@@ -13,7 +13,7 @@ import { supabase } from '../supabase/client';
  */
 export const SUPPORT_EMAIL = 'support@ttimemedia.org';
 
-export type SupportKind = 'contact' | 'problem' | 'privacy';
+export type SupportKind = 'contact' | 'problem' | 'privacy' | 'feedback';
 
 export const SUPPORT_KINDS: Record<
   SupportKind,
@@ -39,12 +39,18 @@ export const SUPPORT_KINDS: Record<
     placeholder: 'What would you like us to know?',
     sent: "Sent. We'll reply to the email on your account.",
   },
+  feedback: {
+    title: 'Send feedback',
+    intro: "Tell us what you like, what's missing, or what you'd change. We read every message.",
+    placeholder: 'What would make Prism better for you?',
+    sent: 'Thank you. Your feedback reached us.',
+  },
 };
 
 export const MAX_SUPPORT_MESSAGE = 5000;
 
 export function isSupportKind(value: unknown): value is SupportKind {
-  return value === 'contact' || value === 'problem' || value === 'privacy';
+  return value === 'contact' || value === 'problem' || value === 'privacy' || value === 'feedback';
 }
 
 export interface SupportRequestInput {

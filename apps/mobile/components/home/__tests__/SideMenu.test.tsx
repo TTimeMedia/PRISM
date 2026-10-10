@@ -50,4 +50,14 @@ describe('SideMenu', () => {
     expect(onClose).toHaveBeenCalled();
     expect(router.push).toHaveBeenCalledWith('/you/settings');
   });
+
+  it('closes the menu and opens the feedback form when tapped', () => {
+    const onClose = jest.fn();
+    renderWithProviders(<SideMenu visible onClose={onClose} />);
+
+    fireEvent.press(screen.getByLabelText('Send feedback'));
+
+    expect(onClose).toHaveBeenCalled();
+    expect(router.push).toHaveBeenCalledWith('/you/support/feedback');
+  });
 });

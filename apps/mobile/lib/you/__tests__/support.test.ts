@@ -84,7 +84,7 @@ describe('submitSupportRequest', () => {
   });
 });
 
-it('knows the three kinds of request', () => {
-  expect(['contact', 'problem', 'privacy'].every(isSupportKind)).toBe(true);
+it('knows the four kinds of request', () => {
+  expect(['contact', 'problem', 'privacy', 'feedback'].every(isSupportKind)).toBe(true);
   expect(isSupportKind('billing')).toBe(false);
 });

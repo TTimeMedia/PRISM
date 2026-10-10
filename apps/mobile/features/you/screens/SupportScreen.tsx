@@ -1,7 +1,14 @@
 import React from 'react';
 import { router, type Href } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { ArrowLeft, CircleAlert, HelpCircle, Mail, ShieldAlert } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  CircleAlert,
+  HelpCircle,
+  Mail,
+  MessageSquareHeart,
+  ShieldAlert,
+} from 'lucide-react-native';
 import {
   PRISMHeader,
   PRISMIconButton,
@@ -17,8 +24,8 @@ import { SUPPORT_EMAIL } from '../../../lib/you/support';
 
 /**
  * Screen 66 — Support. The Help center answers the common questions in the
- * app; Contact support, Report a problem and Privacy concern are forms sent
- * from the app (lib/you/support.ts), answered by email.
+ * app; Contact support, Report a problem, Privacy concern and Send feedback
+ * are forms sent from the app (lib/you/support.ts), answered by email.
  */
 export function SupportScreen() {
   const theme = useTheme();
@@ -61,6 +68,12 @@ export function SupportScreen() {
             subtitle="About your data"
             leading={<ShieldAlert size={20} color={theme.spectrum.pink} />}
             onPress={() => go('/you/support/privacy')}
+          />
+          <PRISMListItem
+            title="Send feedback"
+            subtitle="Ideas and what you'd change"
+            leading={<MessageSquareHeart size={20} color={theme.spectrum.mint} />}
+            onPress={() => go('/you/support/feedback')}
           />
         </PRISMSection>
         <PRISMSection>
