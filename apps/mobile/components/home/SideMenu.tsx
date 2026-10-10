@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import {
   BackHandler,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -28,6 +29,7 @@ import {
   Info,
   LayoutGrid,
   Lock,
+  MessageSquareHeart,
   Palette,
   Settings,
   X,
@@ -72,6 +74,7 @@ const SET_UP_ITEMS: MenuItem[] = [
 const HELP_ITEMS: MenuItem[] = [
   { label: 'How Prism works', icon: CircleHelp, href: '/you/how-it-works' },
   { label: 'Support', icon: Eye, href: '/you/support' },
+  { label: 'Send feedback', icon: MessageSquareHeart, href: '/you/support/feedback' },
   { label: 'About Prism', icon: Info, href: '/you/about' },
 ];
 
@@ -137,7 +140,8 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
   }, [visible, reducedMotion, progress]);
 
   useEffect(() => {
-    if (!visible) return;
+    // Android's back button; web has no BackHandler and warns if it's used.
+    if (!visible || Platform.OS === 'web') return;
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
       onClose();
       return true;

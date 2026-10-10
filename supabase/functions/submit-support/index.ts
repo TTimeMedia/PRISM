@@ -1,7 +1,7 @@
 // PRISM — submit-support Edge Function.
 //
-// The in-app Contact support, Report a problem and Privacy concern forms
-// send here, signed in as the person writing:
+// The in-app Contact support, Report a problem, Privacy concern and Send
+// feedback forms send here, signed in as the person writing:
 //   POST /functions/v1/submit-support
 //   Authorization: Bearer <their session JWT>
 //   { "kind": "problem", "message": "...", "screen": "/care/medications",
@@ -25,6 +25,7 @@ const KINDS = {
   contact: 'Contact',
   problem: 'Problem report',
   privacy: 'Privacy concern',
+  feedback: 'Feedback',
 } as const;
 type Kind = keyof typeof KINDS;
 const MAX_MESSAGE = 5000;
