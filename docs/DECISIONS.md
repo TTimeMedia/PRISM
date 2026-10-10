@@ -503,6 +503,58 @@ The app still includes no crash-reporting or advertising SDKs.
 **Reason:** Selling transition/health/identity data would be fundamentally incompatible with PRISM's privacy commitments.
 **Implications:** The business model (free core + optional PRISM+ premium features) must never depend on data sale, ad targeting based on transition/health status, or any other monetization of sensitive data (`SECURITY.md` §18).
 
+### What stays free, what PRISM+ adds, and what it costs
+
+**Date:** 2026-10-10
+**Status:** Active (prices are planned, not final; the feature list is still to be validated with beta testers)
+**Reason:** The owner wants subscription options. The earlier docs listed PRISM+ candidates but never drew the line between free and paid, or set a price. Drawing that line now means nothing built during beta has to be taken away later.
+**Decision:**
+
+- **Free, permanently:** everything Prism does today. Medications, injections and site tracking, dose reminders and logging, appointments, milestones (up to five photos each), journal, Timeline, Customize Prism, and every privacy feature: App Lock, private notifications, data export and account deletion. Reminders stay free because they are the reason people come to Prism. Export and deletion stay free because charging people to leave with their own data would break the privacy promise.
+- **PRISM+:**
+  1. Apple Health sync (see the next entry).
+  2. Document vault: name change paperwork, letters, ID and insurance documents.
+  3. Progress photos: side-by-side comparisons, a slideshow over time, and more than five photos per milestone.
+  4. Doctor-ready summaries: a PDF of dose history, injection sites, upcoming appointments and, with Apple Health, lab trends. Basic export stays free.
+  5. New themes and app icons added after this date.
+  6. Encrypted backup and extra storage.
+- **Planned price:** $3.99 a month or $29.99 a year (the yearly plan saves about 37%). This sits below comparable apps: Medisafe charges $4.99 a month or $39.99 a year, Bearable $34.99 a year, and Day One $49.99 a year. Subscriptions use Apple in-app purchase. Apple keeps 15% under the Small Business Program.
+- **Founding members:** everyone in the beta gets a free year of PRISM+ and keeps the founding price after that.
+- **Hardship:** App Store offer codes give free or discounted PRISM+ to anyone who says cost is a barrier.
+- **Never paid:** privacy features, reminders, export and deletion. Nothing that is free when someone starts using Prism moves behind PRISM+ later.
+- **Not yet decided:** an optional lifetime purchase (around $79.99, launch only). It brings in money early, but the vault and photo storage cost money for as long as the account exists.
+
+**Implications:**
+
+- Public copy says "free while in beta", not just "free", until PRISM+ ships.
+- Before building PRISM+, confirm the feature ranking with beta testers (a short survey or Instagram story polls), as `MASTER_BUILD_SPEC.md` §26 already requires.
+- The document vault raises Prism's security stakes: it will hold ID documents for trans users. It needs end-to-end encryption and a security review before release (`SECURITY.md`).
+- **Open question for the owner:** `packages/ui/src/tokens/themes.ts` tags ten of the fifteen themes `plus` (Ember, Tidepool, Dusk, Rosewater, Citrus, Berry, Lilac, Coral reef, Meadow, Aurora). The tag does nothing today and every theme is available (see "Fifteen hand-checked color themes replace the eight palettes"). Under the rule that nothing free moves behind PRISM+, those ten stay free for anyone who already has them. Whether they become PRISM+ for new accounts is undecided.
+- The paywall must not nag. A PRISM+ feature is shown once, in its own place (for example, the Connected apps screen), and never interrupts free features.
+
+### Apple Health sync is a PRISM+ feature
+
+**Date:** 2026-10-10
+**Status:** Active (planned, not built)
+**Reason:** The owner wants Prism to work with health apps and decided this belongs in PRISM+. Sync is a convenience on top of Prism's core, and everything it brings in can still be entered by hand for free.
+**Decision:**
+
+- **Mostly read, rarely write.** Data written into Apple Health can reach people through Health Sharing (family members, clinicians), and the Health app isn't covered by Prism's App Lock. Prism reads from Health by default and writes only where the value is clear and the risk is low.
+- **Data types, in build order:**
+  1. **Mood (State of Mind):** journal moods written to Health. When this is switched on, a one-line notice says the entries will appear in Apple Health, including anywhere the user shares Health data.
+  2. **Medications and doses:** read from Health, so people who already log there don't log twice. This needs iOS 26. Apple's medications API is read-only for third-party apps, so doses logged in Prism don't appear in Health.
+  3. **Lab results (Health Records):** read only, for lab trends next to doses and in the doctor-ready summary. This needs Apple's clinical records entitlement and a provider that supports Health Records (mostly US health systems).
+  4. **Body measurements:** read only, and optional. Never shown by default.
+- **Never read** HealthKit's biological sex characteristic. Prism makes no assumptions, and it has no use for this field.
+- **Opt-in, one switch per data type,** on a Connected apps screen in YOU. Nothing is asked during onboarding. Imported records carry a "from Apple Health" label. Turning a switch off asks whether to keep or delete what was already imported.
+
+**Implications:**
+
+- Needs a HealthKit library with an Expo config plugin (for example `@kingstinct/react-native-healthkit`) in the native EAS build. Check library support for the iOS 26 medications API before planning around it; it may need a small native module.
+- New `NSHealthShareUsageDescription` / `NSHealthUpdateUsageDescription` strings, worded to match exactly what Prism reads and writes. App Review checks these.
+- Health data synced to Supabase needs explicit consent, an updated privacy policy, an updated App Store privacy label and an updated `SECURITY.md`. App Review guideline 5.1.3 forbids storing personal health information in iCloud. Prism doesn't use iCloud, but confirm the current wording of 5.1.3 before submitting.
+- Android's equivalent (Health Connect) waits for an Android release.
+
 ### AI should not be the center of the product
 
 **Date:** 2026-09-01

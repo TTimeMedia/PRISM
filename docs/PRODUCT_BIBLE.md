@@ -208,9 +208,9 @@ Community is explicitly **not** a V1 priority. PRISM should not become another s
 
 ### Business model
 
-**Free tier** covers core functionality: personalized dashboard, medications, appointments, Journey, milestones, journal, and basic reminders.
+**Free tier** covers core functionality and stays free: personalized dashboard, medications, injections, reminders, appointments, Journey, milestones, journal, and every privacy feature, including export and account deletion.
 
-**Potential PRISM+** (premium, unvalidated): secure document vault, advanced backups and exports, photo memories, advanced customization, additional storage.
+**PRISM+** (planned, $3.99 a month or $29.99 a year): Apple Health sync, secure document vault, progress photos, doctor-ready summaries, new themes and icons, encrypted backup and additional storage. Beta testers get a founding-member year free. The full split, and the rules that keep it fair, are in `DECISIONS.md` ("What stays free, what PRISM+ adds, and what it costs").
 
 The business model must **never** depend on selling user data. Before launching any paid feature, validate that users actually want it — do not assume.
 
