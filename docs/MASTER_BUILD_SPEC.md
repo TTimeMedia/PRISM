@@ -311,7 +311,7 @@ If AI is implemented: use minimum necessary data, respect user authorization sco
 
 ### Business model
 
-Core PRISM experience is free. Potential PRISM+ (premium, unvalidated): secure document vault, advanced backups/exports, photo memories, advanced customization, additional storage. Validate willingness to pay before overbuilding premium functionality. **Never monetize through selling personal transition or health data.**
+Core PRISM experience is free, and nothing free moves behind PRISM+ later. Planned PRISM+ ($3.99/month or $29.99/year, Apple in-app purchase): Apple Health sync (read-mostly, opt-in per data type), secure document vault, progress photos, doctor-ready summaries, new themes and icons, encrypted backup and additional storage. Privacy features, reminders, export and account deletion are never paid. Validate willingness to pay before overbuilding premium functionality. **Never monetize through selling personal transition or health data.** Details: `DECISIONS.md`, "What stays free, what PRISM+ adds, and what it costs" and "Apple Health sync is a PRISM+ feature".
 
 ## 27. Testing Requirements
 
