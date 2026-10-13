@@ -30,11 +30,11 @@ export interface ColorTokens {
 }
 
 export const darkTokens: ColorTokens = {
-  background: '#0B0B0F', // PRISM_BLACK — app background, lock screen, splash
-  backgroundSecondary: '#0F0F14', // PRISM_DARK
-  surface: '#121218', // PRISM_SURFACE — cards, sheets, navigation surfaces
-  surfaceElevated: '#191921', // PRISM_SURFACE_2 — elevated cards, inputs, secondary controls
-  surfaceSelected: '#22222C', // PRISM_SURFACE_3 — selected controls, strong emphasis
+  background: '#0B0B0F', // PRIZM_BLACK — app background, lock screen, splash
+  backgroundSecondary: '#0F0F14', // PRIZM_DARK
+  surface: '#121218', // PRIZM_SURFACE — cards, sheets, navigation surfaces
+  surfaceElevated: '#191921', // PRIZM_SURFACE_2 — elevated cards, inputs, secondary controls
+  surfaceSelected: '#22222C', // PRIZM_SURFACE_3 — selected controls, strong emphasis
   field: '#191921',
   fieldBorder: 'rgba(255,255,255,0.10)',
   text: {

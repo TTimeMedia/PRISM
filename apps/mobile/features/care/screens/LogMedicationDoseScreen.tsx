@@ -2,18 +2,18 @@ import React from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
-import { medicationLogCreateSchema, type MedicationLogCreateInput } from '@prism/validation';
+import { medicationLogCreateSchema, type MedicationLogCreateInput } from '@prizm/validation';
 import {
-  PRISMButton,
-  PRISMDateInput,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMTextArea,
-  PRISMTimeInput,
+  PRIZMButton,
+  PRIZMDateInput,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMTextArea,
+  PRIZMTimeInput,
   spacing,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { ArrowLeft } from 'lucide-react-native';
 import { useCreateMedicationLog } from '../../../lib/care/mutations';
 import { useMedication } from '../../../lib/care/queries';
@@ -70,12 +70,12 @@ export function LogMedicationDoseScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Log a dose."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <KeyboardAwareScreen>
@@ -96,14 +96,14 @@ export function LogMedicationDoseScreen() {
             control={control}
             name="date"
             render={({ field }) => (
-              <PRISMDateInput label="Date" value={field.value} onChangeText={field.onChange} />
+              <PRIZMDateInput label="Date" value={field.value} onChangeText={field.onChange} />
             )}
           />
           <Controller
             control={control}
             name="time"
             render={({ field }) => (
-              <PRISMTimeInput label="Time" value={field.value} onChangeText={field.onChange} />
+              <PRIZMTimeInput label="Time" value={field.value} onChangeText={field.onChange} />
             )}
           />
           {isInjectable ? (
@@ -124,7 +124,7 @@ export function LogMedicationDoseScreen() {
             control={control}
             name="notes"
             render={({ field }) => (
-              <PRISMTextArea
+              <PRIZMTextArea
                 label="Notes"
                 value={field.value ?? ''}
                 onChangeText={field.onChange}
@@ -132,7 +132,7 @@ export function LogMedicationDoseScreen() {
             )}
           />
           <View style={styles.submit}>
-            <PRISMButton
+            <PRIZMButton
               label="Save entry"
               onPress={handleSubmit(submit)}
               loading={createLog.isPending}

@@ -18,7 +18,7 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { Sora_600SemiBold, Sora_700Bold } from '@expo-google-fonts/sora';
-import { ThemeProvider, ReducedMotionProvider, PRISMToastProvider, useTheme } from '@prism/ui';
+import { ThemeProvider, ReducedMotionProvider, PRIZMToastProvider, useTheme } from '@prizm/ui';
 import { GlobalErrorFallback } from '../components/GlobalErrorFallback';
 import { OfflineBanner } from '../components/OfflineBanner';
 import { AuthProvider, useSession } from '../lib/auth/AuthProvider';
@@ -62,10 +62,10 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
             <ThemeProvider preference={themePreference} palette={palette}>
-              <PRISMToastProvider>
+              <PRIZMToastProvider>
                 <OfflineBanner />
                 <RootNavigator fontsLoaded={fontsLoaded} />
-              </PRISMToastProvider>
+              </PRIZMToastProvider>
             </ThemeProvider>
           </AuthProvider>
         </QueryClientProvider>

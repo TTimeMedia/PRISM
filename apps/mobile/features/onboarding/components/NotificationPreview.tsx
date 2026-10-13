@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Pill } from 'lucide-react-native';
-import { fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 
 /** A Prizm reminder as it would look on the lock screen, saying `body`. */
 export function NotificationPreview({ body }: { body: string }) {

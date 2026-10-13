@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { fontFamily, fontWeight, spacing, type, useTheme } from '@prism/ui';
+import { fontFamily, fontWeight, spacing, type, useTheme } from '@prizm/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { AmbientBackground, Reveal } from '../../../components/motion';
 

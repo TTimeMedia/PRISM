@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MODULE_KEYS } from '@prism/types';
+import { MODULE_KEYS } from '@prizm/types';
 
 export const moduleKeySchema = z.enum(MODULE_KEYS);
 

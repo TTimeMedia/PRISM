@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { PRISMChip, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMChip, spacing, type, useTheme } from '@prizm/ui';
 
 const DAYS = [
   { value: 0, label: 'Sun' },
@@ -30,7 +30,7 @@ export function DaysOfWeekSelect({ value, onChange, error }: DaysOfWeekSelectPro
       <Text style={[styles.label, { color: theme.colors.text.secondary }]}>Days</Text>
       <View style={styles.wrap}>
         {DAYS.map((day) => (
-          <PRISMChip
+          <PRIZMChip
             key={day.value}
             label={day.label}
             selected={value.includes(day.value)}

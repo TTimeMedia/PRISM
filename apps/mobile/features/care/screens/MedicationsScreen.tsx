@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft, Plus } from 'lucide-react-native';
 import {
-  PRISMEmptyState,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMEmptyState,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   useTheme,
-} from '@prism/ui';
-import type { Medication } from '@prism/types';
+} from '@prizm/ui';
+import type { Medication } from '@prizm/types';
 import { useMedications } from '../../../lib/care/queries';
 import { describeNextDose, isMedicationActive } from '../medicationDisplay';
 
@@ -27,32 +27,32 @@ export function MedicationsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Medications"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
         trailing={
-          <PRISMIconButton
+          <PRIZMIconButton
             accessibilityLabel="Add medication"
             onPress={() => router.push('/care/medications/add')}
           >
             <Plus size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={56} />
-            <PRISMSkeleton height={56} />
+            <PRIZMSkeleton height={56} />
+            <PRIZMSkeleton height={56} />
           </View>
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (medications ?? []).length === 0 ? (
-          <PRISMEmptyState
+          <PRIZMEmptyState
             title="No medications yet."
             subtitle="Add one whenever you're ready."
             action={{
@@ -62,7 +62,7 @@ export function MedicationsScreen() {
           />
         ) : (
           <>
-            <PRISMSection title="Active">
+            <PRIZMSection title="Active">
               {active.length === 0 ? null : (
                 <View style={styles.list}>
                   {active.map((medication) => (
@@ -70,15 +70,15 @@ export function MedicationsScreen() {
                   ))}
                 </View>
               )}
-            </PRISMSection>
+            </PRIZMSection>
             {paused.length > 0 ? (
-              <PRISMSection title="Paused">
+              <PRIZMSection title="Paused">
                 <View style={styles.list}>
                   {paused.map((medication) => (
                     <MedicationRow key={medication.id} medication={medication} />
                   ))}
                 </View>
-              </PRISMSection>
+              </PRIZMSection>
             ) : null}
           </>
         )}
@@ -90,7 +90,7 @@ export function MedicationsScreen() {
 function MedicationRow({ medication }: { medication: Medication }) {
   const subtitleParts = [medication.dosage_text, describeNextDose(medication)].filter(Boolean);
   return (
-    <PRISMListItem
+    <PRIZMListItem
       title={medication.name}
       subtitle={subtitleParts.join(' · ')}
       onPress={() => router.push(`/care/medications/${medication.id}`)}

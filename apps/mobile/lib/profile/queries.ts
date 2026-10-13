@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Module, ModuleKey, Profile, Settings } from '@prism/types';
-import type { Database } from '@prism/database';
+import type { Module, ModuleKey, Profile, Settings } from '@prizm/types';
+import type { Database } from '@prizm/database';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 

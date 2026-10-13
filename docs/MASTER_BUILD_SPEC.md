@@ -42,7 +42,7 @@ Full detail: [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §8–9.
 **Monorepo layout:**
 
 ```
-prism/
+prizm/
 ├── apps/{mobile, web}/
 ├── packages/{ui, database, types, config, validation}/
 ├── supabase/{migrations, functions, seed, config.toml}
@@ -245,7 +245,7 @@ Required: Dynamic Type, VoiceOver, TalkBack, semantic labels, logical focus orde
 - **Corner radius:** cards 18px, inputs 12–14px, buttons 14px, tags 999px (pill).
 - **Visual language:** dark-first, geometric, premium, calm, expressive, private, light/refraction-inspired. Avoid generic healthcare blue, rainbow overload, syringe/pill/medical-cross branding, excessive glassmorphism/shadows/animation.
 - **Signature visual metaphor** (Light → Prizm → Spectrum) appears subtly in onboarding, the logo, the timeline, milestone moments, major transitions, and success states — never at the expense of usability. **Rule: if removing the PRIZM aesthetic makes the interface easier to understand, remove the aesthetic.**
-- **Core components:** `PRISMButton`, `PRISMIconButton`, `PRISMCard`, `PRISMSection`, `PRISMInput`, `PRISMTextArea`, `PRISMSelect`, `PRISMSwitch`, `PRISMChip`, `PRISMModal`, `PRISMSheet`, `PRISMToast`, `PRISMSkeleton`, `PRISMEmptyState`, `PRISMErrorState`, `PRISMListItem`, `PRISMHeader`, `PRISMBottomNav`, `PRISMQuickAdd`, `PRISMTimeline`, `PRISMMilestone`, `PRISMMemoryCard`, `PRISMReminderCard`. Every interactive component supports Default/Pressed/Focused/Selected/Disabled/Loading/Error/Success states — implement all of them, not just the default.
+- **Core components:** `PRIZMButton`, `PRIZMIconButton`, `PRIZMCard`, `PRIZMSection`, `PRIZMInput`, `PRIZMTextArea`, `PRIZMSelect`, `PRIZMSwitch`, `PRIZMChip`, `PRIZMModal`, `PRIZMSheet`, `PRIZMToast`, `PRIZMSkeleton`, `PRIZMEmptyState`, `PRIZMErrorState`, `PRIZMListItem`, `PRIZMHeader`, `PRIZMBottomNav`, `PRIZMQuickAdd`, `PRIZMTimeline`, `PRIZMMilestone`, `PRIZMMemoryCard`, `PRIZMReminderCard`. Every interactive component supports Default/Pressed/Focused/Selected/Disabled/Loading/Error/Success states — implement all of them, not just the default.
 - **Forms** support Empty/Typing/Focused/Validation error/Submitting/Success/Network failure/Offline/Unsaved changes, with visible labels, accessible inputs, keyboard-aware layout, preserved input after validation errors, client _and_ server validation, and unsaved-change protection.
 - **Motion:** communicates light moving → refracting → settling; Micro 100–150ms, Standard 180–250ms, Large 300–450ms; respects system Reduce Motion (remove parallax/floating/refractive animation, simplify transitions).
 - **Approved empty-state copy:** General "Nothing here yet. That's okay." · Journey "Your story starts wherever you decide." · Memories "Save the moments that matter to you." · Journal "Whenever you're ready."

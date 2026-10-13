@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pill, CalendarDays, Flag, BookHeart } from 'lucide-react-native';
-import type { P0ModuleKey } from '@prism/types';
+import type { P0ModuleKey } from '@prizm/types';
 
 export interface ModuleInfo {
   key: P0ModuleKey;
@@ -13,7 +13,7 @@ export interface ModuleInfo {
 
 /**
  * Screens 56-57 (Customize PRIZM / Module Configuration). P0 modules
- * only — see @prism/types MODULE_KEYS and docs/DECISIONS.md "Customize
+ * only — see @prizm/types MODULE_KEYS and docs/DECISIONS.md "Customize
  * PRIZM and Quick Add expose only P0 modules until P1 ships".
  */
 export const MODULE_INFO: ModuleInfo[] = [

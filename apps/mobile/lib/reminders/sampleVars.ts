@@ -5,7 +5,7 @@ import {
   type Medication,
   type ReminderKind,
   type ReminderVars,
-} from '@prism/types';
+} from '@prizm/types';
 
 /**
  * What to show as the example of a reminder. The person's own medication or

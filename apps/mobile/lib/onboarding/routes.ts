@@ -1,5 +1,5 @@
 import type { Href } from 'expo-router';
-import type { OnboardingStep } from '@prism/types';
+import type { OnboardingStep } from '@prizm/types';
 
 /**
  * OnboardingStep values are snake_case (they're also stored verbatim in

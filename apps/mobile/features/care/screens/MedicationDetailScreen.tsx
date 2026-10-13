@@ -3,19 +3,19 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMModal,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMModal,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useMedication, useMedicationLogs } from '../../../lib/care/queries';
 import { useDeleteMedication, usePauseMedication } from '../../../lib/care/mutations';
 import { describeFrequency, describeNextDose, isMedicationActive } from '../medicationDisplay';
@@ -54,21 +54,21 @@ export function MedicationDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title={medication?.name ?? 'Medication'}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !medication ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSection>
+          <PRIZMSection>
             <DetailRow
               label="Form"
               value={MEDICATION_FORM_OPTIONS.find((o) => o.value === medication.form)?.label}
@@ -83,33 +83,33 @@ export function MedicationDetailScreen() {
             <DetailRow label="Reminder" value={medication.reminder_enabled ? 'On' : 'Off'} />
             <DetailRow label="Notes" value={medication.notes} />
             <DetailRow label="Status" value={active ? 'Active' : 'Paused'} />
-          </PRISMSection>
+          </PRIZMSection>
 
           <View style={styles.actions}>
-            <PRISMButton label="Log" onPress={() => router.push(`/care/medications/${id}/log`)} />
-            <PRISMButton
+            <PRIZMButton label="Log" onPress={() => router.push(`/care/medications/${id}/log`)} />
+            <PRIZMButton
               label="Edit"
               variant="secondary"
               onPress={() => router.push(`/care/medications/${id}/edit`)}
             />
-            <PRISMButton
+            <PRIZMButton
               label={active ? 'Pause' : 'Resume'}
               variant="secondary"
               loading={pausing}
               onPress={handlePauseToggle}
             />
-            <PRISMButton
+            <PRIZMButton
               label="Delete"
               variant="destructive"
               onPress={() => setConfirmDelete(true)}
             />
           </View>
 
-          <PRISMSection title="Recent activity">
+          <PRIZMSection title="Recent activity">
             {logs && logs.length > 0 ? (
               <View style={styles.list}>
                 {logs.slice(0, 3).map((log) => (
-                  <PRISMListItem
+                  <PRIZMListItem
                     key={log.id}
                     title={
                       MEDICATION_LOG_STATUS_OPTIONS.find((o) => o.value === log.status)?.label ??
@@ -119,7 +119,7 @@ export function MedicationDetailScreen() {
                     showChevron={false}
                   />
                 ))}
-                <PRISMButton
+                <PRIZMButton
                   label="View all"
                   variant="tertiary"
                   onPress={() => router.push(`/care/medications/${id}/history`)}
@@ -130,10 +130,10 @@ export function MedicationDetailScreen() {
                 No activity logged yet.
               </Text>
             )}
-          </PRISMSection>
+          </PRIZMSection>
         </ScrollView>
       )}
-      <PRISMModal
+      <PRIZMModal
         visible={confirmDelete}
         title="Delete this medication?"
         message="This removes the medication itself. Its past logs stay in your history."

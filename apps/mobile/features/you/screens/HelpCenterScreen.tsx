@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMInput,
-  PRISMListItem,
-  PRISMSection,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMInput,
+  PRIZMListItem,
+  PRIZMSection,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { HELP_CATEGORIES, searchHelpArticles } from '../../../lib/you/helpArticles';
 
 /** Help center: every article, grouped, with a search box. Works offline. */
@@ -23,16 +23,16 @@ export function HelpCenterScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Help center."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <PRISMInput
+        <PRIZMInput
           label="Search help"
           placeholder="Reminders, App Lock, export…"
           value={query}
@@ -44,16 +44,16 @@ export function HelpCenterScreen() {
           const articles = results.filter((article) => article.category === category);
           if (articles.length === 0) return null;
           return (
-            <PRISMSection key={category} title={category}>
+            <PRIZMSection key={category} title={category}>
               {articles.map((article) => (
-                <PRISMListItem
+                <PRIZMListItem
                   key={article.slug}
                   title={article.title}
                   subtitle={article.summary}
                   onPress={() => router.push(`/you/help/${article.slug}`)}
                 />
               ))}
-            </PRISMSection>
+            </PRIZMSection>
           );
         })}
         {searching && results.length === 0 ? (
@@ -61,13 +61,13 @@ export function HelpCenterScreen() {
             Nothing matches that. Try other words, or ask us directly.
           </Text>
         ) : null}
-        <PRISMSection title="Still need help?">
-          <PRISMListItem
+        <PRIZMSection title="Still need help?">
+          <PRIZMListItem
             title="Contact support"
             subtitle="We reply by email"
             onPress={() => router.push('/you/support/contact')}
           />
-        </PRISMSection>
+        </PRIZMSection>
       </ScrollView>
     </View>
   );

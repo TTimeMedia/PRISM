@@ -3,17 +3,17 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft, Trash2 } from 'lucide-react-native';
 import {
-  PRISMEmptyState,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMModal,
-  PRISMSkeleton,
+  PRIZMEmptyState,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMModal,
+  PRIZMSkeleton,
   spacing,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useMedicationLogs } from '../../../lib/care/queries';
 import { useDeleteMedicationLog } from '../../../lib/care/mutations';
 import { ChipField } from '../components/ChipField';
@@ -50,12 +50,12 @@ export function MedicationLogScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Medication log"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <View style={styles.filterRow}>
@@ -68,15 +68,15 @@ export function MedicationLogScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
-          <PRISMSkeleton height={56} />
+          <PRIZMSkeleton height={56} />
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : visible.length === 0 ? (
-          <PRISMEmptyState title="Nothing logged yet." subtitle="Entries will show up here." />
+          <PRIZMEmptyState title="Nothing logged yet." subtitle="Entries will show up here." />
         ) : (
           <View style={styles.list}>
             {visible.map((log) => (
-              <PRISMListItem
+              <PRIZMListItem
                 key={log.id}
                 title={
                   MEDICATION_LOG_STATUS_OPTIONS.find((o) => o.value === log.status)?.label ??
@@ -90,19 +90,19 @@ export function MedicationLogScreen() {
                   .join(' · ')}
                 showChevron={false}
                 trailing={
-                  <PRISMIconButton
+                  <PRIZMIconButton
                     accessibilityLabel="Delete entry"
                     onPress={() => setDeleteTarget(log.id)}
                   >
                     <Trash2 size={20} color={theme.colors.text.tertiary} />
-                  </PRISMIconButton>
+                  </PRIZMIconButton>
                 }
               />
             ))}
           </View>
         )}
       </ScrollView>
-      <PRISMModal
+      <PRIZMModal
         visible={!!deleteTarget}
         title="Delete this entry?"
         message="This removes the entry from your history. This can't be undone."

@@ -3,19 +3,19 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMChip,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMModal,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMChip,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMModal,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useJournalEntry } from '../../../lib/journey/queries';
 import { useDeleteJournalEntry } from '../../../lib/journey/mutations';
 import { EntryGallery } from '../components/EntryGallery';
@@ -42,21 +42,21 @@ export function JournalEntryDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title={entry?.title?.trim() || 'Journal entry'}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !entry ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSection>
+          <PRIZMSection>
             <Text style={[styles.date, { color: theme.colors.text.tertiary }]}>
               {formatDate(entry.date)}
             </Text>
@@ -73,18 +73,18 @@ export function JournalEntryDetailScreen() {
             {entry.tags.length > 0 ? (
               <View style={styles.tags}>
                 {entry.tags.map((tag) => (
-                  <PRISMChip key={tag} label={tag} />
+                  <PRIZMChip key={tag} label={tag} />
                 ))}
               </View>
             ) : null}
-          </PRISMSection>
+          </PRIZMSection>
           <View style={styles.actions}>
-            <PRISMButton
+            <PRIZMButton
               label="Edit"
               variant="secondary"
               onPress={() => router.push(`/journey/journal/${id}/edit`)}
             />
-            <PRISMButton
+            <PRIZMButton
               label="Delete"
               variant="destructive"
               onPress={() => setConfirmDelete(true)}
@@ -92,7 +92,7 @@ export function JournalEntryDetailScreen() {
           </View>
         </ScrollView>
       )}
-      <PRISMModal
+      <PRIZMModal
         visible={confirmDelete}
         title="Delete this entry?"
         onRequestClose={() => setConfirmDelete(false)}

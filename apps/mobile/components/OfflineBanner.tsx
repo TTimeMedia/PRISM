@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
-import { useTheme } from '@prism/ui';
-import { spacing } from '@prism/ui/tokens';
-import { OFFLINE_COPY } from '@prism/config';
+import { useTheme } from '@prizm/ui';
+import { spacing } from '@prizm/ui/tokens';
+import { OFFLINE_COPY } from '@prizm/config';
 
 /**
  * "You're offline. Your changes will sync when you're back online." —

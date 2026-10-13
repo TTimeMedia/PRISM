@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { careSetupImpliesMedication, getNextOnboardingStep } from '@prism/types';
+import { careSetupImpliesMedication, getNextOnboardingStep } from '@prizm/types';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { OptionGrid } from '../components/OptionGrid';
 import { CARE_SETUP_CHIP_OPTIONS } from '../optionLabels';

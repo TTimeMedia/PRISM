@@ -3,18 +3,18 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft, CalendarArrowDown, MessageCircleQuestion, Plus } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMEmptyState,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMEmptyState,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   useTheme,
-} from '@prism/ui';
-import type { Appointment } from '@prism/types';
+} from '@prizm/ui';
+import type { Appointment } from '@prizm/types';
 import { useAppointments } from '../../../lib/care/queries';
 import { useQuestions } from '../../../lib/care/questions';
 import { CalendarImportSheet } from '../components/CalendarImportSheet';
@@ -35,32 +35,32 @@ export function AppointmentsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Appointments"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
         trailing={
           <View style={styles.headerActions}>
-            <PRISMIconButton
+            <PRIZMIconButton
               accessibilityLabel="Import from calendar"
               onPress={() => setImportOpen(true)}
             >
               <CalendarArrowDown size={22} color={theme.colors.text.primary} />
-            </PRISMIconButton>
-            <PRISMIconButton
+            </PRIZMIconButton>
+            <PRIZMIconButton
               accessibilityLabel="Add appointment"
               onPress={() => router.push('/care/appointments/add')}
             >
               <Plus size={22} color={theme.colors.text.primary} />
-            </PRISMIconButton>
+            </PRIZMIconButton>
           </View>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <PRISMListItem
+        <PRIZMListItem
           title="Questions for my doctor"
           subtitle={
             openQuestions === 0
@@ -75,23 +75,23 @@ export function AppointmentsScreen() {
         />
         {isLoading ? (
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={56} />
-            <PRISMSkeleton height={56} />
+            <PRIZMSkeleton height={56} />
+            <PRIZMSkeleton height={56} />
           </View>
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (appointments ?? []).length === 0 ? (
           <View>
-            <PRISMEmptyState
+            <PRIZMEmptyState
               title="No appointments yet."
               subtitle="Add one, or bring them in from your calendar."
             />
             <View style={styles.emptyActions}>
-              <PRISMButton
+              <PRIZMButton
                 label="Add appointment"
                 onPress={() => router.push('/care/appointments/add')}
               />
-              <PRISMButton
+              <PRIZMButton
                 label="Import from calendar"
                 variant="secondary"
                 onPress={() => setImportOpen(true)}
@@ -100,7 +100,7 @@ export function AppointmentsScreen() {
           </View>
         ) : (
           <>
-            <PRISMSection title="Upcoming">
+            <PRIZMSection title="Upcoming">
               {upcoming.length === 0 ? null : (
                 <View style={styles.list}>
                   {upcoming.map((appointment) => (
@@ -108,15 +108,15 @@ export function AppointmentsScreen() {
                   ))}
                 </View>
               )}
-            </PRISMSection>
+            </PRIZMSection>
             {past.length > 0 ? (
-              <PRISMSection title="Past">
+              <PRIZMSection title="Past">
                 <View style={styles.list}>
                   {past.map((appointment) => (
                     <AppointmentRow key={appointment.id} appointment={appointment} />
                   ))}
                 </View>
-              </PRISMSection>
+              </PRIZMSection>
             ) : null}
           </>
         )}
@@ -132,7 +132,7 @@ function AppointmentRow({ appointment }: { appointment: Appointment }) {
     new Date(appointment.starts_at).toLocaleString(),
   ].filter(Boolean);
   return (
-    <PRISMListItem
+    <PRIZMListItem
       title={appointment.title}
       subtitle={subtitleParts.join(' · ')}
       onPress={() => router.push(`/care/appointments/${appointment.id}`)}

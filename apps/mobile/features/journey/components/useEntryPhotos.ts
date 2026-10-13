@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ImagePickerAsset } from 'expo-image-picker';
-import { useToast } from '@prism/ui';
+import { useToast } from '@prizm/ui';
 import { pickEntryImages, type EntryPhotoChange } from '../../../lib/journey/entryImage';
 import { MAX_ENTRY_PHOTOS } from '../../../lib/journey/entryPhotos';
 

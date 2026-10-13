@@ -3,15 +3,15 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMSkeleton,
   fontFamily,
   fontWeight,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useModules } from '../../../lib/profile/queries';
 import { useAppointments, useMedications } from '../../../lib/care/queries';
 import { useSupplies } from '../../../lib/care/supplies';
@@ -98,11 +98,11 @@ export function CareHomeScreen() {
 
         {loading ? (
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={96} />
-            <PRISMSkeleton height={160} />
+            <PRIZMSkeleton height={96} />
+            <PRIZMSkeleton height={160} />
           </View>
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (
           <>
             {anyOn ? (
@@ -209,7 +209,7 @@ export function CareHomeScreen() {
                         onPress={() => router.push(`/care/appointments/${appointment.id}`)}
                       />
                     ))}
-                    <PRISMButton
+                    <PRIZMButton
                       label="Import from calendar"
                       variant="tertiary"
                       onPress={() => setImportOpen(true)}
@@ -270,7 +270,7 @@ export function CareHomeScreen() {
                   <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
                     Nothing is switched on here yet.
                   </Text>
-                  <PRISMButton
+                  <PRIZMButton
                     label="Choose what shows"
                     variant="secondary"
                     onPress={() => router.push('/you/customize')}

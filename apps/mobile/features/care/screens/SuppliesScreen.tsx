@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, Package, Plus } from 'lucide-react-native';
 import {
-  PRISMEmptyState,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSkeleton,
+  PRIZMEmptyState,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useMedications } from '../../../lib/care/queries';
 import { useSupplies } from '../../../lib/care/supplies';
 import { outlookLabel, supplyOutlook } from '../../../lib/care/supplyOutlook';
@@ -31,29 +31,29 @@ export function SuppliesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Supplies"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
         trailing={
-          <PRISMIconButton
+          <PRIZMIconButton
             accessibilityLabel="Add a supply"
             onPress={() => router.push('/care/supplies/add')}
           >
             <Plus size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
-          <PRISMSkeleton height={56} />
+          <PRIZMSkeleton height={56} />
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : rows.length === 0 ? (
-          <PRISMEmptyState
+          <PRIZMEmptyState
             title="No supplies yet."
             subtitle="Add a vial, syringes or pills. Linked to a medication, Prizm counts them down as you log doses and reminds you before you run out."
             action={{ label: 'Add a supply', onPress: () => router.push('/care/supplies/add') }}

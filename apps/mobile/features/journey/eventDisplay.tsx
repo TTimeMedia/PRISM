@@ -1,7 +1,7 @@
 import React from 'react';
 import { BookOpen, CalendarDays, Pill, Sparkles } from 'lucide-react-native';
-import type { ModuleKey } from '@prism/types';
-import type { useTheme } from '@prism/ui';
+import type { ModuleKey } from '@prizm/types';
+import type { useTheme } from '@prizm/ui';
 
 type Theme = ReturnType<typeof useTheme>;
 

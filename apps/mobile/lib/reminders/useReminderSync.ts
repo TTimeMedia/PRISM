@@ -9,7 +9,7 @@ import {
   type Reminder,
   type ReminderMessages,
   type Supply,
-} from '@prism/types';
+} from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules, useSettings } from '../profile/queries';

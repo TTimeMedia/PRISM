@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { ArrowLeft, Plus } from 'lucide-react-native';
 import {
-  PRISMEmptyState,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSkeleton,
+  PRIZMEmptyState,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSkeleton,
   spacing,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useJournalEntries } from '../../../lib/journey/queries';
 
 /**
@@ -26,36 +26,36 @@ export function JournalScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Journal"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
         trailing={
-          <PRISMIconButton
+          <PRIZMIconButton
             accessibilityLabel="Write something"
             onPress={() => router.push('/journey/journal/add')}
           >
             <Plus size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
         <View style={styles.content}>
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={72} />
-            <PRISMSkeleton height={72} />
+            <PRIZMSkeleton height={72} />
+            <PRIZMSkeleton height={72} />
           </View>
         </View>
       ) : isError ? (
         <View style={styles.content}>
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         </View>
       ) : (entries ?? []).length === 0 ? (
         <View style={styles.content}>
-          <PRISMEmptyState
+          <PRIZMEmptyState
             title="Nothing written yet."
             subtitle="Write whenever you have something to say."
             action={{
@@ -71,7 +71,7 @@ export function JournalScreen() {
           contentContainerStyle={styles.content}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           renderItem={({ item: entry }) => (
-            <PRISMListItem
+            <PRIZMListItem
               title={entry.title?.trim() || formatDate(entry.date)}
               subtitle={journalPreview(entry)}
               onPress={() => router.push(`/journey/journal/${entry.id}`)}

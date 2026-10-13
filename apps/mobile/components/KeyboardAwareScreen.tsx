@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { spacing } from '@prism/ui';
+import { spacing } from '@prizm/ui';
 
 export interface KeyboardAwareScreenProps {
   children: React.ReactNode;

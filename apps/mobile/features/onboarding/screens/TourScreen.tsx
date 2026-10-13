@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { getNextOnboardingStep } from '@prism/types';
+import { getNextOnboardingStep } from '@prizm/types';
 import { TourSlides } from '../components/TourSlides';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';

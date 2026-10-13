@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Lock } from 'lucide-react-native';
-import { getNextOnboardingStep, renderReminder, SAMPLE_VARS } from '@prism/types';
-import { PRISMSwitch, spacing, type, useTheme } from '@prism/ui';
+import { getNextOnboardingStep, renderReminder, SAMPLE_VARS } from '@prizm/types';
+import { PRIZMSwitch, spacing, type, useTheme } from '@prizm/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { NotificationPreview } from '../components/NotificationPreview';
 import { Reveal } from '../../../components/motion';
@@ -65,7 +65,7 @@ export function PrivacySetupScreen() {
       onPrimaryPress={submit}
       primaryLoading={isSubmitting}
     >
-      <PRISMSwitch
+      <PRIZMSwitch
         label="Private notifications"
         description={
           notificationPrivacy

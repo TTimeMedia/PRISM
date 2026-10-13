@@ -17,7 +17,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, 'node_modules'),
 ];
 
-// pnpm uses symlinks for workspace packages (@prism/*) and nests transitive
+// pnpm uses symlinks for workspace packages (@prizm/*) and nests transitive
 // dependencies inside each package's own node_modules — Metro must follow
 // symlinks and use its default hierarchical lookup (walking up from the
 // requiring file) to resolve them correctly. Disabling hierarchical lookup

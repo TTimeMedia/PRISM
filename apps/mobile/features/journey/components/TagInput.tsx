@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { PRISMChip, PRISMInput, spacing } from '@prism/ui';
+import { PRIZMChip, PRIZMInput, spacing } from '@prizm/ui';
 import { SUGGESTED_JOURNAL_TAGS } from '../optionLabels';
 
 export interface TagInputProps {
@@ -41,7 +41,7 @@ export function TagInput({ value, onChange }: TagInputProps) {
 
   return (
     <View style={styles.container}>
-      <PRISMInput
+      <PRIZMInput
         label="Tags"
         placeholder="Add a tag"
         value={draft}
@@ -51,7 +51,7 @@ export function TagInput({ value, onChange }: TagInputProps) {
       />
       <View style={styles.chips}>
         {SUGGESTED_JOURNAL_TAGS.map((tag) => (
-          <PRISMChip
+          <PRIZMChip
             key={tag}
             label={tag}
             selected={value.includes(tag)}
@@ -62,7 +62,7 @@ export function TagInput({ value, onChange }: TagInputProps) {
       {customTags.length > 0 ? (
         <View style={styles.chips}>
           {customTags.map((tag) => (
-            <PRISMChip key={tag} label={tag} selected onPress={() => removeTag(tag)} />
+            <PRIZMChip key={tag} label={tag} selected onPress={() => removeTag(tag)} />
           ))}
         </View>
       ) : null}

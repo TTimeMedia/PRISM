@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { resetPasswordSchema, type ResetPasswordInput } from '@prism/validation';
-import { PRISMButton, PRISMInput, spacing, useToast } from '@prism/ui';
+import { resetPasswordSchema, type ResetPasswordInput } from '@prizm/validation';
+import { PRIZMButton, PRIZMInput, spacing, useToast } from '@prizm/ui';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { updatePassword } from '../../../lib/auth/actions';
@@ -49,7 +49,7 @@ export function ResetPasswordScreen() {
         control={control}
         name="password"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="New password"
             secureTextEntry
             autoCapitalize="none"
@@ -66,7 +66,7 @@ export function ResetPasswordScreen() {
         control={control}
         name="confirmPassword"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Confirm password"
             secureTextEntry
             autoCapitalize="none"
@@ -82,7 +82,7 @@ export function ResetPasswordScreen() {
         )}
       />
       <View style={styles.actions}>
-        <PRISMButton
+        <PRIZMButton
           label="Reset password"
           loading={isSubmitting}
           onPress={handleSubmit(onSubmit)}

@@ -2,15 +2,15 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { milestoneCreateSchema, type MilestoneCreateInput } from '@prism/validation';
+import { milestoneCreateSchema, type MilestoneCreateInput } from '@prizm/validation';
 import {
-  PRISMButton,
-  PRISMChip,
-  PRISMDateInput,
-  PRISMInput,
-  PRISMTextArea,
+  PRIZMButton,
+  PRIZMChip,
+  PRIZMDateInput,
+  PRIZMInput,
+  PRIZMTextArea,
   spacing,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { SUGGESTED_MILESTONE_TITLES } from '../optionLabels';
 import { MILESTONE_ICON_OPTIONS } from '../milestoneIcons';
@@ -60,7 +60,7 @@ export function MilestoneForm({
       <View style={styles.content}>
         <View style={styles.suggested}>
           {SUGGESTED_MILESTONE_TITLES.map((suggestion) => (
-            <PRISMChip
+            <PRIZMChip
               key={suggestion}
               label={suggestion}
               onPress={() => setValue('title', suggestion, { shouldValidate: true })}
@@ -71,7 +71,7 @@ export function MilestoneForm({
           control={control}
           name="title"
           render={({ field, fieldState }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Title"
               value={field.value}
               onChangeText={field.onChange}
@@ -84,7 +84,7 @@ export function MilestoneForm({
           control={control}
           name="description"
           render={({ field }) => (
-            <PRISMTextArea
+            <PRIZMTextArea
               label="Description"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -95,7 +95,7 @@ export function MilestoneForm({
           control={control}
           name="date"
           render={({ field, fieldState }) => (
-            <PRISMDateInput
+            <PRIZMDateInput
               label="Date"
               value={field.value}
               onChangeText={field.onChange}
@@ -108,7 +108,7 @@ export function MilestoneForm({
           control={control}
           name="category"
           render={({ field }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Category"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -122,7 +122,7 @@ export function MilestoneForm({
           render={({ field }) => (
             <View style={styles.iconField}>
               {MILESTONE_ICON_OPTIONS.map((option) => (
-                <PRISMChip
+                <PRIZMChip
                   key={option.value}
                   label={option.label}
                   selected={field.value === option.value}
@@ -134,7 +134,7 @@ export function MilestoneForm({
         />
         <EntryPhotoField {...photos.field} />
         <View style={styles.submit}>
-          <PRISMButton
+          <PRIZMButton
             label={submitLabel}
             onPress={handleSubmit((values) => onSubmit(values, photos.change))}
             loading={submitting}

@@ -3,19 +3,19 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMPinInput,
-  PRISMSection,
-  PRISMSheet,
-  PRISMSkeleton,
-  PRISMSwitch,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMPinInput,
+  PRIZMSection,
+  PRIZMSheet,
+  PRIZMSkeleton,
+  PRIZMSwitch,
   spacing,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { hasPin, setPin } from '../../../lib/you/pinStorage';
 import { isBiometricAvailable } from '../../../lib/you/biometrics';
@@ -85,28 +85,28 @@ export function AppLockSettingsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="App lock."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !settings ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSection>
-            <PRISMSwitch
+          <PRIZMSection>
+            <PRIZMSwitch
               label="Enable App Lock"
               description="Require a PIN or biometrics to open Prizm."
               value={settings.app_lock_enabled}
               onValueChange={toggleAppLock}
             />
-            <PRISMSwitch
+            <PRIZMSwitch
               label="Use biometrics"
               description={
                 biometricsAvailable
@@ -117,34 +117,34 @@ export function AppLockSettingsScreen() {
               disabled={!biometricsAvailable || !settings.app_lock_enabled}
               onValueChange={(value) => updateSettings.mutate({ biometric_lock: value })}
             />
-          </PRISMSection>
-          <PRISMButton label="Change PIN" variant="secondary" onPress={() => openPinModal(false)} />
+          </PRIZMSection>
+          <PRIZMButton label="Change PIN" variant="secondary" onPress={() => openPinModal(false)} />
         </ScrollView>
       )}
-      <PRISMSheet
+      <PRIZMSheet
         visible={pinModalVisible}
         title={pendingEnable ? 'Set a PIN' : 'Change your PIN'}
         onRequestClose={() => setPinModalVisible(false)}
       >
         <View style={styles.pinFields}>
-          <PRISMPinInput
+          <PRIZMPinInput
             label="New PIN"
             helperText={pinError ? undefined : 'Used to unlock Prizm. Stored only on this device.'}
             value={newPin}
             onChangeText={setNewPin}
             error={pinError}
           />
-          <PRISMPinInput label="Confirm PIN" value={confirmPin} onChangeText={setConfirmPin} />
+          <PRIZMPinInput label="Confirm PIN" value={confirmPin} onChangeText={setConfirmPin} />
           <View style={styles.sheetActions}>
-            <PRISMButton label="Save" onPress={savePin} />
-            <PRISMButton
+            <PRIZMButton label="Save" onPress={savePin} />
+            <PRIZMButton
               label="Cancel"
               variant="secondary"
               onPress={() => setPinModalVisible(false)}
             />
           </View>
         </View>
-      </PRISMSheet>
+      </PRIZMSheet>
     </View>
   );
 }

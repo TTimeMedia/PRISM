@@ -11,7 +11,7 @@ import {
   paletteTokens,
   resolvePaletteKey,
   themeTokens,
-} from '@prism/ui';
+} from '@prizm/ui';
 
 function luminance(hex: string): number {
   const [r, g, b] = [1, 3, 5].map((i) => {

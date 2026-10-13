@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
-import { spacing, useReducedMotion, useTheme } from '@prism/ui';
+import { spacing, useReducedMotion, useTheme } from '@prizm/ui';
 import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 
 const SIZE = 44;

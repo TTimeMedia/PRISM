@@ -3,14 +3,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSkeleton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSkeleton,
   useTheme,
   useToast,
-} from '@prism/ui';
-import type { MilestoneCreateInput } from '@prism/validation';
+} from '@prizm/ui';
+import type { MilestoneCreateInput } from '@prizm/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useUpdateMilestone } from '../../../lib/journey/mutations';
@@ -48,18 +48,18 @@ export function EditMilestoneScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Edit milestone."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !milestone ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <MilestoneForm
           defaultValues={{

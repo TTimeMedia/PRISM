@@ -6,7 +6,7 @@ import type {
   Milestone,
   JournalEntry,
   TimelineEvent,
-} from '@prism/types';
+} from '@prizm/types';
 import { entryPhotos } from '../../lib/journey/entryPhotos';
 
 const MEDICATION_LOG_STATUS_LABELS: Record<MedicationLogStatus, string> = {

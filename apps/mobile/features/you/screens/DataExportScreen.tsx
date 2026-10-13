@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSection,
+  PRIZMButton,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSection,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useExportData } from '../../../lib/you/useExportData';
 
 /**
@@ -35,33 +35,33 @@ export function DataExportScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Data & export."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <PRISMSection title="Export">
+        <PRIZMSection title="Export">
           <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
             Downloads everything you&rsquo;ve stored in Prizm — profile, medications, injections,
             appointments, milestones, and journal entries — as a single JSON file.
           </Text>
-          <PRISMButton label="Export my data" loading={isExporting} onPress={handleExport} />
-        </PRISMSection>
+          <PRIZMButton label="Export my data" loading={isExporting} onPress={handleExport} />
+        </PRIZMSection>
 
-        <PRISMSection title="Delete account">
+        <PRIZMSection title="Delete account">
           <Text style={[styles.description, { color: theme.colors.text.secondary }]}>
             Permanently deletes your Prizm account and everything in it. This cannot be undone.
           </Text>
-          <PRISMButton
+          <PRIZMButton
             label="Delete my account"
             variant="destructive"
             onPress={() => router.push('/you/data/delete-account')}
           />
-        </PRISMSection>
+        </PRIZMSection>
       </ScrollView>
     </View>
   );

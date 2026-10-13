@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MapPin } from 'lucide-react-native';
-import { PRISMInput, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMInput, spacing, type, useTheme } from '@prizm/ui';
 import {
   isLocationSearchAvailable,
   searchLocations,
   type LocationSuggestion,
-} from '../modules/prism-location-search';
+} from '../modules/prizm-location-search';
 
 export interface LocationSearchInputProps {
   label?: string;
@@ -20,7 +20,7 @@ const DEBOUNCE_MS = 250;
 
 /**
  * A location field with Apple Maps-style suggestions as you type (MapKit
- * autocomplete — see modules/prism-location-search). Picking a suggestion
+ * autocomplete — see modules/prizm-location-search). Picking a suggestion
  * fills the field with "Name, address"; typing something of your own is
  * always fine. Where MapKit isn't available (Android, Expo Go) this is
  * just a plain text field.
@@ -75,7 +75,7 @@ export function LocationSearchInput({
 
   return (
     <View>
-      <PRISMInput
+      <PRIZMInput
         label={label}
         value={value}
         onChangeText={onChangeText}

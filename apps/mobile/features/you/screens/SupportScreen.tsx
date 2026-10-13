@@ -10,15 +10,15 @@ import {
   ShieldAlert,
 } from 'lucide-react-native';
 import {
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSection,
-  PRISMSwitch,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSection,
+  PRIZMSwitch,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useAppStore } from '../../../lib/store/appStore';
 import { SUPPORT_EMAIL } from '../../../lib/you/support';
 
@@ -35,55 +35,55 @@ export function SupportScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Support."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <PRISMSection>
-          <PRISMListItem
+        <PRIZMSection>
+          <PRIZMListItem
             title="Help center"
             subtitle="Answers to common questions"
             leading={<HelpCircle size={20} color={theme.accent} />}
             onPress={() => go('/you/help')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Contact support"
             subtitle="Ask us anything"
             leading={<Mail size={20} color={theme.spectrum.violet} />}
             onPress={() => go('/you/support/contact')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Report a problem"
             subtitle="Something isn't working"
             leading={<CircleAlert size={20} color={theme.spectrum.yellow} />}
             onPress={() => go('/you/support/problem')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Privacy concern"
             subtitle="About your data"
             leading={<ShieldAlert size={20} color={theme.spectrum.pink} />}
             onPress={() => go('/you/support/privacy')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Send feedback"
             subtitle="Ideas and what you'd change"
             leading={<MessageSquareHeart size={20} color={theme.spectrum.mint} />}
             onPress={() => go('/you/support/feedback')}
           />
-        </PRISMSection>
-        <PRISMSection>
-          <PRISMSwitch
+        </PRIZMSection>
+        <PRIZMSection>
+          <PRIZMSwitch
             label="Shake to report a problem"
             description="Shake your phone anywhere in Prizm to open a problem report, with an optional screenshot."
             value={shakeToReport}
             onValueChange={setShakeToReport}
           />
-        </PRISMSection>
+        </PRIZMSection>
         <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
           We reply by email to the address on your account. You can also write to {SUPPORT_EMAIL}.
         </Text>

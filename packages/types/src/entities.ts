@@ -34,7 +34,7 @@ export interface Profile {
   journey_stage: JourneyStage | null;
   /** Screen 09 (What Brings You Here?) — multi-select intent, also gates whether Appointment Setup appears. */
   intent: string[] | null;
-  /** Resume point for an interrupted onboarding flow — see @prism/types OnboardingStep. Null = not started. */
+  /** Resume point for an interrupted onboarding flow — see @prizm/types OnboardingStep. Null = not started. */
   onboarding_step: string | null;
   created_at: ISODateTime;
   updated_at: ISODateTime;
@@ -59,7 +59,7 @@ export type FrequencyType = (typeof FREQUENCY_TYPES)[number];
 /**
  * Shape of `medications.frequency_config`. Deliberately minimal for MVP —
  * "advanced recurring schedules" (richer `custom` patterns) are P1
- * (docs/DECISIONS.md). Validated centrally in @prism/validation so every
+ * (docs/DECISIONS.md). Validated centrally in @prizm/validation so every
  * writer (mobile, and any future web/admin surface) agrees on the shape.
  */
 export interface FrequencyConfig {
@@ -333,9 +333,9 @@ export interface Settings {
   reduced_motion: boolean;
   /** Master switch for device-calendar sync — see docs/DECISIONS.md § CARE. Permission is requested only when this is turned on, never eagerly. */
   calendar_sync_enabled: boolean;
-  /** Accent color theme key (see ACCENT_THEMES in @prism/ui). Unknown values fall back to the default client-side. */
+  /** Accent color theme key (see ACCENT_THEMES in @prizm/ui). Unknown values fall back to the default client-side. */
   accent_color: string;
-  /** Whole-app color palette key (see PALETTES in @prism/ui). Unknown values fall back to the default client-side. */
+  /** Whole-app color palette key (see PALETTES in @prizm/ui). Unknown values fall back to the default client-side. */
   palette: string;
   /** Which kinds of server push the person wants — see PushPreferences. */
   push_preferences: PushPreferences;

@@ -51,14 +51,14 @@ describe('pickSuggestions', () => {
   });
 
   it("skips what's already in Prizm, dismissed, past, or too far ahead", () => {
-    const inPrism = event({ id: 'in', title: 'Endo appointment' });
+    const inPrizm = event({ id: 'in', title: 'Endo appointment' });
     const dismissed = event({ id: 'no', title: 'Lab work', startsAt: inDays(4) });
     const past = event({ id: 'past', title: 'Dentist', startsAt: inDays(-1) });
     const far = event({ id: 'far', title: 'Surgery', startsAt: inDays(90) });
 
     const picked = pickSuggestions(
-      [inPrism, dismissed, past, far],
-      [{ title: 'Endo appointment', starts_at: inPrism.startsAt }],
+      [inPrizm, dismissed, past, far],
+      [{ title: 'Endo appointment', starts_at: inPrizm.startsAt }],
       [suggestionKey(dismissed)],
       now,
     );

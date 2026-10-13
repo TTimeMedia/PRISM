@@ -38,7 +38,7 @@ Full architectural rationale: [`docs/TECHNICAL_BIBLE.md`](./docs/TECHNICAL_BIBLE
 PRIZM is designed as a monorepo. The structure below is specified in [`docs/TECHNICAL_BIBLE.md`](./docs/TECHNICAL_BIBLE.md) and [`docs/MASTER_BUILD_SPEC.md`](./docs/MASTER_BUILD_SPEC.md) and will be created as implementation begins:
 
 ```
-prism/
+prizm/
 ├── apps/
 │   ├── mobile/          # React Native + Expo app
 │   └── web/              # Next.js marketing/support site

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Linking, StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { PRISMButton, spacing, useToast } from '@prism/ui';
+import { PRIZMButton, spacing, useToast } from '@prizm/ui';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { resendVerificationEmail } from '../../../lib/auth/actions';
@@ -43,14 +43,14 @@ export function VerifyEmailScreen() {
     >
       {resendError ? <FormError message={resendError} /> : null}
       <View style={styles.actions}>
-        <PRISMButton label="Open email" onPress={openEmail} />
-        <PRISMButton
+        <PRIZMButton label="Open email" onPress={openEmail} />
+        <PRIZMButton
           label="Resend email"
           variant="secondary"
           loading={isResending}
           onPress={resend}
         />
-        <PRISMButton
+        <PRIZMButton
           label="Change email"
           variant="tertiary"
           onPress={() => router.replace('/(auth)/sign-up')}

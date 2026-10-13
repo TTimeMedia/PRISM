@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Appointment, Medication, Milestone, TodayItem } from '@prism/types';
+import type { Appointment, Medication, Milestone, TodayItem } from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules } from '../profile/queries';

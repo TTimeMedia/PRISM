@@ -4,7 +4,7 @@ import {
   filterIrrelevantItems,
   rankItems,
 } from '../engine';
-import type { Appointment, JournalEntry, Medication, Milestone } from '@prism/types';
+import type { Appointment, JournalEntry, Medication, Milestone } from '@prizm/types';
 
 const NOW = new Date('2026-06-15T12:00:00Z');
 

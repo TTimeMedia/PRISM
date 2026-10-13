@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { spacing, type, useTheme } from '@prism/ui';
+import { spacing, type, useTheme } from '@prizm/ui';
 
 /** A calm, non-technical submit-level error — see docs/SCREEN_BIBLE.md §3 (Error state). */
 export function FormError({ message }: { message: string }) {

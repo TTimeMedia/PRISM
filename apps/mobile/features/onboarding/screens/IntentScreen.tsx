@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { getNextOnboardingStep, modulesForIntent, type IntentOption } from '@prism/types';
+import { getNextOnboardingStep, modulesForIntent, type IntentOption } from '@prizm/types';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { OptionGrid } from '../components/OptionGrid';
 import { INTENT_CHIP_OPTIONS } from '../optionLabels';

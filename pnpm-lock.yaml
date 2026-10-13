@@ -34,19 +34,19 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.1
         version: 3.10.0(react-hook-form@7.87.0(react@19.2.3))
-      '@prism/config':
+      '@prizm/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@prism/database':
+      '@prizm/database':
         specifier: workspace:*
         version: link:../../packages/database
-      '@prism/types':
+      '@prizm/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@prism/ui':
+      '@prizm/ui':
         specifier: workspace:*
         version: link:../../packages/ui
-      '@prism/validation':
+      '@prizm/validation':
         specifier: workspace:*
         version: link:../../packages/validation
       '@react-native-async-storage/async-storage':
@@ -206,7 +206,7 @@ importers:
 
   packages/config:
     dependencies:
-      '@prism/types':
+      '@prizm/types':
         specifier: workspace:*
         version: link:../types
     devDependencies:
@@ -216,7 +216,7 @@ importers:
 
   packages/database:
     dependencies:
-      '@prism/types':
+      '@prizm/types':
         specifier: workspace:*
         version: link:../types
       '@supabase/supabase-js':
@@ -272,7 +272,7 @@ importers:
 
   packages/validation:
     dependencies:
-      '@prism/types':
+      '@prizm/types':
         specifier: workspace:*
         version: link:../types
       zod:

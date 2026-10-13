@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Check } from 'lucide-react-native';
-import { fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 
 export function formatEventWhen(startsAt: string, allDay: boolean): string {
   const date = new Date(startsAt);

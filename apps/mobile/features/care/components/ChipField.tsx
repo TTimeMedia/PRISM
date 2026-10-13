@@ -1,5 +1,5 @@
 import React from 'react';
-import { PRISMChipGroup } from '@prism/ui';
+import { PRIZMChipGroup } from '@prizm/ui';
 
 export interface ChipFieldOption {
   value: string;
@@ -15,12 +15,12 @@ export interface ChipFieldProps {
 
 /**
  * A labeled single-select chip row — Form, Frequency, Injection Site, Log
- * Status. Thin adapter over the shared `PRISMChipGroup` (packages/ui),
+ * Status. Thin adapter over the shared `PRIZMChipGroup` (packages/ui),
  * keeping CARE's existing single-nullable-value call-site contract.
  */
 export function ChipField({ label, options, value, onChange }: ChipFieldProps) {
   return (
-    <PRISMChipGroup
+    <PRIZMChipGroup
       label={label}
       options={options}
       value={value ? [value] : []}

@@ -8,7 +8,7 @@ import {
   type ReminderKind,
   type ReminderMessages,
   type ReminderVars,
-} from '@prism/types';
+} from '@prizm/types';
 import {
   appointmentReminderTimes,
   medicationNudgeTimes,
@@ -40,8 +40,8 @@ const PRIVATE_BODY = 'Your Prizm reminder is ready.';
 const PRIVATE_NUDGE_BODY = 'Your Prizm reminder is still waiting.';
 
 /** Notification action buttons. The labels are generic on purpose, so a lock screen never says what for. */
-export const MEDICATION_CATEGORY = 'prism-medication';
-export const APPOINTMENT_CATEGORY = 'prism-appointment';
+export const MEDICATION_CATEGORY = 'prizm-medication';
+export const APPOINTMENT_CATEGORY = 'prizm-appointment';
 export const ACTION_DONE = 'done';
 export const ACTION_SNOOZE = 'snooze';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@prism/validation",
+  "name": "@prizm/validation",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -12,7 +12,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@prism/types": "workspace:*",
+    "@prizm/types": "workspace:*",
     "zod": "^3.24.1"
   },
   "devDependencies": {

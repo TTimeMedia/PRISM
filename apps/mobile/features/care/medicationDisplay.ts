@@ -1,4 +1,4 @@
-import type { Medication, FrequencyConfig, FrequencyType } from '@prism/types';
+import type { Medication, FrequencyConfig, FrequencyType } from '@prizm/types';
 import { resolveNextMedicationOccurrence } from '../../lib/reminders/scheduleResolution';
 
 const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];

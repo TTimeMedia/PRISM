@@ -6,7 +6,7 @@ import type {
   Milestone,
   JournalEntry,
   TimelineEvent,
-} from '@prism/types';
+} from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules } from '../profile/queries';

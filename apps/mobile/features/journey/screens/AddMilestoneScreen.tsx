@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { PRISMHeader, PRISMIconButton, useTheme, useToast } from '@prism/ui';
-import type { MilestoneCreateInput } from '@prism/validation';
+import { PRIZMHeader, PRIZMIconButton, useTheme, useToast } from '@prizm/ui';
+import type { MilestoneCreateInput } from '@prizm/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useCreateMilestone } from '../../../lib/journey/mutations';
 import { saveWithPhotos, type EntryPhotoChange } from '../../../lib/journey/entryImage';
@@ -37,12 +37,12 @@ export function AddMilestoneScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Add a milestone."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <MilestoneForm

@@ -3,16 +3,16 @@ import { router } from 'expo-router';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, UserRound } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { capitalizeFirst, formatBirthday } from '../../../lib/profile/display';
 import { useProfile } from '../../../lib/profile/queries';
 import { useSignedProfilePhotoUrl } from '../../../lib/you/useSignedProfilePhotoUrl';
@@ -25,18 +25,18 @@ export function ProfileScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Profile."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !profile ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
           <View style={styles.avatarRow}>
@@ -48,13 +48,13 @@ export function ProfileScreen() {
               )}
             </View>
           </View>
-          <PRISMSection>
+          <PRIZMSection>
             <DetailRow label="Name" value={profile.display_name} />
             <DetailRow label="Pronouns" value={capitalizeFirst(profile.pronouns)} />
             <DetailRow label="Gender" value={profile.gender} />
             <DetailRow label="Birthday" value={formatBirthday(profile.birthday)} />
-          </PRISMSection>
-          <PRISMButton label="Edit profile" onPress={() => router.push('/you/profile/edit')} />
+          </PRIZMSection>
+          <PRIZMButton label="Edit profile" onPress={() => router.push('/you/profile/edit')} />
         </ScrollView>
       )}
     </View>

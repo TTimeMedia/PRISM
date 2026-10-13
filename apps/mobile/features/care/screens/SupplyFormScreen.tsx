@@ -3,20 +3,20 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMChipGroup,
-  PRISMDateInput,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMInput,
-  PRISMModal,
-  PRISMSelect,
-  PRISMTextArea,
+  PRIZMButton,
+  PRIZMChipGroup,
+  PRIZMDateInput,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMInput,
+  PRIZMModal,
+  PRIZMSelect,
+  PRIZMTextArea,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useMedications } from '../../../lib/care/queries';
 import { useDeleteSupply, useSaveSupply, useSupplies } from '../../../lib/care/supplies';
 
@@ -115,12 +115,12 @@ export function SupplyFormScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title={editing ? 'Edit supply' : 'Add a supply'}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <KeyboardAvoidingView
@@ -129,26 +129,26 @@ export function SupplyFormScreen() {
       >
         {loaded ? (
           <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-            <PRISMInput
+            <PRIZMInput
               label="Name"
               placeholder="Testosterone vial, syringes…"
               defaultValue={name}
               onChangeText={setName}
               maxLength={100}
             />
-            <PRISMSelect
+            <PRIZMSelect
               label="For which medication?"
               options={medicationOptions}
               value={medicationId}
               onChange={setMedicationId}
             />
-            <PRISMInput
+            <PRIZMInput
               label="How many you have now"
               keyboardType="decimal-pad"
               defaultValue={quantity}
               onChangeText={setQuantity}
             />
-            <PRISMInput
+            <PRIZMInput
               label="Unit (optional)"
               placeholder="mL, vials, syringes…"
               defaultValue={unit}
@@ -156,13 +156,13 @@ export function SupplyFormScreen() {
               onChangeText={setUnit}
               maxLength={30}
             />
-            <PRISMChipGroup
+            <PRIZMChipGroup
               options={UNIT_CHOICES.map((u) => ({ value: u, label: u }))}
               value={unit ? [unit] : []}
               onChange={(next) => setUnit(next[next.length - 1] ?? '')}
             />
             {linked ? (
-              <PRISMInput
+              <PRIZMInput
                 label="Used per dose (optional)"
                 helperText="For example 0.25 for 0.25 mL per shot, or 1 for one syringe. Logging a dose then counts this down, and Undo puts it back."
                 keyboardType="decimal-pad"
@@ -170,19 +170,19 @@ export function SupplyFormScreen() {
                 onChangeText={setPerDose}
               />
             ) : null}
-            <PRISMDateInput
+            <PRIZMDateInput
               label="Refill date (optional)"
               value={refillOn}
               onChangeText={setRefillOn}
               helperText="Prizm reminds you a week before."
             />
-            <PRISMInput
+            <PRIZMInput
               label="Pharmacy (optional)"
               defaultValue={pharmacy}
               onChangeText={setPharmacy}
               maxLength={200}
             />
-            <PRISMTextArea
+            <PRIZMTextArea
               label="Notes (optional)"
               defaultValue={notes}
               onChangeText={setNotes}
@@ -191,9 +191,9 @@ export function SupplyFormScreen() {
             {error ? (
               <Text style={[styles.error, { color: theme.colors.text.primary }]}>{error}</Text>
             ) : null}
-            <PRISMButton label="Save" loading={save.isPending} onPress={onSave} />
+            <PRIZMButton label="Save" loading={save.isPending} onPress={onSave} />
             {editing ? (
-              <PRISMButton
+              <PRIZMButton
                 label="Delete supply"
                 variant="destructive"
                 onPress={() => setConfirmDelete(true)}
@@ -202,7 +202,7 @@ export function SupplyFormScreen() {
           </ScrollView>
         ) : null}
       </KeyboardAvoidingView>
-      <PRISMModal
+      <PRIZMModal
         visible={confirmDelete}
         title="Delete this supply?"
         onRequestClose={() => setConfirmDelete(false)}

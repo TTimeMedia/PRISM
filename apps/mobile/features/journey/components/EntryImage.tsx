@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
-import { radius, spacing, useTheme } from '@prism/ui';
+import { radius, spacing, useTheme } from '@prizm/ui';
 import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 
 /** A milestone's photo, shown inside its Timeline entry. */

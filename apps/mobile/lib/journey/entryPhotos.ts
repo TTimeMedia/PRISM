@@ -1,4 +1,4 @@
-import { MAX_ENTRY_PHOTOS } from '@prism/validation';
+import { MAX_ENTRY_PHOTOS } from '@prizm/validation';
 
 export { MAX_ENTRY_PHOTOS };
 

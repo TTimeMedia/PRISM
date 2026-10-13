@@ -2,25 +2,25 @@ import {
   calendarLabel,
   calendarsOf,
   dedupeEvents,
-  isAlreadyInPrism,
+  isAlreadyInPrizm,
   matchesSearch,
 } from '../importCandidates';
 
-describe('isAlreadyInPrism', () => {
+describe('isAlreadyInPrizm', () => {
   const existing = [{ title: 'Endocrinology', starts_at: '2026-10-05T14:30:00.000Z' }];
 
   it('recognises the same title at the same time, ignoring case and seconds', () => {
     expect(
-      isAlreadyInPrism({ title: 'endocrinology ', startsAt: '2026-10-05T14:30:45.000Z' }, existing),
+      isAlreadyInPrizm({ title: 'endocrinology ', startsAt: '2026-10-05T14:30:45.000Z' }, existing),
     ).toBe(true);
   });
 
   it('treats a different time or title as new', () => {
     expect(
-      isAlreadyInPrism({ title: 'Endocrinology', startsAt: '2026-10-05T15:30:00.000Z' }, existing),
+      isAlreadyInPrizm({ title: 'Endocrinology', startsAt: '2026-10-05T15:30:00.000Z' }, existing),
     ).toBe(false);
     expect(
-      isAlreadyInPrism({ title: 'Primary care', startsAt: '2026-10-05T14:30:00.000Z' }, existing),
+      isAlreadyInPrizm({ title: 'Primary care', startsAt: '2026-10-05T14:30:00.000Z' }, existing),
     ).toBe(false);
   });
 });

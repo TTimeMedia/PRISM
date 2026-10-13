@@ -2,7 +2,7 @@ import React from 'react';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { PRISMHeader, PRISMIconButton, PRISMSkeleton, useTheme, useToast } from '@prism/ui';
+import { PRIZMHeader, PRIZMIconButton, PRIZMSkeleton, useTheme, useToast } from '@prizm/ui';
 import { useModules } from '../../../lib/profile/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
 import { AppointmentForm, type AppointmentFormSubmitValues } from '../components/AppointmentForm';
@@ -29,16 +29,16 @@ export function AddAppointmentScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Add an appointment."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {modulesLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : (
         // If useModules() itself failed, defaultReminderEnabled is
         // already false (its own pre-Milestone-06 default) — the form

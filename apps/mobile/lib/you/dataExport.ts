@@ -11,7 +11,7 @@ import type {
   Reminder,
   Settings,
   Supply,
-} from '@prism/types';
+} from '@prizm/types';
 
 export interface DataExportRecords {
   profile: Profile | null;

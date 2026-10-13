@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import { NOTIFICATION_STYLES, THEMES } from '@prism/types';
+import { NOTIFICATION_STYLES, THEMES } from '@prizm/types';
 import { isoDateTimeSchema } from './common';
 
 /**
- * `reminders.recurrence` shape — see @prism/types Reminder and
+ * `reminders.recurrence` shape — see @prizm/types Reminder and
  * docs/BUILD_STATUS.md §6. Intentionally the same shape as
  * FrequencyConfig; kept as a separate schema because a reminder's
  * recurrence and a medication's dosing frequency are conceptually

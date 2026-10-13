@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PRISMEmptyState, PRISMHeader, useTheme } from '@prism/ui';
+import { PRIZMEmptyState, PRIZMHeader, useTheme } from '@prizm/ui';
 
 export interface PlaceholderScreenProps {
   title: string;
@@ -35,9 +35,9 @@ export function PlaceholderScreen({
       style={[styles.container, { backgroundColor: theme.colors.background }]}
       edges={['top']}
     >
-      <PRISMHeader title={title} subtitle={subtitle} />
+      <PRIZMHeader title={title} subtitle={subtitle} />
       <ScrollView contentContainerStyle={styles.content}>
-        <PRISMEmptyState title={emptyTitle} subtitle={emptySubtitle} action={action} />
+        <PRIZMEmptyState title={emptyTitle} subtitle={emptySubtitle} action={action} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import type { Settings } from '@prism/types';
+import type { Settings } from '@prizm/types';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { AppLockSettingsScreen } from '../AppLockSettingsScreen';
 import { useSettings, useUpdateSettings } from '../../../../lib/profile/queries';
@@ -54,7 +54,7 @@ function settings(overrides: Partial<Settings> = {}): Settings {
 }
 
 /**
- * Regression coverage for the PRISMPinInput swap (dots, not a visible
+ * Regression coverage for the PRIZMPinInput swap (dots, not a visible
  * digit field) on the one screen that creates the PIN App Lock later
  * enforces — see AppLockScreen.test.tsx for the enforcement side.
  */

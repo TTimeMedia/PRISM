@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { router, useSegments } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getPreviousOnboardingStep, ONBOARDING_STEPS, type OnboardingStep } from '@prism/types';
-import { PRISMIconButton, spacing, useTheme } from '@prism/ui';
+import { getPreviousOnboardingStep, ONBOARDING_STEPS, type OnboardingStep } from '@prizm/types';
+import { PRIZMIconButton, spacing, useTheme } from '@prizm/ui';
 import { onboardingBackHref, ONBOARDING_ROUTE_SEGMENTS } from '../../../lib/onboarding/routes';
 import { careSetupSignalFromModules } from '../../../lib/onboarding/careSetupSignal';
 import { useModules, useProfile, useUpdateProfile } from '../../../lib/profile/queries';
@@ -51,9 +51,9 @@ export function OnboardingBackButton() {
 
   return (
     <View pointerEvents="box-none" style={[styles.wrap, { top: insets.top + spacing.xs }]}>
-      <PRISMIconButton accessibilityLabel="Back" onPress={goBack}>
+      <PRIZMIconButton accessibilityLabel="Back" onPress={goBack}>
         <ArrowLeft size={24} color={theme.colors.text.primary} />
-      </PRISMIconButton>
+      </PRIZMIconButton>
     </View>
   );
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { PRISMButton, fontFamily, fontWeight, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMButton, fontFamily, fontWeight, spacing, type, useTheme } from '@prizm/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { AmbientBackground, Reveal } from '../../../components/motion';
 
@@ -48,13 +48,13 @@ export function OnboardingScreenLayout({
       <KeyboardAwareScreen
         footer={
           <View style={styles.actions}>
-            <PRISMButton
+            <PRIZMButton
               label={primaryLabel}
               loading={primaryLoading}
               disabled={primaryDisabled}
               onPress={onPrimaryPress}
             />
-            {onSkip ? <PRISMButton label={skipLabel} variant="tertiary" onPress={onSkip} /> : null}
+            {onSkip ? <PRIZMButton label={skipLabel} variant="tertiary" onPress={onSkip} /> : null}
           </View>
         }
       >

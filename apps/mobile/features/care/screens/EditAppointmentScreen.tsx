@@ -3,13 +3,13 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSkeleton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSkeleton,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useAppointment } from '../../../lib/care/queries';
 import { useUpdateAppointment } from '../../../lib/care/mutations';
 import { splitISODateTime } from '../../../lib/care/dateTime';
@@ -34,18 +34,18 @@ export function EditAppointmentScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Edit appointment."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !appointment ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <AppointmentForm
           defaultValues={{

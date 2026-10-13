@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import type { Milestone } from '@prism/types';
+import type { Milestone } from '@prizm/types';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { MilestonesScreen } from '../MilestonesScreen';
 import { useMilestones } from '../../../../lib/journey/queries';

@@ -3,14 +3,14 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSkeleton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSkeleton,
   useTheme,
   useToast,
-} from '@prism/ui';
-import type { MedicationCreateInput } from '@prism/validation';
+} from '@prizm/ui';
+import type { MedicationCreateInput } from '@prizm/validation';
 import { useMedication } from '../../../lib/care/queries';
 import { useUpdateMedication } from '../../../lib/care/mutations';
 import { MedicationForm } from '../components/MedicationForm';
@@ -34,18 +34,18 @@ export function EditMedicationScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Edit medication."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !medication ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <MedicationForm
           defaultValues={{

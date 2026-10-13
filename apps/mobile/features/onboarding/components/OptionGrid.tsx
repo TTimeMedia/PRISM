@@ -11,7 +11,7 @@ import {
   type,
   useReducedMotion,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 
 export interface OptionGridOption {
   value: string;

@@ -1,5 +1,5 @@
 import { BookHeart, CalendarDays, Flag, Pill, type LucideIcon } from 'lucide-react-native';
-import type { ModuleKey, P0ModuleKey } from '@prism/types';
+import type { ModuleKey, P0ModuleKey } from '@prizm/types';
 import type { Tint } from './tint';
 
 export interface ModuleStyle {

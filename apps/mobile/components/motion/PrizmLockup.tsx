@@ -1,0 +1,41 @@
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { fontFamily, fontWeight, spacing, useTheme } from '@prizm/ui';
+import { PrizmMark } from './PrizmMark';
+import { Reveal } from './Reveal';
+
+/**
+ * The logo stacked over the Prizm wordmark — the app's calm signature on
+ * Welcome. The mark animates in; the wordmark follows it.
+ */
+export function PrizmLockup() {
+  const theme = useTheme();
+  return (
+    <View style={styles.column}>
+      <PrizmMark size={120} />
+      <Reveal index={2}>
+        <Text
+          accessibilityRole="header"
+          accessibilityLabel="Prizm"
+          style={[styles.wordmark, { color: theme.colors.text.primary }]}
+        >
+          Prizm
+        </Text>
+      </Reveal>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  column: {
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  wordmark: {
+    fontFamily: fontFamily.display,
+    fontSize: 36,
+    lineHeight: 42,
+    fontWeight: fontWeight.bold as '700',
+    letterSpacing: 1.5,
+  },
+});

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Sun, HeartPulse, Compass, CircleUserRound } from 'lucide-react-native';
-import { PRISMBottomNav, type PRISMBottomNavItem } from '@prism/ui';
+import { PRIZMBottomNav, type PRIZMBottomNavItem } from '@prizm/ui';
 import { SideMenuProvider } from '../../components/home/SideMenu';
 
 // Derived from <Tabs>'s own `tabBar` prop rather than imported from
@@ -25,7 +25,7 @@ const STACK_TABS = new Set(['care', 'journey', 'you']);
  * See docs/MASTER_BUILD_SPEC.md §04.
  */
 function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
-  const items: PRISMBottomNavItem[] = state.routes.map((route, index) => {
+  const items: PRIZMBottomNavItem[] = state.routes.map((route, index) => {
     const { options } = descriptors[route.key];
     const focused = state.index === index;
     const label =
@@ -35,7 +35,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
       key: route.key,
       label,
       focused,
-      icon: (options.tabBarIcon as PRISMBottomNavItem['icon']) ?? (() => null),
+      icon: (options.tabBarIcon as PRIZMBottomNavItem['icon']) ?? (() => null),
       onPress: () => {
         const event = navigation.emit({
           type: 'tabPress',
@@ -58,7 +58,7 @@ function CustomTabBar({ state, descriptors, navigation }: TabBarProps) {
     };
   });
 
-  return <PRISMBottomNav items={items} />;
+  return <PRIZMBottomNav items={items} />;
 }
 
 export default function TabLayout() {

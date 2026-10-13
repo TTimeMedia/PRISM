@@ -3,16 +3,16 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMHeader,
-  PRISMIconButton,
+  PRIZMButton,
+  PRIZMHeader,
+  PRIZMIconButton,
   fontFamily,
   fontWeight,
   radius,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import type { HelpArticle } from '../../../lib/you/helpArticles';
 
 /** One help article, then a way to ask if it didn't answer the question. */
@@ -22,12 +22,12 @@ export function HelpArticleScreen({ article }: { article: HelpArticle }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title=""
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
@@ -73,7 +73,7 @@ export function HelpArticleScreen({ article }: { article: HelpArticle }) {
           <Text style={[styles.moreText, { color: theme.colors.text.secondary }]}>
             Didn&apos;t answer your question?
           </Text>
-          <PRISMButton
+          <PRIZMButton
             label="Contact support"
             variant="secondary"
             onPress={() => router.push('/you/support/contact')}

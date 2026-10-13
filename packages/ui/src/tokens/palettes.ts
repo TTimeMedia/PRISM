@@ -11,7 +11,7 @@
  * accents. Status colors (success, warning) are never used as decoration.
  * None is labeled by gender. Framework-agnostic, like colors.ts.
  */
-import { spectrum as prismSpectrum } from './colors';
+import { spectrum as prizmSpectrum } from './colors';
 import type { ColorTokens } from './colors';
 import { DEFAULT_THEME, THEME_IDS, isThemeId, themes } from './themes';
 import type { Mode, ThemeDef, ThemeId, Tokens } from './themes';
@@ -132,13 +132,13 @@ export function paletteSpectrum(
   if (id === 'prism') {
     const wash = (hex: string) => mixHex(t.surface, hex, scheme === 'dark' ? 0.32 : 0.45);
     return {
-      solid: prismSpectrum,
+      solid: prizmSpectrum,
       subtle: {
-        cyan: wash(prismSpectrum.cyan),
-        pink: wash(prismSpectrum.pink),
-        violet: wash(prismSpectrum.violet),
-        mint: wash(prismSpectrum.mint),
-        yellow: wash(prismSpectrum.yellow),
+        cyan: wash(prizmSpectrum.cyan),
+        pink: wash(prizmSpectrum.pink),
+        violet: wash(prizmSpectrum.violet),
+        mint: wash(prizmSpectrum.mint),
+        yellow: wash(prizmSpectrum.yellow),
       },
     };
   }

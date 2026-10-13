@@ -1,22 +1,22 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
-  PRISMButton,
-  PRISMChipGroup,
-  PRISMSheet,
+  PRIZMButton,
+  PRIZMChipGroup,
+  PRIZMSheet,
   componentRadius,
   layout,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { calendarProvider, type CalendarEventSummary } from '../../../lib/calendar';
 import {
   calendarLabel,
   calendarsOf,
   dedupeEvents,
-  isAlreadyInPrism,
+  isAlreadyInPrizm,
   matchesSearch,
 } from '../../../lib/calendar/importCandidates';
 import { useAppointments } from '../../../lib/care/queries';
@@ -96,7 +96,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
       ),
     [events, query, calendarFilter],
   );
-  const alreadyIn = (event: CalendarEventSummary) => isAlreadyInPrism(event, existing ?? []);
+  const alreadyIn = (event: CalendarEventSummary) => isAlreadyInPrizm(event, existing ?? []);
 
   const toggle = (id: string) => {
     setSelected((current) => {
@@ -135,7 +135,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
   };
 
   return (
-    <PRISMSheet visible={visible} title="Import from calendar" onRequestClose={close}>
+    <PRIZMSheet visible={visible} title="Import from calendar" onRequestClose={close}>
       {phase === 'loading' ? (
         <View style={[styles.block, styles.loading]}>
           <ActivityIndicator color={theme.accent} />
@@ -151,7 +151,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
             Calendar access wasn&apos;t allowed, so nothing was read. You can allow it in your
             phone&apos;s Settings under Prizm, then try again.
           </Text>
-          <PRISMButton label="Close" variant="secondary" onPress={close} />
+          <PRIZMButton label="Close" variant="secondary" onPress={close} />
         </View>
       ) : null}
 
@@ -166,8 +166,8 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
               {errorDetail}
             </Text>
           ) : null}
-          <PRISMButton label="Try again" onPress={choose} />
-          <PRISMButton label="Close" variant="tertiary" onPress={close} />
+          <PRIZMButton label="Try again" onPress={choose} />
+          <PRIZMButton label="Close" variant="tertiary" onPress={close} />
         </View>
       ) : null}
 
@@ -177,7 +177,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
             <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
               No upcoming events were found in the next few months.
             </Text>
-            <PRISMButton label="Close" variant="secondary" onPress={close} />
+            <PRIZMButton label="Close" variant="secondary" onPress={close} />
           </View>
         ) : (
           <View style={styles.block}>
@@ -205,7 +205,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
                 <Text style={[styles.detail, { color: theme.colors.text.tertiary }]}>
                   Showing events from {calendars.length} calendars
                 </Text>
-                <PRISMChipGroup
+                <PRIZMChipGroup
                   options={[
                     { value: 'all', label: 'All calendars' },
                     ...calendars.map((calendar) => ({ value: calendar.id, label: calendar.label })),
@@ -238,7 +238,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
                 )}
               </View>
             </ScrollView>
-            <PRISMButton
+            <PRIZMButton
               label={
                 selected.size === 0
                   ? 'Pick appointments to add'
@@ -250,11 +250,11 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
               loading={importing}
               onPress={importSelected}
             />
-            <PRISMButton label="Cancel" variant="tertiary" onPress={close} />
+            <PRIZMButton label="Cancel" variant="tertiary" onPress={close} />
           </View>
         )
       ) : null}
-    </PRISMSheet>
+    </PRIZMSheet>
   );
 }
 

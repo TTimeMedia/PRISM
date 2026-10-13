@@ -13,20 +13,20 @@ import {
   selectedMessage,
   type ReminderKind,
   type ReminderMessages,
-} from '@prism/types';
+} from '@prizm/types';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMInput,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMInput,
+  PRIZMSection,
+  PRIZMSkeleton,
   radius,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useModules, useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppointments, useMedications } from '../../../lib/care/queries';
 import { reminderSampleFor, type ReminderSample } from '../../../lib/reminders/sampleVars';
@@ -74,18 +74,18 @@ export function ReminderMessagesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Reminder wording."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !settings ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
@@ -147,7 +147,7 @@ function KindSection({ kind, sample, title, hint, messages, onSave }: KindSectio
   };
 
   return (
-    <PRISMSection title={title}>
+    <PRIZMSection title={title}>
       <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>{hint}</Text>
       <View style={styles.list} accessibilityRole="radiogroup">
         {options.map((option) => {
@@ -203,7 +203,7 @@ function KindSection({ kind, sample, title, hint, messages, onSave }: KindSectio
       </View>
       {canAdd ? (
         <View style={styles.add}>
-          <PRISMInput
+          <PRIZMInput
             label="Write your own"
             value={draft}
             onChangeText={setDraft}
@@ -241,7 +241,7 @@ function KindSection({ kind, sample, title, hint, messages, onSave }: KindSectio
               Looks like: {renderMessage(draft, sample.vars)}
             </Text>
           ) : null}
-          <PRISMButton
+          <PRIZMButton
             label="Add this wording"
             variant="secondary"
             disabled={!draft.trim()}
@@ -253,7 +253,7 @@ function KindSection({ kind, sample, title, hint, messages, onSave }: KindSectio
           You have {MAX_CUSTOM_MESSAGES} of your own here. Delete one to add another.
         </Text>
       )}
-    </PRISMSection>
+    </PRIZMSection>
   );
 }
 

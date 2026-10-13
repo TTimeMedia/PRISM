@@ -1,4 +1,4 @@
-import type { Module } from '@prism/types';
+import type { Module } from '@prizm/types';
 
 /**
  * Reconstructs a Care-Setup-shaped signal (the slugs

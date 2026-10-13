@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { PRISMButton, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMButton, fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 import { useAppStore } from '../../../lib/store/appStore';
 
 /**
@@ -27,8 +27,8 @@ export function AnalyticsPrompt() {
         Never your name, your health details, or anything you write. You can change this any time in
         Privacy & security.
       </Text>
-      <PRISMButton label="Share anonymous usage" onPress={() => setConsent('granted')} />
-      <PRISMButton label="No thanks" variant="tertiary" onPress={() => setConsent('declined')} />
+      <PRIZMButton label="Share anonymous usage" onPress={() => setConsent('granted')} />
+      <PRIZMButton label="No thanks" variant="tertiary" onPress={() => setConsent('declined')} />
     </View>
   );
 }

@@ -3,7 +3,7 @@ import { isPasswordRecoveryLink, parseAuthDeepLink } from '../deepLinks';
 describe('parseAuthDeepLink', () => {
   it('parses tokens and type from the URL fragment (implicit-flow recovery link)', () => {
     const url =
-      'prism://reset-password#access_token=abc123&refresh_token=def456&type=recovery&expires_in=3600';
+      'prizm://reset-password#access_token=abc123&refresh_token=def456&type=recovery&expires_in=3600';
     const params = parseAuthDeepLink(url);
     expect(params).toEqual({
       accessToken: 'abc123',
@@ -15,7 +15,7 @@ describe('parseAuthDeepLink', () => {
   });
 
   it('parses tokens from a query string when there is no fragment', () => {
-    const url = 'prism://reset-password?access_token=abc123&refresh_token=def456&type=signup';
+    const url = 'prizm://reset-password?access_token=abc123&refresh_token=def456&type=signup';
     const params = parseAuthDeepLink(url);
     expect(params.accessToken).toBe('abc123');
     expect(params.type).toBe('signup');
@@ -23,7 +23,7 @@ describe('parseAuthDeepLink', () => {
 
   it('parses an error response (e.g. an expired recovery link)', () => {
     const url =
-      'prism://reset-password#error=access_denied&error_description=Email+link+is+invalid+or+has+expired';
+      'prizm://reset-password#error=access_denied&error_description=Email+link+is+invalid+or+has+expired';
     const params = parseAuthDeepLink(url);
     expect(params.accessToken).toBeNull();
     expect(params.error).toBe('access_denied');
@@ -31,7 +31,7 @@ describe('parseAuthDeepLink', () => {
   });
 
   it('returns all-null fields for a URL with no auth params', () => {
-    const params = parseAuthDeepLink('prism://welcome');
+    const params = parseAuthDeepLink('prizm://welcome');
     expect(params.accessToken).toBeNull();
     expect(params.refreshToken).toBeNull();
     expect(params.type).toBeNull();

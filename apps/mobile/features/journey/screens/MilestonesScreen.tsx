@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ArrowLeft, Plus } from 'lucide-react-native';
 import {
-  PRISMEmptyState,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMMilestone,
-  PRISMSkeleton,
+  PRIZMEmptyState,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMMilestone,
+  PRIZMSkeleton,
   spacing,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useMilestones } from '../../../lib/journey/queries';
 import { milestoneIconComponent } from '../milestoneIcons';
 
@@ -22,32 +22,32 @@ export function MilestonesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Milestones"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
         trailing={
-          <PRISMIconButton
+          <PRIZMIconButton
             accessibilityLabel="Add milestone"
             onPress={() => router.push('/journey/milestones/add')}
           >
             <Plus size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
         {isLoading ? (
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={72} />
-            <PRISMSkeleton height={72} />
+            <PRIZMSkeleton height={72} />
+            <PRIZMSkeleton height={72} />
           </View>
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (milestones ?? []).length === 0 ? (
-          <PRISMEmptyState
+          <PRIZMEmptyState
             title="No milestones yet."
             subtitle="Suggested milestones are waiting whenever you're ready — or create your own."
             action={{
@@ -58,7 +58,7 @@ export function MilestonesScreen() {
         ) : (
           <View style={styles.list}>
             {(milestones ?? []).map((milestone) => (
-              <PRISMMilestone
+              <PRIZMMilestone
                 key={milestone.id}
                 icon={milestoneIconComponent(milestone.icon, theme.spectrum.violet)}
                 title={milestone.title}

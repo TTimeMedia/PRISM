@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller, useWatch, type Control } from 'react-hook-form';
-import type { MedicationCreateInput } from '@prism/validation';
-import { PRISMInput, PRISMTimeInput } from '@prism/ui';
+import type { MedicationCreateInput } from '@prizm/validation';
+import { PRIZMInput, PRIZMTimeInput } from '@prizm/ui';
 import { ChipField } from './ChipField';
 import { DaysOfWeekSelect } from './DaysOfWeekSelect';
 import { FREQUENCY_TYPE_OPTIONS } from '../optionLabels';
@@ -56,7 +56,7 @@ export function MedicationScheduleFields({
           control={control}
           name="frequency_config.interval_days"
           render={({ field, fieldState }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Every how many days"
               keyboardType="number-pad"
               value={field.value ? String(field.value) : ''}
@@ -72,7 +72,7 @@ export function MedicationScheduleFields({
           control={control}
           name="frequency_config.time_of_day"
           render={({ field, fieldState }) => (
-            <PRISMTimeInput
+            <PRIZMTimeInput
               label="Time of day"
               value={field.value ?? ''}
               onChangeText={field.onChange}

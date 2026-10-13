@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import { PRISMErrorState, useTheme } from '@prism/ui';
+import { PRIZMErrorState, useTheme } from '@prizm/ui';
 
 export interface GlobalErrorFallbackProps {
   error: Error;
@@ -24,7 +24,7 @@ export function GlobalErrorFallback({ error, retry }: GlobalErrorFallbackProps) 
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMErrorState onRetry={retry} />
+      <PRIZMErrorState onRetry={retry} />
     </SafeAreaView>
   );
 }

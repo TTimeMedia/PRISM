@@ -1,5 +1,5 @@
 import { careSetupSignalFromModules } from '../careSetupSignal';
-import type { Module } from '@prism/types';
+import type { Module } from '@prizm/types';
 
 function makeModule(overrides: Partial<Module>): Module {
   return {

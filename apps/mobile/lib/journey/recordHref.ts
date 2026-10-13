@@ -1,5 +1,5 @@
 import type { Href } from 'expo-router';
-import type { ModuleKey } from '@prism/types';
+import type { ModuleKey } from '@prizm/types';
 
 /**
  * Where tapping a timeline moment goes: the original record. The timeline

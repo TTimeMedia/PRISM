@@ -14,14 +14,14 @@ import {
   Accessibility as AccessibilityIcon,
 } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSection,
+  PRIZMButton,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSection,
   spacing,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useProfile } from '../../../lib/profile/queries';
 import { signOut } from '../../../lib/auth/actions';
 
@@ -38,92 +38,92 @@ export function YouScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Settings."
         subtitle={profile?.display_name || 'Your information belongs to you.'}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
-        <PRISMSection title="Me">
-          <PRISMListItem
+        <PRIZMSection title="Me">
+          <PRIZMListItem
             title="Profile"
             leading={<UserRound size={20} color={theme.accent} />}
             onPress={() => router.push('/you/profile')}
           />
-        </PRISMSection>
+        </PRIZMSection>
 
-        <PRISMSection title="Prizm">
-          <PRISMListItem
+        <PRIZMSection title="Prizm">
+          <PRIZMListItem
             title="Customize Prizm"
             subtitle="Choose what shows up for you."
             leading={<Sliders size={20} color={theme.spectrum.violet} />}
             onPress={() => router.push('/you/customize')}
           />
-        </PRISMSection>
+        </PRIZMSection>
 
-        <PRISMSection title="Privacy">
-          <PRISMListItem
+        <PRIZMSection title="Privacy">
+          <PRIZMListItem
             title="Privacy & security"
             leading={<ShieldCheck size={20} color={theme.spectrum.mint} />}
             onPress={() => router.push('/you/privacy')}
           />
-        </PRISMSection>
+        </PRIZMSection>
 
-        <PRISMSection title="Preferences">
-          <PRISMListItem
+        <PRIZMSection title="Preferences">
+          <PRIZMListItem
             title="Notifications"
             leading={<Bell size={20} color={theme.spectrum.yellow} />}
             onPress={() => router.push('/you/notifications')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Appearance"
             leading={<Palette size={20} color={theme.spectrum.pink} />}
             onPress={() => router.push('/you/appearance')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Accessibility"
             leading={<AccessibilityIcon size={20} color={theme.accent} />}
             onPress={() => router.push('/you/accessibility')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Calendar"
             subtitle="Sync appointments to your device calendar."
             leading={<CalendarDays size={20} color={theme.spectrum.mint} />}
             onPress={() => router.push('/you/calendar')}
           />
-        </PRISMSection>
+        </PRIZMSection>
 
-        <PRISMSection title="Data">
-          <PRISMListItem
+        <PRIZMSection title="Data">
+          <PRIZMListItem
             title="Data & export"
             leading={<Download size={20} color={theme.spectrum.violet} />}
             onPress={() => router.push('/you/data')}
           />
-        </PRISMSection>
+        </PRIZMSection>
 
-        <PRISMSection title="About">
-          <PRISMListItem
+        <PRIZMSection title="About">
+          <PRIZMListItem
             title="How Prizm works"
             leading={<HelpCircle size={20} color={theme.spectrum.cyan} />}
             onPress={() => router.push('/you/how-it-works')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="About Prizm"
             leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
             onPress={() => router.push('/you/about')}
           />
-          <PRISMListItem
+          <PRIZMListItem
             title="Support"
             leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
             onPress={() => router.push('/you/support')}
           />
-        </PRISMSection>
+        </PRIZMSection>
 
-        <PRISMButton label="Sign out" variant="secondary" onPress={() => signOut()} />
+        <PRIZMButton label="Sign out" variant="secondary" onPress={() => signOut()} />
       </ScrollView>
     </View>
   );

@@ -5,11 +5,11 @@ import {
   LAB_STATUSES,
   MEDICATION_FORMS,
   MEDICATION_LOG_STATUSES,
-} from '@prism/types';
+} from '@prizm/types';
 import { isoDateSchema, isoDateTimeSchema, notesSchema, titleSchema } from './common';
 
 /**
- * Shape of `medications.frequency_config` — see @prism/types FrequencyConfig
+ * Shape of `medications.frequency_config` — see @prizm/types FrequencyConfig
  * and docs/BUILD_STATUS.md §6 (this shape was an open implementation
  * decision; it is now defined here as the single source of truth).
  */
@@ -81,7 +81,7 @@ export type AppointmentUpdateInput = z.infer<typeof appointmentUpdateSchema>;
  * which stores the combined `starts_at`. Title is required here (CARE's
  * form asks for one directly); onboarding's Appointment Setup instead
  * derives a title from category, since it never asks for one — see
- * `deriveAppointmentTitle` in @prism/validation onboarding.
+ * `deriveAppointmentTitle` in @prizm/validation onboarding.
  */
 export const appointmentFormSchema = z.object({
   title: titleSchema,

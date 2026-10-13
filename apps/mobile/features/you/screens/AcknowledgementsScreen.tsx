@@ -3,14 +3,14 @@ import { router } from 'expo-router';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, ChevronDown, ChevronRight } from 'lucide-react-native';
 import {
-  PRISMHeader,
-  PRISMIconButton,
+  PRIZMHeader,
+  PRIZMIconButton,
   fontWeight,
   radius,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 
 interface Acknowledgement {
   name: string;
@@ -84,12 +84,12 @@ export function AcknowledgementsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Acknowledgements."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <FlatList

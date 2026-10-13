@@ -9,7 +9,7 @@ const OPTIONS = [
 ];
 
 /**
- * ChipField is a thin adapter over the shared PRISMChipGroup
+ * ChipField is a thin adapter over the shared PRIZMChipGroup
  * (packages/ui) — this proves its own call-site contract (a single
  * nullable value, always renders its label) still holds after that
  * consolidation.

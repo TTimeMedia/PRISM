@@ -1,7 +1,7 @@
 import React from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import Animated, { Easing, FadeIn, FadeInDown } from 'react-native-reanimated';
-import { useReducedMotion } from '@prism/ui';
+import { useReducedMotion } from '@prizm/ui';
 
 const BASE_DELAY_MS = 120;
 const STEP_MS = 120;

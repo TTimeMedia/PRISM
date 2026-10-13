@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMSkeleton,
-  PRISMTimeline,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMSkeleton,
+  PRIZMTimeline,
   fontFamily,
   fontWeight,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
-import type { TimelineEvent } from '@prism/types';
+} from '@prizm/ui';
+import type { TimelineEvent } from '@prizm/types';
 import { useProfile } from '../../../lib/profile/queries';
 import { useSignedProfilePhotoUrl } from '../../../lib/you/useSignedProfilePhotoUrl';
 import { useTimelineEvents } from '../../../lib/journey/timelineQuery';
@@ -128,14 +128,14 @@ export function TimelineScreen() {
       </View>
       <View style={styles.profileButtons}>
         <View style={styles.profileButton}>
-          <PRISMButton
+          <PRIZMButton
             label="Profile"
             variant="secondary"
             onPress={() => router.push('/you/profile')}
           />
         </View>
         <View style={styles.profileButton}>
-          <PRISMButton
+          <PRIZMButton
             label="Settings"
             variant="secondary"
             onPress={() => router.push('/you/settings')}
@@ -190,17 +190,17 @@ export function TimelineScreen() {
         <ScrollView contentContainerStyle={styles.content}>
           {header}
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={56} />
-            <PRISMSkeleton height={56} />
+            <PRIZMSkeleton height={56} />
+            <PRIZMSkeleton height={56} />
           </View>
         </ScrollView>
       ) : isError ? (
         <ScrollView contentContainerStyle={styles.content}>
           {header}
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         </ScrollView>
       ) : (
-        <PRISMTimeline
+        <PRIZMTimeline
           contentContainerStyle={styles.content}
           header={header}
           empty={

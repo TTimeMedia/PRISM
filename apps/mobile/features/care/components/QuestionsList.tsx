@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Check, Plus, Trash2 } from 'lucide-react-native';
-import { PRISMIconButton, fontWeight, radius, spacing, type, useTheme, useToast } from '@prism/ui';
-import type { AppointmentQuestion } from '@prism/types';
+import { PRIZMIconButton, fontWeight, radius, spacing, type, useTheme, useToast } from '@prizm/ui';
+import type { AppointmentQuestion } from '@prizm/types';
 import {
   useAddQuestion,
   useDeleteQuestion,
@@ -73,9 +73,9 @@ export function QuestionsList({ questions, appointmentId, placeholder }: Questio
           >
             {q.question}
           </Text>
-          <PRISMIconButton accessibilityLabel="Remove question" onPress={() => remove.mutate(q.id)}>
+          <PRIZMIconButton accessibilityLabel="Remove question" onPress={() => remove.mutate(q.id)}>
             <Trash2 size={16} color={theme.colors.text.tertiary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         </View>
       ))}
 
@@ -96,9 +96,9 @@ export function QuestionsList({ questions, appointmentId, placeholder }: Questio
           style={[styles.input, { color: theme.colors.text.primary }]}
           accessibilityLabel="New question"
         />
-        <PRISMIconButton accessibilityLabel="Add question" onPress={submit}>
+        <PRIZMIconButton accessibilityLabel="Add question" onPress={submit}>
           <Plus size={20} color={draft.trim() ? theme.accent : theme.colors.text.tertiary} />
-        </PRISMIconButton>
+        </PRIZMIconButton>
       </View>
     </View>
   );

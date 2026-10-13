@@ -1,5 +1,5 @@
-import type { Appointment } from '@prism/types';
-import { isAlreadyInPrism } from './importCandidates';
+import type { Appointment } from '@prizm/types';
+import { isAlreadyInPrizm } from './importCandidates';
 import type { CalendarEventSummary } from './types';
 
 /**
@@ -50,7 +50,7 @@ export function pickSuggestions(
       const key = suggestionKey(event);
       if (at < now.getTime() || at > until || skip.has(key) || seen.has(key)) return false;
       seen.add(key);
-      return looksLikeAppointment(event) && !isAlreadyInPrism(event, existing);
+      return looksLikeAppointment(event) && !isAlreadyInPrizm(event, existing);
     })
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt))
     .slice(0, MAX_SUGGESTIONS);

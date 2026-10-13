@@ -3,16 +3,16 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
-import type { Appointment } from '@prism/types';
+} from '@prizm/ui';
+import type { Appointment } from '@prizm/types';
 import { useAppointments } from '../../../lib/care/queries';
 import { nextAppointment, questionsFor, useQuestions } from '../../../lib/care/questions';
 import { QuestionsList } from '../components/QuestionsList';
@@ -33,12 +33,12 @@ export function QuestionsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Questions for my doctor"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
@@ -47,12 +47,12 @@ export function QuestionsScreen() {
           forgotten in the room. Tick them off once they&apos;re asked.
         </Text>
         {isLoading ? (
-          <PRISMSkeleton height={120} />
+          <PRIZMSkeleton height={120} />
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (
           <>
-            <PRISMSection title={next ? `Next visit · ${visitLabel(next)}` : 'For your next visit'}>
+            <PRIZMSection title={next ? `Next visit · ${visitLabel(next)}` : 'For your next visit'}>
               <QuestionsList
                 questions={
                   next
@@ -61,14 +61,14 @@ export function QuestionsScreen() {
                 }
                 appointmentId={null}
               />
-            </PRISMSection>
+            </PRIZMSection>
             {later.map((appointment) => (
-              <PRISMSection key={appointment.id} title={visitLabel(appointment)}>
+              <PRIZMSection key={appointment.id} title={visitLabel(appointment)}>
                 <QuestionsList
                   questions={(questions ?? []).filter((q) => q.appointment_id === appointment.id)}
                   appointmentId={appointment.id}
                 />
-              </PRISMSection>
+              </PRIZMSection>
             ))}
           </>
         )}

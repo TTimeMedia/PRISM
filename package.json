@@ -1,5 +1,5 @@
 {
-  "name": "prism",
+  "name": "prizm",
   "private": true,
   "version": "0.1.0",
   "description": "PRIZM — Your journey. Your way.",
@@ -8,7 +8,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev:mobile": "pnpm --filter @prism/mobile start",
+    "dev:mobile": "pnpm --filter @prizm/mobile start",
     "db:start": "npx supabase start && npx supabase migration up",
     "db:up": "npx supabase migration up",
     "db:stop": "npx supabase stop",

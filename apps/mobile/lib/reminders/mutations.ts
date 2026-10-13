@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Reminder } from '@prism/types';
-import type { ReminderCreateInput } from '@prism/validation';
+import type { Reminder } from '@prizm/types';
+import type { ReminderCreateInput } from '@prizm/validation';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { remindersKey } from './queries';

@@ -8,7 +8,7 @@ import {
   type NativeScrollEvent,
   type NativeSyntheticEvent,
 } from 'react-native';
-import { radius, spacing, useTheme } from '@prism/ui';
+import { radius, spacing, useTheme } from '@prizm/ui';
 import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 
 /**

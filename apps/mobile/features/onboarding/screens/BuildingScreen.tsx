@@ -3,8 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeIn } from 'react-native-reanimated';
-import { useReducedMotion, spacing, spectrumGradient, type, useTheme } from '@prism/ui';
-import { getNextOnboardingStep } from '@prism/types';
+import { useReducedMotion, spacing, spectrumGradient, type, useTheme } from '@prizm/ui';
+import { getNextOnboardingStep } from '@prizm/types';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useProfile, useUpdateProfile } from '../../../lib/profile/queries';
 

@@ -2,15 +2,15 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { journalEntryCreateSchema, type JournalEntryCreateInput } from '@prism/validation';
+import { journalEntryCreateSchema, type JournalEntryCreateInput } from '@prizm/validation';
 import {
-  PRISMButton,
-  PRISMChip,
-  PRISMDateInput,
-  PRISMInput,
-  PRISMTextArea,
+  PRIZMButton,
+  PRIZMChip,
+  PRIZMDateInput,
+  PRIZMInput,
+  PRIZMTextArea,
   spacing,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { TagInput } from './TagInput';
 import { SUGGESTED_JOURNAL_MOODS } from '../optionLabels';
@@ -68,7 +68,7 @@ export function JournalEntryForm({
           control={control}
           name="title"
           render={({ field }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Title"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -80,7 +80,7 @@ export function JournalEntryForm({
           control={control}
           name="content"
           render={({ field, fieldState }) => (
-            <PRISMTextArea
+            <PRIZMTextArea
               label="What's on your mind?"
               minLines={10}
               value={field.value}
@@ -98,7 +98,7 @@ export function JournalEntryForm({
               <View>
                 <View style={styles.chips}>
                   {SUGGESTED_JOURNAL_MOODS.map((mood) => (
-                    <PRISMChip
+                    <PRIZMChip
                       key={mood}
                       label={mood}
                       selected={field.value === mood}
@@ -106,7 +106,7 @@ export function JournalEntryForm({
                     />
                   ))}
                 </View>
-                <PRISMInput
+                <PRIZMInput
                   label="Mood"
                   value={field.value ?? ''}
                   onChangeText={field.onChange}
@@ -120,7 +120,7 @@ export function JournalEntryForm({
           control={control}
           name="date"
           render={({ field, fieldState }) => (
-            <PRISMDateInput
+            <PRIZMDateInput
               label="Date"
               value={field.value}
               onChangeText={field.onChange}
@@ -136,7 +136,7 @@ export function JournalEntryForm({
         />
         <EntryPhotoField {...photos.field} />
         <View style={styles.submit}>
-          <PRISMButton
+          <PRIZMButton
             label={submitLabel}
             onPress={handleSubmit((values) => onSubmit(values, photos.change))}
             loading={submitting}

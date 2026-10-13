@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { CalendarArrowDown } from 'lucide-react-native';
-import { PRISMButton, fontWeight, radius, spacing, type, useTheme, useToast } from '@prism/ui';
+import { PRIZMButton, fontWeight, radius, spacing, type, useTheme, useToast } from '@prizm/ui';
 import type { CalendarEventSummary } from '../../../lib/calendar';
 import { formatComingUpWhen } from '../../../lib/today/comingUp';
 import { SectionTitle, useTint } from '../../../components/home';
@@ -82,9 +82,9 @@ function SuggestionCard({
       </View>
       <View style={styles.actions}>
         <View style={styles.primary}>
-          <PRISMButton label="Add to Prizm" loading={adding} onPress={add} />
+          <PRIZMButton label="Add to Prizm" loading={adding} onPress={add} />
         </View>
-        <PRISMButton label="Not this one" variant="tertiary" onPress={() => onDismiss(event)} />
+        <PRIZMButton label="Not this one" variant="tertiary" onPress={() => onDismiss(event)} />
       </View>
     </View>
   );

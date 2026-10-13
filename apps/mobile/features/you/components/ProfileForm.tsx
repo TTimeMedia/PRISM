@@ -3,8 +3,8 @@ import { Image, StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UserRound } from 'lucide-react-native';
-import { profileUpdateSchema, type ProfileUpdateInput } from '@prism/validation';
-import { PRISMButton, PRISMDateInput, PRISMInput, spacing, useTheme, useToast } from '@prism/ui';
+import { profileUpdateSchema, type ProfileUpdateInput } from '@prizm/validation';
+import { PRIZMButton, PRIZMDateInput, PRIZMInput, spacing, useTheme, useToast } from '@prizm/ui';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { GENDER_OPTIONS, PRONOUN_OPTIONS } from '../../../lib/pickerOptions';
@@ -60,7 +60,7 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
             <UserRound size={32} color={theme.colors.text.tertiary} />
           )}
         </View>
-        <PRISMButton
+        <PRIZMButton
           label="Change photo"
           variant="tertiary"
           loading={uploading}
@@ -71,7 +71,7 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
         control={control}
         name="display_name"
         render={({ field }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Name"
             value={field.value ?? ''}
             onChangeText={field.onChange}
@@ -111,7 +111,7 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
         control={control}
         name="birthday"
         render={({ field, fieldState }) => (
-          <PRISMDateInput
+          <PRIZMDateInput
             label="Birthday"
             value={field.value ?? ''}
             onChangeText={field.onChange}
@@ -121,7 +121,7 @@ export function ProfileForm({ defaultValues, submitting = false, onSubmit }: Pro
         )}
       />
       <View style={styles.submit}>
-        <PRISMButton label="Save changes" onPress={handleSubmit(onSubmit)} loading={submitting} />
+        <PRIZMButton label="Save changes" onPress={handleSubmit(onSubmit)} loading={submitting} />
       </View>
     </View>
   );

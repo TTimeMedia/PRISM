@@ -43,7 +43,7 @@ import {
   type,
   useReducedMotion,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useModules, useProfile } from '../../lib/profile/queries';
 import { MODULE_STYLE } from './moduleStyle';
 import { useTint } from './tint';

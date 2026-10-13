@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, Lock, ShieldCheck } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSection,
-  PRISMSkeleton,
-  PRISMSwitch,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSection,
+  PRIZMSkeleton,
+  PRIZMSwitch,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppStore } from '../../../lib/store/appStore';
 
@@ -27,31 +27,31 @@ export function PrivacyScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Privacy & security."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !settings ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSection title="App security">
-            <PRISMListItem
+          <PRIZMSection title="App security">
+            <PRIZMListItem
               title="App lock"
               subtitle={settings.app_lock_enabled ? 'On' : 'Off'}
               leading={<Lock size={20} color={theme.accent} />}
               onPress={() => router.push('/you/privacy/app-lock')}
             />
-          </PRISMSection>
+          </PRIZMSection>
 
-          <PRISMSection title="Notifications">
-            <PRISMSwitch
+          <PRIZMSection title="Notifications">
+            <PRIZMSwitch
               label="Private notifications"
               description={
                 'Notification previews stay generic, e.g. "Your Prizm reminder is ready."'
@@ -59,19 +59,19 @@ export function PrivacyScreen() {
               value={settings.notification_privacy}
               onValueChange={(value) => updateSettings.mutate({ notification_privacy: value })}
             />
-          </PRISMSection>
+          </PRIZMSection>
 
-          <PRISMSection title="Data">
-            <PRISMListItem title="Data & export" onPress={() => router.push('/you/data')} />
-            <PRISMSwitch
+          <PRIZMSection title="Data">
+            <PRIZMListItem title="Data & export" onPress={() => router.push('/you/data')} />
+            <PRIZMSwitch
               label="Share anonymous usage"
               description="Which screens and features get used, so Prizm can be improved. Never your name, health details or anything you write."
               value={analyticsConsent === 'granted'}
               onValueChange={(value) => setAnalyticsConsent(value ? 'granted' : 'declined')}
             />
-          </PRISMSection>
+          </PRIZMSection>
 
-          <PRISMSection title="Security information">
+          <PRIZMSection title="Security information">
             <View style={styles.infoRow}>
               <ShieldCheck size={20} color={theme.spectrum.mint} />
               <Text style={[styles.infoText, { color: theme.colors.text.secondary }]}>
@@ -82,7 +82,7 @@ export function PrivacyScreen() {
                 you turn them on above.
               </Text>
             </View>
-          </PRISMSection>
+          </PRIZMSection>
         </ScrollView>
       )}
     </View>

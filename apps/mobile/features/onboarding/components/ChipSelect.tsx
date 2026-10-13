@@ -1,5 +1,5 @@
 import React from 'react';
-import { PRISMChipGroup } from '@prism/ui';
+import { PRIZMChipGroup } from '@prizm/ui';
 
 export interface ChipSelectOption {
   value: string;
@@ -18,7 +18,7 @@ export interface ChipSelectProps {
 
 /**
  * Wrapping chip group for onboarding's multi/single-select screens. Thin
- * adapter over the shared `PRISMChipGroup` (packages/ui), keeping
+ * adapter over the shared `PRIZMChipGroup` (packages/ui), keeping
  * onboarding's existing array-value, no-own-label call-site contract.
  */
 export function ChipSelect({
@@ -29,7 +29,7 @@ export function ChipSelect({
   label,
 }: ChipSelectProps) {
   return (
-    <PRISMChipGroup
+    <PRIZMChipGroup
       label={label}
       options={options}
       value={selected}

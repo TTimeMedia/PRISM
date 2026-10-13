@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import type { Theme } from '@prism/types';
-import { DEFAULT_PALETTE_KEY, resolvePaletteKey, type PaletteKey } from '@prism/ui';
+import type { Theme } from '@prizm/types';
+import { DEFAULT_PALETTE_KEY, resolvePaletteKey, type PaletteKey } from '@prizm/ui';
 import { MAX_DISMISSED } from '../calendar/suggestions';
 
 /**

@@ -4,18 +4,18 @@ import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-na
 import { ArrowLeft, MapPin } from 'lucide-react-native';
 import { LinkedText, mapsUrl } from '../../../components/LinkedText';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMModal,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMModal,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useAppointment, useAppointments } from '../../../lib/care/queries';
 import { nextAppointment, questionsFor, useQuestions } from '../../../lib/care/questions';
 import { QuestionsList } from '../components/QuestionsList';
@@ -69,21 +69,21 @@ export function AppointmentDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title={appointment?.title ?? 'Appointment'}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !appointment ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSection>
+          <PRIZMSection>
             <DetailRow label="Provider" value={appointment.provider} />
             <DetailRow label="Category" value={appointment.category} />
             <DetailRow
@@ -106,29 +106,29 @@ export function AppointmentDetailScreen() {
             ) : null}
             <DetailRow label="Reminder" value={appointment.reminder_enabled ? 'On' : 'Off'} />
             <DetailRow label="Notes" value={appointment.notes} linked />
-          </PRISMSection>
-          <PRISMSection title={isPast ? 'Questions you brought' : 'Questions to ask'}>
+          </PRIZMSection>
+          <PRIZMSection title={isPast ? 'Questions you brought' : 'Questions to ask'}>
             <QuestionsList
               questions={questionsFor(id, questions, nextId)}
               appointmentId={id}
               placeholder="Add a question for this visit"
             />
-          </PRISMSection>
+          </PRIZMSection>
           <View style={styles.actions}>
-            <PRISMButton
+            <PRIZMButton
               label="Edit"
               variant="secondary"
               onPress={() => router.push(`/care/appointments/${id}/edit`)}
             />
             {settings?.calendar_sync_enabled ? (
-              <PRISMButton
+              <PRIZMButton
                 label="Add to calendar"
                 variant="secondary"
                 loading={addingToCalendar}
                 onPress={handleAddToCalendar}
               />
             ) : null}
-            <PRISMButton
+            <PRIZMButton
               label="Delete"
               variant="destructive"
               onPress={() => setConfirmDelete(true)}
@@ -136,7 +136,7 @@ export function AppointmentDetailScreen() {
           </View>
         </ScrollView>
       )}
-      <PRISMModal
+      <PRIZMModal
         visible={confirmDelete}
         title="Delete this appointment?"
         onRequestClose={() => setConfirmDelete(false)}

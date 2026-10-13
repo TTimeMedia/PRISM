@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import type { TodayItem } from '@prism/types';
+import type { TodayItem } from '@prizm/types';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { TodayScreen } from '../TodayScreen';
 import { useModules, useProfile } from '../../../../lib/profile/queries';

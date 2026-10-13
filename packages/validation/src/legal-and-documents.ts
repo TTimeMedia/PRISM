@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LEGAL_ITEM_STATUSES } from '@prism/types';
+import { LEGAL_ITEM_STATUSES } from '@prizm/types';
 import { isoDateSchema, notesSchema, titleSchema } from './common';
 
 /** P1. User-managed tracking only — PRIZM does not provide legal advice. Wording must never imply legal transition is required. */

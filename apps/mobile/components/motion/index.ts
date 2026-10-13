@@ -1,4 +1,4 @@
 export { AmbientBackground } from './AmbientBackground';
-export { PrismLockup } from './PrismLockup';
-export { PrismMark } from './PrismMark';
+export { PrizmLockup } from './PrizmLockup';
+export { PrizmMark } from './PrizmMark';
 export { Reveal } from './Reveal';

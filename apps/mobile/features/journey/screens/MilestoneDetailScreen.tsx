@@ -3,18 +3,18 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMModal,
-  PRISMSection,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMModal,
+  PRIZMSection,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useMilestone } from '../../../lib/journey/queries';
 import { useDeleteMilestone } from '../../../lib/journey/mutations';
 import { EntryGallery } from '../components/EntryGallery';
@@ -41,18 +41,18 @@ export function MilestoneDetailScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title={milestone?.title ?? 'Milestone'}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !milestone ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
           {entryPhotos(milestone).length > 0 ? (
@@ -60,18 +60,18 @@ export function MilestoneDetailScreen() {
               <EntryGallery paths={entryPhotos(milestone)} label={milestone.title} />
             </View>
           ) : null}
-          <PRISMSection>
+          <PRIZMSection>
             <DetailRow label="Date" value={formatDate(milestone.date)} />
             <DetailRow label="Category" value={milestone.category} />
             <DetailRow label="Description" value={milestone.description} />
-          </PRISMSection>
+          </PRIZMSection>
           <View style={styles.actions}>
-            <PRISMButton
+            <PRIZMButton
               label="Edit"
               variant="secondary"
               onPress={() => router.push(`/journey/milestones/${id}/edit`)}
             />
-            <PRISMButton
+            <PRIZMButton
               label="Delete"
               variant="destructive"
               onPress={() => setConfirmDelete(true)}
@@ -79,7 +79,7 @@ export function MilestoneDetailScreen() {
           </View>
         </ScrollView>
       )}
-      <PRISMModal
+      <PRIZMModal
         visible={confirmDelete}
         title="Delete this milestone?"
         onRequestClose={() => setConfirmDelete(false)}

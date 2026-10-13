@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 /**
  * YOU — Screens 53-66 (Legal Journey/Documents, 67-71, are P1, no
  * screens yet). A plain internal stack; every screen renders its own
- * header (PRISMHeader) so the native header stays hidden throughout. See
+ * header (PRIZMHeader) so the native header stays hidden throughout. See
  * docs/SCREEN_BIBLE.md §9.
  */
 /**

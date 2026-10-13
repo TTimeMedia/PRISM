@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { X } from 'lucide-react-native';
 import type { ImagePickerAsset } from 'expo-image-picker';
-import { PRISMButton, radius, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMButton, radius, spacing, type, useTheme } from '@prizm/ui';
 import { MAX_ENTRY_PHOTOS } from '../../../lib/journey/entryPhotos';
 import { useSignedEntryImageUrl } from '../../../lib/journey/useSignedEntryImageUrl';
 
@@ -53,7 +53,7 @@ export function EntryPhotoField({
         </View>
       ) : null}
       {room > 0 ? (
-        <PRISMButton
+        <PRIZMButton
           label={count === 0 ? 'Add photos' : `Add more (up to ${room})`}
           variant="secondary"
           onPress={onAdd}

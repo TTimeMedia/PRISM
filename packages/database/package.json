@@ -1,5 +1,5 @@
 {
-  "name": "@prism/database",
+  "name": "@prizm/database",
   "version": "0.1.0",
   "private": true,
   "main": "./src/index.ts",
@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@prism/types": "workspace:*",
+    "@prizm/types": "workspace:*",
     "@supabase/supabase-js": "^2.49.4"
   },
   "devDependencies": {

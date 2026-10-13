@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { forgotPasswordSchema, type ForgotPasswordInput } from '@prism/validation';
-import { PRISMButton, PRISMInput, spacing } from '@prism/ui';
+import { forgotPasswordSchema, type ForgotPasswordInput } from '@prizm/validation';
+import { PRIZMButton, PRIZMInput, spacing } from '@prizm/ui';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { sendPasswordResetEmail } from '../../../lib/auth/actions';
@@ -46,7 +46,7 @@ export function ForgotPasswordScreen() {
         title="Check your email"
         subtitle="If an account exists for this email, we'll send instructions to reset your password."
       >
-        <PRISMButton
+        <PRIZMButton
           label="Back to sign in"
           variant="secondary"
           onPress={() => router.replace('/(auth)/sign-in')}
@@ -62,7 +62,7 @@ export function ForgotPasswordScreen() {
         control={control}
         name="email"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Email"
             autoCapitalize="none"
             autoComplete="email"
@@ -78,7 +78,7 @@ export function ForgotPasswordScreen() {
         )}
       />
       <View style={styles.actions}>
-        <PRISMButton
+        <PRIZMButton
           label="Send reset link"
           loading={isSubmitting}
           onPress={handleSubmit(onSubmit)}

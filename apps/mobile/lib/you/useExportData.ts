@@ -13,7 +13,7 @@ import type {
   Profile,
   Reminder,
   Settings,
-} from '@prism/types';
+} from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { buildDataExport, type DataExportRecords } from './dataExport';
 
@@ -75,7 +75,7 @@ export function useExportData() {
       };
       const payload = buildDataExport(records);
       const json = JSON.stringify(payload, null, 2);
-      const filename = `prism-export-${payload.exported_at.slice(0, 10)}.json`;
+      const filename = `prizm-export-${payload.exported_at.slice(0, 10)}.json`;
 
       if (Platform.OS === 'web') {
         downloadOnWeb(json, filename);

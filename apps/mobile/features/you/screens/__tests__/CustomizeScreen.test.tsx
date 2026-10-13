@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import type { Module } from '@prism/types';
+import type { Module } from '@prizm/types';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { CustomizeScreen } from '../CustomizeScreen';
 import { useModules, useSetModuleEnabled } from '../../../../lib/profile/queries';

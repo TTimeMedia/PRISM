@@ -1,11 +1,11 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Appointment, Medication, MedicationLog } from '@prism/types';
-import type { Database } from '@prism/database';
+import type { Appointment, Medication, MedicationLog } from '@prizm/types';
+import type { Database } from '@prizm/database';
 import type {
   AppointmentCreateInput,
   MedicationCreateInput,
   MedicationLogCreateInput,
-} from '@prism/validation';
+} from '@prizm/validation';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';

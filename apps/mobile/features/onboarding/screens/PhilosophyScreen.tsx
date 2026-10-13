@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Lock, Repeat, SlidersHorizontal, type LucideIcon } from 'lucide-react-native';
-import { getNextOnboardingStep } from '@prism/types';
+import { getNextOnboardingStep } from '@prizm/types';
 import {
   fontFamily,
   fontWeight,
@@ -11,9 +11,9 @@ import {
   spectrumGradient,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
-import { PrismMark, Reveal } from '../../../components/motion';
+import { PrizmMark, Reveal } from '../../../components/motion';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 
@@ -61,7 +61,7 @@ export function PhilosophyScreen() {
 
   return (
     <OnboardingScreenLayout
-      hero={<PrismMark size={84} />}
+      hero={<PrizmMark size={84} />}
       phase={0.25}
       title="Set it up your way."
       primaryLabel="Continue"

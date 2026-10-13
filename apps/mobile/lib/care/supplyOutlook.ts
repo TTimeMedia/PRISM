@@ -1,4 +1,4 @@
-import type { Medication, Supply } from '@prism/types';
+import type { Medication, Supply } from '@prizm/types';
 
 /**
  * How long a supply will last and whether it needs attention soon. Pure, so

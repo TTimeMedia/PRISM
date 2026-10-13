@@ -3,19 +3,19 @@ import { router } from 'expo-router';
 import { AppState, Linking, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMChipGroup,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSection,
-  PRISMSkeleton,
-  PRISMSwitch,
+  PRIZMButton,
+  PRIZMChipGroup,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSection,
+  PRIZMSkeleton,
+  PRIZMSwitch,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
-import { resolveReminderMessages, type PushCategory } from '@prism/types';
+} from '@prizm/ui';
+import { resolveReminderMessages, type PushCategory } from '@prizm/types';
 import { useModules, useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppointments, useMedications } from '../../../lib/care/queries';
 import { reminderSampleFor } from '../../../lib/reminders/sampleVars';
@@ -87,35 +87,35 @@ export function NotificationSettingsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Notifications."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !settings ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
           {permission === 'undetermined' || permission === 'denied' ? (
-            <PRISMSection title="Reminders">
+            <PRIZMSection title="Reminders">
               <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
                 {permission === 'denied'
                   ? "Reminders are off on this phone, so Prizm can't remind you about medications or appointments. Turn them on in your phone's Settings."
                   : 'Turn on reminders so Prizm can tell you when a medication or appointment is coming up.'}
               </Text>
-              <PRISMButton
+              <PRIZMButton
                 label={permission === 'denied' ? 'Open Settings' : 'Turn on reminders'}
                 onPress={turnOnReminders}
               />
-            </PRISMSection>
+            </PRIZMSection>
           ) : null}
-          <PRISMSection title="Notifications">
-            <PRISMSwitch
+          <PRIZMSection title="Notifications">
+            <PRIZMSwitch
               label="Private notifications"
               description={
                 'Notification previews stay generic, e.g. "Your Prizm reminder is ready."'
@@ -123,14 +123,14 @@ export function NotificationSettingsScreen() {
               value={settings.notification_privacy}
               onValueChange={(value) => updateSettings.mutate({ notification_privacy: value })}
             />
-          </PRISMSection>
-          <PRISMSection title="Messages from Prizm">
+          </PRIZMSection>
+          <PRIZMSection title="Messages from Prizm">
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
               Sent from Prizm&apos;s server, so they can reach you even when the app is closed. You
               choose which kinds you get.
             </Text>
             {PUSH_OPTIONS.map((option) => (
-              <PRISMSwitch
+              <PRIZMSwitch
                 key={option.category}
                 label={option.label}
                 description={option.description}
@@ -143,39 +143,39 @@ export function NotificationSettingsScreen() {
               Private notifications on, reminders only ever say &quot;Your Prizm reminder is
               ready.&quot;
             </Text>
-          </PRISMSection>
-          <PRISMSection title="Reminder wording">
+          </PRIZMSection>
+          <PRIZMSection title="Reminder wording">
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
               {`Choose what your reminders say, like "It's shot day." or "Take your vitamins at 9:00 AM.", or write your own. Used when Private notifications is off.`}
             </Text>
-            <PRISMButton
+            <PRIZMButton
               label="Choose reminder wording"
               variant="secondary"
               onPress={() => router.push('/you/reminder-messages')}
             />
-          </PRISMSection>
-          <PRISMSection title="Appointment reminders">
+          </PRIZMSection>
+          <PRIZMSection title="Appointment reminders">
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
               When to be reminded about an appointment that has its reminder turned on. Pick as many
               as you like.
             </Text>
-            <PRISMChipGroup
+            <PRIZMChipGroup
               options={LEAD_OPTIONS}
               value={leadMinutes.map(String)}
               onChange={(next) => setLeadMinutes(next.map(Number).sort((a, b) => a - b))}
               multiple
             />
-          </PRISMSection>
-          <PRISMSection title="Doses">
-            <PRISMSwitch
+          </PRIZMSection>
+          <PRIZMSection title="Doses">
+            <PRIZMSwitch
               label="Gentle follow-up"
               description="If a dose isn't marked done 30 minutes after its reminder, send one more nudge."
               value={missedDoseNudge}
               onValueChange={setMissedDoseNudge}
             />
-          </PRISMSection>
-          <PRISMSection title="See how it looks">
-            <PRISMButton
+          </PRIZMSection>
+          <PRIZMSection title="See how it looks">
+            <PRIZMButton
               label={testSent ? 'Sent. Look for it in a few seconds.' : 'Send a test reminder'}
               variant="secondary"
               disabled={permission !== 'granted'}
@@ -193,7 +193,7 @@ export function NotificationSettingsScreen() {
                 Turn on reminders above to send a test.
               </Text>
             ) : null}
-          </PRISMSection>
+          </PRIZMSection>
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
             Reminders are set on this phone. Medication and appointment reminders are set per item —
             open a medication or appointment and turn its reminder on or off there.

@@ -4,17 +4,17 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft, ChevronRight } from 'lucide-react-native';
 import {
   layout,
-  PRISMCard,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSkeleton,
-  PRISMSwitch,
+  PRIZMCard,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSkeleton,
+  PRIZMSwitch,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
-import type { ModuleKey } from '@prism/types';
+} from '@prizm/ui';
+import type { ModuleKey } from '@prizm/types';
 import { useModules, useSetModuleEnabled } from '../../../lib/profile/queries';
 import { MODULE_INFO } from '../moduleInfo';
 
@@ -35,25 +35,25 @@ export function CustomizeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Make Prizm yours."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
         <View style={styles.content}>
-          <PRISMSkeleton height={72} />
-          <PRISMSkeleton height={72} />
+          <PRIZMSkeleton height={72} />
+          <PRIZMSkeleton height={72} />
         </View>
       ) : isError ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
           {MODULE_INFO.map((info) => (
-            <PRISMCard key={info.key} style={styles.card}>
+            <PRIZMCard key={info.key} style={styles.card}>
               <View style={styles.body}>
                 <View style={styles.row}>
                   {info.icon(theme.accent)}
@@ -66,7 +66,7 @@ export function CustomizeScreen() {
                     </Text>
                   </View>
                 </View>
-                <PRISMSwitch
+                <PRIZMSwitch
                   label={`${info.label} enabled`}
                   value={enabled.has(info.key)}
                   onValueChange={(value) => toggle(info.key, value)}
@@ -86,7 +86,7 @@ export function CustomizeScreen() {
                 </Text>
                 <ChevronRight size={18} color={theme.colors.text.tertiary} />
               </Pressable>
-            </PRISMCard>
+            </PRIZMCard>
           ))}
         </ScrollView>
       )}

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Text } from 'react-native';
-import { PRISMInput, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMInput, spacing, type, useTheme } from '@prizm/ui';
 import { ChipField, type ChipFieldOption } from './ChipField';
 
 export interface MedicationPickerProps {
@@ -40,7 +40,7 @@ export function MedicationPicker({
   return (
     <>
       {showSearch ? (
-        <PRISMInput
+        <PRIZMInput
           label={`Search ${label.toLowerCase()}`}
           value={query}
           onChangeText={setQuery}

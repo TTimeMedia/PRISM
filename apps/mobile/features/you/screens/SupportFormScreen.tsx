@@ -4,17 +4,17 @@ import { Image, Linking, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSwitch,
-  PRISMTextArea,
+  PRIZMButton,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSwitch,
+  PRIZMTextArea,
   radius,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { track } from '../../../lib/analytics/events';
@@ -75,18 +75,18 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title={`${copy.title}.`}
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <KeyboardAwareScreen>
         <View style={styles.content}>
           <Text style={[styles.intro, { color: theme.colors.text.secondary }]}>{copy.intro}</Text>
-          <PRISMTextArea
+          <PRIZMTextArea
             label="Message"
             placeholder={copy.placeholder}
             value={message}
@@ -103,7 +103,7 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
                 accessibilityLabel="Screenshot of the screen you were on"
               />
               <View style={styles.shotText}>
-                <PRISMSwitch
+                <PRIZMSwitch
                   label="Attach this screenshot"
                   description="It shows what was on screen, which can include your medications. Attach it only if you're comfortable."
                   value={attachScreenshot}
@@ -116,7 +116,7 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
             Sent with your account email (for our reply), Prizm {version}, your phone&apos;s system
             version{fromScreen ? ' and the screen you were on' : ''}.
           </Text>
-          <PRISMButton
+          <PRIZMButton
             label="Send"
             onPress={send}
             loading={sending}

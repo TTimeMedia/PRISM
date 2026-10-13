@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { router, type Href } from 'expo-router';
-import { useToast } from '@prism/ui';
+import { useToast } from '@prizm/ui';
 import { useSession } from '../auth/AuthProvider';
 import { useProfile } from '../profile/queries';
 import { useCreateMedicationLog } from '../care/mutations';

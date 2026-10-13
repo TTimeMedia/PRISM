@@ -3,18 +3,18 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { PenLine } from 'lucide-react-native';
-import type { JournalEntry, Milestone } from '@prism/types';
+import type { JournalEntry, Milestone } from '@prizm/types';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMSkeleton,
   fontFamily,
   fontWeight,
   radius,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useModules } from '../../../lib/profile/queries';
 import { useJournalEntries, useMilestones } from '../../../lib/journey/queries';
 import { EmptyCard, HeroCard, ScreenGlow, SectionTitle, useTint } from '../../../components/home';
@@ -92,11 +92,11 @@ export function JourneyHomeScreen() {
 
         {loading ? (
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={168} />
-            <PRISMSkeleton height={120} />
+            <PRIZMSkeleton height={168} />
+            <PRIZMSkeleton height={120} />
           </View>
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (
           <>
             {journalOn ? (
@@ -118,7 +118,7 @@ export function JourneyHomeScreen() {
                     <MoodChip key={mood} label={mood} />
                   ))}
                 </View>
-                <PRISMButton
+                <PRIZMButton
                   label="Write an entry"
                   onPress={() => router.push('/journey/journal/add')}
                 />
@@ -137,7 +137,7 @@ export function JourneyHomeScreen() {
                 <Text style={[styles.heroBody, { color: theme.colors.text.secondary }]}>
                   A milestone, with a photo if you like. It stays private.
                 </Text>
-                <PRISMButton
+                <PRIZMButton
                   label="Add a milestone"
                   onPress={() => router.push('/journey/milestones/add')}
                 />
@@ -211,7 +211,7 @@ export function JourneyHomeScreen() {
                   Milestones and Journal aren&apos;t switched on, so there&apos;s nothing to add to
                   yet.
                 </Text>
-                <PRISMButton
+                <PRIZMButton
                   label="Choose what shows"
                   variant="secondary"
                   onPress={() => router.push('/you/customize')}

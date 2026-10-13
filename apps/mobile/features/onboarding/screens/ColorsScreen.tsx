@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { getNextOnboardingStep } from '@prism/types';
-import type { PaletteKey } from '@prism/ui';
+import { getNextOnboardingStep } from '@prizm/types';
+import type { PaletteKey } from '@prizm/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile, useUpdateSettings } from '../../../lib/profile/queries';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Linking, Text, type StyleProp, type TextStyle } from 'react-native';
-import { useTheme } from '@prism/ui';
+import { useTheme } from '@prizm/ui';
 
 /**
  * Text where web addresses, email addresses and phone numbers can be tapped:

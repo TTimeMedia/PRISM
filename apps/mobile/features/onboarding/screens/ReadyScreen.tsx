@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PrismMark } from '../../../components/motion';
+import { PrizmMark } from '../../../components/motion';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 import { track } from '../../../lib/analytics/events';
@@ -13,7 +13,7 @@ export function ReadyScreen() {
   const updateProfile = useUpdateProfile();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const enterPrism = async () => {
+  const enterPrizm = async () => {
     setIsSubmitting(true);
     // The root layout's Stack.Protected guards react to this and route
     // to (tabs) automatically — no explicit navigation call needed.
@@ -24,12 +24,12 @@ export function ReadyScreen() {
 
   return (
     <OnboardingScreenLayout
-      hero={<PrismMark size={132} />}
+      hero={<PrizmMark size={132} />}
       phase={1}
       title="Prizm is ready."
       subtitle="Everything you picked is turned on. Add or remove parts any time in You, then Make Prizm yours."
       primaryLabel="Enter Prizm"
-      onPrimaryPress={enterPrism}
+      onPrimaryPress={enterPrizm}
       primaryLoading={isSubmitting}
     />
   );

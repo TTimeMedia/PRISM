@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { ChevronRight, Plus, type LucideIcon } from 'lucide-react-native';
 import Svg, { Circle, Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
-import { PRISMButton, fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMButton, fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 import { useTint, withAlpha, type Tint } from './tint';
 
 export { useTint, withAlpha, type Tint } from './tint';
@@ -143,9 +143,9 @@ export function EmptyCard({
       </Text>
       <Text style={[styles.emptyBody, { color: theme.colors.text.secondary }]}>{body}</Text>
       <View style={styles.emptyActions}>
-        <PRISMButton label={primaryLabel} onPress={onPrimary} />
+        <PRIZMButton label={primaryLabel} onPress={onPrimary} />
         {secondaryLabel && onSecondary ? (
-          <PRISMButton label={secondaryLabel} variant="tertiary" onPress={onSecondary} />
+          <PRIZMButton label={secondaryLabel} variant="tertiary" onPress={onSecondary} />
         ) : null}
       </View>
     </View>

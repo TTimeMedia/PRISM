@@ -2,8 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Check, ChevronDown, Plus } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMSheet,
+  PRIZMButton,
+  PRIZMSheet,
   componentRadius,
   fontWeight,
   layout,
@@ -11,7 +11,7 @@ import {
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 
 export interface ListPickerFieldProps {
   label: string;
@@ -107,7 +107,7 @@ export function ListPickerField({
       </Pressable>
       {error ? <Text style={[styles.error, { color: theme.destructive }]}>{error}</Text> : null}
 
-      <PRISMSheet visible={open} title={label} onRequestClose={close}>
+      <PRIZMSheet visible={open} title={label} onRequestClose={close}>
         {writingOwn ? (
           <View style={styles.writeOwn}>
             <Text style={[styles.hint, { color: theme.colors.text.secondary }]}>
@@ -130,12 +130,12 @@ export function ListPickerField({
                 },
               ]}
             />
-            <PRISMButton
+            <PRIZMButton
               label="Use this"
               disabled={!draft.trim()}
               onPress={() => choose(draft.trim())}
             />
-            <PRISMButton
+            <PRIZMButton
               label="Back to the list"
               variant="tertiary"
               onPress={() => setWritingOwn(false)}
@@ -188,11 +188,11 @@ export function ListPickerField({
               ) : null}
             </ScrollView>
             {value ? (
-              <PRISMButton label="Clear" variant="tertiary" onPress={() => choose('')} />
+              <PRIZMButton label="Clear" variant="tertiary" onPress={() => choose('')} />
             ) : null}
           </>
         )}
-      </PRISMSheet>
+      </PRIZMSheet>
     </View>
   );
 }

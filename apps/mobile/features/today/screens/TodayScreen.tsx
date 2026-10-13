@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
-import type { P0ModuleKey, TodayItem } from '@prism/types';
+import type { P0ModuleKey, TodayItem } from '@prizm/types';
 import type { LucideIcon } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMErrorState,
-  PRISMSkeleton,
+  PRIZMButton,
+  PRIZMErrorState,
+  PRIZMSkeleton,
   fontFamily,
   fontWeight,
   radius,
@@ -15,7 +15,7 @@ import {
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useModules, useProfile } from '../../../lib/profile/queries';
 import { useTodayItems } from '../../../lib/today/queries';
 import { useCreateMedicationLog, useUndoMedicationLog } from '../../../lib/care/mutations';
@@ -147,11 +147,11 @@ export function TodayScreen() {
 
         {isLoading ? (
           <View style={styles.skeletons}>
-            <PRISMSkeleton height={168} />
-            <PRISMSkeleton height={72} />
+            <PRIZMSkeleton height={168} />
+            <PRIZMSkeleton height={72} />
           </View>
         ) : isError ? (
-          <PRISMErrorState onRetry={() => refetch()} />
+          <PRIZMErrorState onRetry={() => refetch()} />
         ) : (
           <>
             {next ? (
@@ -322,10 +322,10 @@ function NextUpCard({
       </Text>
       <View style={styles.heroActions}>
         <View style={styles.heroPrimary}>
-          <PRISMButton label="View" onPress={() => router.push(comingUpItemHref(item))} />
+          <PRIZMButton label="View" onPress={() => router.push(comingUpItemHref(item))} />
         </View>
         {canLog ? (
-          <PRISMButton label="Log dose" variant="secondary" loading={logging} onPress={onLogDose} />
+          <PRIZMButton label="Log dose" variant="secondary" loading={logging} onPress={onLogDose} />
         ) : null}
       </View>
     </HeroCard>

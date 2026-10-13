@@ -30,7 +30,7 @@ export type HelpCategory = (typeof HELP_CATEGORIES)[number];
 
 export const HELP_ARTICLES: HelpArticle[] = [
   {
-    slug: 'what-prism-does',
+    slug: 'what-prizm-does',
     title: 'What Prizm does',
     category: 'Getting started',
     summary: 'An organizer for your care. It never gives medical advice.',

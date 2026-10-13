@@ -1,4 +1,4 @@
-import type { Appointment, Medication } from '@prism/types';
+import type { Appointment, Medication } from '@prizm/types';
 import { reminderSampleFor } from '../sampleVars';
 
 const med = (o: Partial<Medication>): Medication =>

@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import { DEFAULT_PUSH_PREFERENCES, PUSH_CATEGORIES, type PushPreferences } from '@prism/types';
+import { DEFAULT_PUSH_PREFERENCES, PUSH_CATEGORIES, type PushPreferences } from '@prizm/types';
 import { supabase } from '../supabase/client';
 
 /**

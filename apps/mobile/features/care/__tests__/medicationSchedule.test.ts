@@ -1,4 +1,4 @@
-import type { MedicationCreateInput } from '@prism/validation';
+import type { MedicationCreateInput } from '@prizm/validation';
 import { scheduleProblem, withScheduleDefaults } from '../medicationSchedule';
 
 const base: MedicationCreateInput = {

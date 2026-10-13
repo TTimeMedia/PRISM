@@ -1,6 +1,6 @@
-import { useTheme } from '@prism/ui';
+import { useTheme } from '@prizm/ui';
 
-/** The role colors the home tabs are built from (see @prism/ui palettes.ts). */
+/** The role colors the home tabs are built from (see @prizm/ui palettes.ts). */
 export type Tint = 'cyan' | 'pink' | 'violet' | 'mint' | 'yellow';
 
 /** Appends an 8-bit alpha to a #RRGGBB color. */

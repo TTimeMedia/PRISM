@@ -1,4 +1,4 @@
-import type { MedicationCreateInput } from '@prism/validation';
+import type { MedicationCreateInput } from '@prizm/validation';
 
 /**
  * A schedule that can't produce any dose times: weekly/custom without a

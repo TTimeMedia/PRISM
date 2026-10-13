@@ -1,5 +1,5 @@
 import { buildTimelineEvents, type TimelineRecords } from '../timeline';
-import type { Appointment, Medication, MedicationLog, Milestone, JournalEntry } from '@prism/types';
+import type { Appointment, Medication, MedicationLog, Milestone, JournalEntry } from '@prizm/types';
 
 const NOW = new Date('2026-06-15T12:00:00Z');
 

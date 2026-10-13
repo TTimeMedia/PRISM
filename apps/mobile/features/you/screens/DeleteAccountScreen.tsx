@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { Keyboard, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMInput,
+  PRIZMButton,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMInput,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { supabase } from '../../../lib/supabase/client';
 import { signOut } from '../../../lib/auth/actions';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
@@ -52,12 +52,12 @@ export function DeleteAccountScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Delete your Prizm account?"
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <KeyboardAwareScreen>
@@ -66,7 +66,7 @@ export function DeleteAccountScreen() {
             This permanently deletes your Prizm account and associated information. This cannot be
             undone.
           </Text>
-          <PRISMInput
+          <PRIZMInput
             label={`Type "${CONFIRM_PHRASE}" to confirm`}
             value={confirmText}
             onChangeText={setConfirmText}
@@ -74,7 +74,7 @@ export function DeleteAccountScreen() {
             returnKeyType="done"
             onSubmitEditing={() => Keyboard.dismiss()}
           />
-          <PRISMButton
+          <PRIZMButton
             label="Delete my account"
             variant="destructive"
             disabled={!canDelete}

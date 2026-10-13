@@ -1,4 +1,4 @@
-import type { Appointment, AppointmentQuestion } from '@prism/types';
+import type { Appointment, AppointmentQuestion } from '@prizm/types';
 import { nextAppointment, questionsFor } from '../questions';
 
 jest.mock('../../supabase/client', () => ({ supabase: {} }));

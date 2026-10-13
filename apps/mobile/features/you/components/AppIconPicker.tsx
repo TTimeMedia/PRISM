@@ -1,6 +1,6 @@
 import React from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { radius, spacing, type, useTheme } from '@prism/ui';
+import { radius, spacing, type, useTheme } from '@prizm/ui';
 import { APP_ICONS, type AppIconKey } from '../../../lib/you/appIcon';
 
 interface AppIconPickerProps {

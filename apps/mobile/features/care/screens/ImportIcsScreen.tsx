@@ -4,16 +4,16 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { File } from 'expo-file-system';
 import { X } from 'lucide-react-native';
 import {
-  PRISMButton,
-  PRISMHeader,
-  PRISMIconButton,
+  PRIZMButton,
+  PRIZMHeader,
+  PRIZMIconButton,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { parseIcs, type IcsEvent } from '../../../lib/calendar/ics';
-import { isAlreadyInPrism } from '../../../lib/calendar/importCandidates';
+import { isAlreadyInPrizm } from '../../../lib/calendar/importCandidates';
 import { useAppointments } from '../../../lib/care/queries';
 import { useCreateAppointment } from '../../../lib/care/mutations';
 import { ImportableEventRow } from '../components/ImportableEventRow';
@@ -49,7 +49,7 @@ export function ImportIcsScreen() {
         setSelected(
           new Set(
             events.flatMap((event, index) =>
-              isAlreadyInPrism(event, existing ?? []) ? [] : [index],
+              isAlreadyInPrizm(event, existing ?? []) ? [] : [index],
             ),
           ),
         );
@@ -102,12 +102,12 @@ export function ImportIcsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Add to Prizm"
         leading={
-          <PRISMIconButton accessibilityLabel="Close" onPress={leave}>
+          <PRIZMIconButton accessibilityLabel="Close" onPress={leave}>
             <X size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
@@ -123,7 +123,7 @@ export function ImportIcsScreen() {
               This file doesn&apos;t have an appointment Prizm can read. You can add it yourself
               from Appointments.
             </Text>
-            <PRISMButton label="Go to Appointments" variant="secondary" onPress={leave} />
+            <PRIZMButton label="Go to Appointments" variant="secondary" onPress={leave} />
           </View>
         ) : null}
 
@@ -143,12 +143,12 @@ export function ImportIcsScreen() {
                   allDay={event.allDay}
                   location={event.location}
                   selected={selected.has(index)}
-                  alreadyAdded={isAlreadyInPrism(event, existing ?? [])}
+                  alreadyAdded={isAlreadyInPrizm(event, existing ?? [])}
                   onPress={() => toggle(index)}
                 />
               ))}
             </View>
-            <PRISMButton
+            <PRIZMButton
               label={
                 selected.size === 0
                   ? 'Pick appointments to add'
@@ -160,7 +160,7 @@ export function ImportIcsScreen() {
               loading={adding}
               onPress={add}
             />
-            <PRISMButton label="Not now" variant="tertiary" onPress={leave} />
+            <PRIZMButton label="Not now" variant="tertiary" onPress={leave} />
           </View>
         ) : null}
       </ScrollView>

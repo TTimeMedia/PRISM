@@ -28,7 +28,7 @@ import type {
   Reminder,
   Settings,
   Supply,
-} from '@prism/types';
+} from '@prizm/types';
 
 /** Every key of Row whose value type is nullable — a nullable column can always be omitted on insert, same as an explicit null. */
 type NullableKeys<Row> = { [K in keyof Row]: null extends Row[K] ? K : never }[keyof Row];

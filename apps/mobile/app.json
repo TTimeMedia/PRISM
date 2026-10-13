@@ -6,12 +6,12 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "prism",
+    "scheme": "prizm",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#0B0B0F",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ttimemedia.prism",
+      "bundleIdentifier": "ttimemedia.prizm",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSCalendarsWriteOnlyAccessUsageDescription": "Prizm adds the appointments you choose to sync to your calendar.",
@@ -27,7 +27,7 @@
       }
     },
     "android": {
-      "package": "ttimemedia.prism",
+      "package": "ttimemedia.prizm",
       "adaptiveIcon": {
         "backgroundColor": "#16263F",
         "foregroundImage": "./assets/images/app-icons/android-slate.png",

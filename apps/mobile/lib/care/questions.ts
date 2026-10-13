@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Appointment, AppointmentQuestion } from '@prism/types';
+import type { Appointment, AppointmentQuestion } from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';

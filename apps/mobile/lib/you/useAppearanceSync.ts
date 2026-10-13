@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { knownPaletteKey } from '@prism/ui';
-import type { Theme } from '@prism/types';
+import { knownPaletteKey } from '@prizm/ui';
+import type { Theme } from '@prizm/types';
 import { useAppStore } from '../store/appStore';
 
 const THEMES: readonly string[] = ['light', 'dark', 'system'] satisfies Theme[];

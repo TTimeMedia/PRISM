@@ -11,7 +11,7 @@ import {
   type,
   useTheme,
   type PaletteKey,
-} from '@prism/ui';
+} from '@prizm/ui';
 
 interface PalettePickerProps {
   value: PaletteKey;

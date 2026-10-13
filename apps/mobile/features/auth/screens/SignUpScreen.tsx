@@ -3,8 +3,8 @@ import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signUpSchema, type SignUpInput } from '@prism/validation';
-import { PRISMButton, PRISMInput, spacing, type, useTheme } from '@prism/ui';
+import { signUpSchema, type SignUpInput } from '@prizm/validation';
+import { PRIZMButton, PRIZMInput, spacing, type, useTheme } from '@prizm/ui';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { signUp } from '../../../lib/auth/actions';
@@ -44,7 +44,7 @@ export function SignUpScreen() {
       title="Let's set up your space."
       subtitle="Use an email and password. We'll send a link to confirm it's you."
       footer={
-        <PRISMButton
+        <PRIZMButton
           label="Sign in"
           variant="tertiary"
           onPress={() => router.replace('/(auth)/sign-in')}
@@ -56,7 +56,7 @@ export function SignUpScreen() {
         control={control}
         name="email"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Email"
             autoCapitalize="none"
             autoComplete="email"
@@ -73,7 +73,7 @@ export function SignUpScreen() {
         control={control}
         name="password"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Password"
             secureTextEntry
             autoCapitalize="none"
@@ -90,7 +90,7 @@ export function SignUpScreen() {
         control={control}
         name="confirmPassword"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Confirm password"
             secureTextEntry
             autoCapitalize="none"
@@ -106,7 +106,7 @@ export function SignUpScreen() {
         )}
       />
       <View style={styles.actions}>
-        <PRISMButton
+        <PRIZMButton
           label="Create account"
           loading={isSubmitting}
           onPress={handleSubmit(onSubmit)}

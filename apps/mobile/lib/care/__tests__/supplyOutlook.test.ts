@@ -1,4 +1,4 @@
-import type { Medication, Supply } from '@prism/types';
+import type { Medication, Supply } from '@prizm/types';
 import {
   daysBetweenDoses,
   outlookLabel,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'expo-router';
-import { normalizeOnboardingStep } from '@prism/types';
+import { normalizeOnboardingStep } from '@prizm/types';
 import { useSession } from '../lib/auth/AuthProvider';
 import { useProfile } from '../lib/profile/queries';
 import { onboardingStepHref } from '../lib/onboarding/routes';

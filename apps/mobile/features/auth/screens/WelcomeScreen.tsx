@@ -1,21 +1,21 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
-import { PRISMButton, spacing } from '@prism/ui';
+import { PRIZMButton, spacing } from '@prizm/ui';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
-import { PrismLockup } from '../../../components/motion';
+import { PrizmLockup } from '../../../components/motion';
 
 /** Screen 02 — Welcome. See docs/SCREEN_BIBLE.md §4. */
 export function WelcomeScreen() {
   return (
     <AuthScreenLayout
-      hero={<PrismLockup />}
+      hero={<PrizmLockup />}
       title="A private place that's just yours."
       subtitle="Keep your care, your milestones, and your journal together in one private place. Your information stays yours."
     >
       <View style={styles.actions}>
-        <PRISMButton label="Get started" onPress={() => router.push('/(auth)/sign-up')} />
-        <PRISMButton
+        <PRIZMButton label="Get started" onPress={() => router.push('/(auth)/sign-up')} />
+        <PRIZMButton
           label="I already have an account"
           variant="secondary"
           onPress={() => router.push('/(auth)/sign-in')}

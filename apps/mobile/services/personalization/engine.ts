@@ -5,7 +5,7 @@ import type {
   ModuleKey,
   RelevanceBucket,
   TodayItem,
-} from '@prism/types';
+} from '@prizm/types';
 import {
   isMedicationDueOn,
   resolveMedicationOccurrences,

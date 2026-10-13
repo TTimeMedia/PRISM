@@ -1,16 +1,16 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { Link, Stack } from 'expo-router';
-import { PRISMButton, PRISMErrorState } from '@prism/ui';
+import { PRIZMButton, PRIZMErrorState } from '@prizm/ui';
 
 export default function NotFoundScreen() {
   return (
     <>
       <Stack.Screen options={{ title: 'Prizm' }} />
       <SafeAreaView style={styles.container}>
-        <PRISMErrorState message="This screen doesn't exist." />
+        <PRIZMErrorState message="This screen doesn't exist." />
         <Link href="/(tabs)/today" asChild>
-          <PRISMButton label="Go to Today" variant="primary" />
+          <PRIZMButton label="Go to Today" variant="primary" />
         </Link>
       </SafeAreaView>
     </>

@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  PRISMButton,
-  PRISMPinInput,
+  PRIZMButton,
+  PRIZMPinInput,
   fontFamily,
   fontWeight,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { authenticateWithBiometrics, isBiometricAvailable } from '../../../lib/you/biometrics';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { resetPinAndSignOut } from '../../../lib/you/forgotPin';
@@ -87,7 +87,7 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
         <Text style={[styles.subtitle, { color: theme.colors.text.secondary }]}>Unlock Prizm.</Text>
 
         {biometricEnabled && biometricAvailable ? (
-          <PRISMButton
+          <PRIZMButton
             label="Unlock with biometrics"
             onPress={tryBiometrics}
             accessibilityLabel="Unlock with biometrics"
@@ -95,7 +95,7 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
         ) : null}
 
         <View style={styles.pinBlock}>
-          <PRISMPinInput
+          <PRIZMPinInput
             label="PIN"
             value={pin}
             onChangeText={(value) => {
@@ -109,7 +109,7 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
             // rely on a return key that doesn't exist for this keyboard type.
             onSubmitEditing={submitPin}
           />
-          <PRISMButton label="Unlock" variant="secondary" onPress={submitPin} disabled={!pin} />
+          <PRIZMButton label="Unlock" variant="secondary" onPress={submitPin} disabled={!pin} />
         </View>
 
         {forgotOpen ? (
@@ -118,16 +118,16 @@ export function AppLockScreen({ biometricEnabled, onUnlock }: AppLockScreenProps
               Sign out to reset your PIN. Your data stays in your account. Sign back in with your
               email and password, then set up App Lock again.
             </Text>
-            <PRISMButton
+            <PRIZMButton
               label="Sign out and reset PIN"
               variant="secondary"
               loading={resetting}
               onPress={resetPin}
             />
-            <PRISMButton label="Cancel" variant="tertiary" onPress={() => setForgotOpen(false)} />
+            <PRIZMButton label="Cancel" variant="tertiary" onPress={() => setForgotOpen(false)} />
           </View>
         ) : (
-          <PRISMButton
+          <PRIZMButton
             label="Forgot your PIN?"
             variant="tertiary"
             onPress={() => setForgotOpen(true)}

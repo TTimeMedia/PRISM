@@ -1,4 +1,4 @@
-import type { Appointment } from '@prism/types';
+import type { Appointment } from '@prizm/types';
 
 export interface ImportCandidate {
   title: string;
@@ -15,7 +15,7 @@ function identity(candidate: ImportCandidate): string {
 }
 
 /** True when Prizm already has an appointment with this title at this time. */
-export function isAlreadyInPrism(
+export function isAlreadyInPrizm(
   candidate: ImportCandidate,
   existing: readonly Pick<Appointment, 'title' | 'starts_at'>[],
 ): boolean {

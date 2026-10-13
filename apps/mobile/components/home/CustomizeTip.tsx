@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Sparkles } from 'lucide-react-native';
-import { PRISMButton, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMButton, fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 import { useAppStore } from '../../lib/store/appStore';
 
 /**
@@ -38,7 +38,7 @@ export function CustomizeTip() {
       </View>
       <View style={styles.actions}>
         <View style={styles.primary}>
-          <PRISMButton
+          <PRIZMButton
             label="Choose what shows"
             variant="secondary"
             onPress={() => {
@@ -47,7 +47,7 @@ export function CustomizeTip() {
             }}
           />
         </View>
-        <PRISMButton label="Got it" variant="tertiary" onPress={dismiss} />
+        <PRIZMButton label="Got it" variant="tertiary" onPress={dismiss} />
       </View>
     </View>
   );

@@ -9,7 +9,7 @@ const OPTIONS = [
 ];
 
 /**
- * ChipSelect is a thin adapter over the shared PRISMChipGroup
+ * ChipSelect is a thin adapter over the shared PRIZMChipGroup
  * (packages/ui) — this proves its own call-site contract (an array of
  * selected values, no own label, multi- or single-select) still holds
  * after that consolidation.

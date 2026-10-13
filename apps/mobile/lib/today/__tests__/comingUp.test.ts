@@ -1,4 +1,4 @@
-import type { TodayItem } from '@prism/types';
+import type { TodayItem } from '@prizm/types';
 import {
   comingUpItemHref,
   formatComingUpWhen,

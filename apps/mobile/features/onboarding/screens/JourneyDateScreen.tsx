@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
-import { getNextOnboardingStep } from '@prism/types';
-import { PRISMDateInput } from '@prism/ui';
+import { getNextOnboardingStep } from '@prizm/types';
+import { PRIZMDateInput } from '@prizm/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { ChipSelect } from '../components/ChipSelect';
 import { JOURNEY_DATE_CHOICE_OPTIONS } from '../optionLabels';
@@ -44,7 +44,7 @@ export function JourneyDateScreen() {
         onPrimaryPress={() => submit(date || null)}
         primaryLoading={isSubmitting}
       >
-        <PRISMDateInput label="Date" value={date} onChangeText={setDate} />
+        <PRIZMDateInput label="Date" value={date} onChangeText={setDate} />
       </OnboardingScreenLayout>
     );
   }

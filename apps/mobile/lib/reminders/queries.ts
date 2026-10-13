@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Reminder } from '@prism/types';
+import type { Reminder } from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 

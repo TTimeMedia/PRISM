@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { Bell, Menu } from 'lucide-react-native';
-import { fontFamily, fontWeight, spacing, type, useTheme } from '@prism/ui';
+import { fontFamily, fontWeight, spacing, type, useTheme } from '@prizm/ui';
 import { useReminderAttention } from '../../lib/reminders/useReminderAttention';
 import { useSideMenu } from './SideMenu';
 

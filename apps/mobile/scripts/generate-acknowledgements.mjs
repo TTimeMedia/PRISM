@@ -47,7 +47,7 @@ function visit(name, fromDir) {
 }
 
 for (const dep of Object.keys(own.dependencies ?? {})) {
-  if (dep.startsWith('@prism/')) continue;
+  if (dep.startsWith('@prizm/')) continue;
   visit(dep, root);
 }
 
@@ -55,7 +55,7 @@ const bodies = [];
 const bodyIndex = new Map();
 const isCopyright = (line) => /copyright|\(c\)|©/i.test(line);
 const packages = [...seen.values()]
-  .filter((entry) => !entry.name.startsWith('@prism/'))
+  .filter((entry) => !entry.name.startsWith('@prizm/'))
   .sort((a, b) => a.name.localeCompare(b.name))
   .map(({ name, version, license, text }) => {
     if (!text) return { name, version, license, copyright: [], body: null };

@@ -3,17 +3,17 @@ import { router } from 'expo-router';
 import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSection,
-  PRISMSkeleton,
-  PRISMSwitch,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSection,
+  PRIZMSkeleton,
+  PRIZMSwitch,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { calendarProvider } from '../../../lib/calendar';
 import { useAppStore } from '../../../lib/store/appStore';
@@ -67,22 +67,22 @@ export function CalendarSettingsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Calendar."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !settings ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSection>
-            <PRISMSwitch
+          <PRIZMSection>
+            <PRIZMSwitch
               label="Sync to calendar"
               description={
                 available
@@ -93,12 +93,12 @@ export function CalendarSettingsScreen() {
               disabled={!available}
               onValueChange={toggleCalendarSync}
             />
-          </PRISMSection>
+          </PRIZMSection>
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
             Once this is on, open any appointment to add it to your calendar.
           </Text>
-          <PRISMSection>
-            <PRISMSwitch
+          <PRIZMSection>
+            <PRIZMSwitch
               label="Suggest appointments from my calendar"
               description={
                 available
@@ -109,7 +109,7 @@ export function CalendarSettingsScreen() {
               disabled={!available}
               onValueChange={toggleSuggestions}
             />
-          </PRISMSection>
+          </PRIZMSection>
         </ScrollView>
       )}
     </View>

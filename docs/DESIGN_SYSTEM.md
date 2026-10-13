@@ -68,20 +68,20 @@ PRIZM uses a **dark-first** visual language.
 
 | Token             | Value     | Usage                                            |
 | ----------------- | --------- | ------------------------------------------------ |
-| `PRISM_BLACK`     | `#0B0B0F` | App background, lock screen, splash screen       |
-| `PRISM_DARK`      | `#0F0F14` | Secondary background regions                     |
-| `PRISM_SURFACE`   | `#121218` | Cards, sheets, navigation surfaces               |
-| `PRISM_SURFACE_2` | `#191921` | Elevated cards, input fields, secondary controls |
-| `PRISM_SURFACE_3` | `#22222C` | Selected controls, strong emphasis surfaces      |
+| `PRIZM_BLACK`     | `#0B0B0F` | App background, lock screen, splash screen       |
+| `PRIZM_DARK`      | `#0F0F14` | Secondary background regions                     |
+| `PRIZM_SURFACE`   | `#121218` | Cards, sheets, navigation surfaces               |
+| `PRIZM_SURFACE_2` | `#191921` | Elevated cards, input fields, secondary controls |
+| `PRIZM_SURFACE_3` | `#22222C` | Selected controls, strong emphasis surfaces      |
 
 ### Light mode
 
 | Token           | Value     |
 | --------------- | --------- |
-| `PRISM_WHITE`   | `#F8F8FA` |
-| `PRISM_LIGHT`   | `#F2F2F5` |
-| `PRISM_LIGHT_2` | `#EAEAEE` |
-| `PRISM_LIGHT_3` | `#DEDEE5` |
+| `PRIZM_WHITE`   | `#F8F8FA` |
+| `PRIZM_LIGHT`   | `#F2F2F5` |
+| `PRIZM_LIGHT_2` | `#EAEAEE` |
+| `PRIZM_LIGHT_3` | `#DEDEE5` |
 
 Light mode is **not** a simple inversion of dark mode — it must independently preserve hierarchy, softness, premium feel, and spectrum accents. Use warm/off-white surfaces; avoid pure white everywhere, harsh black text, and excessive borders.
 
@@ -89,11 +89,11 @@ Light mode is **not** a simple inversion of dark mode — it must independently 
 
 | Token          | Value     | Typical use                                                       |
 | -------------- | --------- | ----------------------------------------------------------------- |
-| `PRISM_CYAN`   | `#5BCFFB` | Primary action, active navigation, links, focus state             |
-| `PRISM_PINK`   | `#F5A9B8` | Personal/journey moments, memories, emotional/reflection surfaces |
-| `PRISM_VIOLET` | `#B58CFF` | Journey, milestones, special moments                              |
-| `PRISM_MINT`   | `#8DE8C5` | Completed states, positive confirmations, successful saves        |
-| `PRISM_YELLOW` | `#FFE58A` | Attention, upcoming, gentle reminders                             |
+| `PRIZM_CYAN`   | `#5BCFFB` | Primary action, active navigation, links, focus state             |
+| `PRIZM_PINK`   | `#F5A9B8` | Personal/journey moments, memories, emotional/reflection surfaces |
+| `PRIZM_VIOLET` | `#B58CFF` | Journey, milestones, special moments                              |
+| `PRIZM_MINT`   | `#8DE8C5` | Completed states, positive confirmations, successful saves        |
+| `PRIZM_YELLOW` | `#FFE58A` | Attention, upcoming, gentle reminders                             |
 
 These assignments are guidelines, not rigid rules. **Spectrum gradient** (Cyan → Pink → Violet → Mint → Yellow) is reserved for branding, hero moments, subtle highlights, and the PRIZM logo — never for every button, card, background, heading, or icon. A spectrum gradient should feel _special_.
 
@@ -338,7 +338,7 @@ Use sparingly, e.g. _"Delete this journal entry? This can't be undone."_ with Ca
 
 Build reusable components rather than designing each screen independently. Core component set:
 
-`PRISMButton` · `PRISMIconButton` · `PRISMCard` · `PRISMSection` · `PRISMInput` · `PRISMTextArea` · `PRISMSelect` · `PRISMSwitch` · `PRISMChip` · `PRISMModal` · `PRISMSheet` · `PRISMToast` · `PRISMSkeleton` · `PRISMEmptyState` · `PRISMErrorState` · `PRISMListItem` · `PRISMHeader` · `PRISMBottomNav` · `PRISMQuickAdd` · `PRISMTimeline` · `PRISMMilestone` · `PRISMMemoryCard` · `PRISMReminderCard`
+`PRIZMButton` · `PRIZMIconButton` · `PRIZMCard` · `PRIZMSection` · `PRIZMInput` · `PRIZMTextArea` · `PRIZMSelect` · `PRIZMSwitch` · `PRIZMChip` · `PRIZMModal` · `PRIZMSheet` · `PRIZMToast` · `PRIZMSkeleton` · `PRIZMEmptyState` · `PRIZMErrorState` · `PRIZMListItem` · `PRIZMHeader` · `PRIZMBottomNav` · `PRIZMQuickAdd` · `PRIZMTimeline` · `PRIZMMilestone` · `PRIZMMemoryCard` · `PRIZMReminderCard`
 
 ### Design tokens
 

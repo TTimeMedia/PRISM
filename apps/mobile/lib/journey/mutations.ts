@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { JournalEntry, Milestone } from '@prism/types';
-import type { Database } from '@prism/database';
-import type { JournalEntryCreateInput, MilestoneCreateInput } from '@prism/validation';
+import type { JournalEntry, Milestone } from '@prizm/types';
+import type { Database } from '@prizm/database';
+import type { JournalEntryCreateInput, MilestoneCreateInput } from '@prizm/validation';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';

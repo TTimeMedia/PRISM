@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CARE_SETUP_OPTIONS, INTENT_OPTIONS, JOURNEY_STAGES } from '@prism/types';
+import { CARE_SETUP_OPTIONS, INTENT_OPTIONS, JOURNEY_STAGES } from '@prizm/types';
 import { isoDateSchema, titleSchema } from './common';
 
 /** Screen 09 — What Brings You Here? Multi-select, entirely optional. */

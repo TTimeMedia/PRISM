@@ -3,8 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signInSchema, type SignInInput } from '@prism/validation';
-import { PRISMButton, PRISMInput, spacing } from '@prism/ui';
+import { signInSchema, type SignInInput } from '@prizm/validation';
+import { PRIZMButton, PRIZMInput, spacing } from '@prizm/ui';
 import { AuthScreenLayout } from '../components/AuthScreenLayout';
 import { FormError } from '../components/FormError';
 import { signIn } from '../../../lib/auth/actions';
@@ -44,7 +44,7 @@ export function SignInScreen() {
     <AuthScreenLayout
       title="Welcome back."
       footer={
-        <PRISMButton
+        <PRIZMButton
           label="Create account"
           variant="tertiary"
           onPress={() => router.replace('/(auth)/sign-up')}
@@ -56,7 +56,7 @@ export function SignInScreen() {
         control={control}
         name="email"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Email"
             autoCapitalize="none"
             autoComplete="email"
@@ -73,7 +73,7 @@ export function SignInScreen() {
         control={control}
         name="password"
         render={({ field, fieldState }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Password"
             secureTextEntry
             autoCapitalize="none"
@@ -89,8 +89,8 @@ export function SignInScreen() {
         )}
       />
       <View style={styles.actions}>
-        <PRISMButton label="Sign in" loading={isSubmitting} onPress={handleSubmit(onSubmit)} />
-        <PRISMButton
+        <PRIZMButton label="Sign in" loading={isSubmitting} onPress={handleSubmit(onSubmit)} />
+        <PRIZMButton
           label="Forgot password?"
           variant="tertiary"
           onPress={() =>

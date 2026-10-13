@@ -2,8 +2,8 @@ import React from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 import { BookOpen, CalendarDays, Flag, Pill, type LucideIcon } from 'lucide-react-native';
-import type { ModuleKey } from '@prism/types';
-import { fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import type { ModuleKey } from '@prizm/types';
+import { fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 import { useModules } from '../../../lib/profile/queries';
 import { useTint, type Tint } from '../../../components/home/tint';
 

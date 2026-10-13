@@ -3,15 +3,15 @@ import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSkeleton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSkeleton,
   spacing,
   useTheme,
   useToast,
-} from '@prism/ui';
-import type { ProfileUpdateInput } from '@prism/validation';
+} from '@prizm/ui';
+import type { ProfileUpdateInput } from '@prizm/validation';
 import { useProfile, useUpdateProfile } from '../../../lib/profile/queries';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ProfileForm } from '../components/ProfileForm';
@@ -34,18 +34,18 @@ export function EditProfileScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Edit profile."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !profile ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <KeyboardAwareScreen>
           <View style={styles.content}>

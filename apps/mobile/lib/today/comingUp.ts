@@ -1,5 +1,5 @@
 import type { Href } from 'expo-router';
-import type { ModuleKey, TodayItem } from '@prism/types';
+import type { ModuleKey, TodayItem } from '@prizm/types';
 
 const COMING_UP_BUCKETS = new Set(['due_today', 'upcoming']);
 const DEFAULT_LIMIT = 4;

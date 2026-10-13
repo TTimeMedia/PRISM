@@ -5,17 +5,17 @@ import Constants from 'expo-constants';
 import * as WebBrowser from 'expo-web-browser';
 import { ArrowLeft } from 'lucide-react-native';
 import {
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMListItem,
-  PRISMSection,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMListItem,
+  PRIZMSection,
   fontFamily,
   fontWeight,
   spacing,
   type,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { LEGAL_LINKS } from '../../../lib/you/legal';
 
 /**
@@ -41,12 +41,12 @@ export function AboutScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="About Prizm."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <ScrollView contentContainerStyle={styles.content}>
@@ -61,14 +61,14 @@ export function AboutScreen() {
           appointments, and the personal journey around them. It stores and organizes what you tell
           it; it never interprets, recommends, or diagnoses.
         </Text>
-        <PRISMSection title="Legal">
-          <PRISMListItem title="Privacy Policy" onPress={() => open(LEGAL_LINKS.privacy)} />
-          <PRISMListItem title="Terms of Service" onPress={() => open(LEGAL_LINKS.terms)} />
-          <PRISMListItem
+        <PRIZMSection title="Legal">
+          <PRIZMListItem title="Privacy Policy" onPress={() => open(LEGAL_LINKS.privacy)} />
+          <PRIZMListItem title="Terms of Service" onPress={() => open(LEGAL_LINKS.terms)} />
+          <PRIZMListItem
             title="Open-source acknowledgements"
             onPress={() => router.push('/you/acknowledgements')}
           />
-        </PRISMSection>
+        </PRIZMSection>
         <Text style={[styles.copyright, { color: theme.colors.text.tertiary }]}>
           © {new Date().getFullYear()} T-Time Media LLC
         </Text>

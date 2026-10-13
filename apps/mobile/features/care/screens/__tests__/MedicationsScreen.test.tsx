@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import type { Medication } from '@prism/types';
+import type { Medication } from '@prizm/types';
 import { renderWithProviders } from '../../../../test-utils/renderWithProviders';
 import { MedicationsScreen } from '../MedicationsScreen';
 import { useMedications } from '../../../../lib/care/queries';

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { renderWithProviders } from '../../test-utils/renderWithProviders';
 import { LocationSearchInput } from '../LocationSearchInput';
-import { searchLocations } from '../../modules/prism-location-search';
+import { searchLocations } from '../../modules/prizm-location-search';
 
-jest.mock('../../modules/prism-location-search', () => ({
+jest.mock('../../modules/prizm-location-search', () => ({
   isLocationSearchAvailable: true,
   searchLocations: jest.fn(),
 }));

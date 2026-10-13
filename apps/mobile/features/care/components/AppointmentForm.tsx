@@ -3,15 +3,15 @@ import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  PRISMButton,
-  PRISMDateInput,
-  PRISMInput,
-  PRISMSwitch,
-  PRISMTextArea,
-  PRISMTimeInput,
+  PRIZMButton,
+  PRIZMDateInput,
+  PRIZMInput,
+  PRIZMSwitch,
+  PRIZMTextArea,
+  PRIZMTimeInput,
   spacing,
-} from '@prism/ui';
-import { appointmentFormSchema, type AppointmentFormInput } from '@prism/validation';
+} from '@prizm/ui';
+import { appointmentFormSchema, type AppointmentFormInput } from '@prizm/validation';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from './ChipField';
 import { SUGGESTED_APPOINTMENT_CATEGORY_OPTIONS } from '../optionLabels';
@@ -78,7 +78,7 @@ export function AppointmentForm({
           control={control}
           name="title"
           render={({ field, fieldState }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Title"
               value={field.value}
               onChangeText={field.onChange}
@@ -91,7 +91,7 @@ export function AppointmentForm({
           control={control}
           name="provider"
           render={({ field }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Provider"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -115,7 +115,7 @@ export function AppointmentForm({
           control={control}
           name="date"
           render={({ field, fieldState }) => (
-            <PRISMDateInput
+            <PRIZMDateInput
               label="Date"
               value={field.value}
               onChangeText={field.onChange}
@@ -128,7 +128,7 @@ export function AppointmentForm({
           control={control}
           name="time"
           render={({ field }) => (
-            <PRISMTimeInput
+            <PRIZMTimeInput
               label="Time"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -151,18 +151,18 @@ export function AppointmentForm({
           control={control}
           name="reminder_enabled"
           render={({ field }) => (
-            <PRISMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
+            <PRIZMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
           )}
         />
         <Controller
           control={control}
           name="notes"
           render={({ field }) => (
-            <PRISMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
+            <PRIZMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
           )}
         />
         <View style={styles.submit}>
-          <PRISMButton label={submitLabel} onPress={handleSubmit(submit)} loading={submitting} />
+          <PRIZMButton label={submitLabel} onPress={handleSubmit(submit)} loading={submitting} />
         </View>
       </View>
     </KeyboardAwareScreen>

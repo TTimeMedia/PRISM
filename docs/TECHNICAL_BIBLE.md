@@ -52,7 +52,7 @@ Do not make social login a requirement for MVP; email + password + verification 
 Recommended monorepo:
 
 ```
-prism/
+prizm/
 ├── apps/
 │   ├── mobile/
 │   │   ├── app/

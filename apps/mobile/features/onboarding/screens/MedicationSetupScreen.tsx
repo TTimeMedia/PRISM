@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MEDICATION_FORMS, getNextOnboardingStep } from '@prism/types';
-import { medicationCreateSchema, type MedicationCreateInput } from '@prism/validation';
-import { PRISMDateInput, PRISMInput, PRISMSwitch, spacing } from '@prism/ui';
+import { MEDICATION_FORMS, getNextOnboardingStep } from '@prizm/types';
+import { medicationCreateSchema, type MedicationCreateInput } from '@prizm/validation';
+import { PRIZMDateInput, PRIZMInput, PRIZMSwitch, spacing } from '@prizm/ui';
 import { StyleSheet, View } from 'react-native';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
@@ -120,7 +120,7 @@ export function MedicationSetupScreen() {
         control={control}
         name="dosage_text"
         render={({ field }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Dosage"
             value={field.value ?? ''}
             onChangeText={field.onChange}
@@ -133,7 +133,7 @@ export function MedicationSetupScreen() {
         control={control}
         name="start_date"
         render={({ field, fieldState }) => (
-          <PRISMDateInput
+          <PRIZMDateInput
             label="Start date"
             value={field.value ?? ''}
             onChangeText={field.onChange}
@@ -146,7 +146,7 @@ export function MedicationSetupScreen() {
         control={control}
         name="reminder_enabled"
         render={({ field }) => (
-          <PRISMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
+          <PRIZMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
         )}
       />
     </OnboardingScreenLayout>

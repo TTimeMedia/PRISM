@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CalendarDays, Heart, Palette, Sun, type LucideIcon } from 'lucide-react-native';
-import { PRISMButton, fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
+import { PRIZMButton, fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prizm/ui';
 import { AmbientBackground, Reveal } from '../../../components/motion';
 
 interface Slide {
@@ -181,9 +181,9 @@ export function TourSlides({
             />
           ))}
         </View>
-        <PRISMButton label={isLast ? doneLabel : 'Next'} onPress={next} loading={loading} />
+        <PRIZMButton label={isLast ? doneLabel : 'Next'} onPress={next} loading={loading} />
         {onSkip && !isLast ? (
-          <PRISMButton label="Skip" variant="tertiary" onPress={onSkip} />
+          <PRIZMButton label="Skip" variant="tertiary" onPress={onSkip} />
         ) : null}
       </View>
     </SafeAreaView>

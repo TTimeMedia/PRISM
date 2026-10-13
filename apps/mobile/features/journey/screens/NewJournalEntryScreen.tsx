@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { PRISMHeader, PRISMIconButton, useTheme, useToast } from '@prism/ui';
-import type { JournalEntryCreateInput } from '@prism/validation';
+import { PRIZMHeader, PRIZMIconButton, useTheme, useToast } from '@prizm/ui';
+import type { JournalEntryCreateInput } from '@prizm/validation';
 import { useSession } from '../../../lib/auth/AuthProvider';
 import { useModules } from '../../../lib/profile/queries';
 import { useCreateJournalEntry } from '../../../lib/journey/mutations';
@@ -43,12 +43,12 @@ export function NewJournalEntryScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Write something."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       <JournalEntryForm

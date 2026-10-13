@@ -4,16 +4,16 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import {
   type PaletteKey,
-  PRISMErrorState,
-  PRISMHeader,
-  PRISMIconButton,
-  PRISMSelect,
-  PRISMSkeleton,
+  PRIZMErrorState,
+  PRIZMHeader,
+  PRIZMIconButton,
+  PRIZMSelect,
+  PRIZMSkeleton,
   spacing,
   type,
   useTheme,
-} from '@prism/ui';
-import type { Theme } from '@prism/types';
+} from '@prizm/ui';
+import type { Theme } from '@prizm/types';
 import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
 import { useAppStore } from '../../../lib/store/appStore';
 import { track } from '../../../lib/analytics/events';
@@ -68,21 +68,21 @@ export function AppearanceScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <PRISMHeader
+      <PRIZMHeader
         title="Appearance."
         leading={
-          <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
+          <PRIZMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />
-          </PRISMIconButton>
+          </PRIZMIconButton>
         }
       />
       {isLoading ? (
-        <PRISMSkeleton height={56} />
+        <PRIZMSkeleton height={56} />
       ) : isError || !settings ? (
-        <PRISMErrorState onRetry={() => refetch()} />
+        <PRIZMErrorState onRetry={() => refetch()} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          <PRISMSelect
+          <PRIZMSelect
             label="Theme"
             options={THEME_OPTIONS}
             value={settings.theme}

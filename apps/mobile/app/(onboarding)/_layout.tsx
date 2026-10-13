@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Stack } from 'expo-router';
-import { normalizeOnboardingStep } from '@prism/types';
+import { normalizeOnboardingStep } from '@prizm/types';
 import { useProfile } from '../../lib/profile/queries';
 import { isOnboardingBack, ONBOARDING_ROUTE_SEGMENTS } from '../../lib/onboarding/routes';
 import { OnboardingBackButton } from '../../features/onboarding/components/OnboardingBackButton';

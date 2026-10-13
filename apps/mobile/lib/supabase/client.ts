@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
-import { createSupabaseClient, type PrismSupabaseClient } from '@prism/database';
-import { requireEnv } from '@prism/config';
+import { createSupabaseClient, type PrizmSupabaseClient } from '@prizm/database';
+import { requireEnv } from '@prizm/config';
 import { supabaseAuthStorage } from './storage';
 
 /**
@@ -23,7 +23,7 @@ const demo =
       (require('../demo/setup'), require('../demo/demoFetch') as typeof import('../demo/demoFetch'))
     : null;
 
-export const supabase: PrismSupabaseClient = createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+export const supabase: PrizmSupabaseClient = createSupabaseClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     storage: demo ? demo.demoAuthStorage : supabaseAuthStorage,
     autoRefreshToken: !demo,

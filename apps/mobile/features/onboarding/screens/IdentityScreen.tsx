@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getNextOnboardingStep } from '@prism/types';
-import { identitySchema, type IdentityInput } from '@prism/validation';
-import { PRISMInput } from '@prism/ui';
+import { getNextOnboardingStep } from '@prizm/types';
+import { identitySchema, type IdentityInput } from '@prizm/validation';
+import { PRIZMInput } from '@prizm/ui';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { GENDER_OPTIONS, PRONOUN_OPTIONS } from '../../../lib/pickerOptions';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
@@ -59,7 +59,7 @@ export function IdentityScreen() {
         control={control}
         name="display_name"
         render={({ field }) => (
-          <PRISMInput
+          <PRIZMInput
             label="Name"
             value={field.value ?? ''}
             onChangeText={field.onChange}

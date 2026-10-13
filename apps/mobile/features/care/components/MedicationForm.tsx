@@ -2,15 +2,15 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { medicationCreateSchema, type MedicationCreateInput } from '@prism/validation';
+import { medicationCreateSchema, type MedicationCreateInput } from '@prizm/validation';
 import {
-  PRISMButton,
-  PRISMDateInput,
-  PRISMInput,
-  PRISMSwitch,
-  PRISMTextArea,
+  PRIZMButton,
+  PRIZMDateInput,
+  PRIZMInput,
+  PRIZMSwitch,
+  PRIZMTextArea,
   spacing,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
@@ -91,7 +91,7 @@ export function MedicationForm({
           control={control}
           name="dosage_text"
           render={({ field }) => (
-            <PRISMInput
+            <PRIZMInput
               label="Dosage"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -104,7 +104,7 @@ export function MedicationForm({
           control={control}
           name="start_date"
           render={({ field, fieldState }) => (
-            <PRISMDateInput
+            <PRIZMDateInput
               label="Start date"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -117,14 +117,14 @@ export function MedicationForm({
           control={control}
           name="reminder_enabled"
           render={({ field }) => (
-            <PRISMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
+            <PRIZMSwitch label="Remind me" value={field.value} onValueChange={field.onChange} />
           )}
         />
         <Controller
           control={control}
           name="notes"
           render={({ field }) => (
-            <PRISMTextArea
+            <PRIZMTextArea
               label="Notes"
               value={field.value ?? ''}
               onChangeText={field.onChange}
@@ -133,7 +133,7 @@ export function MedicationForm({
           )}
         />
         <View style={styles.submit}>
-          <PRISMButton
+          <PRIZMButton
             label={submitLabel}
             onPress={handleSubmit(submitChecked)}
             loading={submitting}

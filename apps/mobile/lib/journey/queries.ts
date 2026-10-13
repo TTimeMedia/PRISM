@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { JournalEntry, Milestone } from '@prism/types';
+import type { JournalEntry, Milestone } from '@prizm/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 

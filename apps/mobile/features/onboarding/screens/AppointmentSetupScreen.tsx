@@ -5,18 +5,18 @@ import { CalendarDays, CalendarPlus, Clock } from 'lucide-react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getNextOnboardingStep } from '@prism/types';
+import { getNextOnboardingStep } from '@prizm/types';
 import {
   appointmentSetupSchema,
   deriveAppointmentTitle,
   type AppointmentSetupInput,
-} from '@prism/validation';
+} from '@prizm/validation';
 import {
-  PRISMButton,
-  PRISMDateInput,
-  PRISMInput,
-  PRISMSwitch,
-  PRISMTimeInput,
+  PRIZMButton,
+  PRIZMDateInput,
+  PRIZMInput,
+  PRIZMSwitch,
+  PRIZMTimeInput,
   fontFamily,
   fontWeight,
   radius,
@@ -25,7 +25,7 @@ import {
   useReducedMotion,
   useTheme,
   useToast,
-} from '@prism/ui';
+} from '@prizm/ui';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { OptionGrid, type OptionGridOption } from '../components/OptionGrid';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
@@ -192,7 +192,7 @@ export function AppointmentSetupScreen() {
               <CalendarPlus size={22} color={theme.colors.text.primary} strokeWidth={2} />
             </View>
             <View style={styles.syncText}>
-              <PRISMSwitch
+              <PRIZMSwitch
                 label="Sync with my calendar"
                 description={
                   syncAvailable
@@ -221,7 +221,7 @@ export function AppointmentSetupScreen() {
                 control={control}
                 name="provider"
                 render={({ field }) => (
-                  <PRISMInput
+                  <PRIZMInput
                     label="Provider"
                     value={field.value ?? ''}
                     onChangeText={field.onChange}
@@ -245,7 +245,7 @@ export function AppointmentSetupScreen() {
                 control={control}
                 name="date"
                 render={({ field, fieldState }) => (
-                  <PRISMDateInput
+                  <PRIZMDateInput
                     label="Date"
                     value={field.value ?? ''}
                     onChangeText={field.onChange}
@@ -258,7 +258,7 @@ export function AppointmentSetupScreen() {
                 control={control}
                 name="time"
                 render={({ field, fieldState }) => (
-                  <PRISMTimeInput
+                  <PRIZMTimeInput
                     label="Time"
                     value={field.value ?? ''}
                     onChangeText={field.onChange}
@@ -282,7 +282,7 @@ export function AppointmentSetupScreen() {
                 control={control}
                 name="reminder_enabled"
                 render={({ field }) => (
-                  <PRISMSwitch
+                  <PRIZMSwitch
                     label="Remind me"
                     value={field.value}
                     onValueChange={field.onChange}
@@ -292,12 +292,12 @@ export function AppointmentSetupScreen() {
             </Animated.View>
           ) : (
             <View style={styles.actions}>
-              <PRISMButton
+              <PRIZMButton
                 label="Import from my calendar"
                 variant="secondary"
                 onPress={() => setImportOpen(true)}
               />
-              <PRISMButton
+              <PRIZMButton
                 label="Add my next appointment now"
                 variant="secondary"
                 onPress={() => setShowForm(true)}
