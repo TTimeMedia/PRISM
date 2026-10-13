@@ -29,7 +29,7 @@ export const GENDER_OPTIONS = [
 ] as const;
 
 /**
- * Common medications people bring to Prism, alphabetical. This is a
+ * Common medications people bring to Prizm, alphabetical. This is a
  * convenience list, not medical guidance, and not exhaustive: anything
  * else can be typed in.
  */

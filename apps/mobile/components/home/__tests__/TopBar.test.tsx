@@ -82,14 +82,14 @@ describe('TopBar', () => {
 
     fireEvent.press(screen.getByLabelText('Open menu'));
 
-    expect(screen.getByText('Your Prism')).toBeTruthy();
+    expect(screen.getByText('Your Prizm')).toBeTruthy();
     expect(screen.getByLabelText('Medications')).toBeTruthy();
     expect(screen.getByLabelText('Journal')).toBeTruthy();
     // Injections is off, so it is not listed.
     expect(screen.queryByLabelText('Injections')).toBeNull();
     // The menu has its own Reminders entry; the bell behind it is hidden while the menu is open.
     expect(screen.getAllByLabelText('Reminders')).toHaveLength(1);
-    expect(screen.getByLabelText('How Prism works')).toBeTruthy();
+    expect(screen.getByLabelText('How Prizm works')).toBeTruthy();
     expect(screen.getByLabelText('Your profile, Dominic Perignon')).toBeTruthy();
     expect(screen.getByText('DP')).toBeTruthy();
   });
@@ -101,13 +101,13 @@ describe('TopBar', () => {
     fireEvent.press(screen.getByLabelText('Privacy'));
 
     expect(router.push).toHaveBeenCalledWith('/you/privacy');
-    expect(screen.queryByText('Your Prism')).toBeNull();
+    expect(screen.queryByText('Your Prizm')).toBeNull();
   });
 
   it('keeps the closed menu out of reach, and the bar usable', () => {
     renderBar('Today');
 
-    expect(screen.queryByText('Your Prism')).toBeNull();
+    expect(screen.queryByText('Your Prizm')).toBeNull();
     expect(screen.getAllByLabelText('Reminders')).toHaveLength(1);
   });
 });

@@ -113,7 +113,7 @@ export function SupportFormScreen({ kind, screenshotUri, fromScreen }: SupportFo
             </View>
           ) : null}
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
-            Sent with your account email (for our reply), Prism {version}, your phone&apos;s system
+            Sent with your account email (for our reply), Prizm {version}, your phone&apos;s system
             version{fromScreen ? ' and the screen you were on' : ''}.
           </Text>
           <PRISMButton

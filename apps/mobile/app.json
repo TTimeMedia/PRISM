@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Prism",
+    "name": "Prizm",
     "slug": "prism",
     "owner": "ttimemedia",
     "version": "1.0.0",
@@ -14,7 +14,7 @@
       "bundleIdentifier": "ttimemedia.prism",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCalendarsWriteOnlyAccessUsageDescription": "Prism adds the appointments you choose to sync to your calendar.",
+        "NSCalendarsWriteOnlyAccessUsageDescription": "Prizm adds the appointments you choose to sync to your calendar.",
         "CFBundleDocumentTypes": [
           {
             "CFBundleTypeName": "Calendar event",
@@ -71,13 +71,13 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Prism uses Face ID to unlock the app you locked for your privacy."
+          "faceIDPermission": "Prizm uses Face ID to unlock the app you locked for your privacy."
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Prism uses your photo library to set your profile photo and to add photos to your milestones and journal entries.",
+          "photosPermission": "Prizm uses your photo library to set your profile photo and to add photos to your milestones and journal entries.",
           "cameraPermission": false,
           "microphonePermission": false
         }
@@ -85,7 +85,7 @@
       [
         "expo-calendar",
         {
-          "calendarPermission": "Prism reads your calendar when you import, or to suggest appointments if you turn that on, so you can choose which to add. Only the ones you choose are saved. It also adds appointments you choose to sync.",
+          "calendarPermission": "Prizm reads your calendar when you import, or to suggest appointments if you turn that on, so you can choose which to add. Only the ones you choose are saved. It also adds appointments you choose to sync.",
           "remindersPermission": false
         }
       ],

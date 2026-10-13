@@ -76,11 +76,11 @@ describe('PrivacySetupScreen', () => {
     renderWithProviders(<PrivacySetupScreen />);
     const hidden = { includeHiddenElements: true };
 
-    expect(screen.getByText('Your Prism reminder is ready.', hidden)).toBeTruthy();
+    expect(screen.getByText('Your Prizm reminder is ready.', hidden)).toBeTruthy();
 
     fireEvent(screen.getByLabelText('Private notifications'), 'valueChange', false);
 
-    expect(screen.queryByText('Your Prism reminder is ready.', hidden)).toBeNull();
+    expect(screen.queryByText('Your Prizm reminder is ready.', hidden)).toBeNull();
     expect(screen.getByText('Take your Vitamin D at 9:00 AM.', hidden)).toBeTruthy();
   });
 

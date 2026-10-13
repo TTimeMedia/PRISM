@@ -45,7 +45,7 @@ const PILLARS: Pillar[] = [
   },
 ];
 
-/** Screen 08 — Philosophy. A short, calm intro to how Prism works: optional, private, yours. */
+/** Screen 08 — Philosophy. A short, calm intro to how Prizm works: optional, private, yours. */
 export function PhilosophyScreen() {
   const theme = useTheme();
   const updateProfile = useUpdateProfile();
@@ -107,7 +107,7 @@ export function PhilosophyScreen() {
             { color: theme.colors.text.primary },
           ]}
         >
-          Prism fits around you.
+          Prizm fits around you.
         </Text>
       </Reveal>
     </OnboardingScreenLayout>

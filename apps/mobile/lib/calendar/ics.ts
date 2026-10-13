@@ -1,6 +1,6 @@
 /**
  * A small, forgiving reader for iCalendar (.ics) files — the calendar
- * attachments clinics and patient portals send. It reads what Prism needs
+ * attachments clinics and patient portals send. It reads what Prizm needs
  * to make an appointment (title, start, end, place, notes) and ignores the
  * rest, including repeat rules: an imported appointment is the first date
  * in the file. Runs entirely on the phone.

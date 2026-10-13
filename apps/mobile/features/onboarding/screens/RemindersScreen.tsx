@@ -10,7 +10,7 @@ import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 import { requestNotificationPermissions } from '../../../lib/reminders/notificationScheduler';
 
-/** What Prism sends once notifications are on (lib/reminders/useReminderSync.ts). */
+/** What Prizm sends once notifications are on (lib/reminders/useReminderSync.ts). */
 const USES: { icon: LucideIcon; text: string }[] = [
   { icon: Pill, text: 'Dose and shot reminders, with one follow-up if a dose is missed' },
   { icon: CalendarDays, text: 'A heads-up before each appointment' },
@@ -19,7 +19,7 @@ const USES: { icon: LucideIcon; text: string }[] = [
 
 /**
  * Reminders — the one place onboarding turns notifications on. It says what
- * Prism uses them for, then asks for the phone's permission at a moment
+ * Prizm uses them for, then asks for the phone's permission at a moment
  * that makes sense instead of a surprise system prompt the first time a
  * reminder is saved. What each notification says was chosen on the screen
  * before (Privacy Setup). Reminders are scheduled on the phone
@@ -70,7 +70,7 @@ export function RemindersScreen() {
       }
       phase={0.9}
       title="Turn on notifications."
-      subtitle="Prism uses notifications for gentle reminders about the things you track. Your phone will ask for permission next."
+      subtitle="Prizm uses notifications for gentle reminders about the things you track. Your phone will ask for permission next."
       primaryLabel={declinedNote ? 'Continue' : 'Turn on notifications'}
       onPrimaryPress={declinedNote ? skip : turnOn}
       primaryLoading={isSubmitting}

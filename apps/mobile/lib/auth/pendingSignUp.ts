@@ -10,7 +10,7 @@ import { isEmailNotConfirmedError } from './errors';
  * The email and password from Sign Up are kept in memory only, never
  * written anywhere, and are forgotten as soon as sign-in works or the
  * "Check your email" screen closes. While that screen is open, sign-in is
- * retried when Prism comes back to the foreground and every few seconds.
+ * retried when Prizm comes back to the foreground and every few seconds.
  * Once it works, the session change routes on to onboarding as usual.
  */
 

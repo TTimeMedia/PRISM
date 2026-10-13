@@ -26,7 +26,7 @@ const SLIDES: Slide[] = [
     icon: Sun,
     tint: 'cyan',
     title: 'Start at Today',
-    body: 'Your day at a glance, the moment you open Prism.',
+    body: 'Your day at a glance, the moment you open Prizm.',
     points: [
       'What is coming up next',
       'Your reminders and recent entries',
@@ -55,9 +55,9 @@ const SLIDES: Slide[] = [
     icon: Palette,
     tint: 'mint',
     title: 'Make it yours',
-    body: 'Prism is built from parts you switch on and off.',
+    body: 'Prizm is built from parts you switch on and off.',
     points: [
-      'Turn parts on or off in Make Prism yours',
+      'Turn parts on or off in Make Prizm yours',
       'Pick your color and theme',
       'Lock the app with a PIN or Face ID',
       'Export or delete your data any time',
@@ -77,8 +77,8 @@ export interface TourSlidesProps {
 }
 
 /**
- * Swipeable "how Prism works" walkthrough — used once during onboarding
- * and again from You → How Prism works. Each slide is one idea with three
+ * Swipeable "how Prizm works" walkthrough — used once during onboarding
+ * and again from You → How Prizm works. Each slide is one idea with three
  * short points; nothing here reads or asks for anything.
  */
 export function TourSlides({

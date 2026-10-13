@@ -14,7 +14,7 @@ export interface CalendarSuggestionsProps {
 
 /**
  * "From your calendar": upcoming events that look like appointments, each
- * one tap from Prism. Shown only when calendar suggestions are on.
+ * one tap from Prizm. Shown only when calendar suggestions are on.
  */
 export function CalendarSuggestions({ suggestions, onAdd, onDismiss }: CalendarSuggestionsProps) {
   if (suggestions.length === 0) return null;
@@ -82,7 +82,7 @@ function SuggestionCard({
       </View>
       <View style={styles.actions}>
         <View style={styles.primary}>
-          <PRISMButton label="Add to Prism" loading={adding} onPress={add} />
+          <PRISMButton label="Add to Prizm" loading={adding} onPress={add} />
         </View>
         <PRISMButton label="Not this one" variant="tertiary" onPress={() => onDismiss(event)} />
       </View>

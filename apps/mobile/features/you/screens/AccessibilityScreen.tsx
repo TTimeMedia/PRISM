@@ -19,9 +19,9 @@ import { useSettings, useUpdateSettings } from '../../../lib/profile/queries';
  * Screen 61 — Accessibility. "Reduced motion" is the one real toggle
  * here (settings.reduced_motion, wired through ReducedMotionProvider in
  * app/_layout.tsx). Text size, contrast, and screen reader support are
- * already handled by respecting OS-level settings throughout PRISM
+ * already handled by respecting OS-level settings throughout PRIZM
  * (system font scaling, semantic accessibilityLabel/Role on every
- * control) rather than a separate, PRISM-specific override that would
+ * control) rather than a separate, PRIZM-specific override that would
  * fight the OS setting — see docs/DECISIONS.md § YOU.
  */
 export function AccessibilityScreen() {
@@ -48,14 +48,14 @@ export function AccessibilityScreen() {
           <PRISMSection>
             <PRISMSwitch
               label="Reduced motion"
-              description="Skip decorative motion effects throughout Prism."
+              description="Skip decorative motion effects throughout Prizm."
               value={settings.reduced_motion}
               onValueChange={(value) => updateSettings.mutate({ reduced_motion: value })}
             />
           </PRISMSection>
           <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
             Text size follows your device&rsquo;s system setting. Screen reader labels are built
-            into every Prism control. Increased contrast isn&rsquo;t available as a separate Prism
+            into every Prizm control. Increased contrast isn&rsquo;t available as a separate Prizm
             setting yet — for now, your device&rsquo;s own contrast setting applies.
           </Text>
         </ScrollView>

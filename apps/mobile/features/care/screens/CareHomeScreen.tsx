@@ -234,7 +234,7 @@ export function CareHomeScreen() {
                     icon={Package}
                     tint="violet"
                     title="Keep track of supplies"
-                    body="Vials, syringes, pills, patches. Prism counts them down as you log doses and reminds you before you run out."
+                    body="Vials, syringes, pills, patches. Prizm counts them down as you log doses and reminds you before you run out."
                     primaryLabel="Add a supply"
                     onPrimary={() => router.push('/care/supplies/add')}
                   />

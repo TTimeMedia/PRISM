@@ -5,7 +5,7 @@ import { TourSlides } from '../components/TourSlides';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile } from '../../../lib/profile/queries';
 
-/** How Prism works — a short, skippable walkthrough shown once, after setup and before "Prism is ready." */
+/** How Prizm works — a short, skippable walkthrough shown once, after setup and before "Prizm is ready." */
 export function TourScreen() {
   const updateProfile = useUpdateProfile();
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -121,7 +121,7 @@ export function TimelineScreen() {
           </Text>
           {since ? (
             <Text style={[styles.since, { color: theme.colors.text.secondary }]}>
-              With Prism since {since}
+              With Prizm since {since}
             </Text>
           ) : null}
         </View>

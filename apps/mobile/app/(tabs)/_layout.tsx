@@ -20,7 +20,7 @@ type TabBarProps =
 const STACK_TABS = new Set(['care', 'journey', 'you']);
 
 /**
- * PRISM has exactly four primary destinations — TODAY / CARE / JOURNEY /
+ * PRIZM has exactly four primary destinations — TODAY / CARE / JOURNEY /
  * YOU — and no fifth tab is added without revising the specification.
  * See docs/MASTER_BUILD_SPEC.md §04.
  */

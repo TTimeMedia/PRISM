@@ -55,13 +55,13 @@ export function SuppliesScreen() {
         ) : rows.length === 0 ? (
           <PRISMEmptyState
             title="No supplies yet."
-            subtitle="Add a vial, syringes or pills. Linked to a medication, Prism counts them down as you log doses and reminds you before you run out."
+            subtitle="Add a vial, syringes or pills. Linked to a medication, Prizm counts them down as you log doses and reminds you before you run out."
             action={{ label: 'Add a supply', onPress: () => router.push('/care/supplies/add') }}
           />
         ) : (
           <>
             <Text style={[styles.intro, { color: theme.colors.text.secondary }]}>
-              Prism reminds you a week before something runs out or is due for a refill.
+              Prizm reminds you a week before something runs out or is due for a refill.
             </Text>
             <View style={styles.list}>
               {rows.map(({ supply, medication, outlook }) => (

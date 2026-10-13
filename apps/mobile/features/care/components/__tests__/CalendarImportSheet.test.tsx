@@ -120,10 +120,10 @@ describe('CalendarImportSheet', () => {
     expect(onClose).toHaveBeenCalled();
   });
 
-  it('cannot add an appointment that is already in Prism', async () => {
+  it('cannot add an appointment that is already in Prizm', async () => {
     open();
 
-    expect(await screen.findByText('Already in Prism')).toBeTruthy();
+    expect(await screen.findByText('Already in Prizm')).toBeTruthy();
     expect(screen.getByLabelText('Primary care').props.accessibilityState.disabled).toBe(true);
     expect(screen.getByText('Pick appointments to add')).toBeTruthy();
   });

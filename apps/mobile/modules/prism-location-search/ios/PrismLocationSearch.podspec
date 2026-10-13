@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name           = 'PrismLocationSearch'
   s.version        = '1.0.0'
-  s.summary        = 'Apple MapKit address and place autocomplete for PRISM.'
+  s.summary        = 'Apple MapKit address and place autocomplete for PRIZM.'
   s.description    = 'Wraps MKLocalSearchCompleter so appointment locations can be searched like a map.'
   s.author         = 'PRISM'
   s.homepage       = 'https://docs.expo.dev/modules/'

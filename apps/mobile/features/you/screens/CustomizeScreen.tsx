@@ -19,7 +19,7 @@ import { useModules, useSetModuleEnabled } from '../../../lib/profile/queries';
 import { MODULE_INFO } from '../moduleInfo';
 
 /**
- * Screen 56 — Customize PRISM. Module toggles for the five P0 modules
+ * Screen 56 — Customize PRIZM. Module toggles for the five P0 modules
  * only — see docs/SCREEN_BIBLE.md Screen 56. Toggling a module off never
  * deletes its data (docs/DECISIONS.md).
  */
@@ -36,7 +36,7 @@ export function CustomizeScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <PRISMHeader
-        title="Make Prism yours."
+        title="Make Prizm yours."
         leading={
           <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />

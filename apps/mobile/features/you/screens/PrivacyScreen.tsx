@@ -54,7 +54,7 @@ export function PrivacyScreen() {
             <PRISMSwitch
               label="Private notifications"
               description={
-                'Notification previews stay generic, e.g. "Your Prism reminder is ready."'
+                'Notification previews stay generic, e.g. "Your Prizm reminder is ready."'
               }
               value={settings.notification_privacy}
               onValueChange={(value) => updateSettings.mutate({ notification_privacy: value })}
@@ -65,7 +65,7 @@ export function PrivacyScreen() {
             <PRISMListItem title="Data & export" onPress={() => router.push('/you/data')} />
             <PRISMSwitch
               label="Share anonymous usage"
-              description="Which screens and features get used, so Prism can be improved. Never your name, health details or anything you write."
+              description="Which screens and features get used, so Prizm can be improved. Never your name, health details or anything you write."
               value={analyticsConsent === 'granted'}
               onValueChange={(value) => setAnalyticsConsent(value ? 'granted' : 'declined')}
             />
@@ -75,9 +75,9 @@ export function PrivacyScreen() {
             <View style={styles.infoRow}>
               <ShieldCheck size={20} color={theme.spectrum.mint} />
               <Text style={[styles.infoText, { color: theme.colors.text.secondary }]}>
-                Your information is scoped to your account at the database level — no other Prism
+                Your information is scoped to your account at the database level — no other Prizm
                 user can query, guess into, or read it. Sensitive files (photos, documents) live in
-                private storage, never a public link. Prism doesn&rsquo;t sell your information or
+                private storage, never a public link. Prizm doesn&rsquo;t sell your information or
                 share it with third parties for advertising. Anonymous usage counts are only sent if
                 you turn them on above.
               </Text>

@@ -17,7 +17,7 @@ export function IntentScreen() {
   const submit = async (intent: string[]) => {
     setIsSubmitting(true);
     const next = getNextOnboardingStep('intent', { careSetup: null, intent });
-    // What they picked is what's on in Make Prism yours; they can change it any time.
+    // What they picked is what's on in Make Prizm yours; they can change it any time.
     await Promise.all(
       modulesForIntent(intent).map((moduleKey) =>
         setModuleEnabled.mutateAsync({ moduleKey, enabled: true }),

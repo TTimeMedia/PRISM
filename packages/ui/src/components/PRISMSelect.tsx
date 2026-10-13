@@ -22,7 +22,7 @@ export interface PRISMSelectProps<T extends string = string> {
 }
 
 /**
- * An inline option list (not a native picker) so PRISM can present
+ * An inline option list (not a native picker) so PRIZM can present
  * richer, self-explanatory choices — see docs/DESIGN_SYSTEM.md §21
  * ("module cards should be visually richer than a plain checkbox row").
  */

@@ -11,7 +11,7 @@ import { onboardingStepHref } from '../../../lib/onboarding/routes';
 import { useUpdateProfile, useUpdateSettings } from '../../../lib/profile/queries';
 
 /** The lock-screen wording with private notifications on (lib/reminders/notificationScheduler.ts). */
-const PRIVATE_BODY = 'Your Prism reminder is ready.';
+const PRIVATE_BODY = 'Your Prizm reminder is ready.';
 /** A made-up reminder in the default wording, for what "off" looks like. */
 const STANDARD_BODY = renderReminder('medication', SAMPLE_VARS.medication, {}).body;
 
@@ -59,8 +59,8 @@ export function PrivacySetupScreen() {
         </View>
       }
       phase={0.87}
-      title="Protect your Prism."
-      subtitle="Prism's reminders can show on your lock screen, where other people might see them. Choose what they say."
+      title="Protect your Prizm."
+      subtitle="Prizm's reminders can show on your lock screen, where other people might see them. Choose what they say."
       primaryLabel="Continue"
       onPrimaryPress={submit}
       primaryLoading={isSubmitting}

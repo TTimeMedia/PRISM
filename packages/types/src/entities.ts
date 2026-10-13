@@ -1,5 +1,5 @@
 /**
- * PRISM core entity types.
+ * PRIZM core entity types.
  *
  * These mirror the canonical schema in docs/MASTER_BUILD_SPEC.md §18
  * exactly (column names, nullability, defaults). This file is the
@@ -7,7 +7,7 @@
  * app, web app, and Supabase migrations — do not redefine these shapes
  * elsewhere.
  *
- * PRISM stores and organizes what the user tells it. Nothing here
+ * PRIZM stores and organizes what the user tells it. Nothing here
  * calculates, recommends, or interprets medical information — see
  * docs/PRODUCT_BIBLE.md §12 (Product Boundaries).
  */
@@ -76,7 +76,7 @@ export interface Medication {
   user_id: UUID;
   name: string;
   form: MedicationForm | null;
-  /** User-entered, informational only. PRISM never calculates or recommends dosage. */
+  /** User-entered, informational only. PRIZM never calculates or recommends dosage. */
   dosage_text: string | null;
   frequency_type: FrequencyType | null;
   frequency_config: FrequencyConfig | null;
@@ -172,7 +172,7 @@ export const LAB_STATUSES = [
 ] as const;
 export type LabStatus = (typeof LAB_STATUSES)[number];
 
-/** P1. PRISM stores lab records; it never interprets results. */
+/** P1. PRIZM stores lab records; it never interprets results. */
 export interface Lab {
   id: UUID;
   user_id: UUID;
@@ -186,7 +186,7 @@ export interface Lab {
   updated_at: ISODateTime;
 }
 
-/** P1. PRISM records procedures; it never determines eligibility or readiness. */
+/** P1. PRIZM records procedures; it never determines eligibility or readiness. */
 export interface Procedure {
   id: UUID;
   user_id: UUID;
@@ -254,7 +254,7 @@ export const LEGAL_ITEM_STATUSES = [
 ] as const;
 export type LegalItemStatus = (typeof LEGAL_ITEM_STATUSES)[number];
 
-/** P1. User-managed tracking only — PRISM does not provide legal advice. */
+/** P1. User-managed tracking only — PRIZM does not provide legal advice. */
 export interface LegalItem {
   id: UUID;
   user_id: UUID;
@@ -310,7 +310,7 @@ export const DEFAULT_PUSH_PREFERENCES: PushPreferences = {
   reminders: false,
 };
 
-/** A phone Prism can send a push to. The token is an opaque address issued by Expo. */
+/** A phone Prizm can send a push to. The token is an opaque address issued by Expo. */
 export interface PushToken {
   id: UUID;
   user_id: UUID;

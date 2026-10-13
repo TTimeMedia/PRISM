@@ -1,5 +1,5 @@
 /**
- * PRISM color tokens — see docs/DESIGN_SYSTEM.md §4.
+ * PRIZM color tokens — see docs/DESIGN_SYSTEM.md §4.
  * Framework-agnostic (plain hex/rgba strings) so both the mobile app and
  * the web app can use them without pulling in react-native.
  */
@@ -78,7 +78,7 @@ export const lightTokens: ColorTokens = {
   shadow: '0 8px 30px rgba(60,80,170,0.14)',
 };
 
-/** The signature PRISM accent system. Accents, never decoration — see docs/DESIGN_SYSTEM.md §3. */
+/** The signature PRIZM accent system. Accents, never decoration — see docs/DESIGN_SYSTEM.md §3. */
 export const spectrum = {
   cyan: '#5BCFFB', // primary action, active navigation, links, focus state
   pink: '#F5A9B8', // personal/journey moments, memories, reflection
@@ -100,7 +100,7 @@ export const destructive = '#F5716C';
 
 /**
  * User-selectable accent themes (YOU → Appearance). The accent replaces
- * PRISM's primary-action color — buttons, active navigation, focus,
+ * PRIZM's primary-action color — buttons, active navigation, focus,
  * selected chips, switches. `cyan` is the default and matches
  * `spectrum.cyan`; the gradient and the other spectrum accents are
  * unaffected.

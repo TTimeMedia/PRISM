@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 
 /**
  * Anonymous product analytics, sent to PostHog's EU region. Only ever runs
- * after the person said yes (Today's "Help improve Prism?" card, or Privacy &
+ * after the person said yes (Today's "Help improve Prizm?" card, or Privacy &
  * security); see docs/DECISIONS.md.
  *
  * What is sent: an event name from lib/analytics/events.ts, the app version
@@ -14,7 +14,7 @@ import Constants from 'expo-constants';
  * no taps captured automatically, no screen recording.
  *
  * PostHog's own app library isn't used: it needs native code and captures
- * more than Prism wants. This posts named events to PostHog's batch API.
+ * more than Prizm wants. This posts named events to PostHog's batch API.
  */
 
 /** PostHog project key. Public by design: it can only send events, not read them. */
@@ -118,7 +118,7 @@ export async function flush(): Promise<void> {
   }
 }
 
-// Send what's waiting when Prism goes to the background.
+// Send what's waiting when Prizm goes to the background.
 AppState.addEventListener('change', (state) => {
   if (state !== 'active') void flush();
 });

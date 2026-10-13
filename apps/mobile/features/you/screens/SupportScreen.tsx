@@ -79,7 +79,7 @@ export function SupportScreen() {
         <PRISMSection>
           <PRISMSwitch
             label="Shake to report a problem"
-            description="Shake your phone anywhere in Prism to open a problem report, with an optional screenshot."
+            description="Shake your phone anywhere in Prizm to open a problem report, with an optional screenshot."
             value={shakeToReport}
             onValueChange={setShakeToReport}
           />

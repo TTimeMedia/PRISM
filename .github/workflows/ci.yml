@@ -75,7 +75,7 @@ jobs:
       - name: Apply the Supabase auth/storage stand-in (test-only — see the file's own header)
         run: psql -v ON_ERROR_STOP=1 -f supabase/tests/database/00_ci_standin_schema.sql
 
-      - name: Apply every PRISM migration, in order
+      - name: Apply every PRIZM migration, in order
         run: |
           for f in $(ls supabase/migrations/*.sql | sort); do
             echo "::group::$f"

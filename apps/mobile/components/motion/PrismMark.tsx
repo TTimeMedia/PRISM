@@ -27,7 +27,7 @@ export interface PrismMarkProps {
 }
 
 /**
- * The Prism logo (the crystal prism from the app icon, cut out on its own),
+ * The Prizm logo (the crystal prism from the app icon, cut out on its own),
  * easing in with a soft spring and then floating and breathing gently over a
  * faint spectrum halo. Static under Reduce Motion. Decorative — hidden from
  * screen readers.

@@ -150,8 +150,8 @@ describe('scheduleMedicationReminders — follow-up', () => {
     const nudge = mockSchedule.mock.calls
       .map((call) => call[0])
       .find((arg) => arg.content.data.type === 'medication_nudge');
-    expect(nudge.content.title).toBe('Prism');
-    expect(nudge.content.body).toBe('Your Prism reminder is still waiting.');
+    expect(nudge.content.title).toBe('Prizm');
+    expect(nudge.content.body).toBe('Your Prizm reminder is still waiting.');
   });
 });
 
@@ -166,7 +166,7 @@ describe('scheduleAppointmentReminder — lead times', () => {
     await scheduleAppointmentReminder(appointment(), false, [1440]);
 
     const { content } = mockSchedule.mock.calls[0]?.[0];
-    expect(content.title).toBe('Prism');
+    expect(content.title).toBe('Prizm');
     expect(content.body).toBe('Endocrinology tomorrow.');
     expect(content.categoryIdentifier).toBe(APPOINTMENT_CATEGORY);
   });
@@ -234,8 +234,8 @@ describe('cancelRemindersFor, cancelDueNudges and cancelAllReminders', () => {
 describe('scheduleSnooze', () => {
   it('sends the same reminder again in ten minutes, marked so a re-sync leaves it alone', async () => {
     await scheduleSnooze({
-      title: 'Prism',
-      body: 'Your Prism reminder is ready.',
+      title: 'Prizm',
+      body: 'Your Prizm reminder is ready.',
       data: { type: 'medication', referenceId: 'm1' },
       categoryIdentifier: MEDICATION_CATEGORY,
     });

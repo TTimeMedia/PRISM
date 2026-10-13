@@ -1,9 +1,9 @@
-# PRISM Master Build Specification
+# PRIZM Master Build Specification
 
 Version 1.0
 Tagline: Your journey. Your way.
 
-**Document purpose:** this document is the authoritative specification for designing, engineering, testing, and preparing PRISM for beta release. **Claude Code (and any engineer building PRISM) should treat this document as the source of truth.** When an implementation decision is not explicitly covered, choose the option that best preserves the principles in this document. Do not ask the product owner unnecessary clarification questions. Do not invent product requirements that conflict with this specification.
+**Document purpose:** this document is the authoritative specification for designing, engineering, testing, and preparing PRIZM for beta release. **Claude Code (and any engineer building PRIZM) should treat this document as the source of truth.** When an implementation decision is not explicitly covered, choose the option that best preserves the principles in this document. Do not ask the product owner unnecessary clarification questions. Do not invent product requirements that conflict with this specification.
 
 This document is a synthesis — full detail on any one area lives in its dedicated document: [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md), [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md), [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md), [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md), [`SECURITY.md`](./SECURITY.md), [`DECISIONS.md`](./DECISIONS.md). This document tells you what to build and in what order; the others tell you exactly how.
 
@@ -11,13 +11,13 @@ This document is a synthesis — full detail on any one area lives in its dedica
 
 ## 01. Product Definition
 
-PRISM is a private, personalized app for transgender and gender-diverse people to manage, document, organize, and reflect on their individual gender-affirming journey. PRISM adapts to the individual — there is no required transition path. A person can use PRISM with HRT, without HRT, with injections, without injections, before surgery, after surgery, without surgery, while changing legal documents, without changing legal documents, while exploring their identity, after many years of transition, or without identifying with the concept of "transition" at all.
+PRIZM is a private, personalized app for transgender and gender-diverse people to manage, document, organize, and reflect on their individual gender-affirming journey. PRIZM adapts to the individual — there is no required transition path. A person can use PRIZM with HRT, without HRT, with injections, without injections, before surgery, after surgery, without surgery, while changing legal documents, without changing legal documents, while exploring their identity, after many years of transition, or without identifying with the concept of "transition" at all.
 
 **The application must never require a user to medically, socially, legally, or physically transition.**
 
-### What PRISM is not
+### What PRIZM is not
 
-Not a doctor, therapist, diagnostic tool, medical decision system, hormone dosing calculator, medication recommendation engine, surgery eligibility system, dysphoria scoring system, replacement for medical care, social network, dating application, or a platform for determining someone's gender. PRISM is a personal organization, tracking, documentation, and reflection tool.
+Not a doctor, therapist, diagnostic tool, medical decision system, hormone dosing calculator, medication recommendation engine, surgery eligibility system, dysphoria scoring system, replacement for medical care, social network, dating application, or a platform for determining someone's gender. PRIZM is a personal organization, tracking, documentation, and reflection tool.
 
 ### Target users
 
@@ -25,13 +25,13 @@ Transgender men, transgender women, nonbinary people, gender-fluid people, quest
 
 ## 02. Core Philosophy & Product Principles
 
-**Your journey. Your way.** — _Set it up your way._ Add only what you want to keep; everything is optional, private, and changeable later. **Prism fits around you.** This philosophy must influence the product architecture, UX, database, copy, personalization, and visual design — not just the marketing copy.
+**Your journey. Your way.** — _Set it up your way._ Add only what you want to keep; everything is optional, private, and changeable later. **Prizm fits around you.** This philosophy must influence the product architecture, UX, database, copy, personalization, and visual design — not just the marketing copy.
 
 1. **Person First** — the user is not a collection of medical records; the interface prioritizes the person over their data.
 2. **No Assumptions** — never assume gender, pronouns, name, HRT status, medication, injections, surgery, dysphoria, transition status, transition start date, transition goals, or legal changes. Everything is optional unless technically required for account creation (e.g. an email to sign in with).
 3. **Private by Default** — privacy is a core product feature. Sensitive information must never be unnecessarily exposed through notifications, lock screens, analytics, logs, URLs, screenshots, or metadata.
 4. **No Judgment** — a missed medication record is not a failure; changing a plan, stopping HRT, starting HRT, changing pronouns, changing names — none of these are failures. The application records events; it does not judge them.
-5. **No Finish Line** — PRISM must never imply that a user has completed transition, failed transition, fallen behind, or reached "the correct endpoint." There is no universal endpoint.
+5. **No Finish Line** — PRIZM must never imply that a user has completed transition, failed transition, fallen behind, or reached "the correct endpoint." There is no universal endpoint.
 
 Full detail: [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §8–9.
 
@@ -66,7 +66,7 @@ Full detail: [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md) §2–5.
 
 ## 04. Navigation
 
-PRISM has exactly four primary destinations: **TODAY · CARE · JOURNEY · YOU**, presented as a bottom tab bar. **Do not add additional primary navigation tabs unless this specification is intentionally revised.** Secondary navigation within each tab is contextual (e.g. CARE's sub-navigation: Medications, Injections, Appointments, Labs, Procedures).
+PRIZM has exactly four primary destinations: **TODAY · CARE · JOURNEY · YOU**, presented as a bottom tab bar. **Do not add additional primary navigation tabs unless this specification is intentionally revised.** Secondary navigation within each tab is contextual (e.g. CARE's sub-navigation: Medications, Injections, Appointments, Labs, Procedures).
 
 ## 05. Personalization Engine
 
@@ -82,9 +82,9 @@ Ranking pipeline and priority order are specified in [`TECHNICAL_BIBLE.md`](./TE
 
 Sequential, resumable, and every non-essential step is skippable. No step visually resembles a progress meter.
 
-1. **Splash** — "PRISM" / "Your journey. Your way." Routes to Today, Welcome, or resumed onboarding.
-2. **Welcome** — "Welcome to PRISM." Get started / Already have an account.
-3. **Philosophy** — the approved PRISM philosophy, verbatim, never rewritten into clinical language.
+1. **Splash** — "PRIZM" / "Your journey. Your way." Routes to Today, Welcome, or resumed onboarding.
+2. **Welcome** — "Welcome to PRIZM." Get started / Already have an account.
+3. **Philosophy** — the approved PRIZM philosophy, verbatim, never rewritten into clinical language.
 4. **What Brings You Here?** — multi-select intent (managing medications, tracking injections, appointments, labs, surgery, legal changes, milestones, journaling, records, "keeping everything in one place," "I'm still figuring things out," "something else").
 5. ~~**Journey Stage**~~ — removed from onboarding (see SCREEN_BIBLE Screen 10). If it ever returns it **must not** appear as a progress meter.
 6. **Identity** (optional) — Name, Pronouns, Gender. Fully skippable.
@@ -94,8 +94,8 @@ Sequential, resumable, and every non-essential step is skippable. No step visual
 10. **Appointment Setup** (conditional) — Title, Provider, Category, Date/time, Location, Notes, Reminder.
 11. **Journey Date** (optional) — Choose a date / I don't know / My journey doesn't have one specific start date / Skip. Never invent a default date.
 12. **Privacy Setup** — App lock, Biometrics, Private notifications (**defaults to ON**).
-13. **Building PRISM** — 1–2 second prism/light animation; never artificially delayed beyond actual setup time.
-14. **Ready** — "Your PRISM is ready." → Today.
+13. **Building PRIZM** — 1–2 second prism/light animation; never artificially delayed beyond actual setup time.
+14. **Ready** — "Your PRIZM is ready." → Today.
 
 Full per-screen spec: [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §5.
 
@@ -103,7 +103,7 @@ Full per-screen spec: [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §5.
 
 Structure: Greeting + Date → Priority information → Upcoming information → Recent meaningful information → Optional reflection → Quick Add.
 
-**Personalization priority (render order):** (1) things requiring action today, (2) upcoming items, (3) recent meaningful activity, (4) optional reflection, (5) nothing. **Do not manufacture content to fill empty space** — an empty TODAY shows: _"Nothing urgent today. That's okay. Your PRISM is here whenever you need it."_
+**Personalization priority (render order):** (1) things requiring action today, (2) upcoming items, (3) recent meaningful activity, (4) optional reflection, (5) nothing. **Do not manufacture content to fill empty space** — an empty TODAY shows: _"Nothing urgent today. That's okay. Your PRIZM is here whenever you need it."_
 
 ## 08. CARE
 
@@ -113,13 +113,13 @@ CARE is organized without feeling clinical — see [`DESIGN_SYSTEM.md`](./DESIGN
 
 Fields: `id, user_id, name, form, dosage_text, frequency_type, frequency_config, start_date, end_date, reminder_enabled, notes, created_at, updated_at`. Forms: pill, injection, patch, gel, cream, other. Frequencies: daily, weekly, every X days, custom.
 
-**Medication rules — PRISM can:** record medication, display user-entered dosage, create reminders, log completion/skipped/missed doses, record notes. **PRISM cannot:** recommend dosage, calculate hormone dosage, suggest dosage changes, determine whether a dose is appropriate, or diagnose medication issues. This is a hard boundary — not a copy-writing preference.
+**Medication rules — PRIZM can:** record medication, display user-entered dosage, create reminders, log completion/skipped/missed doses, record notes. **PRIZM cannot:** recommend dosage, calculate hormone dosage, suggest dosage changes, determine whether a dose is appropriate, or diagnose medication issues. This is a hard boundary — not a copy-writing preference.
 
 **Medication log statuses:** Scheduled, Completed, Skipped, Missed, Skipped intentionally. Never shame users for a status.
 
 ### Injections
 
-Optional — not the identity of PRISM. Fields: `id, user_id, medication_id, injected_at, site, notes, created_at, updated_at`. Site values: left/right thigh, left/right glute, left/right abdomen, other, don't track. **Do not provide medical advice regarding injection sites.**
+Optional — not the identity of PRIZM. Fields: `id, user_id, medication_id, injected_at, site, notes, created_at, updated_at`. Site values: left/right thigh, left/right glute, left/right abdomen, other, don't track. **Do not provide medical advice regarding injection sites.**
 
 ### Appointments
 
@@ -127,11 +127,11 @@ Fields: `id, user_id, title, provider, category, starts_at, ends_at, location, n
 
 ### Labs (P1)
 
-PRISM tracks lab records; **it does not interpret them.** Fields: `id, user_id, title, date, provider, status, notes, attachment_id, created_at, updated_at`. Statuses: Scheduled, Completed, Results received, Follow-up needed. Not part of MVP (§25) — the schema and rules here apply once built.
+PRIZM tracks lab records; **it does not interpret them.** Fields: `id, user_id, title, date, provider, status, notes, attachment_id, created_at, updated_at`. Statuses: Scheduled, Completed, Results received, Follow-up needed. Not part of MVP (§25) — the schema and rules here apply once built.
 
 ### Procedures (P1)
 
-Fields: `id, user_id, title, date, provider, category, notes, created_at, updated_at`. PRISM records procedures; it does not determine eligibility or readiness. Not part of MVP (§25) — the schema and rules here apply once built.
+Fields: `id, user_id, title, date, provider, category, notes, created_at, updated_at`. PRIZM records procedures; it does not determine eligibility or readiness. Not part of MVP (§25) — the schema and rules here apply once built.
 
 ## 09. JOURNEY
 
@@ -155,13 +155,13 @@ Personal documentation — first Pride, favorite selfie, haircut, ID, birthday, 
 
 ## 10. YOU
 
-The user's control center. Sections: **Personal** (Profile, Edit Profile) · **PRISM** (Customize PRISM, Module Configuration) · **Experience** (Notifications, Appearance, Accessibility) · **Privacy** (Privacy, App Lock) · **Journey** (Legal Journey, Documents) · **Data** (Data & Export, Delete Account) · **Support** (Support, About). The Legal Journey and Documents sections themselves are P1 (§25) and are not present in the MVP build of YOU.
+The user's control center. Sections: **Personal** (Profile, Edit Profile) · **PRIZM** (Customize PRIZM, Module Configuration) · **Experience** (Notifications, Appearance, Accessibility) · **Privacy** (Privacy, App Lock) · **Journey** (Legal Journey, Documents) · **Data** (Data & Export, Delete Account) · **Support** (Support, About). The Legal Journey and Documents sections themselves are P1 (§25) and are not present in the MVP build of YOU.
 
-**Customize PRISM in MVP** exposes toggles for the five P0 modules only (`medications`, `injections`, `appointments`, `milestones`, `journal`). The `modules` table schema and its full set of module keys are unchanged — labs/procedures/legal/documents/memories remain valid keys the architecture supports — but the MVP UI simply does not yet offer them; each is added to the toggle list in the release its screens ship (see [`DECISIONS.md`](./DECISIONS.md)).
+**Customize PRIZM in MVP** exposes toggles for the five P0 modules only (`medications`, `injections`, `appointments`, `milestones`, `journal`). The `modules` table schema and its full set of module keys are unchanged — labs/procedures/legal/documents/memories remain valid keys the architecture supports — but the MVP UI simply does not yet offer them; each is added to the toggle list in the release its screens ship (see [`DECISIONS.md`](./DECISIONS.md)).
 
 ## 11. Legal Journey (P1)
 
-Initial items: Name change, Gender marker, Driver's license, Passport, Birth certificate, Social Security, Custom. Statuses: Not started, Preparing, Filed, In progress, Approved, Complete. Legal information is user-managed tracking only — **PRISM does not provide legal advice**, and wording must never imply legal transition is required. Not part of MVP (§25).
+Initial items: Name change, Gender marker, Driver's license, Passport, Birth certificate, Social Security, Custom. Statuses: Not started, Preparing, Filed, In progress, Approved, Complete. Legal information is user-managed tracking only — **PRIZM does not provide legal advice**, and wording must never imply legal transition is required. Not part of MVP (§25).
 
 ## 12. Documents (P1)
 
@@ -169,7 +169,7 @@ Categories: Medical records, Lab results, Letters, Insurance, Surgery documents,
 
 ## 13. Quick Add
 
-Global **+** action, "Add to PRISM": Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only options relevant to the user's enabled modules are shown.** In the MVP build this means only Medication, Injection, Appointment, Milestone, and Journal ever appear, since the Lab/Procedure/Memory/Document modules are P1 (§25) and are not enabled-able until their screens ship.
+Global **+** action, "Add to PRIZM": Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only options relevant to the user's enabled modules are shown.** In the MVP build this means only Medication, Injection, Appointment, Milestone, and Journal ever appear, since the Lab/Procedure/Memory/Document modules are P1 (§25) and are not enabled-able until their screens ship.
 
 ## 14. Search (P1)
 
@@ -177,11 +177,11 @@ Universal search covers timeline, medications, appointments, labs, milestones, j
 
 ## 15. Notifications
 
-Default: **private notifications ON.** Example: _"Your PRISM reminder is ready."_ Never default to sensitive content such as _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_ Users can intentionally opt into more detailed notifications.
+Default: **private notifications ON.** Example: _"Your PRIZM reminder is ready."_ Never default to sensitive content such as _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_ Users can intentionally opt into more detailed notifications.
 
 ## 16. App Lock
 
-Support Face ID, Touch ID, Android biometrics, and PIN fallback where appropriate. The lock screen must not reveal medications, appointments, journey data, journal content, or sensitive notifications — it shows only the PRISM mark and an unlock prompt.
+Support Face ID, Touch ID, Android biometrics, and PIN fallback where appropriate. The lock screen must not reveal medications, appointments, journey data, journal content, or sensitive notifications — it shows only the PRIZM mark and an unlock prompt.
 
 ## 17. Authentication
 
@@ -229,7 +229,7 @@ Full detail: [`SECURITY.md`](./SECURITY.md).
 
 ## 20. Privacy
 
-PRISM must: minimize collected information, allow optional identity information, avoid unnecessary and sensitive analytics, support data export, support account deletion, protect sensitive notifications and lock-screen content, never sell transition or health data, never target advertising based on transition or health information.
+PRIZM must: minimize collected information, allow optional identity information, avoid unnecessary and sensitive analytics, support data export, support account deletion, protect sensitive notifications and lock-screen content, never sell transition or health data, never target advertising based on transition or health information.
 
 **Do not casually claim HIPAA compliance.** Actual legal obligations must be determined from the final operating model, with appropriate legal/privacy review — see [`SECURITY.md`](./SECURITY.md) §Legal/Privacy Review Requirements.
 
@@ -244,7 +244,7 @@ Required: Dynamic Type, VoiceOver, TalkBack, semantic labels, logical focus orde
 - **Spacing:** 8-point grid; 20px screen padding; 16–20px card padding; 44×44px minimum touch target.
 - **Corner radius:** cards 18px, inputs 12–14px, buttons 14px, tags 999px (pill).
 - **Visual language:** dark-first, geometric, premium, calm, expressive, private, light/refraction-inspired. Avoid generic healthcare blue, rainbow overload, syringe/pill/medical-cross branding, excessive glassmorphism/shadows/animation.
-- **Signature visual metaphor** (Light → Prism → Spectrum) appears subtly in onboarding, the logo, the timeline, milestone moments, major transitions, and success states — never at the expense of usability. **Rule: if removing the PRISM aesthetic makes the interface easier to understand, remove the aesthetic.**
+- **Signature visual metaphor** (Light → Prizm → Spectrum) appears subtly in onboarding, the logo, the timeline, milestone moments, major transitions, and success states — never at the expense of usability. **Rule: if removing the PRIZM aesthetic makes the interface easier to understand, remove the aesthetic.**
 - **Core components:** `PRISMButton`, `PRISMIconButton`, `PRISMCard`, `PRISMSection`, `PRISMInput`, `PRISMTextArea`, `PRISMSelect`, `PRISMSwitch`, `PRISMChip`, `PRISMModal`, `PRISMSheet`, `PRISMToast`, `PRISMSkeleton`, `PRISMEmptyState`, `PRISMErrorState`, `PRISMListItem`, `PRISMHeader`, `PRISMBottomNav`, `PRISMQuickAdd`, `PRISMTimeline`, `PRISMMilestone`, `PRISMMemoryCard`, `PRISMReminderCard`. Every interactive component supports Default/Pressed/Focused/Selected/Disabled/Loading/Error/Success states — implement all of them, not just the default.
 - **Forms** support Empty/Typing/Focused/Validation error/Submitting/Success/Network failure/Offline/Unsaved changes, with visible labels, accessible inputs, keyboard-aware layout, preserved input after validation errors, client _and_ server validation, and unsaved-change protection.
 - **Motion:** communicates light moving → refracting → settling; Micro 100–150ms, Standard 180–250ms, Large 300–450ms; respects system Reduce Motion (remove parallax/floating/refractive animation, simplify transitions).
@@ -265,19 +265,19 @@ Full detail: [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md).
 **This scope is final** — adopted by explicit product-owner decision on 2026-09-01, recorded in [`DECISIONS.md`](./DECISIONS.md) §Full MVP (P0) / next-release (P1) scope. It supersedes the narrative MVP wording that appeared in earlier drafts of this document and of `PRODUCT_BIBLE.md`.
 
 - **Authentication:** sign up, sign in, email verification, password recovery, session handling.
-- **Onboarding:** the full sequential flow (Philosophy → What Brings You Here? → Identity → Care Setup → Medication/Injection/Appointment Setup → Journey Date → Privacy Setup → Building PRISM → Ready).
+- **Onboarding:** the full sequential flow (Philosophy → What Brings You Here? → Identity → Care Setup → Medication/Injection/Appointment Setup → Journey Date → Privacy Setup → Building PRIZM → Ready).
 - **Personalization:** the module-driven configuration model, module selection, and the personalization engine that drives TODAY.
 - **TODAY:** personalized dashboard, dynamic cards, Quick Add.
 - **CARE:** medications, medication reminders and logging, injections, appointments.
 - **JOURNEY:** timeline, milestones, journal.
-- **YOU:** customize PRISM, privacy, notifications, app lock, accessibility, data export, account deletion.
+- **YOU:** customize PRIZM, privacy, notifications, app lock, accessibility, data export, account deletion.
 - **Foundation (cross-cutting, required to build any of the above):** repository, navigation, Supabase, database, RLS, design system, theme system.
 
 Labs, Procedures, and Legal Journey are **not** part of MVP (see §25). Foundation, Identity/Personalization, and cross-cutting requirements (Accessibility, Privacy, Security) are prerequisites for every P0 feature area above, not separate optional scope.
 
 P0/P1/P2 screen-level breakdown: [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md) §14.
 
-> **Module toggle scoping:** Customize PRISM and Quick Add expose only the five P0 module keys (`medications`, `injections`, `appointments`, `milestones`, `journal`) in the MVP build. See §10 and §13 below, and [`DECISIONS.md`](./DECISIONS.md) §Customize PRISM and Quick Add expose only P0 modules until P1 ships.
+> **Module toggle scoping:** Customize PRIZM and Quick Add expose only the five P0 module keys (`medications`, `injections`, `appointments`, `milestones`, `journal`) in the MVP build. See §10 and §13 below, and [`DECISIONS.md`](./DECISIONS.md) §Customize PRIZM and Quick Add expose only P0 modules until P1 ships.
 
 ## 25. P1 Scope (Next Release)
 
@@ -299,19 +299,19 @@ Also still applicable from the original Version 1.1 candidate list, timed at the
 
 ## 26. Version 2 Scope
 
-Secure document vault, advanced photo memories, cloud backup, advanced exports, health ecosystem integrations, provider information, insurance, PRISM Resources, PRISM Insights, PRISM Assistant, optional PRISM Connect.
+Secure document vault, advanced photo memories, cloud backup, advanced exports, health ecosystem integrations, provider information, insurance, PRIZM Resources, PRIZM Insights, PRIZM Assistant, optional PRIZM Connect.
 
-**Community should NOT be part of V1.** Do not turn PRISM into a social network.
+**Community should NOT be part of V1.** Do not turn PRIZM into a social network.
 
 ### AI strategy (V2, optional)
 
-**PRISM Assistant** may eventually answer questions about the user's _own_ stored information ("When was my last appointment?" "Show my milestones from the past year." "When did I start tracking this medication?"). AI must **not**: recommend dose changes, diagnose, recommend stopping medication, determine surgery eligibility or readiness, or make medical decisions of any kind.
+**PRIZM Assistant** may eventually answer questions about the user's _own_ stored information ("When was my last appointment?" "Show my milestones from the past year." "When did I start tracking this medication?"). AI must **not**: recommend dose changes, diagnose, recommend stopping medication, determine surgery eligibility or readiness, or make medical decisions of any kind.
 
 If AI is implemented: use minimum necessary data, respect user authorization scoping, never expose unrelated records, never train external models on private user data without explicit consent and legal basis, log AI access carefully, and let users understand what data is being used.
 
 ### Business model
 
-Core PRISM experience is free. Potential PRISM+ (premium, unvalidated): secure document vault, advanced backups/exports, photo memories, advanced customization, additional storage. Validate willingness to pay before overbuilding premium functionality. **Never monetize through selling personal transition or health data.**
+Core PRIZM experience is free. Potential PRIZM+ (premium, unvalidated): secure document vault, advanced backups/exports, photo memories, advanced customization, additional storage. Validate willingness to pay before overbuilding premium functionality. **Never monetize through selling personal transition or health data.**
 
 ## 27. Testing Requirements
 
@@ -355,7 +355,7 @@ Meaningful, conventional commits (`feat(auth): add email authentication`, `fix(t
 
 ## 29. Acceptance Criteria
 
-PRISM MVP is complete when a new user can:
+PRIZM MVP is complete when a new user can:
 
 1. Create an account
 2. Verify email
@@ -406,14 +406,14 @@ Every screen needs intentional spacing, correct typography, meaningful hierarchy
 
 - **Product** — does it serve the user's journey? is it necessary? does it avoid assumptions?
 - **UX** — is the purpose obvious? is the primary action obvious? is the flow simple?
-- **Visual** — does it look like PRISM? is the hierarchy clear? is spectrum color restrained?
+- **Visual** — does it look like PRIZM? is the hierarchy clear? is spectrum color restrained?
 - **Accessibility** — can it be used without color? does Dynamic Type work? does screen reader navigation work? are touch targets large enough? does Reduce Motion work?
 - **Privacy** — is sensitive data minimized? could this expose private information? are notifications safe?
 - **Engineering** — is data persisted correctly? is RLS correct? are errors handled? is offline behavior defined? are tests present?
 
-### The PRISM Test (applies to every product decision)
+### The PRIZM Test (applies to every product decision)
 
-1. Does this feel like PRISM?
+1. Does this feel like PRIZM?
 2. Does this assume something about the user?
 3. Is this information actually necessary?
 4. Does this make the user's journey easier?
@@ -435,9 +435,9 @@ These rules override convenience:
 7. Disabled modules hide data; they do not delete it.
 8. User data belongs to the user.
 9. Accessibility is not optional.
-10. Do not sacrifice usability for the PRISM aesthetic.
+10. Do not sacrifice usability for the PRIZM aesthetic.
 11. Do not manufacture content when the user has nothing to show.
-12. Do not turn PRISM into a social network.
+12. Do not turn PRIZM into a social network.
 13. Do not monetize by selling personal data.
 14. Do not make AI the center of the product.
 15. Every feature must make the journey easier to manage, understand, remember, document, or protect.
@@ -448,9 +448,9 @@ The full, dated decision log (including anything added after this document was w
 
 ## Appendix A — Build Directive for Claude Code
 
-**Your role:** lead engineer, product engineer, UI engineer, QA engineer, and technical architect responsible for building PRISM. You have authority to make implementation decisions within the constraints of this specification. Build the application end-to-end. Do not repeatedly ask the product owner for decisions that can reasonably be made from this specification. When implementation details are unspecified, choose the simplest production-quality solution that preserves, in order: **privacy, accessibility, security, maintainability, personalization, PRISM's design language.**
+**Your role:** lead engineer, product engineer, UI engineer, QA engineer, and technical architect responsible for building PRIZM. You have authority to make implementation decisions within the constraints of this specification. Build the application end-to-end. Do not repeatedly ask the product owner for decisions that can reasonably be made from this specification. When implementation details are unspecified, choose the simplest production-quality solution that preserves, in order: **privacy, accessibility, security, maintainability, personalization, PRIZM's design language.**
 
-**Primary objective:** build a production-quality MVP of PRISM. The final application must run, authenticate users, persist user data, enforce ownership, personalize the experience, provide the specified navigation, implement core CARE and JOURNEY functionality, implement YOU/settings, protect sensitive information, provide accessible UI, handle errors/loading/empty states/offline conditions, pass automated tests, and be documented. **Do not build a static prototype pretending to be a working application.**
+**Primary objective:** build a production-quality MVP of PRIZM. The final application must run, authenticate users, persist user data, enforce ownership, personalize the experience, provide the specified navigation, implement core CARE and JOURNEY functionality, implement YOU/settings, protect sensitive information, provide accessible UI, handle errors/loading/empty states/offline conditions, pass automated tests, and be documented. **Do not build a static prototype pretending to be a working application.**
 
 ### Implementation rules
 
@@ -458,13 +458,13 @@ The full, dated decision log (including anything added after this document was w
 - **Rule B — Build incrementally.** Implement in vertical slices (e.g. Medication: UI → validation → database → RLS → persistence → loading → errors → tests). Do not build 50 screens with fake data and postpone backend integration.
 - **Rule C — Real data.** MVP functionality must use real persistence. Do not rely on hard-coded mock data except for intentional development fixtures.
 - **Rule D — Security first.** Implement RLS before exposing production data through UI. Test unauthorized access.
-- **Rule E — Reusable components.** Do not duplicate UI code across screens when a reusable PRISM component should exist.
+- **Rule E — Reusable components.** Do not duplicate UI code across screens when a reusable PRIZM component should exist.
 - **Rule F — Keep personalization centralized.** Do not hard-code dashboard logic separately into each screen; build a clear personalization layer (see §05).
 - **Rule G — Do not overbuild.** Do not implement V2 features during MVP unless required to support the architecture.
 
 ### Final instruction
 
-Build PRISM as if it will be trusted with someone's most personal information. Do not optimize for novelty, engagement, or screen time. Optimize for **trust, clarity, privacy, personalization, accessibility, reliability.**
+Build PRIZM as if it will be trusted with someone's most personal information. Do not optimize for novelty, engagement, or screen time. Optimize for **trust, clarity, privacy, personalization, accessibility, reliability.**
 
 And above everything else:
 

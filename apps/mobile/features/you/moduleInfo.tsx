@@ -12,9 +12,9 @@ export interface ModuleInfo {
 }
 
 /**
- * Screens 56-57 (Customize PRISM / Module Configuration). P0 modules
+ * Screens 56-57 (Customize PRIZM / Module Configuration). P0 modules
  * only — see @prism/types MODULE_KEYS and docs/DECISIONS.md "Customize
- * PRISM and Quick Add expose only P0 modules until P1 ships".
+ * PRIZM and Quick Add expose only P0 modules until P1 ships".
  */
 export const MODULE_INFO: ModuleInfo[] = [
   {

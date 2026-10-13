@@ -114,10 +114,10 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    expect(screen.getByText('Help improve Prism?')).toBeTruthy();
+    expect(screen.getByText('Help improve Prizm?')).toBeTruthy();
     fireEvent.press(screen.getByText('No thanks'));
     expect(useAppStore.getState().analyticsConsent).toBe('declined');
-    expect(screen.queryByText('Help improve Prism?')).toBeNull();
+    expect(screen.queryByText('Help improve Prizm?')).toBeNull();
   });
 
   it('still shows the full screen while the data has not loaded yet', () => {
@@ -279,14 +279,14 @@ describe('TodayScreen', () => {
     expect(screen.queryByLabelText('Log an injection')).toBeNull();
   });
 
-  it('tells people once where to turn parts of Prism on and off, then stays quiet', () => {
+  it('tells people once where to turn parts of Prizm on and off, then stays quiet', () => {
     todayResult([]);
 
     renderWithProviders(<TodayScreen />);
 
-    expect(screen.getByText('Make Prism yours')).toBeTruthy();
+    expect(screen.getByText('Make Prizm yours')).toBeTruthy();
     fireEvent.press(screen.getByText('Got it'));
-    expect(screen.queryByText('Make Prism yours')).toBeNull();
+    expect(screen.queryByText('Make Prizm yours')).toBeNull();
   });
 
   it('opens the switches from the tip', () => {
@@ -326,7 +326,7 @@ describe('TodayScreen', () => {
     renderWithProviders(<TodayScreen />);
 
     expect(screen.getByText('From your calendar')).toBeTruthy();
-    fireEvent.press(screen.getByText('Add to Prism'));
+    fireEvent.press(screen.getByText('Add to Prizm'));
     await waitFor(() => expect(mockAddSuggestion).toHaveBeenCalledWith(suggestion));
     fireEvent.press(screen.getByText('Not this one'));
     expect(mockDismissSuggestion).toHaveBeenCalledWith(suggestion);

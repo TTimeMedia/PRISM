@@ -6,12 +6,12 @@ export const LAUNCH_UPDATE_TIMEOUT_MS = 4000;
 
 /**
  * Applies a waiting over-the-air update while the launch screen is still
- * showing, so Prism never opens on older code. Without this, a fresh
+ * showing, so Prizm never opens on older code. Without this, a fresh
  * install runs the code inside the build until the next launch (which once
- * ignored a theme saved by newer code), and every update needed Prism to
+ * ignored a theme saved by newer code), and every update needed Prizm to
  * be opened twice. Gives up after a few seconds on a slow connection; the
  * update then downloads in the background as before. Returns true once
- * Prism may open.
+ * Prizm may open.
  */
 export function useLaunchUpdate(): boolean {
   const [done, setDone] = useState(!Updates.isEnabled || __DEV__);

@@ -1,4 +1,4 @@
-// PRISM — submit-support Edge Function.
+// PRIZM — submit-support Edge Function.
 //
 // The in-app Contact support, Report a problem, Privacy concern and Send
 // feedback forms send here, signed in as the person writing:
@@ -20,7 +20,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.49.4';
 import { corsHeaders } from '../_shared/cors.ts';
 
 const SUPPORT_TO = 'support@ttimemedia.org';
-const FROM = 'Prism Support <no-reply@ttimemedia.org>';
+const FROM = 'Prizm Support <no-reply@ttimemedia.org>';
 const KINDS = {
   contact: 'Contact',
   problem: 'Problem report',
@@ -166,7 +166,7 @@ async function email(input: {
       from: FROM,
       to: [SUPPORT_TO],
       ...(input.replyTo ? { reply_to: input.replyTo } : {}),
-      subject: `[Prism] ${KINDS[input.kind]} · ${input.requestId.slice(0, 8)}`,
+      subject: `[Prizm] ${KINDS[input.kind]} · ${input.requestId.slice(0, 8)}`,
       text: textBody,
       ...(input.screenshot ? { attachments: [input.screenshot] } : {}),
     }),

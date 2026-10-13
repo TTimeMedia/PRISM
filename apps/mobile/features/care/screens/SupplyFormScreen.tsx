@@ -30,7 +30,7 @@ function parseAmount(text: string): number | null {
 
 /**
  * Add or edit a supply. Linking it to a medication with an amount per dose
- * lets Prism count it down each time a dose is logged.
+ * lets Prizm count it down each time a dose is logged.
  */
 export function SupplyFormScreen() {
   const theme = useTheme();
@@ -174,7 +174,7 @@ export function SupplyFormScreen() {
               label="Refill date (optional)"
               value={refillOn}
               onChangeText={setRefillOn}
-              helperText="Prism reminds you a week before."
+              helperText="Prizm reminds you a week before."
             />
             <PRISMInput
               label="Pharmacy (optional)"

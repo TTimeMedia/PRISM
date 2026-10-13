@@ -22,7 +22,7 @@ function stepFromSegment(segment: string | undefined): OnboardingStep | null {
  * instead this steps to the previous screen in the flow — skipping the
  * setup screens that were skipped on the way forward — and moves the saved
  * resume point back with it. The first screen has nothing before it, and
- * the short "Building Prism" transition isn't somewhere to go back from.
+ * the short "Building Prizm" transition isn't somewhere to go back from.
  */
 export function OnboardingBackButton() {
   const theme = useTheme();

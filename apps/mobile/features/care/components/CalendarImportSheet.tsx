@@ -36,8 +36,8 @@ export interface CalendarImportSheetProps {
 /**
  * Import from calendar. Opening the sheet is the choice to look: it reads the
  * upcoming events then (the first time, iOS asks for calendar access with
- * Prism's own explanation), and the person ticks the ones that are
- * appointments. Only ticked events are copied into Prism; the rest are never
+ * Prizm's own explanation), and the person ticks the ones that are
+ * appointments. Only ticked events are copied into Prizm; the rest are never
  * stored.
  */
 export function CalendarImportSheet({ visible, onClose, onImported }: CalendarImportSheetProps) {
@@ -149,7 +149,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
         <View style={styles.block}>
           <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
             Calendar access wasn&apos;t allowed, so nothing was read. You can allow it in your
-            phone&apos;s Settings under Prism, then try again.
+            phone&apos;s Settings under Prizm, then try again.
           </Text>
           <PRISMButton label="Close" variant="secondary" onPress={close} />
         </View>
@@ -158,7 +158,7 @@ export function CalendarImportSheet({ visible, onClose, onImported }: CalendarIm
       {phase === 'error' ? (
         <View style={styles.block}>
           <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
-            Prism couldn&apos;t read the calendar just now. Check that Calendar is set up on this
+            Prizm couldn&apos;t read the calendar just now. Check that Calendar is set up on this
             phone and try again.
           </Text>
           {errorDetail ? (

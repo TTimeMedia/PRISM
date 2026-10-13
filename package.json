@@ -2,7 +2,7 @@
   "name": "prism",
   "private": true,
   "version": "0.1.0",
-  "description": "PRISM — Your journey. Your way.",
+  "description": "PRIZM — Your journey. Your way.",
   "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": ">=20.0.0"

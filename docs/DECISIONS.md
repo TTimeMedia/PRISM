@@ -1,6 +1,6 @@
-# PRISM Decisions Log
+# PRIZM Decisions Log
 
-This is the authoritative, dated record of explicit PRISM product decisions. It exists so that "why does PRISM work this way?" always has a traceable answer, and so future changes to these decisions are made deliberately, not by accident.
+This is the authoritative, dated record of explicit PRIZM product decisions. It exists so that "why does PRIZM work this way?" always has a traceable answer, and so future changes to these decisions are made deliberately, not by accident.
 
 Format:
 
@@ -12,69 +12,69 @@ Reason
 Implications
 ```
 
-All decisions below were extracted from the original PRISM master source document (`docs/archive/PRISM_MASTER_SOURCE.docx`) during the documentation setup on 2026-09-01, unless otherwise noted. "Date" reflects when the decision was recorded in this log, not necessarily when it was first conceived.
+All decisions below were extracted from the original PRIZM master source document (`docs/archive/PRISM_MASTER_SOURCE.docx`) during the documentation setup on 2026-09-01, unless otherwise noted. "Date" reflects when the decision was recorded in this log, not necessarily when it was first conceived.
 
 ---
 
 ## Core Identity & Scope
 
-### PRISM is for all transgender and gender-diverse people
+### PRIZM is for all transgender and gender-diverse people
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** The product must work equally well for trans men, trans women, nonbinary people, gender-fluid people, and questioning people, regardless of where they are in any process of transition.
 **Implications:** No onboarding flow, screen, or default may be tuned to one identity group's typical path. User research (see `PRODUCT_BIBLE.md` §16) must include this full range before launch.
 
-### PRISM does not assume HRT
+### PRIZM does not assume HRT
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** Some people use hormone therapy; some don't. Neither is more "correct."
 **Implications:** No screen, field, or notification may default to assuming HRT use. Medication/care modules are opt-in during onboarding (`CARE Setup`, `SCREEN_BIBLE.md` Screen 12).
 
-### PRISM does not assume surgery
+### PRIZM does not assume surgery
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** Surgery is one possible part of a journey, not a requirement of it.
-**Implications:** Procedures and surgery-related milestones are optional, suggested (never required) entries. PRISM never asks about surgical eligibility or readiness.
+**Implications:** Procedures and surgery-related milestones are optional, suggested (never required) entries. PRIZM never asks about surgical eligibility or readiness.
 
-### PRISM does not assume a binary gender
+### PRIZM does not assume a binary gender
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** Nonbinary, gender-fluid, and questioning users are explicitly in scope (`PRODUCT_BIBLE.md` §6).
 **Implications:** The `gender` field is free-text/optional, never a binary selector. No feature may branch its behavior on an assumed binary gender.
 
-### PRISM does not require pronouns
+### PRIZM does not require pronouns
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** A user should never be forced to declare pronouns to use the app.
 **Implications:** `pronouns` is nullable in `profiles` and skippable at onboarding (`SCREEN_BIBLE.md` Screen 11).
 
-### PRISM does not require a transition start date
+### PRIZM does not require a transition start date
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** Not every user has, knows, or wants to specify a single start date for their journey.
 **Implications:** Journey Date onboarding (`SCREEN_BIBLE.md` Screen 16) always offers "I don't know" / "My journey doesn't have one specific start date" / "Skip," and no default date is ever invented on the user's behalf.
 
-### PRISM does not define a universal transition path
+### PRIZM does not define a universal transition path
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** Core principle: there is no single right way to transition, so Prism never prescribes one (`PRODUCT_BIBLE.md` §4).
+**Reason:** Core principle: there is no single right way to transition, so Prizm never prescribes one (`PRODUCT_BIBLE.md` §4).
 **Implications:** All suggested content (milestones, categories) is optional and always paired with a "create your own" equivalent.
 
-### PRISM does not use a transition progress score
+### PRIZM does not use a transition progress score
 
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** A percentage or score implies a fixed endpoint that does not exist for every user.
 **Implications:** Journey Stage (onboarding) must never render as a progress meter or percentage (`SCREEN_BIBLE.md` Screen 10). No screen anywhere in the product may show a "% transitioned" or equivalent metric.
 
-### PRISM does not define a transition finish line
+### PRIZM does not define a transition finish line
 
 **Date:** 2026-09-01
 **Status:** Active
@@ -83,11 +83,11 @@ All decisions below were extracted from the original PRISM master source documen
 
 ## Privacy & Security
 
-### PRISM is private by default
+### PRIZM is private by default
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** Privacy is foundational, not a premium add-on, given the sensitivity of the data PRISM holds.
+**Reason:** Privacy is foundational, not a premium add-on, given the sensitivity of the data PRIZM holds.
 **Implications:** Private notifications default to ON at onboarding (`SCREEN_BIBLE.md` Screen 17). The lock screen exposes no user content. See `SECURITY.md` for the full posture.
 
 ### Disabled modules hide data rather than deleting it
@@ -95,19 +95,19 @@ All decisions below were extracted from the original PRISM master source documen
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** A user experimenting with what to track should never risk losing data by toggling a module off.
-**Implications:** Toggling a module in Customize PRISM changes only what is _surfaced_ (TODAY, CARE, search, Quick Add); the underlying rows are untouched and reappear exactly as they were if the module is re-enabled. This is Non-Negotiable Rule 7 (`MASTER_BUILD_SPEC.md` §31) and must be implemented at the query/filter layer, never via a delete.
+**Implications:** Toggling a module in Customize PRIZM changes only what is _surfaced_ (TODAY, CARE, search, Quick Add); the underlying rows are untouched and reappear exactly as they were if the module is re-enabled. This is Non-Negotiable Rule 7 (`MASTER_BUILD_SPEC.md` §31) and must be implemented at the query/filter layer, never via a delete.
 
 ### Minimum password length is 8 characters
 
 **Date:** 2026-09-02
 **Status:** Active
 **Reason:** `MASTER_BUILD_SPEC.md` §17 and `SECURITY.md` §1 specify email + password authentication but do not set a minimum length. This is visible to the user (Sign Up and Reset Password's inline validation error), so it is recorded here rather than left as an undocumented implementation detail, per `BUILD_STATUS.md`'s own rule for implementation-level choices.
-**Implications:** `packages/validation`'s `passwordSchema` enforces 8–72 characters client-side; Supabase Auth's own server-side minimum (6 by default) is a backstop, not the enforced policy. No complexity rules (uppercase/symbol requirements) are imposed — PRISM does not sacrifice usability for a false sense of security (`MASTER_BUILD_SPEC.md` §31, Non-Negotiable Rule 12).
+**Implications:** `packages/validation`'s `passwordSchema` enforces 8–72 characters client-side; Supabase Auth's own server-side minimum (6 by default) is a backstop, not the enforced policy. No complexity rules (uppercase/symbol requirements) are imposed — PRIZM does not sacrifice usability for a false sense of security (`MASTER_BUILD_SPEC.md` §31, Non-Negotiable Rule 12).
 
-### Outside services Prism uses
+### Outside services Prizm uses
 
 **Date:** 2026-09-28
-**Status:** Superseded (see "Outside services Prism uses: adds PostHog for opt-in anonymous usage").
+**Status:** Superseded (see "Outside services Prizm uses: adds PostHog for opt-in anonymous usage").
 **Reason:** `SECURITY.md` §6 requires every third-party service that touches user data to be reviewed and named. These are the ones in use as of v0.3.0.
 **Decision:**
 
@@ -115,19 +115,19 @@ All decisions below were extracted from the original PRISM master source documen
 - **Resend** (auth email and support requests, sender `no-reply@ttimemedia.org`): email address, auth links, and the text of support requests with any screenshot the person chose to attach.
 - **Expo push service** (server push): an opaque device token plus the notification title and body. Reminder text is generic while Private notifications is on. Expo passes the notification to Apple or Google.
 - **Expo EAS Update** (app code delivery): no user data.
-- **Apple MapKit** (appointment location suggestions, iOS only): the text typed into a Location field, sent by the phone's own MapKit with no Prism key.
+- **Apple MapKit** (appointment location suggestions, iOS only): the text typed into a Location field, sent by the phone's own MapKit with no Prizm key.
 
 The app includes no analytics, crash-reporting or advertising SDKs.
 **Implications:** Adding any service to this list needs the same review and an update to the draft privacy policy (`docs/website/prism.html`). As of 2026-09-28 the draft names all of them, including Expo push and the push token.
 
-### Outside services Prism uses: adds PostHog for opt-in anonymous usage
+### Outside services Prizm uses: adds PostHog for opt-in anonymous usage
 
 **Date:** 2026-10-06
 **Status:** Active
-**Reason:** The owner wants to know which screens and features get used. Prism holds health information, so usage counts must carry none of it, and are sent only after a clear yes.
+**Reason:** The owner wants to know which screens and features get used. Prizm holds health information, so usage counts must carry none of it, and are sent only after a clear yes.
 **Decision:** The 2026-09-28 list above stays the same, with one addition: **PostHog Cloud, EU region**. It receives the event names from `lib/analytics/events.ts`, the app version, the platform and OS version, and a random per-install ID.
 
-- **Ask first.** Nothing is sent until the person says yes, either on Today's one-time "Help improve Prism?" card or in Privacy & security. The choice is stored in `appStore.analyticsConsent` (`unasked` / `granted` / `declined`).
+- **Ask first.** Nothing is sent until the person says yes, either on Today's one-time "Help improve Prizm?" card or in Privacy & security. The choice is stored in `appStore.analyticsConsent` (`unasked` / `granted` / `declined`).
 - **No SDK.** `lib/analytics/analytics.ts` posts to PostHog's batch HTTP API. The React Native SDK needs native code and captures more than wanted automatically.
 - **Only fixed values.** Properties are counts or fixed values, such as a theme key or a support kind, never text the person wrote. Screen names have record IDs replaced with `:id`.
 - **Anonymous.** Events are sent with `$process_person_profile: false` and `$geoip_disable: true`, and "Discard client IP data" is on in the PostHog project. The install ID is deleted when analytics is turned off.
@@ -182,7 +182,7 @@ The app still includes no crash-reporting or advertising SDKs.
 
 **Date:** 2026-09-02
 **Status:** Active
-**Reason:** "PRISM is private by default" (see above) already establishes private notifications as an on-by-default protection users shouldn't have to discover. App Lock and Biometrics are a different kind of control — an extra authentication step the user must actively choose to accept, not a passive protection — so defaulting them on would add friction to every app open for users who never asked for it.
+**Reason:** "PRIZM is private by default" (see above) already establishes private notifications as an on-by-default protection users shouldn't have to discover. App Lock and Biometrics are a different kind of control — an extra authentication step the user must actively choose to accept, not a passive protection — so defaulting them on would add friction to every app open for users who never asked for it.
 **Implications:** `privacySetupSchema` (`packages/validation/src/onboarding.ts`) defaults `app_lock_enabled: false`, `biometric_lock: false`, `notification_privacy: true`. This is the concrete, screen-level expression of the existing "private by default" decision plus a genuinely new choice (App Lock/Biometrics off), so it's recorded here rather than left implicit in the Zod schema alone.
 
 ## CARE
@@ -235,7 +235,7 @@ The app still includes no crash-reporting or advertising SDKs.
 - **Supply estimates and reminders.** `lib/care/supplyOutlook.ts` estimates when a supply runs out from the medication's schedule. The reminder sync schedules a reminder a week before that date and a week before the refill date, both at 10:00. They follow Private notifications.
 - **Questions** (table `appointment_questions`) belong to an appointment, or to none. A question with none shows on whichever appointment is next. If an appointment is deleted, its questions go back to that pool (`on delete set null`).
 
-**Implications:** Both tables are in the data export and are removed with the account. The privacy policy's list of what Prism keeps includes supplies and questions.
+**Implications:** Both tables are in the data export and are removed with the account. The privacy policy's list of what Prizm keeps includes supplies and questions.
 
 ### The "Log a dose" tile on Today became the Euphoria jar
 
@@ -321,8 +321,8 @@ The app still includes no crash-reporting or advertising SDKs.
 ### Notification Settings offers only "Private notifications" — every reminder-category toggle needs a delivery engine that doesn't exist yet
 
 **Date:** 2026-09-03
-**Status:** Superseded (see YOU: Notification Settings covers real reminders and opt-in messages from Prism, 2026-09-24)
-**Reason:** Screen 58 lists Medication/Injection/Appointment/Lab/Custom reminders as independently configurable, but no notification-scheduling or delivery engine exists anywhere in PRISM yet (no push registration, no local-notification scheduling tied to `medications.reminder_enabled`/`appointments.reminder_enabled`, no `reminders` table writes from any screen). Building toggles for reminder categories that cannot actually deliver a reminder would be exactly the fake-control pattern ruled out project-wide (see CARE's "Next scheduled event" decision) — a toggle that visibly does nothing is worse than no toggle.
+**Status:** Superseded (see YOU: Notification Settings covers real reminders and opt-in messages from Prizm, 2026-09-24)
+**Reason:** Screen 58 lists Medication/Injection/Appointment/Lab/Custom reminders as independently configurable, but no notification-scheduling or delivery engine exists anywhere in PRIZM yet (no push registration, no local-notification scheduling tied to `medications.reminder_enabled`/`appointments.reminder_enabled`, no `reminders` table writes from any screen). Building toggles for reminder categories that cannot actually deliver a reminder would be exactly the fake-control pattern ruled out project-wide (see CARE's "Next scheduled event" decision) — a toggle that visibly does nothing is worse than no toggle.
 **Decision:** Notification Settings (and Privacy's own "Notifications" section) expose only "Private notifications" (`settings.notification_privacy`, a real column, already defaulting to `true` per `docs/SECURITY.md` §7), plus plain-language copy explaining that per-category reminders aren't available yet.
 **Implications:** Each existing per-item `reminder_enabled` field (Medication, Appointment) still exists and is still collected on their own Add/Edit forms — those are honest, real booleans about the record, just not yet wired to an actual notification. When a real delivery engine ships, Screen 58's full per-category toggle list becomes buildable without any schema change (`reminders.notification_style` already exists per `MASTER_BUILD_SPEC.md` §18).
 
@@ -338,7 +338,7 @@ The app still includes no crash-reporting or advertising SDKs.
 
 **Date:** 2026-09-03
 **Status:** Active
-**Reason:** The `profile-photos` storage bucket and its per-user RLS policies have existed since Foundation (`supabase/migrations/…_storage_buckets_and_policies.sql`) but were never wired to any screen. The bucket is private (`docs/SECURITY.md` §5: "never public buckets for sensitive PRISM information"), so a permanent public URL isn't available to store — only a signed URL, which expires.
+**Reason:** The `profile-photos` storage bucket and its per-user RLS policies have existed since Foundation (`supabase/migrations/…_storage_buckets_and_policies.sql`) but were never wired to any screen. The bucket is private (`docs/SECURITY.md` §5: "never public buckets for sensitive PRIZM information"), so a permanent public URL isn't available to store — only a signed URL, which expires.
 **Decision:** `EditProfileScreen` uses `expo-image-picker` (new dependency) to pick a photo and uploads it to `{user_id}/profile.<ext>` in `profile-photos` (`apps/mobile/lib/you/profilePhoto.ts`). `profiles.profile_photo_url` stores that bucket object path, not a URL; `useSignedProfilePhotoUrl()` resolves a fresh 1-hour signed URL on read wherever the photo is displayed. `packages/validation/src/profile.ts`'s `profileUpdateSchema` was relaxed from `z.string().url()` to a plain non-empty string to match what the column actually holds now.
 **Implications:** Any future reader of `profile_photo_url` must resolve it through Storage (`createSignedUrl`), never treat it as a directly-usable `<img src>`/`Image source` URL. Re-uploading a photo overwrites the same object path (`upsert: true`), so a user only ever has one stored profile photo at a time — consistent with the field being singular.
 
@@ -347,15 +347,15 @@ The app still includes no crash-reporting or advertising SDKs.
 **Date:** 2026-09-03
 **Status:** Superseded (see YOU: Account deletion runs through the deployed delete-account Edge Function, 2026-09-23)
 **Reason:** Deleting a `auth.users` row requires the Supabase service-role key (or equivalent admin API access), which must never ship inside the mobile app (`docs/SECURITY.md` §14-15). No Supabase Edge Function exists yet (`supabase/functions/README.md` — "None exist yet"), so there is currently no safe way for the client to actually delete an account.
-**Decision:** `DeleteAccountScreen` is fully built — heading, plain-language consequences, a type-to-confirm ("DELETE") gate before the destructive button is enabled — and calls `supabase.functions.invoke('delete-account')`. Since that function isn't deployed, the call fails and the screen surfaces the same honest, non-technical error every other PRISM failure uses ("Couldn't delete your account. Please try again later.") rather than a fabricated success.
+**Decision:** `DeleteAccountScreen` is fully built — heading, plain-language consequences, a type-to-confirm ("DELETE") gate before the destructive button is enabled — and calls `supabase.functions.invoke('delete-account')`. Since that function isn't deployed, the call fails and the screen surfaces the same honest, non-technical error every other PRIZM failure uses ("Couldn't delete your account. Please try again later.") rather than a fabricated success.
 **Implications:** A future milestone (or a backend-focused one) must add the `delete-account` Edge Function itself before this screen's primary action can succeed — tracked in `supabase/functions/README.md`. Nothing about the client changes when that ships; this is a real, complete UI blocked on real, documented server-side work, not a placeholder.
 
 ### Accessibility, About, and Support show what's real; nothing is faked to fill out the spec's full field list
 
 **Date:** 2026-09-03
-**Status:** Active, amended 2026-09-28: Support's Contact support, Report a problem and Privacy concern rows now open a draft email to `support@ttimemedia.org`, the address published on the Prism page. The draft carries the topic, app version and platform only. Help center is still "not connected yet".
-**Reason:** Three Screen Bible entries describe more than PRISM currently has a real answer for: Screen 61 (Accessibility) lists Text size / Increased contrast / Screen reader optimizations alongside Reduced motion, but only Reduced motion has a `settings` column and an actual code path (`ReducedMotionProvider`) that changes behavior; Screen 65 (About) calls for Privacy Policy / Terms / open-source acknowledgements, none of which have been published anywhere; Screen 66 (Support) calls for Help center / Contact support / Report a problem / Privacy concern, and no support email, ticketing system, or help-center URL has been established anywhere in the source material — inventing one (e.g. a `mailto:` address) would fabricate an organizational detail nobody specified.
-**Decision:** Accessibility ships only the Reduced motion toggle as an interactive control, with plain-language copy explaining that text size already follows the OS setting (default React Native font-scaling behavior, never overridden) and that every PRISM control already carries real accessibility labels/roles. About shows Privacy Policy/Terms/acknowledgements as informational rows marked "Not yet published"/"Not yet compiled" rather than linking anywhere. Support's four rows are real, themed, tappable list items that surface an honest "This isn't connected yet" toast rather than opening a fabricated link or address.
+**Status:** Active, amended 2026-09-28: Support's Contact support, Report a problem and Privacy concern rows now open a draft email to `support@ttimemedia.org`, the address published on the Prizm page. The draft carries the topic, app version and platform only. Help center is still "not connected yet".
+**Reason:** Three Screen Bible entries describe more than PRIZM currently has a real answer for: Screen 61 (Accessibility) lists Text size / Increased contrast / Screen reader optimizations alongside Reduced motion, but only Reduced motion has a `settings` column and an actual code path (`ReducedMotionProvider`) that changes behavior; Screen 65 (About) calls for Privacy Policy / Terms / open-source acknowledgements, none of which have been published anywhere; Screen 66 (Support) calls for Help center / Contact support / Report a problem / Privacy concern, and no support email, ticketing system, or help-center URL has been established anywhere in the source material — inventing one (e.g. a `mailto:` address) would fabricate an organizational detail nobody specified.
+**Decision:** Accessibility ships only the Reduced motion toggle as an interactive control, with plain-language copy explaining that text size already follows the OS setting (default React Native font-scaling behavior, never overridden) and that every PRIZM control already carries real accessibility labels/roles. About shows Privacy Policy/Terms/acknowledgements as informational rows marked "Not yet published"/"Not yet compiled" rather than linking anywhere. Support's four rows are real, themed, tappable list items that surface an honest "This isn't connected yet" toast rather than opening a fabricated link or address.
 **Implications:** When a real contrast mode, a published legal page, or a live support channel exists, each becomes a normal wiring task — swap the static row for a real link/toggle. Until then, nothing on these three screens claims to do something it can't.
 
 ### Support is answered in the app; legal pages live on the website
@@ -368,7 +368,7 @@ The app still includes no crash-reporting or advertising SDKs.
 - **Support forms.** Contact support, Report a problem and Privacy concern are in-app forms. The `submit-support` Edge Function saves each one to `support_requests` (RLS: insert and read your own, no edits) and emails it to support@ttimemedia.org through Resend, Reply-To the sender's account email, so support answers by replying. At most 10 a person an hour. Chosen over a helpdesk service (Zendesk, Intercom, Help Scout) so no new company receives tester data.
 - **Shake to report.** Shaking the phone (two jolts over 2.4 g within 600 ms) opens Report a problem with a screenshot of the screen. The screenshot is shown, and attached only if the person turns that on, because screens show medications. It is stored in the private `attachments` bucket under `{user_id}/support/`, so account deletion removes it. On by default, with a switch in Support. Needs `expo-sensors` (motion permission off: the accelerometer needs none) and `react-native-view-shot`, so 0.3.3 is a new build.
 - **Help center.** Articles ship inside the app (`lib/you/helpArticles.ts`): searchable, readable offline, updated over the air. Each ends with Contact support. When a feature changes, its article changes in the same commit.
-- **Legal pages.** The Privacy Policy (`docs/website/prism.html` → /prism) and Terms of Service (`docs/website/prism-terms.html` → /prism-terms) are web pages opened inside Prism, so updating them never needs an app update and they match what the App Store links to. Open-source acknowledgements are generated from the app's dependencies by `scripts/generate-acknowledgements.mjs` and shown in the app.
+- **Legal pages.** The Privacy Policy (`docs/website/prism.html` → /prism) and Terms of Service (`docs/website/prism-terms.html` → /prism-terms) are web pages opened inside Prizm, so updating them never needs an app update and they match what the App Store links to. Open-source acknowledgements are generated from the app's dependencies by `scripts/generate-acknowledgements.mjs` and shown in the app.
 - **Forgot PIN.** The lock screen offers "Forgot your PIN?": it turns App Lock off for the account, forgets the phone's PIN and signs out. Getting back in needs the email and password, so it never bypasses the lock.
 
 **Implications:** Resend now also carries support messages, and the privacy policy says so. The Terms of Service are a draft for legal review before launch; they name no governing law yet. The function needs the `RESEND_API_KEY` secret. Run the acknowledgements script after changing dependencies.
@@ -391,10 +391,10 @@ The app still includes no crash-reporting or advertising SDKs.
 - `packages/ui/src/tokens/themes.ts` is the source of every theme's colors. One change from the supplied file: Coral reef's light accent moved from #D44A2E to #D06A35 (text #A9501F), because the original read as an error red. It still meets every contrast rule.
 - `palettes.ts` turns a theme into what screens read: grounds, text and borders, plus five role colors. Prism keeps its five-color spectrum; every other theme is single-color by design, so its roles use its two accents, and feature tiles use the theme's subtle accent shades so text on them stays readable (checked for all 30 theme and mode pairs in `lib/__tests__/themes.test.ts`). Status colors (success, warning) are used only for status: the toast and the offline banner.
 - The default theme is Prism. Saved themes from the old set are read as the closest new theme (slate → Midnight ink, mist → Mono, ocean → Tidepool, forest → Moss, blossom → Rosewater). The database default for new accounts is now 'prism' (migration `20261006120000_theme_default.sql`).
-- The free / PRISM+ tag is kept in the theme data but does nothing yet: every theme is available.
+- The free / PRIZM+ tag is kept in the theme data but does nothing yet: every theme is available.
 - The eight app icons keep their names; they are chosen separately from the theme.
 
-**Implications:** Headings take their typeface from the theme (`theme.fonts.display`): Sora, or the phone's own serif (Georgia on iOS) for Paper, so no font file ships. Brand wordmarks and initials stay in Sora. `docs/design/themes.css` holds the web version for reference. The launch screen background is now Prism's (#F8F8FA light, #0B0B0F dark), from the next build.
+**Implications:** Headings take their typeface from the theme (`theme.fonts.display`): Sora, or the phone's own serif (Georgia on iOS) for Paper, so no font file ships. Brand wordmarks and initials stay in Sora. `docs/design/themes.css` holds the web version for reference. The launch screen background is now Prizm's (#F8F8FA light, #0B0B0F dark), from the next build.
 
 ### The App Lock Screen (78) is a global overlay from the root layout, not a route
 
@@ -404,13 +404,13 @@ The app still includes no crash-reporting or advertising SDKs.
 **Decision:** `AppLockScreen` is rendered conditionally inside `app/_layout.tsx`'s `RootNavigator`, absolutely positioned over the entire `<Stack>`, driven by `useAppLockStore` (a new, deliberately non-persisted Zustand store — "is currently locked" must reset to `true` on every fresh process start) and `useAppLockGate()` (locks on first mount when App Lock is enabled, and again whenever `AppState` leaves `'active'`).
 **Implications:** Unlocking never triggers a navigation — the underlying `<Stack>` was never unmounted, so the user resumes on the exact screen they were viewing when the app was backgrounded. Any future screen that needs "cover everything, resume exactly where you were" behavior (e.g. a future biometric re-auth for a single sensitive action) should follow the same overlay-not-route pattern rather than introducing a new one.
 
-### Notification Settings covers real reminders and opt-in messages from Prism
+### Notification Settings covers real reminders and opt-in messages from Prizm
 
 **Date:** 2026-09-24
 **Status:** Active (supersedes "Notification Settings offers only Private notifications")
 **Reason:** Reminders now exist (see CARE), and server push was added for messages that can't be scheduled on the phone.
-**Decision:** Notification Settings shows whether the phone allows notifications, with a way to turn them on. It also has Private notifications, a test reminder, and **Messages from Prism**, stored in `settings.push_preferences`: security alerts are on by default, and nudges and Prism news are opt-in. **Reminder wording** lets each person pick built-in wording per kind ("It's shot day.", "Take your {name} at {time}.") or write their own, previewed on their own medications. That wording is used only while Private notifications is off. The push provider is Expo's push service (see "Outside services Prism uses" under Privacy & Security).
-**Implications:** Push tokens live in `push_tokens` (RLS, own rows only) and are removed on sign-out. `send-push` is the only sender and requires a shared secret. It applies the same privacy rule as the phone: reminders stay "Your Prism reminder is ready." while Private notifications is on.
+**Decision:** Notification Settings shows whether the phone allows notifications, with a way to turn them on. It also has Private notifications, a test reminder, and **Messages from Prizm**, stored in `settings.push_preferences`: security alerts are on by default, and nudges and Prizm news are opt-in. **Reminder wording** lets each person pick built-in wording per kind ("It's shot day.", "Take your {name} at {time}.") or write their own, previewed on their own medications. That wording is used only while Private notifications is off. The push provider is Expo's push service (see "Outside services Prizm uses" under Privacy & Security).
+**Implications:** Push tokens live in `push_tokens` (RLS, own rows only) and are removed on sign-out. `send-push` is the only sender and requires a shared secret. It applies the same privacy rule as the phone: reminders stay "Your Prizm reminder is ready." while Private notifications is on.
 
 ### Account deletion runs through the deployed delete-account Edge Function
 
@@ -424,15 +424,15 @@ The app still includes no crash-reporting or advertising SDKs.
 **Date:** 2026-09-24
 **Status:** Active
 **Reason:** Replaces the single accent colour from 2026-09-23 with palettes that recolour the whole app. Colour choices in this space are easily read as gender signals, so none is framed that way.
-**Decision:** Eight palettes (Slate, Mist, Prism, Ocean, Forest, Ember, Dusk, Blossom) recolour accents, icon chips, timeline dots and backgrounds in light and dark mode. The choice is saved in `settings.palette` and offered in Appearance and as an onboarding step. New accounts start on Slate; accounts that existed before palettes keep Prism.
+**Decision:** Eight palettes (Slate, Mist, Prism, Ocean, Forest, Ember, Dusk, Blossom) recolour accents, icon chips, timeline dots and backgrounds in light and dark mode. The choice is saved in `settings.palette` and offered in Appearance and as an onboarding step. New accounts start on Slate; accounts that existed before palettes keep Prizm.
 **Implications:** No palette name or description refers to gender. Theme and palette sync across devices through `useAppearanceSync`.
 
 ### Calendar access is opt-in and asked for only on tap
 
 **Date:** 2026-09-22 (import added 2026-09-24)
 **Status:** Active
-**Decision:** When calendar sync is on (`settings.calendar_sync_enabled`), appointments can be added to the phone's calendar. Appointments can also be imported from the calendar or from an `.ics` file. Read access is requested only when the person taps Import. Files are parsed on the phone, and nothing is added until the person confirms. Prism never asks for Reminders access.
-**Implications:** Calendar events written by Prism can be read by anything else that has access to that calendar.
+**Decision:** When calendar sync is on (`settings.calendar_sync_enabled`), appointments can be added to the phone's calendar. Appointments can also be imported from the calendar or from an `.ics` file. Read access is requested only when the person taps Import. Files are parsed on the phone, and nothing is added until the person confirms. Prizm never asks for Reminders access.
+**Implications:** Calendar events written by Prizm can be read by anything else that has access to that calendar.
 
 ## Product Structure
 
@@ -473,42 +473,42 @@ The app still includes no crash-reporting or advertising SDKs.
 
 ## Boundaries
 
-### PRISM is not a medical provider
+### PRIZM is not a medical provider
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** PRISM organizes and documents; it does not diagnose, prescribe, or treat.
-**Implications:** No feature may present PRISM as a source of medical authority. See "PRISM does not provide medical advice" below and `SECURITY.md` §21 for the related compliance-claim restriction.
+**Reason:** PRIZM organizes and documents; it does not diagnose, prescribe, or treat.
+**Implications:** No feature may present PRIZM as a source of medical authority. See "PRIZM does not provide medical advice" below and `SECURITY.md` §21 for the related compliance-claim restriction.
 
-### PRISM does not provide medical advice
+### PRIZM does not provide medical advice
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** Users may enter and view their own dosage, lab, and procedure information, but PRISM must never recommend doses, calculate hormone dosage, suggest dosage changes, judge whether a dose is appropriate, interpret lab results, or determine surgical/legal readiness.
+**Reason:** Users may enter and view their own dosage, lab, and procedure information, but PRIZM must never recommend doses, calculate hormone dosage, suggest dosage changes, judge whether a dose is appropriate, interpret lab results, or determine surgical/legal readiness.
 **Implications:** This boundary applies to every layer, including any future AI assistant (`MASTER_BUILD_SPEC.md` §26 AI Strategy) — an assistant may help a user find their _own_ recorded information, but must refuse questions that require a medical judgment.
 
 ## Product Discipline
 
-### PRISM should not become a social network
+### PRIZM should not become a social network
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** Public profiles, follower counts, and feeds would work against PRISM's private-by-default identity and its focus on the individual's own journey.
+**Reason:** Public profiles, follower counts, and feeds would work against PRIZM's private-by-default identity and its focus on the individual's own journey.
 **Implications:** Community is explicitly excluded from V1 and is not planned as a default direction for V2 either; it would require a deliberate, separately-evaluated decision to revisit (`PRODUCT_BIBLE.md` §14).
 
-### PRISM should not monetize by selling user data
+### PRIZM should not monetize by selling user data
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** Selling transition/health/identity data would be fundamentally incompatible with PRISM's privacy commitments.
-**Implications:** The business model (free core + optional PRISM+ premium features) must never depend on data sale, ad targeting based on transition/health status, or any other monetization of sensitive data (`SECURITY.md` §18).
+**Reason:** Selling transition/health/identity data would be fundamentally incompatible with PRIZM's privacy commitments.
+**Implications:** The business model (free core + optional PRIZM+ premium features) must never depend on data sale, ad targeting based on transition/health status, or any other monetization of sensitive data (`SECURITY.md` §18).
 
 ### AI should not be the center of the product
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** PRISM's value is the personalized organization and documentation system itself, not a chatbot layered on top of it.
-**Implications:** Any future PRISM Assistant is optional, V2-scoped, and strictly limited to helping users navigate their own recorded data — never medical decision-making (`MASTER_BUILD_SPEC.md` §26).
+**Reason:** PRIZM's value is the personalized organization and documentation system itself, not a chatbot layered on top of it.
+**Implications:** Any future PRIZM Assistant is optional, V2-scoped, and strictly limited to helping users navigate their own recorded data — never medical decision-making (`MASTER_BUILD_SPEC.md` §26).
 
 ---
 
@@ -534,7 +534,7 @@ The following were found while cross-referencing the five source sections (Produ
 **Date:** 2026-09-01
 **Status:** Active
 **Reason:** Following the resolution above, the product owner set the complete MVP boundary explicitly, rather than leaving it to be inferred from inconsistent narrative text across source sections.
-**Decision — MVP / P0:** Authentication; Onboarding; Personalization; TODAY; Medications; Medication reminders/logging; Injections; Appointments; Timeline; Milestones; Journal; Customize PRISM; Privacy; Notifications; App lock; Accessibility; Data export; Account deletion.
+**Decision — MVP / P0:** Authentication; Onboarding; Personalization; TODAY; Medications; Medication reminders/logging; Injections; Appointments; Timeline; Milestones; Journal; Customize PRIZM; Privacy; Notifications; App lock; Accessibility; Data export; Account deletion.
 **Decision — P1 (next release):** Labs; Procedures; Legal Journey; Memories; Documents; Universal Search; Advanced recurring schedules; Supply tracking; Enhanced journal functionality.
 **Implications:**
 
@@ -544,12 +544,12 @@ The following were found while cross-referencing the five source sections (Produ
 - "Enhanced journal functionality" being P1 means the P0 Journal is the version already specified (title, content, mood, tags, photo) — richer functionality (e.g. prompts, advanced formatting) is deferred, not the base feature.
 - This decision supersedes the "Version 1.1 Scope" section of `MASTER_BUILD_SPEC.md` as previously written where the two lists diverged; `MASTER_BUILD_SPEC.md` §25 has been updated to match this entry exactly.
 
-### RESOLVED — Customize PRISM and Quick Add expose only P0 modules until P1 ships
+### RESOLVED — Customize PRIZM and Quick Add expose only P0 modules until P1 ships
 
 **Date:** 2026-09-01
 **Status:** Active
-**Reason:** The P0/P1 split above creates a scoping question the source material never had to answer: Customize PRISM (§`SCREEN_BIBLE.md` Screen 56) and the Quick Add sheet (Screen 21) both enumerate all ten module keys, including the five now deferred to P1 (labs, procedures, legal, documents, memories). Shipping MVP with visible toggles or Quick Add options for modules that have no corresponding screens would dead-end the user — a real implementation-blocking ambiguity if left unresolved, not just a cosmetic detail.
-**Decision:** In the MVP build, Customize PRISM and Quick Add present only the five P0 module keys (`medications`, `injections`, `appointments`, `milestones`, `journal`). The remaining five module keys (`labs`, `procedures`, `legal`, `documents`, `memories`) still exist in the `modules` table schema and are still valid `module_key` values — the architecture anticipates them — but the UI simply does not yet offer them, consistent with progressive disclosure (`TECHNICAL_BIBLE.md` §3, Principle 5) and "do not overbuild" (`MASTER_BUILD_SPEC.md` Appendix A, Rule G). No "coming soon" placeholders are shown; the module is added to the toggle list and Quick Add sheet in the same release its screens ship.
+**Reason:** The P0/P1 split above creates a scoping question the source material never had to answer: Customize PRIZM (§`SCREEN_BIBLE.md` Screen 56) and the Quick Add sheet (Screen 21) both enumerate all ten module keys, including the five now deferred to P1 (labs, procedures, legal, documents, memories). Shipping MVP with visible toggles or Quick Add options for modules that have no corresponding screens would dead-end the user — a real implementation-blocking ambiguity if left unresolved, not just a cosmetic detail.
+**Decision:** In the MVP build, Customize PRIZM and Quick Add present only the five P0 module keys (`medications`, `injections`, `appointments`, `milestones`, `journal`). The remaining five module keys (`labs`, `procedures`, `legal`, `documents`, `memories`) still exist in the `modules` table schema and are still valid `module_key` values — the architecture anticipates them — but the UI simply does not yet offer them, consistent with progressive disclosure (`TECHNICAL_BIBLE.md` §3, Principle 5) and "do not overbuild" (`MASTER_BUILD_SPEC.md` Appendix A, Rule G). No "coming soon" placeholders are shown; the module is added to the toggle list and Quick Add sheet in the same release its screens ship.
 **Implications:** Timeline (P0) aggregates only P0 record types (medications, injections, appointments, milestones, journal entries) until P1 ships, since a module with no data source contributes nothing to the unified view — this requires no special-casing, since Timeline already pulls only from enabled modules. `SCREEN_BIBLE.md` Screen 56 and Screen 21, and `MASTER_BUILD_SPEC.md` §10 and §13, have been updated with this clarification.
 
 ### RESOLVED — `settings` table primary key
@@ -558,6 +558,13 @@ The following were found while cross-referencing the five source sections (Produ
 **Status:** Resolved (minor/technical, not a product-level contradiction)
 **Conflict:** The Technical Bible's schema for `settings` uses `user_id UUID PRIMARY KEY` as the sole key. The Master Build Specification's schema for the same table lists both `id UUID PRIMARY KEY` and `user_id UUID PRIMARY KEY`, which is not valid as written (a table cannot have two independent primary keys) and would also allow multiple settings rows per user if "fixed" by adding a surrogate `id`.
 **Resolution:** `user_id` is the sole primary key of `settings` (one row per user), matching the Technical Bible and the invariant the rest of the specification assumes (e.g. "Load Module Configuration" in the user lifecycle expects exactly one settings row). Documented in `MASTER_BUILD_SPEC.md` §18.
+
+### DECIDED — The product is renamed from Prism to Prizm
+
+**Date:** 2026-10-12
+**Status:** Active (owner decision)
+**Decision:** The product name is now **Prizm** (written **PRIZM** in the all-caps style these documents use). Everything a person reads (app copy, notification text, permission prompts, support email sender and subject, website copy, and documentation) uses the new name.
+**Implications:** Deliberately **not** renamed in this change, because each affects installed apps, stored data, or external systems: the bundle identifier and Android package (`ttimemedia.prism`), the URL scheme `prism://` and auth redirect URLs, the `@prism/*` workspace packages, `PRISM*` component and token names, the repository name, the `ttimemedia.org/prism` page path, secure-store keys such as `prism_app_lock_pin`, and the `prism` theme and icon keys. The **Prism** theme and **Prism** alternate app icon keep their names (the optical word, not the product). Not changeable from code: the App Store Connect name, the TestFlight listing, and image assets that contain the old wordmark. See the rename pull request for the full list.
 
 ---
 

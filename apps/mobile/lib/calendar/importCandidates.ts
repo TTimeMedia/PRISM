@@ -9,12 +9,12 @@ function minuteKey(iso: string): string {
   return new Date(iso).toISOString().slice(0, 16);
 }
 
-/** The same title at the same minute — how an appointment already in Prism is recognised. */
+/** The same title at the same minute — how an appointment already in Prizm is recognised. */
 function identity(candidate: ImportCandidate): string {
   return `${candidate.title.trim().toLowerCase()}|${minuteKey(candidate.startsAt)}`;
 }
 
-/** True when Prism already has an appointment with this title at this time. */
+/** True when Prizm already has an appointment with this title at this time. */
 export function isAlreadyInPrism(
   candidate: ImportCandidate,
   existing: readonly Pick<Appointment, 'title' | 'starts_at'>[],

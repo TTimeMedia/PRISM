@@ -1,7 +1,7 @@
 import { capture } from './analytics';
 
 /**
- * Every event Prism can send. Only these names exist, so nothing else can be
+ * Every event Prizm can send. Only these names exist, so nothing else can be
  * sent by accident. None carries anything the person wrote or recorded:
  * "dose_logged" says a dose was logged, never which medication or how much.
  * Adding an event means adding it here and to the privacy policy's

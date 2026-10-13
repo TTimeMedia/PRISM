@@ -26,7 +26,7 @@ export const frequencyConfigSchema = z
   .optional();
 
 /**
- * PRISM may store and display user-entered dosage information. It must
+ * PRIZM may store and display user-entered dosage information. It must
  * never calculate, recommend, or validate dosage as "correct" — this
  * schema only checks that free text was provided, not what it says.
  * See docs/PRODUCT_BIBLE.md §12 and docs/DECISIONS.md.
@@ -101,7 +101,7 @@ export type AppointmentFormInput = z.infer<typeof appointmentFormSchema>;
 
 // --- P1 (schema/validation exists now; screens ship later — see docs/DECISIONS.md)
 
-/** P1. PRISM stores lab records; it never interprets results. */
+/** P1. PRIZM stores lab records; it never interprets results. */
 export const labCreateSchema = z.object({
   title: titleSchema,
   date: isoDateSchema,
@@ -112,7 +112,7 @@ export const labCreateSchema = z.object({
 });
 export type LabCreateInput = z.infer<typeof labCreateSchema>;
 
-/** P1. PRISM records procedures; it never determines eligibility or readiness. */
+/** P1. PRIZM records procedures; it never determines eligibility or readiness. */
 export const procedureCreateSchema = z.object({
   title: titleSchema,
   date: isoDateSchema,

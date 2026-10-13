@@ -30,8 +30,8 @@ export type PickEntryImagesResult =
  * (lib/you/profilePhoto.ts). Library-only.
  *
  * This opens the phone's own photo picker, which needs no permission for
- * Prism to use it: the person picks photos and only those are handed over.
- * So nobody is ever sent to Settings to turn something on, and Prism never
+ * Prizm to use it: the person picks photos and only those are handed over.
+ * So nobody is ever sent to Settings to turn something on, and Prizm never
  * gets access to the rest of their library.
  */
 export async function pickEntryImages(limit: number): Promise<PickEntryImagesResult> {

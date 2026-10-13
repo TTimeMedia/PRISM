@@ -4,8 +4,8 @@ import { profileUpdateSchema } from '../profile';
 describe('profileUpdateSchema', () => {
   it('accepts a completely empty object — no identity field is required', () => {
     // See docs/PRODUCT_BIBLE.md §8.2 (No Assumptions) and
-    // docs/DECISIONS.md "PRISM does not require pronouns" /
-    // "PRISM does not assume a binary gender".
+    // docs/DECISIONS.md "PRIZM does not require pronouns" /
+    // "PRIZM does not assume a binary gender".
     const result = profileUpdateSchema.safeParse({});
     expect(result.success).toBe(true);
   });

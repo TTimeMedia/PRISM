@@ -106,7 +106,7 @@ describe('TimelineScreen (the YOU tab)', () => {
     renderWithProviders(<TimelineScreen />);
 
     expect(screen.getByText('Dominic Perignon')).toBeTruthy();
-    expect(screen.getByText(/^With Prism since /)).toBeTruthy();
+    expect(screen.getByText(/^With Prizm since /)).toBeTruthy();
     expect(screen.getByText('DP')).toBeTruthy();
   });
 

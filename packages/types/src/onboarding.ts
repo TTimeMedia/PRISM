@@ -209,7 +209,7 @@ export function normalizeOnboardingStep(saved: string | null | undefined): Onboa
  * figuring things out", or skipping turns everything on so the app is never
  * empty. Injections count as medications. Topics without a feature yet (lab
  * work, surgery, legal changes, records) turn nothing on.
- * Everything can be turned on or off any time under You → Make Prism yours.
+ * Everything can be turned on or off any time under You → Make Prizm yours.
  */
 export function modulesForIntent(intent: readonly string[] | null | undefined): P0ModuleKey[] {
   const picked = intent ?? [];

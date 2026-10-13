@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Pill } from 'lucide-react-native';
 import { fontFamily, fontWeight, radius, spacing, type, useTheme } from '@prism/ui';
 
-/** A Prism reminder as it would look on the lock screen, saying `body`. */
+/** A Prizm reminder as it would look on the lock screen, saying `body`. */
 export function NotificationPreview({ body }: { body: string }) {
   const theme = useTheme();
   return (
@@ -20,7 +20,7 @@ export function NotificationPreview({ body }: { body: string }) {
       </View>
       <View style={styles.previewText}>
         <View style={styles.previewHeader}>
-          <Text style={[styles.previewApp, { color: theme.colors.text.primary }]}>Prism</Text>
+          <Text style={[styles.previewApp, { color: theme.colors.text.primary }]}>Prizm</Text>
           <Text style={[styles.previewTime, { color: theme.colors.text.tertiary }]}>now</Text>
         </View>
         <Text style={[styles.previewBody, { color: theme.colors.text.secondary }]}>{body}</Text>

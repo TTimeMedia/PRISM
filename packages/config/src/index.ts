@@ -1,10 +1,10 @@
 /**
- * Shared, non-secret configuration constants for PRISM.
+ * Shared, non-secret configuration constants for PRIZM.
  * Actual secrets (Supabase keys, etc.) live in environment variables —
  * see docs/SECURITY.md §14-15 and .env.example at the repo root.
  */
 
-export const APP_NAME = 'Prism';
+export const APP_NAME = 'Prizm';
 export const APP_TAGLINE = 'Your journey. Your way.';
 export const APP_SCHEME = 'prism';
 

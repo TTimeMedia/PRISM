@@ -15,7 +15,7 @@ describe('medicationCreateSchema', () => {
   });
 
   it('accepts user-entered dosage_text without judging its content', () => {
-    // PRISM stores and displays user-entered dosage; it never validates
+    // PRIZM stores and displays user-entered dosage; it never validates
     // whether a dose is "correct" — see docs/PRODUCT_BIBLE.md §12.
     const result = medicationCreateSchema.safeParse({
       name: 'Estradiol',

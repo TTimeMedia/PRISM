@@ -152,7 +152,7 @@ function RootNavigator({ fontsLoaded }: { fontsLoaded: boolean }) {
 }
 
 /**
- * Screens and transitions use Prism's colors instead of React Navigation's
+ * Screens and transitions use Prizm's colors instead of React Navigation's
  * default near-white. Without this, the space behind a screen while it
  * slides in or out (for example tapping You from Appearance) flashes white,
  * most visibly in dark themes.

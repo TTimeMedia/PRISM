@@ -72,10 +72,10 @@ const SET_UP_ITEMS: MenuItem[] = [
 ];
 
 const HELP_ITEMS: MenuItem[] = [
-  { label: 'How Prism works', icon: CircleHelp, href: '/you/how-it-works' },
+  { label: 'How Prizm works', icon: CircleHelp, href: '/you/how-it-works' },
   { label: 'Support', icon: Eye, href: '/you/support' },
   { label: 'Send feedback', icon: MessageSquareHeart, href: '/you/support/feedback' },
-  { label: 'About Prism', icon: Info, href: '/you/about' },
+  { label: 'About Prizm', icon: Info, href: '/you/about' },
 ];
 
 function initialsOf(name: string | null | undefined): string {
@@ -219,7 +219,7 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
         >
           <SafeAreaView style={styles.flex} edges={['top', 'bottom']}>
             <View style={styles.header}>
-              <Text style={[styles.brand, { color: theme.colors.text.primary }]}>Prism</Text>
+              <Text style={[styles.brand, { color: theme.colors.text.primary }]}>Prizm</Text>
               <Pressable
                 accessibilityRole="button"
                 accessibilityLabel="Close menu"
@@ -231,7 +231,7 @@ export function SideMenu({ visible, onClose }: { visible: boolean; onClose: () =
             </View>
 
             <ScrollView contentContainerStyle={styles.list}>
-              <Group title="Your Prism" items={features} onPick={go} />
+              <Group title="Your Prizm" items={features} onPick={go} />
               <Group title="Set up" items={SET_UP_ITEMS} onPick={go} />
               <Group title="Help" items={HELP_ITEMS} onPick={go} />
             </ScrollView>

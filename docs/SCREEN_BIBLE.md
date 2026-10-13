@@ -1,22 +1,22 @@
-# PRISM Screen Bible
+# PRIZM Screen Bible
 
 Version: 1.0
 Status: Implementation specification
 Tagline: Your journey. Your way.
 
-This is the authoritative reference for PRISM's application interface: every screen, its purpose, and its behavior. It assumes the product intent defined in [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) and the visual system defined in [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md). Per-screen entries below state only what is _distinctive_ to that screen; every screen also inherits the **Global Screen Contract** (§3–§16) — repeating that contract 78 times would bury the requirements that actually differ per screen.
+This is the authoritative reference for PRIZM's application interface: every screen, its purpose, and its behavior. It assumes the product intent defined in [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) and the visual system defined in [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md). Per-screen entries below state only what is _distinctive_ to that screen; every screen also inherits the **Global Screen Contract** (§3–§16) — repeating that contract 78 times would bury the requirements that actually differ per screen.
 
 ---
 
 ## 1. Screen System
 
-PRISM is organized into four primary areas: **TODAY / CARE / JOURNEY / YOU**, plus global actions available throughout the app: **+ (Quick Add), Search, Notifications, Back, Close, Save, Edit, Delete.** The application uses native platform conventions wherever they improve usability.
+PRIZM is organized into four primary areas: **TODAY / CARE / JOURNEY / YOU**, plus global actions available throughout the app: **+ (Quick Add), Search, Notifications, Back, Close, Save, Edit, Delete.** The application uses native platform conventions wherever they improve usability.
 
 ## 2. Screen Inventory
 
 **Authentication (7):** Splash · Welcome · Sign Up · Sign In · Forgot Password · Reset Password · Email Verification
 
-**Onboarding:** Philosophy · What Brings You Here? · Identity · Care Setup · Medication Setup · Injection Setup · Appointment Setup · Journey Date · Privacy Setup · Building PRISM · PRISM Ready
+**Onboarding:** Philosophy · What Brings You Here? · Identity · Care Setup · Medication Setup · Injection Setup · Appointment Setup · Journey Date · Privacy Setup · Building PRIZM · PRIZM Ready
 
 **TODAY (3):** Today · Quick Add · Notifications
 
@@ -24,7 +24,7 @@ PRISM is organized into four primary areas: **TODAY / CARE / JOURNEY / YOU**, pl
 
 **JOURNEY (12):** Journey Home · Timeline · Timeline Event · Milestones · Add Milestone · Milestone Detail · Journal · New Journal Entry · Journal Entry Detail · Memories · Add Memory · Memory Detail
 
-**YOU (19):** You · Profile · Edit Profile · Customize PRISM · Module Configuration · Notification Settings · Privacy · App Lock · Accessibility · Appearance · Data & Export · Delete Account · About · Support · Legal Journey · Legal Item Detail · Documents · Add Document · Document Detail
+**YOU (19):** You · Profile · Edit Profile · Customize PRIZM · Module Configuration · Notification Settings · Privacy · App Lock · Accessibility · Appearance · Data & Export · Delete Account · About · Support · Legal Journey · Legal Item Detail · Documents · Add Document · Document Detail
 
 **Global (7):** Search · Search Results · Confirmation Modal · Delete Confirmation · Error State · Offline State · App Lock Screen
 
@@ -69,21 +69,21 @@ Every screen in this inventory inherits the following unless a per-screen entry 
 
 ### Screen 01 — Splash
 
-**Purpose:** establish PRISM's identity on cold start.
-**Content:** centered "PRISM," tagline "Your journey. Your way.," subtle light/prism animation.
+**Purpose:** establish PRIZM's identity on cold start.
+**Content:** centered "PRIZM," tagline "Your journey. Your way.," subtle light/prism animation.
 **Behavior:** displays briefly while the app initializes, then routes — authenticated → Today; unauthenticated → Welcome; incomplete onboarding → resume onboarding at the correct step.
 
 ### Screen 02 — Welcome
 
 **Purpose:** first impression for a new/unauthenticated user.
-**Content:** "Welcome to PRISM." / "A private space built around your journey—not someone else's idea of what your journey should look like."
+**Content:** "Welcome to PRIZM." / "A private space built around your journey—not someone else's idea of what your journey should look like."
 **Actions:** **Get started** → Sign Up; **I already have an account** → Sign In.
 
 ### Screen 03 — Sign Up
 
 **Fields:** Email, Password, Confirm password.
 **Actions:** **Create account** (primary); **Sign in** (secondary, → Sign In).
-**Content:** visible, non-buried legal line — "By continuing, you agree to PRISM's Terms and Privacy Policy."
+**Content:** visible, non-buried legal line — "By continuing, you agree to PRIZM's Terms and Privacy Policy."
 **Exit:** success → Email Verification.
 
 ### Screen 04 — Sign In
@@ -114,11 +114,11 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 
 ### Screen 08 — Philosophy
 
-**Content:** "Set it up your way." + the Prism Manifesto (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §4). **Action:** **Continue.**
+**Content:** "Set it up your way." + the Prizm Manifesto (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §4). **Action:** **Continue.**
 
 ### Screen 09 — What Brings You Here?
 
-**Purpose:** surface intent, not identity. **Heading:** "What would you like PRISM to help with?"
+**Purpose:** surface intent, not identity. **Heading:** "What would you like PRIZM to help with?"
 **Content (multi-select):** Managing medications · Tracking injections · Keeping up with appointments · Tracking lab work · Preparing for surgery · Keeping track of legal changes · Documenting milestones · Journaling · Saving important records · Keeping everything in one place · I'm still figuring things out · Something else.
 **Action:** **Continue.**
 
@@ -132,7 +132,7 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 
 ### Screen 11 — Identity
 
-**Heading:** "Tell PRISM about you." **Fields (all optional):** Name, Pronouns, Gender. **Copy:** "Everything here is optional." **Actions:** **Continue**, **Skip.**
+**Heading:** "Tell PRIZM about you." **Fields (all optional):** Name, Pronouns, Gender. **Copy:** "Everything here is optional." **Actions:** **Continue**, **Skip.**
 
 ### Screen 12 — Care Setup
 
@@ -158,15 +158,15 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 
 ### Screen 17 — Privacy Setup
 
-**Heading:** "Protect your PRISM." **Content:** App Lock (toggle), Biometrics (toggle), Private notifications (toggle, **enabled by default**) — _"Private notifications hide sensitive information from your lock screen."_ **Action:** **Continue.**
+**Heading:** "Protect your PRIZM." **Content:** App Lock (toggle), Biometrics (toggle), Private notifications (toggle, **enabled by default**) — _"Private notifications hide sensitive information from your lock screen."_ **Action:** **Continue.**
 
-### Screen 18 — Building PRISM
+### Screen 18 — Building PRIZM
 
-**Visual:** light enters a prism, refracts, and the user's selected modules appear from the spectrum. Duration ~1–2 seconds. **Text:** "Building your PRISM…"
+**Visual:** light enters a prism, refracts, and the user's selected modules appear from the spectrum. Duration ~1–2 seconds. **Text:** "Building your PRIZM…"
 
-### Screen 19 — PRISM Ready
+### Screen 19 — PRIZM Ready
 
-**Heading:** "Your PRISM is ready." **Copy:** "Everything you chose to track is now organized around you." **Action:** **Enter PRISM** → Today.
+**Heading:** "Your PRIZM is ready." **Copy:** "Everything you chose to track is now organized around you." **Action:** **Enter PRIZM** → Today.
 
 ---
 
@@ -177,11 +177,11 @@ Onboarding is sequential but every non-essential step is skippable, and the whol
 **Purpose:** the primary application screen; answers "What matters to me today?" (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §Core User Experience).
 **Content:** greeting header ("Good morning, Alex." + date + "Here's what's happening today.") followed by dynamic, personalization-driven cards.
 **Card types:** Medication (due today), Appointment (upcoming), Journey (recent milestone), Reflection (optional journal prompt), Reminder (custom). **Cards only appear when relevant** — see [`TECHNICAL_BIBLE.md`](./TECHNICAL_BIBLE.md) §Personalization Engine for the ranking pipeline.
-**Empty state:** "Nothing urgent today." / "That's okay. Your PRISM is here whenever you need it." → **Add something** (opens Quick Add).
+**Empty state:** "Nothing urgent today." / "That's okay. Your PRIZM is here whenever you need it." → **Add something** (opens Quick Add).
 
 ### Screen 21 — Quick Add
 
-**Type:** bottom sheet, accessible from anywhere via the global **+**. **Heading:** "Add to PRISM."
+**Type:** bottom sheet, accessible from anywhere via the global **+**. **Heading:** "Add to PRIZM."
 **Content:** Medication · Injection · Appointment · Lab · Procedure · Milestone · Journal · Memory · Document — **filtered to only the user's enabled modules.** In MVP this means only Medication, Injection, Appointment, Milestone, and Journal appear, since Lab/Procedure/Memory/Document are P1 modules (§14) not yet enable-able.
 
 ### Screen 22 — Notifications
@@ -250,7 +250,7 @@ Editable version of Appointment Detail.
 
 ### Screen 37 — Lab Detail (P1)
 
-**Content:** all lab fields. **Actions:** **Edit**, **Delete**, **Open attachment.** PRISM provides no medical interpretation of results.
+**Content:** all lab fields. **Actions:** **Edit**, **Delete**, **Open attachment.** PRIZM provides no medical interpretation of results.
 
 ### Screen 38 — Procedures (P1)
 
@@ -323,7 +323,7 @@ Editable version of Appointment Detail.
 
 ### Screen 53 — You
 
-**Purpose:** primary settings hub. **Sections:** **Me** (Profile) · **PRISM** (Customize PRISM) · **Privacy** (Privacy & App Lock) · **Preferences** (Notifications, Appearance, Accessibility) · **Data** (Export, Delete account) · **About** (Support, Legal).
+**Purpose:** primary settings hub. **Sections:** **Me** (Profile) · **PRIZM** (Customize PRIZM) · **Privacy** (Privacy & App Lock) · **Preferences** (Notifications, Appearance, Accessibility) · **Data** (Export, Delete account) · **About** (Support, Legal).
 
 ### Screen 54 — Profile
 
@@ -333,9 +333,9 @@ Editable version of Appointment Detail.
 
 All fields optional; saves changes.
 
-### Screen 56 — Customize PRISM
+### Screen 56 — Customize PRIZM
 
-**Heading:** "Make PRISM yours." **Content (MVP):** module toggles for the five P0 modules only — Medications, Injections, Appointments, Milestones, Journal. Labs, Procedures, Memories, Legal, and Documents are P1 (§14) and are not offered as toggles until their screens ship — the `modules` table already supports all ten keys, so no schema change is needed when they're added. **Constraint:** toggling a module off changes only whether it's surfaced; it never deletes existing data (see [`DECISIONS.md`](./DECISIONS.md)).
+**Heading:** "Make PRIZM yours." **Content (MVP):** module toggles for the five P0 modules only — Medications, Injections, Appointments, Milestones, Journal. Labs, Procedures, Memories, Legal, and Documents are P1 (§14) and are not offered as toggles until their screens ship — the `modules` table already supports all ten keys, so no schema change is needed when they're added. **Constraint:** toggling a module off changes only whether it's surfaced; it never deletes existing data (see [`DECISIONS.md`](./DECISIONS.md)).
 
 ### Screen 57 — Module Configuration
 
@@ -347,7 +347,7 @@ All fields optional; saves changes.
 
 ### Screen 59 — Privacy
 
-**Sections:** **App Security** (App lock, Biometrics, PIN) · **Notifications** (Private notifications) · **Data** (Export, Delete) · **Security information** (plain-language explanation of how PRISM protects information).
+**Sections:** **App Security** (App lock, Biometrics, PIN) · **Notifications** (Private notifications) · **Data** (Export, Delete) · **Security information** (plain-language explanation of how PRIZM protects information).
 
 ### Screen 60 — App Lock
 
@@ -359,7 +359,7 @@ All fields optional; saves changes.
 
 ### Screen 62 — Appearance
 
-**Content:** Light, Dark, System (default). Dark mode is a signature PRISM experience, not an afterthought (see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md)).
+**Content:** Light, Dark, System (default). Dark mode is a signature PRIZM experience, not an afterthought (see [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md)).
 
 ### Screen 63 — Data & Export
 
@@ -367,11 +367,11 @@ All fields optional; saves changes.
 
 ### Screen 64 — Delete Account
 
-**Heading:** "Delete your PRISM account?" **Copy:** "This permanently deletes your PRISM account and associated information." **Action:** requires explicit confirmation (e.g. **Delete my account**). No dark patterns — the path to deletion must be as clear as the path to any other setting.
+**Heading:** "Delete your PRIZM account?" **Copy:** "This permanently deletes your PRIZM account and associated information." **Action:** requires explicit confirmation (e.g. **Delete my account**). No dark patterns — the path to deletion must be as clear as the path to any other setting.
 
 ### Screen 65 — About
 
-**Content:** PRISM logo, Version, Product description, Privacy Policy, Terms, open-source acknowledgements where applicable.
+**Content:** PRIZM logo, Version, Product description, Privacy Policy, Terms, open-source acknowledgements where applicable.
 
 ### Screen 66 — Support
 
@@ -391,7 +391,7 @@ All fields optional; saves changes.
 
 ### Screen 70 — Add Document (P1)
 
-**Fields:** File, Title, Category. **Action:** **Secure document.** **Copy before upload:** "This file contains information you chose to store privately in PRISM."
+**Fields:** File, Title, Category. **Action:** **Secure document.** **Copy before upload:** "This file contains information you chose to store privately in PRIZM."
 
 ### Screen 71 — Document Detail (P1)
 
@@ -403,7 +403,7 @@ All fields optional; saves changes.
 
 ### Screen 72 — Search (P1)
 
-**Content:** universal search field, placeholder "Search PRISM," scoped to Timeline, Medications, Appointments, Labs, Milestones, Journal, Memories, Legal, Documents — filtered to enabled modules only.
+**Content:** universal search field, placeholder "Search PRIZM," scoped to Timeline, Medications, Appointments, Labs, Milestones, Journal, Memories, Legal, Documents — filtered to enabled modules only.
 
 ### Screen 73 — Search Results (P1)
 
@@ -427,7 +427,7 @@ All fields optional; saves changes.
 
 ### Screen 78 — App Lock Screen
 
-**Content:** minimal — "PRISM" / "Unlock PRISM," biometric button where available, PIN fallback. Displays no user information whatsoever.
+**Content:** minimal — "PRIZM" / "Unlock PRIZM," biometric button where available, PIN fallback. Displays no user information whatsoever.
 
 ---
 
@@ -453,7 +453,7 @@ At any point the user can: add a module, remove a module from view, change prefe
 
 ### No Assumption Check
 
-Before every major release, verify PRISM can be used fully without: identifying gender, selecting pronouns, taking hormones, taking medication, having surgery, changing a name, changing legal documents, or choosing a transition date. The answer must remain **yes** in every case.
+Before every major release, verify PRIZM can be used fully without: identifying gender, selecting pronouns, taking hormones, taking medication, having surgery, changing a name, changing legal documents, or choosing a transition date. The answer must remain **yes** in every case.
 
 ### Accessibility Check
 
@@ -469,17 +469,17 @@ Recommended build sequence (mirrors [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC
 
 ## 14. MVP Screen Priority
 
-**P0 — Required for MVP:** Splash, Welcome, Sign Up, Sign In, Onboarding, Today, Quick Add, Care, Medications, Medication Detail, Medication Logging, Injections, Appointments, Journey, Timeline, Milestones, Journal, You, Customize PRISM, Privacy, App Lock, Notifications, Data & Export, Delete Account.
+**P0 — Required for MVP:** Splash, Welcome, Sign Up, Sign In, Onboarding, Today, Quick Add, Care, Medications, Medication Detail, Medication Logging, Injections, Appointments, Journey, Timeline, Milestones, Journal, You, Customize PRIZM, Privacy, App Lock, Notifications, Data & Export, Delete Account.
 
 **P1 — Shortly after MVP:** Labs, Procedures, Memories, Legal Journey, Universal Search, Documents. Also P1 at the feature (not screen) level: Advanced recurring schedules, Supply tracking, Enhanced journal functionality.
 
 > **Resolved:** this P0/P1 split was confirmed by explicit product-owner decision on 2026-09-01 — see [`DECISIONS.md`](./DECISIONS.md) §Full MVP (P0) / next-release (P1) scope. It supersedes the narrative "basic labs / procedures / basic legal journey" wording that had appeared elsewhere as part of MVP; those sections have since been corrected to match this list.
 
-**P2 — Future:** AI Assistant, Health integrations, Provider information, Insurance, Advanced backup, PRISM Resources, PRISM Connect.
+**P2 — Future:** AI Assistant, Health integrations, Provider information, Insurance, Advanced backup, PRIZM Resources, PRIZM Connect.
 
 ## 15. Final Screen Rule
 
-Every PRISM screen must answer one question: **why does this screen exist?** If the answer is unclear, remove the screen. Every screen exists to make the user's journey **easier to manage, easier to understand, easier to remember, or easier to protect.**
+Every PRIZM screen must answer one question: **why does this screen exist?** If the answer is unclear, remove the screen. Every screen exists to make the user's journey **easier to manage, easier to understand, easier to remember, or easier to protect.**
 
 ## 16. Screen Bible Completion Criteria
 

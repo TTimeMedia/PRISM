@@ -50,7 +50,7 @@ describe('pickSuggestions', () => {
     ]);
   });
 
-  it("skips what's already in Prism, dismissed, past, or too far ahead", () => {
+  it("skips what's already in Prizm, dismissed, past, or too far ahead", () => {
     const inPrism = event({ id: 'in', title: 'Endo appointment' });
     const dismissed = event({ id: 'no', title: 'Lab work', startsAt: inDays(4) });
     const past = event({ id: 'past', title: 'Dentist', startsAt: inDays(-1) });

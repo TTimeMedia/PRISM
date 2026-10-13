@@ -33,7 +33,7 @@ export function CalendarSettingsScreen() {
   const suggestionsOn = useAppStore((state) => state.calendarSuggestions);
   const setSuggestionsOn = useAppStore((state) => state.setCalendarSuggestions);
 
-  // Turning suggestions on is the moment Prism asks to read the calendar.
+  // Turning suggestions on is the moment Prizm asks to read the calendar.
   const toggleSuggestions = async (value: boolean) => {
     if (value) {
       try {
@@ -42,7 +42,7 @@ export function CalendarSettingsScreen() {
           return;
         }
       } catch {
-        showToast("Calendar isn't available in this build of Prism.", 'error');
+        showToast("Calendar isn't available in this build of Prizm.", 'error');
         return;
       }
     }
@@ -58,7 +58,7 @@ export function CalendarSettingsScreen() {
           return;
         }
       } catch {
-        showToast("Calendar isn't available in this build of Prism.", 'error');
+        showToast("Calendar isn't available in this build of Prizm.", 'error');
         return;
       }
     }
@@ -86,7 +86,7 @@ export function CalendarSettingsScreen() {
               label="Sync to calendar"
               description={
                 available
-                  ? 'Add appointments to your device calendar. Prism only asks for calendar access once you turn this on.'
+                  ? 'Add appointments to your device calendar. Prizm only asks for calendar access once you turn this on.'
                   : 'Not available on this device.'
               }
               value={settings.calendar_sync_enabled}
@@ -102,7 +102,7 @@ export function CalendarSettingsScreen() {
               label="Suggest appointments from my calendar"
               description={
                 available
-                  ? 'When you open Prism, it looks at upcoming events on this phone and offers the ones that look like appointments on Today. Nothing is kept unless you add it.'
+                  ? 'When you open Prizm, it looks at upcoming events on this phone and offers the ones that look like appointments on Today. Nothing is kept unless you add it.'
                   : 'Not available on this device.'
               }
               value={suggestionsOn}

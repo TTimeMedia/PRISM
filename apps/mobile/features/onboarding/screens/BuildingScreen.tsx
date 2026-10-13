@@ -11,7 +11,7 @@ import { useProfile, useUpdateProfile } from '../../../lib/profile/queries';
 const BUILD_DURATION_MS = 1500;
 
 /**
- * Screen 18 — Building PRISM. A brief (~1-2s) light/prism visual, never
+ * Screen 18 — Building PRIZM. A brief (~1-2s) light/prism visual, never
  * artificially delayed beyond that — see docs/SCREEN_BIBLE.md Screen 18.
  * Falls back to an instant static display under Reduce Motion.
  */
@@ -43,7 +43,7 @@ export function BuildingScreen() {
           />
         ))}
       </View>
-      <Text style={[styles.text, { color: theme.colors.text.secondary }]}>Building Prism…</Text>
+      <Text style={[styles.text, { color: theme.colors.text.secondary }]}>Building Prizm…</Text>
     </SafeAreaView>
   );
 }

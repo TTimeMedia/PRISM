@@ -74,7 +74,7 @@ describe('choosing a version', () => {
     });
     expect(messageOptions('medication', messages).at(-1)?.id).toBe('mine');
     expect(renderReminder('medication', { name: 'T', time: '8 PM' }, messages)).toEqual({
-      title: 'Prism',
+      title: 'Prizm',
       body: 'Meds time, T at 8 PM!',
     });
   });

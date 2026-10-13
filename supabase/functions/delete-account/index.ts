@@ -1,4 +1,4 @@
-// PRISM — delete-account Edge Function.
+// PRIZM — delete-account Edge Function.
 //
 // Deleting an `auth.users` row requires the service-role key, which must
 // never ship in the mobile app (docs/SECURITY.md §14-15) — so this is

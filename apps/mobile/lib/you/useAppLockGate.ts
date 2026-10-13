@@ -7,7 +7,7 @@ import { useAppLockStore } from '../store/appLockStore';
  * enabled (a cold app start always requires unlocking) and re-locks
  * whenever the app leaves the foreground — the standard "re-lock on
  * backgrounding" behavior every mobile app-lock feature implements, so
- * a user can't background PRISM and hand an unlocked device to someone
+ * a user can't background PRIZM and hand an unlocked device to someone
  * else.
  */
 export function useAppLockGate(appLockEnabled: boolean): void {

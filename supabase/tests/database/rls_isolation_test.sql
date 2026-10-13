@@ -1,4 +1,4 @@
--- PRISM RLS adversarial test suite.
+-- PRIZM RLS adversarial test suite.
 -- Verifies docs/SECURITY.md §19: "Attempt to: access another user's
 -- record, guess another user's UUID, modify another user's record...
 -- Every attempt must fail."
@@ -17,7 +17,7 @@
 --   psql "$(supabase status -o json | jq -r .DB_URL)" -f supabase/tests/database/rls_isolation_test.sql
 --
 -- Uses plain PL/pgSQL ASSERT rather than pgTAP so it has no extension
--- dependency beyond what every PRISM migration already requires.
+-- dependency beyond what every PRIZM migration already requires.
 
 begin;
 

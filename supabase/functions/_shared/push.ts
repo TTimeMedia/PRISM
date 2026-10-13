@@ -13,8 +13,8 @@ export const DEFAULT_PUSH_PREFERENCES: PushPreferences = {
 };
 
 /** Matches docs/SECURITY.md §7 and the on-device reminders. */
-export const PRIVATE_TITLE = 'Prism';
-export const PRIVATE_BODY = 'Your Prism reminder is ready.';
+export const PRIVATE_TITLE = 'Prizm';
+export const PRIVATE_BODY = 'Your Prizm reminder is ready.';
 
 export function isPushCategory(value: unknown): value is PushCategory {
   return typeof value === 'string' && (PUSH_CATEGORIES as readonly string[]).includes(value);

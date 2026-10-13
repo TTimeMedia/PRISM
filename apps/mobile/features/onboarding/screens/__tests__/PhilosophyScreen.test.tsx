@@ -27,7 +27,7 @@ describe('PhilosophyScreen', () => {
   it('renders the intro copy', () => {
     renderWithProviders(<PhilosophyScreen />);
     expect(screen.getByText('Set it up your way.')).toBeTruthy();
-    expect(screen.getByText('Prism fits around you.')).toBeTruthy();
+    expect(screen.getByText('Prizm fits around you.')).toBeTruthy();
   });
 
   it('persists onboarding_step and advances to Colors on Continue', async () => {

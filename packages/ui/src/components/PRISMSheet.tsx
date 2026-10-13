@@ -22,7 +22,7 @@ export interface PRISMSheetProps {
 }
 
 /**
- * A bottom sheet — used for Quick Add ("Add to PRISM") and similar
+ * A bottom sheet — used for Quick Add ("Add to PRIZM") and similar
  * capture-oriented actions. See docs/DESIGN_SYSTEM.md §12.
  */
 export function PRISMSheet({ visible, title, onRequestClose, children }: PRISMSheetProps) {

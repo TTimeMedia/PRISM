@@ -11,7 +11,7 @@ export interface AuthScreenLayoutProps {
   children: React.ReactNode;
   /** e.g. a "Sign in" link under a Sign Up form's primary action. */
   footer?: React.ReactNode;
-  /** Shown above the title, e.g. the animated PRISM mark on Welcome. */
+  /** Shown above the title, e.g. the animated PRIZM mark on Welcome. */
   hero?: React.ReactNode;
 }
 

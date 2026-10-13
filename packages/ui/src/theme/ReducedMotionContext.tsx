@@ -4,7 +4,7 @@ const ReducedMotionPreferenceContext = createContext(false);
 
 export interface ReducedMotionProviderProps {
   /**
-   * settings.reduced_motion — an explicit, PRISM-specific preference,
+   * settings.reduced_motion — an explicit, PRIZM-specific preference,
    * independent of (and OR'd with) the OS "Reduce Motion" setting that
    * useReducedMotion() already detects. See docs/SCREEN_BIBLE.md Screen
    * 61 and docs/DECISIONS.md § YOU.

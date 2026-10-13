@@ -27,7 +27,7 @@ import { signOut } from '../../../lib/auth/actions';
 
 /**
  * Screen 53 — Settings (opened from the menu; the YOU tab itself shows the
- * Timeline). Primary settings hub — Me / PRISM / Privacy /
+ * Timeline). Primary settings hub — Me / PRIZM / Privacy /
  * Preferences / Data / About, per docs/SCREEN_BIBLE.md §9. Sign out was
  * added here in Milestone 02, before the rest of this screen existed; it
  * stays at the bottom now that the full hub is built.
@@ -56,9 +56,9 @@ export function YouScreen() {
           />
         </PRISMSection>
 
-        <PRISMSection title="Prism">
+        <PRISMSection title="Prizm">
           <PRISMListItem
-            title="Customize Prism"
+            title="Customize Prizm"
             subtitle="Choose what shows up for you."
             leading={<Sliders size={20} color={theme.spectrum.violet} />}
             onPress={() => router.push('/you/customize')}
@@ -107,12 +107,12 @@ export function YouScreen() {
 
         <PRISMSection title="About">
           <PRISMListItem
-            title="How Prism works"
+            title="How Prizm works"
             leading={<HelpCircle size={20} color={theme.spectrum.cyan} />}
             onPress={() => router.push('/you/how-it-works')}
           />
           <PRISMListItem
-            title="About Prism"
+            title="About Prizm"
             leading={<HelpCircle size={20} color={theme.colors.text.secondary} />}
             onPress={() => router.push('/you/about')}
           />

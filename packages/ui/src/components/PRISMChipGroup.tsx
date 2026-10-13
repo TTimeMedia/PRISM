@@ -23,7 +23,7 @@ export interface PRISMChipGroupProps {
 }
 
 /**
- * The one real implementation behind PRISM's chip-based single/multi-select
+ * The one real implementation behind PRIZM's chip-based single/multi-select
  * fields. `features/care/components/ChipField.tsx` and
  * `features/onboarding/components/ChipSelect.tsx` wrap this — each keeping
  * its own pre-existing call-site contract (a single nullable value vs. a

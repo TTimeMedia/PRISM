@@ -1,5 +1,5 @@
 /**
- * PRISM typography tokens — see docs/DESIGN_SYSTEM.md §5.
+ * PRIZM typography tokens — see docs/DESIGN_SYSTEM.md §5.
  * Primary typeface: Inter. Display typeface (sparing use): Sora.
  */
 export const fontFamily = {

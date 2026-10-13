@@ -1,7 +1,7 @@
 -- Test-only stand-in for the parts of Supabase's `auth`/`storage`
--- schemas that PRISM's own migrations/policies depend on.
+-- schemas that PRIZM's own migrations/policies depend on.
 --
--- NOT part of PRISM's real database schema — this exists purely so
+-- NOT part of PRIZM's real database schema — this exists purely so
 -- rls_isolation_test.sql (and this file) can run against a plain
 -- `postgres:16` container (CI's `database-rls` job in
 -- .github/workflows/ci.yml, and a local non-Docker Postgres in a
@@ -35,7 +35,7 @@ as $$
   select nullif(current_setting('request.jwt.claim.sub', true), '')::uuid;
 $$;
 
--- storage.buckets / storage.objects: just the columns PRISM's storage
+-- storage.buckets / storage.objects: just the columns PRIZM's storage
 -- migration and policies actually reference.
 create table storage.buckets (
   id text primary key,

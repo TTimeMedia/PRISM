@@ -31,7 +31,7 @@ describe('RemindersScreen', () => {
     mockedUseUpdateProfile.mockReturnValue({ mutateAsync: updateProfileMutateAsync } as never);
   });
 
-  it('is where notifications get turned on, and says what Prism uses them for', () => {
+  it('is where notifications get turned on, and says what Prizm uses them for', () => {
     renderWithProviders(<RemindersScreen />);
 
     expect(screen.getByText('Turn on notifications.')).toBeTruthy();

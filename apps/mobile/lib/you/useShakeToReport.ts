@@ -28,7 +28,7 @@ function load(): { sensors: Sensors; viewShot: ViewShot } | null {
 }
 
 /**
- * Shake the phone anywhere in Prism to open Report a problem, the way many
+ * Shake the phone anywhere in Prizm to open Report a problem, the way many
  * apps do. It takes a screenshot of the screen first, which the report
  * shows and only attaches if the person turns that on. Off with the switch
  * in Support, while the app is locked, and on the report screen itself.

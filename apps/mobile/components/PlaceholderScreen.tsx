@@ -17,7 +17,7 @@ export interface PlaceholderScreenProps {
  * Milestone 01 (Foundation) establishes navigation and the design
  * language; the real TODAY/CARE/JOURNEY/YOU experiences are built in
  * their own milestones — see docs/BUILD_STATUS.md. This is not meant
- * to look "unfinished" — PRISM's own empty-state language already
+ * to look "unfinished" — PRIZM's own empty-state language already
  * describes a screen with nothing in it yet, which is exactly what
  * this is.
  */

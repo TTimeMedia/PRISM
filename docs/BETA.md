@@ -1,4 +1,4 @@
-# PRISM Beta (Milestone 08)
+# PRIZM Beta (Milestone 08)
 
 Started 2026-09-28. Phase 8 in [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §28: _internal testing, closed beta, collect feedback, fix critical issues, review retention, review trust/privacy feedback, iterate._
 
@@ -6,7 +6,7 @@ This document is the working plan. Tick boxes as they're done, and record anythi
 
 ---
 
-## 1. Entry gates: before anyone else installs Prism
+## 1. Entry gates: before anyone else installs Prizm
 
 Everything here is done by the product owner on their own iPhone against the hosted project, using a **fresh test account** (not your real one).
 
@@ -29,7 +29,7 @@ Walk [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §29 on the device. Items 
 | 12    | Appointment, including a location suggestion and calendar sync                  |      |       |
 | 13–15 | Milestone with photo, journal entry with photo, Timeline shows both             |      |       |
 | 16    | Turn a feature off: it disappears from TODAY, CARE and Timeline                 |      |       |
-| 17    | Private notifications on: lock screen says only "Your Prism reminder is ready." |      |       |
+| 17    | Private notifications on: lock screen says only "Your Prizm reminder is ready." |      |       |
 | 18    | App Lock with PIN and Face ID; background and return; wrong PIN                 |      |       |
 | 19    | Export: file opens and contains every section, including `reminders`            |      |       |
 | 20    | Delete account (see 1d)                                                         |      |       |
@@ -43,13 +43,13 @@ Walk [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §29 on the device. Items 
 
 Needs `PUSH_ADMIN_SECRET` (rotated 2026-09-28; the value is kept in the git-ignored `supabase/.env`) and your test account's user id (Supabase dashboard → Authentication → Users).
 
-1. On the phone: allow notifications, then in You → Notifications turn on **Prism news**.
+1. On the phone: allow notifications, then in You → Notifications turn on **Prizm news**.
 2. Confirm a row exists for the account in `push_tokens`.
 3. Send one:
    ```sh
    curl -X POST "https://<project-ref>.supabase.co/functions/v1/send-push" \
      -H "x-push-secret: $PUSH_ADMIN_SECRET" -H "Content-Type: application/json" \
-     -d '{"category":"updates","title":"Prism","body":"Test from the server","userIds":["<user-id>"]}'
+     -d '{"category":"updates","title":"Prizm","body":"Test from the server","userIds":["<user-id>"]}'
    ```
 4. Expect `{"sent":1,...}` and the notification on the phone with the app closed.
 5. If it says `sent: 1` but nothing arrives, check `eas credentials` for an iOS push key. If `sent: 0` with `recipients: 1`, the token wasn't saved.
@@ -69,7 +69,7 @@ With the test account holding a profile photo, a milestone photo and a journal p
 ### 1e. Before the first outside tester
 
 - [x] Confirm `support@ttimemedia.org` receives mail (confirmed by the owner 2026-09-28). Send one from You → Support → Report a problem.
-- [x] Privacy policy draft names Expo push (see `DECISIONS.md` "Outside services Prism uses") and is published at the URL testers will see: **https://www.ttimemedia.org/prism** (live 2026-09-28, from `public/prism.html` in `rageinstall/ttimemedia.org`; legal review still required before public launch). External TestFlight requires a privacy policy URL.
+- [x] Privacy policy draft names Expo push (see `DECISIONS.md` "Outside services Prizm uses") and is published at the URL testers will see: **https://www.ttimemedia.org/prism** (live 2026-09-28, from `public/prism.html` in `rageinstall/ttimemedia.org`; legal review still required before public launch). External TestFlight requires a privacy policy URL.
 - [x] Choose distribution (§2): **TestFlight** (owner, 2026-09-28).
 
 ---
@@ -101,7 +101,7 @@ Keep the list of who was invited outside this repository. It is personal informa
 
 A short welcome note (email or TestFlight "what to test"):
 
-- What Prism is, and that it's an early version.
+- What Prizm is, and that it's an early version.
 - **Use a real email but not real sensitive data if you'd rather not.** Made-up medications are fine.
 - Reminders run on the phone; allow notifications when asked.
 - How to report a problem: You → Support → Report a problem (opens an email).
@@ -116,16 +116,16 @@ A short welcome note (email or TestFlight "what to test"):
 
 **Survey questions**, taken from [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §16. Ask about assumptions, not looks:
 
-1. What did Prism assume about you?
+1. What did Prizm assume about you?
 2. Did you understand what to do?
 3. What felt unnecessary?
 4. What did you expect to find and couldn't?
 5. What felt uncomfortable?
-6. Would you trust Prism with this information? Why or why not?
+6. Would you trust Prizm with this information? Why or why not?
 7. Which features did you actually use in the last week?
 8. Did reminders arrive when you expected? Did the lock-screen wording feel private enough?
 
-**Numbers.** Prism has no analytics by design ([`SECURITY.md`](./SECURITY.md) §12), so there is no dashboard. The [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §15 metrics are covered this way:
+**Numbers.** Prizm has no analytics by design ([`SECURITY.md`](./SECURITY.md) §12), so there is no dashboard. The [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §15 metrics are covered this way:
 
 | Metric                                                    | Source during beta                                                            |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
@@ -149,16 +149,16 @@ Log each report as a GitHub issue (no tester names or health details in the issu
 - **P2, fix before launch:** confusing copy or layout, or an assumption about the person that shouldn't be there.
 - **Later:** ideas and requests. Check them against `DECISIONS.md` § Product Discipline before accepting any.
 
-Any report that Prism assumed something about someone's gender, body or transition is at least **P2**, even when it's only wording.
+Any report that Prizm assumed something about someone's gender, body or transition is at least **P2**, even when it's only wording.
 
 ---
 
 ## 7. Exit criteria (Beta → Launch)
 
 - [ ] All §1 gates ticked
-- [ ] Both waves have used Prism for at least 3 weeks
+- [ ] Both waves have used Prizm for at least 3 weeks
 - [ ] No open P0 or P1 issues
-- [ ] Survey answers to "What did Prism assume about you?" reviewed, and each real assumption fixed or recorded as a decision
+- [ ] Survey answers to "What did Prizm assume about you?" reviewed, and each real assumption fixed or recorded as a decision
 - [ ] TestFlight shows no crash that occurs more than once
 - [ ] At least one tester (or the owner) has completed export and account deletion on a real account
 
@@ -174,6 +174,6 @@ Listed so it isn't lost; none of it blocks Beta.
 - GitHub Actions CI: last known state was `startup_failure` with no jobs run ([`BUILD_STATUS.md`](./BUILD_STATUS.md) §16)
 - ~~Help center (Support's last unconnected row)~~ Built 2026-10-05: in-app articles, support forms and shake to report (`DECISIONS.md`)
 - **App Store seller:** the Apple developer account is an individual account (team `ZP2P9TDS45`), so the App Store would show that person as the seller, while the privacy policy names T-Time Media LLC. Move to an organization account in the LLC's name before public launch.
-- **Store name:** "Prism" is taken; App Store Connect currently has the placeholder "Prism (6edfe8)". Kept on purpose for internal testing (owner, 2026-09-28): testers see "Prism" on the home screen either way. Choose the listing name before external TestFlight (Beta App Review shows it). "Diffract" had no App Store match in a 2026-09-28 search; "Refract" was free as a bare name. A name unrelated to "Prism" also means renaming the app itself (Apple requires the home-screen name to match).
+- **Store name:** "Prizm" is taken; App Store Connect currently has the placeholder "Prizm (6edfe8)". Kept on purpose for internal testing (owner, 2026-09-28): testers see "Prizm" on the home screen either way. Choose the listing name before external TestFlight (Beta App Review shows it). "Diffract" had no App Store match in a 2026-09-28 search; "Refract" was free as a bare name. A name unrelated to "Prizm" also means renaming the app itself (Apple requires the home-screen name to match).
 - **App Store Connect API key:** EAS holds an ADMIN-role key (chosen 2026-09-28). Optionally replace it with an APP_MANAGER key.
 - Multi-device offline conflict resolution ([`BUILD_STATUS.md`](./BUILD_STATUS.md) §16)

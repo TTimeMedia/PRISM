@@ -9,13 +9,13 @@ export async function isBiometricAvailable(): Promise<boolean> {
 
 /**
  * Prompts the OS biometric UI. `disableDeviceFallback` is intentional —
- * PRISM's own PIN (Screen 60/78) is the fallback, not the device's OS
- * passcode, since App Lock is a distinct, PRISM-specific privacy
+ * PRIZM's own PIN (Screen 60/78) is the fallback, not the device's OS
+ * passcode, since App Lock is a distinct, PRIZM-specific privacy
  * boundary from unlocking the phone itself.
  */
 export async function authenticateWithBiometrics(): Promise<boolean> {
   const result = await LocalAuthentication.authenticateAsync({
-    promptMessage: 'Unlock Prism',
+    promptMessage: 'Unlock Prizm',
     disableDeviceFallback: true,
     cancelLabel: 'Use PIN instead',
   });

@@ -9,7 +9,7 @@ import { supabase } from '../supabase/client';
  */
 export async function pickProfilePhoto(): Promise<ImagePicker.ImagePickerAsset | null> {
   // The phone's own photo picker needs no permission, so nobody is sent to
-  // Settings: they pick a photo and only that photo is handed to Prism.
+  // Settings: they pick a photo and only that photo is handed to Prizm.
   try {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],

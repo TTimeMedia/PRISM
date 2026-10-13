@@ -51,19 +51,19 @@ describe('NotificationSettingsScreen server push', () => {
 
   it('shows what is on by default: security only', async () => {
     renderWithProviders(<NotificationSettingsScreen />);
-    await waitFor(() => expect(screen.getByText('Messages from Prism')).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('Messages from Prizm')).toBeTruthy());
 
-    expect(screen.getByText('Messages from Prism')).toBeTruthy();
+    expect(screen.getByText('Messages from Prizm')).toBeTruthy();
     expect(screen.getByLabelText('Account and security').props.value).toBe(true);
-    expect(screen.getByLabelText('Prism news').props.value).toBe(false);
+    expect(screen.getByLabelText('Prizm news').props.value).toBe(false);
     expect(screen.getByLabelText('Gentle check-ins').props.value).toBe(false);
   });
 
   it('saves a change and keeps the other choices', async () => {
     renderWithProviders(<NotificationSettingsScreen />);
-    await waitFor(() => expect(screen.getByText('Messages from Prism')).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('Messages from Prizm')).toBeTruthy());
 
-    fireEvent(screen.getByLabelText('Prism news'), 'valueChange', true);
+    fireEvent(screen.getByLabelText('Prizm news'), 'valueChange', true);
 
     expect(mutate).toHaveBeenCalledWith({
       push_preferences: { security: true, updates: true, nudges: false, reminders: false },
@@ -79,9 +79,9 @@ describe('NotificationSettingsScreen server push', () => {
     } as never);
 
     renderWithProviders(<NotificationSettingsScreen />);
-    await waitFor(() => expect(screen.getByText('Messages from Prism')).toBeTruthy());
+    await waitFor(() => expect(screen.getByText('Messages from Prizm')).toBeTruthy());
 
     expect(screen.getByLabelText('Account and security').props.value).toBe(true);
-    expect(screen.getByLabelText('Prism news').props.value).toBe(false);
+    expect(screen.getByLabelText('Prizm news').props.value).toBe(false);
   });
 });

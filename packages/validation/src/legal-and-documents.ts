@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { LEGAL_ITEM_STATUSES } from '@prism/types';
 import { isoDateSchema, notesSchema, titleSchema } from './common';
 
-/** P1. User-managed tracking only — PRISM does not provide legal advice. Wording must never imply legal transition is required. */
+/** P1. User-managed tracking only — PRIZM does not provide legal advice. Wording must never imply legal transition is required. */
 export const legalItemCreateSchema = z.object({
   title: titleSchema,
   category: z.string().trim().min(1).max(100),

@@ -8,7 +8,7 @@ import { supabase } from '../supabase/client';
  * `support_requests` and emailed to the support address by the
  * `submit-support` Edge Function, with Reply-To set to the sender's account
  * email, so support answers by replying. The address is the one published on
- * the Prism page (docs/website/prism.html) and is still shown for people who
+ * the Prizm page (docs/website/prism.html) and is still shown for people who
  * would rather write directly.
  */
 export const SUPPORT_EMAIL = 'support@ttimemedia.org';
@@ -21,7 +21,7 @@ export const SUPPORT_KINDS: Record<
 > = {
   contact: {
     title: 'Contact support',
-    intro: 'Ask anything about Prism. We reply by email, usually within two working days.',
+    intro: 'Ask anything about Prizm. We reply by email, usually within two working days.',
     placeholder: 'How can we help?',
     sent: "Sent. We'll reply to the email on your account.",
   },
@@ -42,7 +42,7 @@ export const SUPPORT_KINDS: Record<
   feedback: {
     title: 'Send feedback',
     intro: "Tell us what you like, what's missing, or what you'd change. We read every message.",
-    placeholder: 'What would make Prism better for you?',
+    placeholder: 'What would make Prizm better for you?',
     sent: 'Thank you. Your feedback reached us.',
   },
 };

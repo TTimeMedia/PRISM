@@ -48,7 +48,7 @@ const INCLUDE_OPTIONS: OptionGridOption[] = [
 ];
 
 /**
- * Screen 15 — Appointments. Asks whether to include appointments in Prism
+ * Screen 15 — Appointments. Asks whether to include appointments in Prizm
  * at all, and, if so, whether to sync them to the phone's calendar (opt-in;
  * calendar access is only requested when the switch is turned on). Adding a
  * first appointment here is optional: a real appointment is only created if
@@ -108,7 +108,7 @@ export function AppointmentSetupScreen() {
       }
       setSync(true);
     } catch {
-      showToast("Calendar isn't available in this build of Prism.", 'error');
+      showToast("Calendar isn't available in this build of Prizm.", 'error');
     }
   };
 
@@ -196,7 +196,7 @@ export function AppointmentSetupScreen() {
                 label="Sync with my calendar"
                 description={
                   syncAvailable
-                    ? "Appointments you add also appear in your phone's calendar. Prism only asks for access now, when you turn this on."
+                    ? "Appointments you add also appear in your phone's calendar. Prizm only asks for access now, when you turn this on."
                     : 'Calendar sync is not available on this device.'
                 }
                 value={sync}

@@ -8,9 +8,9 @@ Your care and your journey, in one private place. Gentle dose reminders, appoint
 
 ## Description
 
-Prism is a private companion for your care and your journey.
+Prizm is a private companion for your care and your journey.
 
-Keep your medications and injections, appointments, milestones and journal in one calm place, with gentle reminders when you want them. Prism doesn't assume where you're headed or how you get there. Everything is optional, and you decide what to record.
+Keep your medications and injections, appointments, milestones and journal in one calm place, with gentle reminders when you want them. Prizm doesn't assume where you're headed or how you get there. Everything is optional, and you decide what to record.
 
 CARE
 • Medications and injections, with reminders and a simple dose log (with Undo)
@@ -24,7 +24,7 @@ JOURNEY
 • One timeline of your whole story
 
 PRIVATE BY DESIGN
-• Private notifications: reminders on your lock screen can say only "Your Prism reminder is ready."
+• Private notifications: reminders on your lock screen can say only "Your Prizm reminder is ready."
 • App Lock with a PIN or Face ID
 • Your records can only be read by your account
 • Export your data any time, or delete your account and everything in it from inside the app
@@ -34,9 +34,9 @@ MAKE IT YOURS
 • 15 color themes in light and dark, plus alternate app icons
 • Turn off the parts you don't use
 
-Prism is for anyone keeping track of their care, and especially for trans, nonbinary and gender-diverse people, whatever your path looks like.
+Prizm is for anyone keeping track of their care, and especially for trans, nonbinary and gender-diverse people, whatever your path looks like.
 
-Prism is a personal record-keeping tool. It is not a medical device and does not give medical advice. Always talk to a qualified healthcare professional about your health.
+Prizm is a personal record-keeping tool. It is not a medical device and does not give medical advice. Always talk to a qualified healthcare professional about your health.
 
 ## Keywords (97 / 100)
 
@@ -51,7 +51,7 @@ trans,transgender,HRT,hormone,injection,shot,dose,medication,reminder,nonbinary,
 
 ## App Review notes
 
-Prism is a private record-keeping app for medications and injections, appointments, milestones and a journal. It is not a medical device and gives no medical advice: every medication, dose and schedule is entered by the person using it.
+Prizm is a private record-keeping app for medications and injections, appointments, milestones and a journal. It is not a medical device and gives no medical advice: every medication, dose and schedule is entered by the person using it.
 
 Demo account: see Sign-In Information. It is filled with sample records for a made-up person, Eli, about ten months into testosterone therapy:
 - Today: his weekly testosterone shot is due, with the next medication and appointments under Coming up.

@@ -46,7 +46,7 @@ export const MAX_CUSTOM_MESSAGES = 5;
 export const MAX_MESSAGE_LENGTH = 120;
 
 /** The title on every reminder: short and quiet. The message is the body. */
-export const REMINDER_TITLE = 'Prism';
+export const REMINDER_TITLE = 'Prizm';
 
 export const BUILT_IN_MESSAGES: Record<ReminderKind, MessageOption[]> = {
   medication: [

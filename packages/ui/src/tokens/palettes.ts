@@ -6,7 +6,7 @@
  * text and borders, and five "spectrum" slots that screens use by role
  * (care, milestones, journal and so on).
  *
- * Only the Prism theme keeps the full five-color spectrum, its signature.
+ * Only the Prizm theme keeps the full five-color spectrum, its signature.
  * Every other theme is single-color by design, so its slots use its two
  * accents. Status colors (success, warning) are never used as decoration.
  * None is labeled by gender. Framework-agnostic, like colors.ts.
@@ -120,7 +120,7 @@ export function paletteTokens(key: string | null | undefined, scheme: Mode): Col
 
 /**
  * The five role colors screens use, and the soft wash behind each one's icon.
- * Prism keeps its signature spectrum; every other theme alternates its two
+ * Prizm keeps its signature spectrum; every other theme alternates its two
  * accents, so the app stays single-colored the way each theme is designed.
  */
 export function paletteSpectrum(

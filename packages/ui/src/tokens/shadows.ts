@@ -1,5 +1,5 @@
 /**
- * PRISM relies on contrast, not dramatic shadows — see docs/DESIGN_SYSTEM.md §8.
+ * PRIZM relies on contrast, not dramatic shadows — see docs/DESIGN_SYSTEM.md §8.
  * React Native shadow props differ by platform; these are expressed as
  * plain values components translate into `shadow*`/`elevation` props.
  */

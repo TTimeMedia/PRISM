@@ -6,7 +6,7 @@ import type { CalendarEventSummary } from './types';
  * Calendar suggestions: when the person has turned them on, Today offers
  * upcoming events from the phone's calendar that look like appointments,
  * so a booking added to the calendar (for example with Gmail's "Add to
- * Calendar") is one tap from Prism. Read on the phone only; nothing is kept
+ * Calendar") is one tap from Prizm. Read on the phone only; nothing is kept
  * unless the person adds it.
  */
 

@@ -1,15 +1,15 @@
-# PRISM Design System
+# PRIZM Design System
 
 Version 1.0 — Visual & Interaction Foundation
 Tagline: Your journey. Your way.
 
-This document defines PRISM's visual and interaction language. It exists to keep PRISM from drifting toward a generic healthcare app, a generic LGBTQ+ app, a generic fitness app, or a generic productivity app — each a real and specific failure mode named below. For product intent, see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md); for how these tokens map onto components, see [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §Design System Implementation.
+This document defines PRIZM's visual and interaction language. It exists to keep PRIZM from drifting toward a generic healthcare app, a generic LGBTQ+ app, a generic fitness app, or a generic productivity app — each a real and specific failure mode named below. For product intent, see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md); for how these tokens map onto components, see [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md) §Design System Implementation.
 
 ---
 
 ## 1. Visual Philosophy
 
-PRISM should feel:
+PRIZM should feel:
 
 - **Personal** — this is someone's space, not a clinic portal.
 - **Premium** — intentional, polished, and considered.
@@ -21,17 +21,17 @@ PRISM should feel:
 
 ### The central visual metaphor
 
-PRISM is built around **Light → Prism → Spectrum**. Light enters a prism and becomes something more expansive — one input, refracted into a spectrum unique to how it passes through. That metaphor should influence the interface without becoming literal everywhere: subtle refraction, spectrum highlights, light trails, translucent surfaces, geometric shapes, controlled gradients, soft glow, moments of color emerging from darkness.
+PRIZM is built around **Light → Prizm → Spectrum**. Light enters a prism and becomes something more expansive — one input, refracted into a spectrum unique to how it passes through. That metaphor should influence the interface without becoming literal everywhere: subtle refraction, spectrum highlights, light trails, translucent surfaces, geometric shapes, controlled gradients, soft glow, moments of color emerging from darkness.
 
 **The interface should still look excellent if all spectrum effects were removed.** The metaphor is seasoning, not the meal.
 
-## 2. The PRISM Aesthetic
+## 2. The PRIZM Aesthetic
 
-### What PRISM should feel like
+### What PRIZM should feel like
 
-Imagine combining **Apple-level restraint** with **a private journal** with **a beautifully designed personal dashboard** with **subtle light/refraction** with **the emotional intelligence of a product that knows there is no universal transition path.** That is PRISM.
+Imagine combining **Apple-level restraint** with **a private journal** with **a beautifully designed personal dashboard** with **subtle light/refraction** with **the emotional intelligence of a product that knows there is no universal transition path.** That is PRIZM.
 
-### What PRISM should NOT feel like
+### What PRIZM should NOT feel like
 
 | Failure mode             | Symptoms                                                              |
 | ------------------------ | --------------------------------------------------------------------- |
@@ -45,9 +45,9 @@ Imagine combining **Apple-level restraint** with **a private journal** with **a 
 
 ### Brand personality
 
-PRISM should communicate **"This belongs to you,"** never **"Here is your transition checklist."** The interface should never make a person feel like they're being evaluated.
+PRIZM should communicate **"This belongs to you,"** never **"Here is your transition checklist."** The interface should never make a person feel like they're being evaluated.
 
-**Preferred language:** Your journey · Your PRISM · Your records · Your memories · What matters to you · Whenever you're ready · Nothing here yet. That's okay. · You can change this anytime.
+**Preferred language:** Your journey · Your PRIZM · Your records · Your memories · What matters to you · Whenever you're ready · Nothing here yet. That's okay. · You can change this anytime.
 
 **Avoid:** Progress score · Transition percentage · Completion percentage · You're behind · You're on track · Transition completed · Failed · Overdue transition milestone · Normal/abnormal · Pass/fail.
 
@@ -56,13 +56,13 @@ PRISM should communicate **"This belongs to you,"** never **"Here is your transi
 1. **Person before data** — information serves the person; never make the database structure visible in the experience.
 2. **Progressive disclosure** — show what matters now, hide complexity until needed. A medication list should not feel like a pharmacy database.
 3. **Color has meaning** — spectrum colors are accents, not decoration; color is never the only way information is communicated.
-4. **Space is part of the interface** — PRISM should breathe; avoid dense layouts unless the information genuinely requires density.
+4. **Space is part of the interface** — PRIZM should breathe; avoid dense layouts unless the information genuinely requires density.
 5. **Privacy should be visible** — privacy is part of the product's identity, not an afterthought buried inside Settings.
 6. **No finish line** — the UI must never imply that someone's journey has a universal endpoint.
 
 ## 4. Color System
 
-PRISM uses a **dark-first** visual language.
+PRIZM uses a **dark-first** visual language.
 
 ### Core dark tokens
 
@@ -95,7 +95,7 @@ Light mode is **not** a simple inversion of dark mode — it must independently 
 | `PRISM_MINT`   | `#8DE8C5` | Completed states, positive confirmations, successful saves        |
 | `PRISM_YELLOW` | `#FFE58A` | Attention, upcoming, gentle reminders                             |
 
-These assignments are guidelines, not rigid rules. **Spectrum gradient** (Cyan → Pink → Violet → Mint → Yellow) is reserved for branding, hero moments, subtle highlights, and the PRISM logo — never for every button, card, background, heading, or icon. A spectrum gradient should feel _special_.
+These assignments are guidelines, not rigid rules. **Spectrum gradient** (Cyan → Pink → Violet → Mint → Yellow) is reserved for branding, hero moments, subtle highlights, and the PRIZM logo — never for every button, card, background, heading, or icon. A spectrum gradient should feel _special_.
 
 ### Text colors
 
@@ -123,13 +123,13 @@ Never communicate meaning through color alone. Bad: _green = completed._ Better:
 
 ### Dark mode & light mode character
 
-Dark mode is PRISM's **signature** environment — deep, quiet, premium, private (not "black + neon cyberpunk"), with spectrum accents used selectively against the dark foundation. Light mode should feel clean, soft, and optimistic.
+Dark mode is PRIZM's **signature** environment — deep, quiet, premium, private (not "black + neon cyberpunk"), with spectrum accents used selectively against the dark foundation. Light mode should feel clean, soft, and optimistic.
 
 ## 5. Typography
 
 **Primary typeface: Inter** — navigation, body, forms, labels, buttons, data, settings, system information.
 
-**Display typeface: Sora** — used sparingly for PRISM branding, major screen headings, hero moments, onboarding, and special milestone moments. Sora should create distinction without making the app feel like a marketing website.
+**Display typeface: Sora** — used sparingly for PRIZM branding, major screen headings, hero moments, onboarding, and special milestone moments. Sora should create distinction without making the app feel like a marketing website.
 
 ### Type scale (size / line-height)
 
@@ -171,7 +171,7 @@ Use an 8-point base grid: **4, 8, 12, 16, 24, 32, 40, 48, 64, 80px.**
 
 ## 7. Corner Radius
 
-PRISM uses soft but controlled geometry.
+PRIZM uses soft but controlled geometry.
 
 | Token       | Value | Recommended use                  |
 | ----------- | ----- | -------------------------------- |
@@ -186,7 +186,7 @@ Avoid putting every element inside a pill.
 
 ## 8. Shadows & Surface Hierarchy
 
-PRISM relies on **contrast**, not dramatic shadows.
+PRIZM relies on **contrast**, not dramatic shadows.
 
 - Dark mode: `0 8px 32px rgba(0,0,0,0.25)` — extremely subtle elevation.
 - Light mode: `0 8px 30px rgba(0,0,0,0.08)`.
@@ -197,7 +197,7 @@ Never use dramatic floating-card shadows.
 
 ## 9. Cards
 
-Cards are a primary PRISM component. **Standard card:** Surface background, 18px radius, 16–20px padding, subtle border, minimal shadow. A card contains a clear title, supporting information, an optional icon, and an optional action. **Do not make every piece of information a card.**
+Cards are a primary PRIZM component. **Standard card:** Surface background, 18px radius, 16–20px padding, subtle border, minimal shadow. A card contains a clear title, supporting information, an optional icon, and an optional action. **Do not make every piece of information a card.**
 
 ### TODAY cards
 
@@ -228,7 +228,7 @@ Primary navigation — TODAY / CARE / JOURNEY / YOU — uses a bottom navigation
 
 ### Quick Add
 
-The global **+** should feel like _"Capture something,"_ not _"Enter data."_ The Quick Add sheet ("Add to PRISM") lists: Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only the options relevant to the user's enabled modules.**
+The global **+** should feel like _"Capture something,"_ not _"Enter data."_ The Quick Add sheet ("Add to PRIZM") lists: Medication, Injection, Appointment, Lab, Procedure, Milestone, Journal, Memory, Document — **only the options relevant to the user's enabled modules.**
 
 ## 13. Icons
 
@@ -236,7 +236,7 @@ A consistent, modern icon library: geometric, rounded, simple, thin-to-medium st
 
 ## 14. Logo
 
-The PRISM logo should be geometric, exploring prism geometry, refraction, the letter P, and spectrum emerging from a single shape. It must work monochrome, black/white, spectrum, as an app icon, favicon, social avatar, and in print. **Never use a syringe, pill, medical cross, or generic rainbow.**
+The PRIZM logo should be geometric, exploring prism geometry, refraction, the letter P, and spectrum emerging from a single shape. It must work monochrome, black/white, spectrum, as an app icon, favicon, social avatar, and in print. **Never use a syringe, pill, medical cross, or generic rainbow.**
 
 ## 15. Timeline Visual Language
 
@@ -252,7 +252,7 @@ Journal should feel intentionally quiet. Avoid clinical mood trackers, mental-he
 
 ## 18. Memories
 
-Memories prioritize visual storytelling — a photo grid layout. Primary concept: **"Not progress. Memories."** Avoid before/after framing entirely; PRISM never implies photographs exist to document physical change.
+Memories prioritize visual storytelling — a photo grid layout. Primary concept: **"Not progress. Memories."** Avoid before/after framing entirely; PRIZM never implies photographs exist to document physical change.
 
 ## 19. Care Visual Language
 
@@ -266,7 +266,7 @@ JOURNEY can be more expressive than CARE: gradients, light paths, larger typogra
 
 ## 21. YOU Visual Language
 
-YOU should be quieter — it is the control center. Sections: Profile · Customize PRISM · Privacy, Notifications, Appearance, Accessibility · Legal Journey, Documents · Data & Export, Support, About. Group logically; do not let Settings become an endless flat list.
+YOU should be quieter — it is the control center. Sections: Profile · Customize PRIZM · Privacy, Notifications, Appearance, Accessibility · Legal Journey, Documents · Data & Export, Support, About. Group logically; do not let Settings become an endless flat list.
 
 ## 22. Privacy UI
 
@@ -274,11 +274,11 @@ Privacy should feel premium, not intimidating — e.g. a Privacy screen headline
 
 ### App Lock
 
-The lock screen exposes almost nothing: the PRISM mark, "Unlock to continue," and a biometric prompt. No medication names, appointments, notifications, journey information, or profile information — ever.
+The lock screen exposes almost nothing: the PRIZM mark, "Unlock to continue," and a biometric prompt. No medication names, appointments, notifications, journey information, or profile information — ever.
 
 ### Notifications
 
-Default: **private notifications ON.** Example: _"Your PRISM reminder is ready."_ Never default to _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_ Sensitive context stays hidden unless the user explicitly opts in to more detail.
+Default: **private notifications ON.** Example: _"Your PRIZM reminder is ready."_ Never default to _"Your testosterone injection is due"_ or _"Your surgery appointment is tomorrow."_ Sensitive context stays hidden unless the user explicitly opts in to more detail.
 
 ### Privacy-safe visual design
 
@@ -286,17 +286,17 @@ Never display sensitive information unnecessarily — not in notifications, not 
 
 ## 23. Motion
 
-Motion is part of the PRISM identity, representing _light moving → refracting → settling._
+Motion is part of the PRIZM identity, representing _light moving → refracting → settling._
 
 **Standard durations:** Micro 100–150ms · Standard 180–250ms · Large 300–450ms. Use easing, not linear motion.
 
-### Signature PRISM motion
+### Signature PRIZM motion
 
-Reserve subtle refraction effects for: onboarding, PRISM creation, milestone creation, successful save, and major navigation transitions — a tiny light travels across a surface, briefly splits into spectrum colors, then disappears. It should feel like a signature, **not** an animation that happens on every tap.
+Reserve subtle refraction effects for: onboarding, PRIZM creation, milestone creation, successful save, and major navigation transitions — a tiny light travels across a surface, briefly splits into spectrum colors, then disappears. It should feel like a signature, **not** an animation that happens on every tap.
 
 ### Reduced motion
 
-When Reduce Motion is enabled: remove floating animation, refractive movement, parallax, and elaborate transitions; replace with fades, instant state changes, and minimal opacity transitions. PRISM must remain fully understandable without motion.
+When Reduce Motion is enabled: remove floating animation, refractive movement, parallax, and elaborate transitions; replace with fades, instant state changes, and minimal opacity transitions. PRIZM must remain fully understandable without motion.
 
 ### Haptics
 
@@ -328,7 +328,7 @@ Errors are calm and specific — never `Error 500`. Use _"Something went wrong. 
 
 ### Loading states
 
-Avoid generic spinners where possible — prefer skeletons, subtle shimmer, and soft transitions. The PRISM initialization moment ("Building your PRISM…" with a light-refracting visual) should run roughly 1–2 seconds; never artificially delay loading beyond that.
+Avoid generic spinners where possible — prefer skeletons, subtle shimmer, and soft transitions. The PRIZM initialization moment ("Building your PRIZM…" with a light-refracting visual) should run roughly 1–2 seconds; never artificially delay loading beyond that.
 
 ### Confirmation modals
 
@@ -371,7 +371,7 @@ Mobile is primary, but components should support iPhone, Android, tablet, and we
 
 ### Data density
 
-PRISM has two density modes: **Personal mode** (TODAY, JOURNEY, JOURNAL, MEMORIES) — low density, large spacing, visual storytelling. **Administrative mode** (CARE, Legal, Documents, Settings) — higher density, clear hierarchy, efficient scanning. This split keeps the whole app from feeling like a database while still letting organizational screens be genuinely useful.
+PRIZM has two density modes: **Personal mode** (TODAY, JOURNEY, JOURNAL, MEMORIES) — low density, large spacing, visual storytelling. **Administrative mode** (CARE, Legal, Documents, Settings) — higher density, clear hierarchy, efficient scanning. This split keeps the whole app from feeling like a database while still letting organizational screens be genuinely useful.
 
 ### Personalization architecture (visual)
 
@@ -379,28 +379,28 @@ The visual system must support dynamic content: a user who enables only Journal,
 
 ## 28. Photography & Illustration
 
-**Photography**, where used, should feel personal: real moments, imperfect moments, ordinary life, meaningful memories. Avoid stock photography depicting generic transgender stereotypes. PRISM should never imply that a person's body must change to make their story meaningful.
+**Photography**, where used, should feel personal: real moments, imperfect moments, ordinary life, meaningful memories. Avoid stock photography depicting generic transgender stereotypes. PRIZM should never imply that a person's body must change to make their story meaningful.
 
 **Illustration** should be abstract and geometric: prism, light beam, refracted shape, geometric fragments, spectrum lines, soft particles. Avoid cartoon doctors, syringes, pills, hospital imagery, and stereotypical transition imagery.
 
 ## 29. Microcopy Rules
 
-PRISM copy is concise, respectful, neutral, human, nonjudgmental, and uses contractions naturally. Prefer _"You can change this anytime"_ over _"This setting may be modified at any time."_ Prefer _"Nothing here yet"_ over _"No records have been created."_
+PRIZM copy is concise, respectful, neutral, human, nonjudgmental, and uses contractions naturally. Prefer _"You can change this anytime"_ over _"This setting may be modified at any time."_ Prefer _"Nothing here yet"_ over _"No records have been created."_
 
-## 30. Signature PRISM Moments
+## 30. Signature PRIZM Moments
 
 A small number of memorable experiences carry the brand:
 
-- **First Launch** — dark screen, a beam of light enters and refracts, the PRISM logo appears, "Your journey. Your way."
-- **Building PRISM** — selected modules visually converge into the user's personalized PRISM; the interface subtly reorganizes; then "Your PRISM is ready."
+- **First Launch** — dark screen, a beam of light enters and refracts, the PRIZM logo appears, "Your journey. Your way."
+- **Building PRIZM** — selected modules visually converge into the user's personalized PRIZM; the interface subtly reorganizes; then "Your PRIZM is ready."
 - **Milestone** — saving an important milestone triggers a subtle spectrum pulse. No confetti, no gamification — just "Saved to your journey."
 - **Memory** — after saving, "Saved." The image becomes part of the user's visual timeline.
 
-## 31. The PRISM Test
+## 31. The PRIZM Test
 
 Every new screen must pass these questions before shipping:
 
-1. Does this feel like PRISM? _(If it could belong to any generic healthcare app, redesign it.)_
+1. Does this feel like PRIZM? _(If it could belong to any generic healthcare app, redesign it.)_
 2. Does this assume something about the user? _(If yes, remove the assumption.)_
 3. Is the information necessary? _(If not, hide it.)_
 4. Is the interface calmer than the problem? _(If not, simplify it.)_
@@ -411,7 +411,7 @@ Every new screen must pass these questions before shipping:
 
 ## 32. Final Design Principle
 
-**PRISM should make someone's journey easier to manage without making their journey feel like a project they have to complete.**
+**PRIZM should make someone's journey easier to manage without making their journey feel like a project they have to complete.**
 
 The visual system exists to support that idea.
 

@@ -12,7 +12,7 @@ export interface PRISMCardProps {
 }
 
 /**
- * The primary PRISM surface component. Standard card: surface
+ * The primary PRIZM surface component. Standard card: surface
  * background, 18px radius, subtle border, minimal shadow. Do not make
  * every piece of information a card — see docs/DESIGN_SYSTEM.md §9.
  */

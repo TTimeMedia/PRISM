@@ -23,7 +23,7 @@ type State = { status: 'loading' } | { status: 'ready'; events: IcsEvent[] } | {
 const APPOINTMENTS = '/care/appointments';
 
 /**
- * Shown when a calendar file (.ics) is opened in Prism — for example an
+ * Shown when a calendar file (.ics) is opened in Prizm — for example an
  * appointment attached to a clinic's email. The file is read on the phone,
  * its events are listed, and nothing is added until the person confirms.
  */
@@ -45,7 +45,7 @@ export function ImportIcsScreen() {
         const events = parseIcs(await new File(uri).text());
         if (cancelled) return;
         setState(events.length > 0 ? { status: 'ready', events } : { status: 'empty' });
-        // Tick everything that isn't in Prism yet.
+        // Tick everything that isn't in Prizm yet.
         setSelected(
           new Set(
             events.flatMap((event, index) =>
@@ -103,7 +103,7 @@ export function ImportIcsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <PRISMHeader
-        title="Add to Prism"
+        title="Add to Prizm"
         leading={
           <PRISMIconButton accessibilityLabel="Close" onPress={leave}>
             <X size={22} color={theme.colors.text.primary} />
@@ -120,7 +120,7 @@ export function ImportIcsScreen() {
         {state.status === 'empty' ? (
           <View style={styles.block}>
             <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
-              This file doesn&apos;t have an appointment Prism can read. You can add it yourself
+              This file doesn&apos;t have an appointment Prizm can read. You can add it yourself
               from Appointments.
             </Text>
             <PRISMButton label="Go to Appointments" variant="secondary" onPress={leave} />

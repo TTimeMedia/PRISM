@@ -105,8 +105,8 @@ export function NotificationSettingsScreen() {
             <PRISMSection title="Reminders">
               <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
                 {permission === 'denied'
-                  ? "Reminders are off on this phone, so Prism can't remind you about medications or appointments. Turn them on in your phone's Settings."
-                  : 'Turn on reminders so Prism can tell you when a medication or appointment is coming up.'}
+                  ? "Reminders are off on this phone, so Prizm can't remind you about medications or appointments. Turn them on in your phone's Settings."
+                  : 'Turn on reminders so Prizm can tell you when a medication or appointment is coming up.'}
               </Text>
               <PRISMButton
                 label={permission === 'denied' ? 'Open Settings' : 'Turn on reminders'}
@@ -118,15 +118,15 @@ export function NotificationSettingsScreen() {
             <PRISMSwitch
               label="Private notifications"
               description={
-                'Notification previews stay generic, e.g. "Your Prism reminder is ready."'
+                'Notification previews stay generic, e.g. "Your Prizm reminder is ready."'
               }
               value={settings.notification_privacy}
               onValueChange={(value) => updateSettings.mutate({ notification_privacy: value })}
             />
           </PRISMSection>
-          <PRISMSection title="Messages from Prism">
+          <PRISMSection title="Messages from Prizm">
             <Text style={[styles.note, { color: theme.colors.text.secondary }]}>
-              Sent from Prism&apos;s server, so they can reach you even when the app is closed. You
+              Sent from Prizm&apos;s server, so they can reach you even when the app is closed. You
               choose which kinds you get.
             </Text>
             {PUSH_OPTIONS.map((option) => (
@@ -140,7 +140,7 @@ export function NotificationSettingsScreen() {
             ))}
             <Text style={[styles.note, { color: theme.colors.text.tertiary }]}>
               These go through Apple and Expo&apos;s notification services to reach your phone. With
-              Private notifications on, reminders only ever say &quot;Your Prism reminder is
+              Private notifications on, reminders only ever say &quot;Your Prizm reminder is
               ready.&quot;
             </Text>
           </PRISMSection>
@@ -217,8 +217,8 @@ const PUSH_OPTIONS: { category: PushCategory; label: string; description: string
   },
   {
     category: 'updates',
-    label: 'Prism news',
-    description: 'What is new in Prism.',
+    label: 'Prizm news',
+    description: 'What is new in Prizm.',
   },
 ];
 

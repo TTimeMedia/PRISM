@@ -4,7 +4,7 @@ import { PRISMButton, fontWeight, radius, spacing, type, useTheme } from '@prism
 import { useAppStore } from '../../../lib/store/appStore';
 
 /**
- * The one-time question on Today: may Prism count anonymous usage? Nothing
+ * The one-time question on Today: may Prizm count anonymous usage? Nothing
  * is sent before a yes. Either answer hides the card for good; the choice
  * can be changed in Privacy & security.
  */
@@ -21,7 +21,7 @@ export function AnalyticsPrompt() {
         { backgroundColor: theme.colors.surface, borderColor: theme.colors.border.subtle },
       ]}
     >
-      <Text style={[styles.title, { color: theme.colors.text.primary }]}>Help improve Prism?</Text>
+      <Text style={[styles.title, { color: theme.colors.text.primary }]}>Help improve Prizm?</Text>
       <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
         Share anonymous usage: which screens and features get used, so we know what to make better.
         Never your name, your health details, or anything you write. You can change this any time in

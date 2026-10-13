@@ -1,16 +1,16 @@
-# PRISM Technical Bible
+# PRIZM Technical Bible
 
 Version: 1.0
 Status: Engineering specification
 Tagline: Your journey. Your way.
 
-This document defines _how PRISM is built_. It assumes familiarity with [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) for product intent. Screen-by-screen implementation detail lives in [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md); visual implementation detail lives in [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md); the executable synthesis of all of it lives in [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md).
+This document defines _how PRIZM is built_. It assumes familiarity with [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) for product intent. Screen-by-screen implementation detail lives in [`SCREEN_BIBLE.md`](./SCREEN_BIBLE.md); visual implementation detail lives in [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md); the executable synthesis of all of it lives in [`MASTER_BUILD_SPEC.md`](./MASTER_BUILD_SPEC.md).
 
 ---
 
 ## 1. Engineering Objective
 
-Build PRISM as a secure, personalized, mobile-first application that adapts its experience to the individual user. The architecture must support:
+Build PRIZM as a secure, personalized, mobile-first application that adapts its experience to the individual user. The architecture must support:
 
 - Personalized modules
 - Optional identity information
@@ -41,7 +41,7 @@ Do not make social login a requirement for MVP; email + password + verification 
 
 1. **Security first** — Sensitive user data must never be accessible merely because a frontend request knows another user's ID. Database authorization must enforce ownership.
 2. **Server is authoritative** — The client must never be trusted to enforce security. The frontend can hide functionality; the backend must enforce permissions.
-3. **Modular by design** — PRISM consists of independent modules that can be independently enabled, disabled, and expanded.
+3. **Modular by design** — PRIZM consists of independent modules that can be independently enabled, disabled, and expanded.
 4. **Configuration over hard-coding** — Do not hard-code the user's personalized dashboard. It is generated from **user configuration + current data + relevance rules**.
 5. **Progressive disclosure** — Do not ask users for information until it's needed. If someone doesn't enable medication tracking, don't ask for medication details during onboarding.
 6. **Accessibility is architecture** — Accessibility cannot be added at the end; components must be designed with it from the beginning.
@@ -172,10 +172,10 @@ Full column-level schema for each table is defined in [`MASTER_BUILD_SPEC.md`](.
 
 - **`profiles`** — everything except `user_id` is optional (display_name, pronouns, gender, birthday, journey_start_date, profile_photo_url all nullable).
 - **`modules`** — one row per `(user_id, module_key)` with an `enabled` boolean and a `configuration` JSONB blob. New modules plug into this table without schema changes or dashboard rewrites (see §14 Future-Proofing).
-- **`medications`** — `dosage_text` is user-entered, informational data only; PRISM never calculates or recommends dosage.
+- **`medications`** — `dosage_text` is user-entered, informational data only; PRIZM never calculates or recommends dosage.
 - **`medication_logs`** — status is one of `scheduled | completed | skipped | missed | skipped_intentionally`; the neutral status vocabulary is a product requirement (see [`PRODUCT_BIBLE.md`](./PRODUCT_BIBLE.md) §8.4 No Judgment), not just a UX preference.
 - **`injections`** — `site` is a tracking label (e.g. `left_thigh`, `not_tracked`), never a medical recommendation.
-- **`labs`** — PRISM stores lab records; it does not interpret results.
+- **`labs`** — PRIZM stores lab records; it does not interpret results.
 - **`legal_items`** — status is one of `not_started | preparing | filed | in_progress | approved | complete`.
 - **`documents`** — requires separate secure storage architecture; `storage_path` must never be publicly resolvable (see §11 File Storage below).
 - **`reminders`** — `notification_style` is one of `private | standard | custom`; `private` is the default (see [`SECURITY.md`](./SECURITY.md)).
@@ -195,11 +195,11 @@ Every user-owned table must have RLS enabled. The fundamental policy: an authent
 
 ### Storage Security (File Storage)
 
-Private storage buckets are used for sensitive files — candidate buckets: `profile-photos`, `memories`, `documents`, `attachments`. Storage policies must verify ownership. **Never create public buckets for sensitive PRISM information.** Storage paths must never be publicly resolvable; use authenticated access and short-lived signed URLs where a temporary public link is genuinely necessary.
+Private storage buckets are used for sensitive files — candidate buckets: `profile-photos`, `memories`, `documents`, `attachments`. Storage policies must verify ownership. **Never create public buckets for sensitive PRIZM information.** Storage paths must never be publicly resolvable; use authenticated access and short-lived signed URLs where a temporary public link is genuinely necessary.
 
 ### Data Ownership
 
-The user owns their information. PRISM must provide mechanisms to view, edit, delete, export, and (eventually) migrate it.
+The user owns their information. PRIZM must provide mechanisms to view, edit, delete, export, and (eventually) migrate it.
 
 ### Account Deletion
 
@@ -288,13 +288,13 @@ Store absolute timestamps in UTC; convert to local time for display. Date-only r
 Use native push notifications through Expo-supported infrastructure.
 
 ```
-Reminder Created → Schedule Notification → Native Notification → User Action → PRISM → Record Updated
+Reminder Created → Schedule Notification → Native Notification → User Action → PRIZM → Record Updated
 ```
 
 **Private is the default notification style.** Content:
 
-- Private: _"Your PRISM reminder is ready."_
-- Standard: _"You have something scheduled in PRISM."_
+- Private: _"Your PRIZM reminder is ready."_
+- Standard: _"You have something scheduled in PRIZM."_
 - Custom: user-defined text where appropriate.
 
 Avoid sensitive lock-screen content by default (see [`SECURITY.md`](./SECURITY.md) for the full private-notification rationale).
@@ -332,7 +332,7 @@ Attempt to: access another user's record, guess another user's UUID, modify anot
 
 ### Performance
 
-PRISM should feel immediate: fast cold launch, instant navigation between cached screens, optimistic UI where safe, minimal unnecessary network requests, paginated long timelines, lazy-loaded images, efficient database queries.
+PRIZM should feel immediate: fast cold launch, instant navigation between cached screens, optimistic UI where safe, minimal unnecessary network requests, paginated long timelines, lazy-loaded images, efficient database queries.
 
 ## 19. Environment Strategy
 
@@ -383,7 +383,7 @@ A feature is not complete because it renders. A feature is complete when:
 
 ### Engineering North Star
 
-PRISM should feel simple on the surface while being disciplined underneath.
+PRIZM should feel simple on the surface while being disciplined underneath.
 
 The user should see: **Your journey. Your way.**
 The engineering team should see: **Secure. Modular. Personalized. Testable. Extensible.**

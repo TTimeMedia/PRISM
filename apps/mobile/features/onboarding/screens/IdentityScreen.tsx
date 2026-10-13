@@ -47,7 +47,7 @@ export function IdentityScreen() {
 
   return (
     <OnboardingScreenLayout
-      title="How should Prism address you?"
+      title="How should Prizm address you?"
       subtitle="Everything here is optional, and it stays private to your account."
       phase={0.85}
       primaryLabel="Continue"

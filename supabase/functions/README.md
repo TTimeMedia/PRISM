@@ -36,7 +36,7 @@ all actually gone.
 
 ## `send-push`
 
-The one place server push notifications leave from. It is called by Prism
+The one place server push notifications leave from. It is called by Prizm
 itself (an admin action, a scheduled job or another function), never by the
 app, so it uses `verify_jwt = false` and requires an `x-push-secret` header
 equal to the `PUSH_ADMIN_SECRET` function secret.
@@ -50,7 +50,7 @@ x-push-secret: <PUSH_ADMIN_SECRET>
 
 Categories are `security`, `updates`, `nudges` and `reminders`. Each person
 chooses which they get in Notification Settings (`settings.push_preferences`;
-security defaults on, the rest are opt-in). Reminders are generic ("Your Prism
+security defaults on, the rest are opt-in). Reminders are generic ("Your Prizm
 reminder is ready.") while `settings.notification_privacy` is on. Phones are
 found in `push_tokens`, filled by the app (`apps/mobile/lib/push`); tokens Expo
 reports as `DeviceNotRegistered` are deleted.

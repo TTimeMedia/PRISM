@@ -31,7 +31,7 @@ function loadAcknowledgements(): AcknowledgementsFile {
   return require('../../../assets/acknowledgements.json') as AcknowledgementsFile;
 }
 
-/** Open-source software in Prism, with each package's copyright and license. Tap one to read it. */
+/** Open-source software in Prizm, with each package's copyright and license. Tap one to read it. */
 export function AcknowledgementsScreen() {
   const theme = useTheme();
   const data = useMemo(loadAcknowledgements, []);
@@ -101,7 +101,7 @@ export function AcknowledgementsScreen() {
         contentContainerStyle={styles.content}
         ListHeaderComponent={
           <Text style={[styles.intro, { color: theme.colors.text.secondary }]}>
-            Prism is built with open-source software. Thank you to everyone who made these{' '}
+            Prizm is built with open-source software. Thank you to everyone who made these{' '}
             {data.packages.length} packages.
           </Text>
         }

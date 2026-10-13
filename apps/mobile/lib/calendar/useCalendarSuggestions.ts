@@ -11,7 +11,7 @@ import { SUGGESTION_WINDOW_DAYS, pickSuggestions, suggestionKey } from './sugges
  * Appointment suggestions from the phone's calendar, for Today. Only runs
  * when the person turned suggestions on (Calendar settings) and calendar
  * access was already given; it never asks for access itself. Looks again
- * each time Prism comes back to the foreground, so an event just added in
+ * each time Prizm comes back to the foreground, so an event just added in
  * another app shows up.
  */
 export function useCalendarSuggestions(active: boolean) {

@@ -24,12 +24,12 @@ export interface ImportableEventRowProps {
   /** Which calendar it comes from, so two accounts are easy to tell apart. */
   calendarLabel?: string;
   selected: boolean;
-  /** Already in Prism: shown, but can't be picked again. */
+  /** Already in Prizm: shown, but can't be picked again. */
   alreadyAdded?: boolean;
   onPress: () => void;
 }
 
-/** One calendar event a person can tick to bring into Prism. */
+/** One calendar event a person can tick to bring into Prizm. */
 export function ImportableEventRow({
   title,
   startsAt,
@@ -72,7 +72,7 @@ export function ImportableEventRow({
           {title}
         </Text>
         <Text style={[styles.meta, { color: theme.colors.text.secondary }]}>
-          {alreadyAdded ? 'Already in Prism' : formatEventWhen(startsAt, allDay)}
+          {alreadyAdded ? 'Already in Prizm' : formatEventWhen(startsAt, allDay)}
         </Text>
         {calendarLabel && !alreadyAdded ? (
           <Text numberOfLines={1} style={[styles.meta, { color: theme.colors.text.tertiary }]}>

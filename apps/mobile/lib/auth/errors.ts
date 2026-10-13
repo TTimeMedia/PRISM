@@ -1,7 +1,7 @@
 import { isAuthApiError, isAuthRetryableFetchError } from '@supabase/supabase-js';
 
 /**
- * Maps Supabase auth errors to PRISM's approved, non-technical error
+ * Maps Supabase auth errors to PRIZM's approved, non-technical error
  * language — see docs/SCREEN_BIBLE.md §3 (Global Screen Contract, Error
  * state) and docs/PRODUCT_BIBLE.md §Error Philosophy: raw backend errors
  * are never exposed to the user. A handful of codes get a more specific,
@@ -25,7 +25,7 @@ export function getAuthErrorMessage(error: unknown): string {
   }
 
   if (isAuthRetryableFetchError(error)) {
-    return "Can't reach Prism's servers. Check your connection and try again.";
+    return "Can't reach Prizm's servers. Check your connection and try again.";
   }
 
   if (isAuthApiError(error)) {

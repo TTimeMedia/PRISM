@@ -113,7 +113,7 @@ export function SignUpScreen() {
         />
       </View>
       <Text style={[styles.legal, { color: theme.colors.text.tertiary }]}>
-        By continuing, you agree to Prism&apos;s Terms and Privacy Policy.
+        By continuing, you agree to Prizm&apos;s Terms and Privacy Policy.
       </Text>
     </AuthScreenLayout>
   );

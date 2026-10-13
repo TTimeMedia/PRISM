@@ -1,5 +1,5 @@
 /**
- * Runs when the phone hands Prism a link or a file. A calendar file (.ics),
+ * Runs when the phone hands Prizm a link or a file. A calendar file (.ics),
  * such as an appointment attached to an email, is sent to the screen that
  * shows what's in it and asks before adding anything. Every other path is
  * left alone.

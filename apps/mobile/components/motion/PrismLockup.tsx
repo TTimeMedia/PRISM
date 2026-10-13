@@ -5,7 +5,7 @@ import { PrismMark } from './PrismMark';
 import { Reveal } from './Reveal';
 
 /**
- * The logo stacked over the Prism wordmark — the app's calm signature on
+ * The logo stacked over the Prizm wordmark — the app's calm signature on
  * Welcome. The mark animates in; the wordmark follows it.
  */
 export function PrismLockup() {
@@ -16,10 +16,10 @@ export function PrismLockup() {
       <Reveal index={2}>
         <Text
           accessibilityRole="header"
-          accessibilityLabel="Prism"
+          accessibilityLabel="Prizm"
           style={[styles.wordmark, { color: theme.colors.text.primary }]}
         >
-          Prism
+          Prizm
         </Text>
       </Reveal>
     </View>

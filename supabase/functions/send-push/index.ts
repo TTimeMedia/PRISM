@@ -1,6 +1,6 @@
-// PRISM — send-push Edge Function.
+// PRIZM — send-push Edge Function.
 //
-// The one place server push notifications leave from. Called by Prism
+// The one place server push notifications leave from. Called by Prizm
 // itself (an admin action, a scheduled job, or another function), never by
 // the mobile app, so it needs a shared secret rather than a user JWT:
 //   POST /functions/v1/send-push
@@ -17,7 +17,7 @@
 // Rules (see ../_shared/push.ts):
 //  - Only people who have that category turned on receive it. Security
 //    alerts default on, everything else is opt-in.
-//  - Reminders are generic ("Your Prism reminder is ready.") while the
+//  - Reminders are generic ("Your Prizm reminder is ready.") while the
 //    person's "Private notifications" setting is on; with it off they use
 //    the wording the person chose ("It's shot day.", their own, ...).
 //  - Tokens Expo reports as no longer valid are deleted.

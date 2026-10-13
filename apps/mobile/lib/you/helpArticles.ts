@@ -31,21 +31,21 @@ export type HelpCategory = (typeof HELP_CATEGORIES)[number];
 export const HELP_ARTICLES: HelpArticle[] = [
   {
     slug: 'what-prism-does',
-    title: 'What Prism does',
+    title: 'What Prizm does',
     category: 'Getting started',
     summary: 'An organizer for your care. It never gives medical advice.',
     blocks: [
       {
         type: 'p',
-        text: 'Prism keeps the details of your care in one place: medications and doses, appointments, milestones and a journal. It reminds you when you ask it to.',
+        text: 'Prizm keeps the details of your care in one place: medications and doses, appointments, milestones and a journal. It reminds you when you ask it to.',
       },
       {
         type: 'p',
-        text: 'Prism stores and organizes what you tell it. It never interprets, recommends or diagnoses. For anything about your health, talk to your care team.',
+        text: 'Prizm stores and organizes what you tell it. It never interprets, recommends or diagnoses. For anything about your health, talk to your care team.',
       },
       {
         type: 'p',
-        text: 'Every question Prism asks is optional. Skip anything you like; nothing breaks without it.',
+        text: 'Every question Prizm asks is optional. Skip anything you like; nothing breaks without it.',
       },
     ],
   },
@@ -53,11 +53,11 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'choose-what-shows',
     title: 'Choose what shows',
     category: 'Getting started',
-    summary: 'Turn features on and off so Prism only shows what you use.',
+    summary: 'Turn features on and off so Prizm only shows what you use.',
     blocks: [
       {
         type: 'p',
-        text: "Prism is built from parts: medications, appointments, milestones and the journal. Turn off the ones you don't need and they disappear from Today, Care and your Timeline. Nothing you saved is deleted.",
+        text: "Prizm is built from parts: medications, appointments, milestones and the journal. Turn off the ones you don't need and they disappear from Today, Care and your Timeline. Nothing you saved is deleted.",
       },
       {
         type: 'steps',
@@ -81,15 +81,15 @@ export const HELP_ARTICLES: HelpArticle[] = [
       {
         type: 'steps',
         items: [
-          'On your iPhone, open Settings, then Notifications, then Prism, and make sure Allow Notifications is on.',
+          'On your iPhone, open Settings, then Notifications, then Prizm, and make sure Allow Notifications is on.',
           "Check that a Focus mode (like Sleep or Do Not Disturb) isn't hiding them.",
-          'In Prism, open the menu, tap Reminders, and tap Send a test reminder. It arrives in a few seconds.',
-          'Open Prism once after changing a medication or appointment, so its reminders are updated.',
+          'In Prizm, open the menu, tap Reminders, and tap Send a test reminder. It arrives in a few seconds.',
+          'Open Prizm once after changing a medication or appointment, so its reminders are updated.',
         ],
       },
       {
         type: 'tip',
-        text: 'A dot on the bell at the top of Today means reminders are on in Prism but your phone is blocking them.',
+        text: 'A dot on the bell at the top of Today means reminders are on in Prizm but your phone is blocking them.',
       },
     ],
   },
@@ -97,11 +97,11 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'private-notifications',
     title: 'Private notifications',
     category: 'Reminders',
-    summary: 'Why reminders say only "Your Prism reminder is ready."',
+    summary: 'Why reminders say only "Your Prizm reminder is ready."',
     blocks: [
       {
         type: 'p',
-        text: 'Private notifications is on to start with. While it is, every reminder on your lock screen says only "Your Prism reminder is ready." Nobody glancing at your phone learns what it\'s for.',
+        text: 'Private notifications is on to start with. While it is, every reminder on your lock screen says only "Your Prizm reminder is ready." Nobody glancing at your phone learns what it\'s for.',
       },
       {
         type: 'p',
@@ -129,7 +129,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
       },
       {
         type: 'p',
-        text: "With Gentle follow-up on, Prism sends one more nudge if a dose isn't marked done 30 minutes after its reminder. Logging the dose cancels the nudge. Turn it off under Reminders, then Doses.",
+        text: "With Gentle follow-up on, Prizm sends one more nudge if a dose isn't marked done 30 minutes after its reminder. Logging the dose cancels the nudge. Turn it off under Reminders, then Doses.",
       },
     ],
   },
@@ -137,17 +137,17 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'duplicate-reminders',
     title: 'I got the same reminder more than once',
     category: 'Reminders',
-    summary: 'Open Prism to refresh your reminders, and remove old copies of the app.',
+    summary: 'Open Prizm to refresh your reminders, and remove old copies of the app.',
     blocks: [
       {
         type: 'p',
-        text: "Opening Prism rebuilds your phone's whole reminder schedule from your account, which clears any leftovers.",
+        text: "Opening Prizm rebuilds your phone's whole reminder schedule from your account, which clears any leftovers.",
       },
       {
         type: 'steps',
         items: [
-          'Open Prism, close it completely, and open it again.',
-          'If you have an older copy of Prism on your phone (for example a test version with a different icon), delete it. It keeps its own reminders.',
+          'Open Prizm, close it completely, and open it again.',
+          'If you have an older copy of Prizm on your phone (for example a test version with a different icon), delete it. It keeps its own reminders.',
           "If it still happens, report it from Support and we'll look into it.",
         ],
       },
@@ -169,7 +169,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
       },
       {
         type: 'p',
-        text: 'Prism offers common medication names as a shortcut. It is not a list of recommendations, and you can type any name.',
+        text: 'Prizm offers common medication names as a shortcut. It is not a list of recommendations, and you can type any name.',
       },
     ],
   },
@@ -189,11 +189,11 @@ export const HELP_ARTICLES: HelpArticle[] = [
       },
       {
         type: 'p',
-        text: 'To bring appointments in, tap the calendar icon at the top of Appointments and pick the events to add, or open an invite file (.ics) from email or Files and choose Prism.',
+        text: 'To bring appointments in, tap the calendar icon at the top of Appointments and pick the events to add, or open an invite file (.ics) from email or Files and choose Prizm.',
       },
       {
         type: 'tip',
-        text: "Turn on Suggest appointments from my calendar (menu, then Calendar) and Today will offer bookings you've added to your calendar, for example with Gmail's Add to Calendar, so adding them to Prism is one tap.",
+        text: "Turn on Suggest appointments from my calendar (menu, then Calendar) and Today will offer bookings you've added to your calendar, for example with Gmail's Add to Calendar, so adding them to Prizm is one tap.",
       },
     ],
   },
@@ -209,7 +209,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
       },
       {
         type: 'p',
-        text: 'Photos are stored privately in your account. Prism only sees the photo you pick, never the rest of your library.',
+        text: 'Photos are stored privately in your account. Prizm only sees the photo you pick, never the rest of your library.',
       },
     ],
   },
@@ -217,7 +217,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'app-lock',
     title: 'App Lock and Face ID',
     category: 'Privacy and security',
-    summary: 'Lock Prism with a PIN or Face ID, and what to do if you forget the PIN.',
+    summary: 'Lock Prizm with a PIN or Face ID, and what to do if you forget the PIN.',
     blocks: [
       {
         type: 'steps',
@@ -229,7 +229,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
       },
       {
         type: 'p',
-        text: 'Prism locks whenever you leave it, so nobody can pick up your phone and open it.',
+        text: 'Prizm locks whenever you leave it, so nobody can pick up your phone and open it.',
       },
       {
         type: 'p',
@@ -246,15 +246,15 @@ export const HELP_ARTICLES: HelpArticle[] = [
     blocks: [
       {
         type: 'p',
-        text: 'Everything you add is stored in your Prism account, and the database only lets your account read it. Prism has no advertising and never sells your data.',
+        text: 'Everything you add is stored in your Prizm account, and the database only lets your account read it. Prizm has no advertising and never sells your data.',
       },
       {
         type: 'p',
-        text: 'If you said yes to sharing anonymous usage, Prism counts which screens and features get used, never what you write or record, and not linked to your account. Turn it off any time in Privacy & security.',
+        text: 'If you said yes to sharing anonymous usage, Prizm counts which screens and features get used, never what you write or record, and not linked to your account. Turn it off any time in Privacy & security.',
       },
       {
         type: 'p',
-        text: 'The privacy policy, in About Prism, lists every company that helps run Prism and exactly what each one receives.',
+        text: 'The privacy policy, in About Prizm, lists every company that helps run Prizm and exactly what each one receives.',
       },
     ],
   },
@@ -308,7 +308,7 @@ export const HELP_ARTICLES: HelpArticle[] = [
         items: [
           'On the sign-in screen, tap Forgot password?',
           'Enter your email. A reset link arrives from no-reply@ttimemedia.org.',
-          'Open the link on your iPhone. It opens Prism, where you choose a new password.',
+          'Open the link on your iPhone. It opens Prizm, where you choose a new password.',
         ],
       },
       {
@@ -319,13 +319,13 @@ export const HELP_ARTICLES: HelpArticle[] = [
   },
   {
     slug: 'offline',
-    title: 'Using Prism without a connection',
+    title: 'Using Prizm without a connection',
     category: 'Your account and data',
     summary: 'Changes wait and save when you are back online.',
     blocks: [
       {
         type: 'p',
-        text: "Reminders work offline. If you add or change something without a connection, Prism shows a banner and saves it as soon as you're back online.",
+        text: "Reminders work offline. If you add or change something without a connection, Prizm shows a banner and saves it as soon as you're back online.",
       },
     ],
   },

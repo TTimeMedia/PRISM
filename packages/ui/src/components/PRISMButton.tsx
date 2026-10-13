@@ -15,7 +15,7 @@ export interface PRISMButtonProps extends Omit<PressableProps, 'style' | 'childr
 }
 
 /**
- * The primary PRISM button. Never use a spectrum gradient on every
+ * The primary PRIZM button. Never use a spectrum gradient on every
  * button — the primary variant uses a single restrained accent.
  * See docs/DESIGN_SYSTEM.md §10.
  */

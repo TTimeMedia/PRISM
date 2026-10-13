@@ -32,12 +32,12 @@ import {
 
 const isNotificationsSupported = Platform.OS !== 'web';
 
-const PRIVATE_TITLE = 'Prism';
+const PRIVATE_TITLE = 'Prizm';
 /** Matches docs/SECURITY.md §7's example verbatim. */
-const PRIVATE_BODY = 'Your Prism reminder is ready.';
+const PRIVATE_BODY = 'Your Prizm reminder is ready.';
 
 /** Follow-up wording, also generic when notifications are private. */
-const PRIVATE_NUDGE_BODY = 'Your Prism reminder is still waiting.';
+const PRIVATE_NUDGE_BODY = 'Your Prizm reminder is still waiting.';
 
 /** Notification action buttons. The labels are generic on purpose, so a lock screen never says what for. */
 export const MEDICATION_CATEGORY = 'prism-medication';
@@ -106,7 +106,7 @@ function parseTimeOfDay(timeOfDay: string | undefined): [hour: number, minute: n
   return match ? [Number(match[1]), Number(match[2])] : [9, 0];
 }
 
-/** PRISM's `days_of_week` is 0 = Sunday (JS convention); expo-notifications' WEEKLY trigger is 1 = Sunday. */
+/** PRIZM's `days_of_week` is 0 = Sunday (JS convention); expo-notifications' WEEKLY trigger is 1 = Sunday. */
 function toExpoWeekday(jsWeekday: number): number {
   return jsWeekday + 1;
 }
@@ -214,7 +214,7 @@ export async function scheduleSnooze(source: {
   const data = source.data ?? {};
   await Notifications.scheduleNotificationAsync({
     content: {
-      title: source.title ?? 'Prism',
+      title: source.title ?? 'Prizm',
       body: source.body ?? PRIVATE_BODY,
       categoryIdentifier: source.categoryIdentifier ?? undefined,
       // "snooze" is not cancelled by the routine re-sync, so it survives it.
@@ -472,7 +472,7 @@ export async function scheduleSupplyReminders(
           ...(notificationPrivacy
             ? { title: PRIVATE_TITLE, body: PRIVATE_BODY }
             : {
-                title: 'Prism',
+                title: 'Prizm',
                 body:
                   kind === 'running-low'
                     ? `${supply.name} is running low: about a week left.`

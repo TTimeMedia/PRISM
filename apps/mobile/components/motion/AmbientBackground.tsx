@@ -88,7 +88,7 @@ export interface AmbientBackgroundProps {
 }
 
 /**
- * Soft spectrum light drifting slowly behind the first screens — PRISM's
+ * Soft spectrum light drifting slowly behind the first screens — PRIZM's
  * "light moving, refracting, settling" (docs/DESIGN_SYSTEM.md §23). Purely
  * decorative and low-contrast so text stays readable; static under Reduce
  * Motion.

@@ -110,7 +110,7 @@ function PromptChip({ prompt }: { prompt: Prompt }) {
 }
 
 /**
- * Nudges people to fill their timeline by using the rest of Prism. The
+ * Nudges people to fill their timeline by using the rest of Prizm. The
  * timeline is a view over milestones, journal entries, appointments and
  * doses, so each prompt opens the screen that adds one.
  *

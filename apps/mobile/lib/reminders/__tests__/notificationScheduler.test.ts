@@ -175,7 +175,7 @@ describe('scheduleMedicationReminders', () => {
     expect(result).toEqual(['generated-id', 'generated-id']);
     expect(mockScheduleNotificationAsync).toHaveBeenCalledTimes(2);
     const triggers = mockScheduleNotificationAsync.mock.calls.map((call) => call[0].trigger);
-    // PRISM's days_of_week is 0=Sunday; expo-notifications' WEEKLY trigger is 1=Sunday.
+    // PRIZM's days_of_week is 0=Sunday; expo-notifications' WEEKLY trigger is 1=Sunday.
     expect(triggers).toEqual(
       expect.arrayContaining([
         { type: 'weekly', weekday: 2, hour: 8, minute: 0 },
@@ -210,8 +210,8 @@ describe('scheduleMedicationReminders', () => {
     });
     await scheduleMedicationReminders(med, true);
     const content = mockScheduleNotificationAsync.mock.calls[0][0].content;
-    expect(content.title).toBe('Prism');
-    expect(content.body).toBe('Your Prism reminder is ready.');
+    expect(content.title).toBe('Prizm');
+    expect(content.body).toBe('Your Prizm reminder is ready.');
   });
 
   const daily = (overrides: Partial<Medication> = {}) =>
@@ -226,7 +226,7 @@ describe('scheduleMedicationReminders', () => {
 
   it('says "shot day" for an injection when notification privacy is off', async () => {
     await scheduleMedicationReminders(daily({ form: 'injection' }), false);
-    expect(firstContent().title).toBe('Prism');
+    expect(firstContent().title).toBe('Prizm');
     expect(firstContent().body).toBe("It's shot day.");
   });
 
@@ -251,7 +251,7 @@ describe('scheduleMedicationReminders', () => {
     await scheduleMedicationReminders(daily({ form: 'pill' }), true, {
       messages: { medication: { selected: 'time-for', custom: [] } },
     });
-    expect(firstContent().body).toBe('Your Prism reminder is ready.');
+    expect(firstContent().body).toBe('Your Prizm reminder is ready.');
   });
 });
 

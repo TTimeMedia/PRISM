@@ -6,7 +6,7 @@ import { PRISMButton, fontWeight, radius, spacing, type, useTheme } from '@prism
 import { useAppStore } from '../../lib/store/appStore';
 
 /**
- * A one-time note on Today that Prism is made of parts you can switch on and
+ * A one-time note on Today that Prizm is made of parts you can switch on and
  * off. It says it once, then stays out of the way: dismissing it (or opening
  * the switches) means it never comes back. After that the same switches live
  * in the menu and in Settings.
@@ -30,9 +30,9 @@ export function CustomizeTip() {
           <Sparkles size={20} color={theme.colors.text.primary} strokeWidth={2} />
         </View>
         <View style={styles.text}>
-          <Text style={[styles.title, { color: theme.colors.text.primary }]}>Make Prism yours</Text>
+          <Text style={[styles.title, { color: theme.colors.text.primary }]}>Make Prizm yours</Text>
           <Text style={[styles.body, { color: theme.colors.text.secondary }]}>
-            Prism is made of parts you switch on and off. Add or remove any of them any time.
+            Prizm is made of parts you switch on and off. Add or remove any of them any time.
           </Text>
         </View>
       </View>

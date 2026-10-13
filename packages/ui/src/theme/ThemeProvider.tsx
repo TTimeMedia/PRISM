@@ -27,7 +27,7 @@ export interface ResolvedTheme {
   /** Role colors screens use (care, milestones, journal…), and the soft wash behind their icons. */
   spectrum: Spectrum;
   spectrumSubtle: Spectrum;
-  /** The original Prism spectrum, for onboarding's brand moments. */
+  /** The original Prizm spectrum, for onboarding's brand moments. */
   spectrumGradient: readonly string[];
   /** Status colors keep their meaning in every theme. Pair them with an icon and words. */
   success: string;

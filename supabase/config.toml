@@ -116,8 +116,8 @@ enabled = true
 # The maximum file size allowed (e.g. "5MB", "500KB").
 file_size_limit = "50MiB"
 
-# PRISM storage buckets — all private. See docs/SECURITY.md §5:
-# "Never create public buckets for sensitive PRISM information."
+# PRIZM storage buckets — all private. See docs/SECURITY.md §5:
+# "Never create public buckets for sensitive PRIZM information."
 # Bucket-level RLS policies are defined in supabase/migrations.
 [storage.buckets.profile-photos]
 public = false
@@ -236,7 +236,7 @@ enable_signup = true
 # addresses. If disabled, only the new email is required to confirm.
 double_confirm_changes = true
 # If enabled, users need to confirm their email address before signing in.
-# PRISM requires email verification per docs/MASTER_BUILD_SPEC.md §17.
+# PRIZM requires email verification per docs/MASTER_BUILD_SPEC.md §17.
 enable_confirmations = true
 # If enabled, users will need to reauthenticate or have logged in recently to change their password.
 secure_password_change = false
@@ -255,7 +255,7 @@ port = 465
 user = "resend"
 pass = "env(RESEND_API_KEY)"
 admin_email = "no-reply@ttimemedia.org"
-sender_name = "PRISM"
+sender_name = "PRIZM"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]
@@ -438,7 +438,7 @@ enabled = true
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
 
-# Production overrides — applied only when pushing to the hosted PRISM
+# Production overrides — applied only when pushing to the hosted PRIZM
 # project (`supabase config push`); everything else inherits the values
 # above. The site URL is the public website that email links fall back to.
 [remotes.production]
@@ -460,7 +460,7 @@ verify_enabled = true
 [remotes.production.storage.analytics]
 enabled = true
 
-# send-push is called by Prism itself (an admin action or scheduled job), never
+# send-push is called by Prizm itself (an admin action or scheduled job), never
 # by the app, so it authenticates with the PUSH_ADMIN_SECRET header instead of a
 # user JWT. See supabase/functions/send-push/index.ts.
 [functions.send-push]

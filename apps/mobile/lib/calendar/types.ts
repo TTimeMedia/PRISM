@@ -23,7 +23,7 @@ export interface CalendarEventSummary {
 }
 
 /**
- * Seam between PRISM and whichever device/account calendar it's syncing
+ * Seam between PRIZM and whichever device/account calendar it's syncing
  * to. Only one implementation exists today (device-calendar-provider.ts,
  * backed by EventKit on iOS) — a future Google Calendar provider (OAuth,
  * not device-calendar-based) implements this same interface, so call
