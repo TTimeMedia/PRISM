@@ -6,7 +6,15 @@ import {
   MEDICATION_FORMS,
   MEDICATION_LOG_STATUSES,
 } from '@prism/types';
-import { isoDateSchema, isoDateTimeSchema, notesSchema, titleSchema } from './common';
+import {
+  isoDateSchema,
+  isoDateTimeSchema,
+  notesSchema,
+  optionalIsoDateSchema,
+  optionalTimeOfDaySchema,
+  timeOfDaySchema,
+  titleSchema,
+} from './common';
 
 /**
  * Shape of `medications.frequency_config` — see @prism/types FrequencyConfig
@@ -17,10 +25,12 @@ export const frequencyConfigSchema = z
   .object({
     interval_days: z.number().int().min(1).max(365).optional(),
     days_of_week: z.array(z.number().int().min(0).max(6)).optional(),
-    time_of_day: z
-      .string()
-      .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Expected HH:mm')
-      .optional(),
+    // A cleared time arrives as '' or null; both mean "not chosen yet", which
+    // medicationScheduleProblems turns into a plain "Choose a time" message.
+    time_of_day: z.preprocess(
+      (value) => (value === '' || value === null ? undefined : value),
+      timeOfDaySchema.optional(),
+    ),
   })
   .nullable()
   .optional();
@@ -37,8 +47,8 @@ export const medicationCreateSchema = z.object({
   dosage_text: z.string().max(200).nullable().optional(),
   frequency_type: z.enum(FREQUENCY_TYPES).nullable().optional(),
   frequency_config: frequencyConfigSchema,
-  start_date: isoDateSchema.nullable().optional(),
-  end_date: isoDateSchema.nullable().optional(),
+  start_date: optionalIsoDateSchema,
+  end_date: optionalIsoDateSchema,
   reminder_enabled: z.boolean().default(false),
   notes: notesSchema,
 });
@@ -47,6 +57,45 @@ export type MedicationCreateInput = z.infer<typeof medicationCreateSchema>;
 /** Editing a medication's own configuration must never rewrite its historical logs — see docs/SCREEN_BIBLE.md Screen 27. */
 export const medicationUpdateSchema = medicationCreateSchema.partial();
 export type MedicationUpdateInput = z.infer<typeof medicationUpdateSchema>;
+
+export type MedicationSchedulePath =
+  | 'frequency_config.days_of_week'
+  | 'frequency_config.interval_days'
+  | 'frequency_config.time_of_day';
+
+/**
+ * What a chosen schedule still needs before doses can show up on Today and
+ * reminders can be set: the days for weekly/custom, the X for every X days,
+ * and the time of day. Each says what to do. Kept out of the schema itself
+ * because zod skips an object's refinements while any field is wrong, and
+ * the forms want every problem shown on the first tap of Save.
+ */
+export function medicationScheduleProblems(
+  values: Partial<Pick<MedicationCreateInput, 'frequency_type' | 'frequency_config'>>,
+): { path: MedicationSchedulePath; message: string }[] {
+  const { frequency_type: type, frequency_config: config } = values;
+  const problems: { path: MedicationSchedulePath; message: string }[] = [];
+  if (!type) return problems;
+  if ((type === 'weekly' || type === 'custom') && !config?.days_of_week?.length) {
+    problems.push({
+      path: 'frequency_config.days_of_week',
+      message: 'Pick at least one day so your reminders can be set.',
+    });
+  }
+  if (type === 'every_x_days' && !config?.interval_days) {
+    problems.push({
+      path: 'frequency_config.interval_days',
+      message: 'Enter how many days are between doses.',
+    });
+  }
+  if (!config?.time_of_day) {
+    problems.push({
+      path: 'frequency_config.time_of_day',
+      message: 'Choose what time you take it.',
+    });
+  }
+  return problems;
+}
 
 export const medicationLogCreateSchema = z.object({
   medication_id: z.string().uuid(),
@@ -88,11 +137,7 @@ export const appointmentFormSchema = z.object({
   provider: z.string().trim().max(200).nullable().optional(),
   category: z.string().trim().max(100).nullable().optional(),
   date: isoDateSchema,
-  time: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Expected HH:mm')
-    .nullable()
-    .optional(),
+  time: optionalTimeOfDaySchema,
   location: z.string().trim().max(300).nullable().optional(),
   notes: notesSchema,
   reminder_enabled: z.boolean().default(false),

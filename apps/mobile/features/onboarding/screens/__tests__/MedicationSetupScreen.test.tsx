@@ -54,6 +54,8 @@ describe('MedicationSetupScreen — schedule', () => {
     fireEvent.press(screen.getByText('Weekly'));
     fireEvent.press(screen.getByText('Mon'));
     fireEvent.press(screen.getByText('Thu'));
+    fireEvent.press(screen.getByLabelText('Time of day'));
+    fireEvent.press(screen.getByText('Done'));
     fireEvent.press(screen.getByText('Save medication'));
 
     await waitFor(() =>
@@ -61,7 +63,10 @@ describe('MedicationSetupScreen — schedule', () => {
         expect.objectContaining({
           name: 'Estradiol valerate',
           frequency_type: 'weekly',
-          frequency_config: expect.objectContaining({ days_of_week: [1, 4] }),
+          frequency_config: expect.objectContaining({
+            days_of_week: [1, 4],
+            time_of_day: expect.stringMatching(/^\d{2}:\d{2}$/),
+          }),
         }),
       ),
     );
@@ -78,6 +83,18 @@ describe('MedicationSetupScreen — schedule', () => {
     expect(
       await screen.findByText('Pick at least one day so your reminders can be set.'),
     ).toBeTruthy();
+    expect(createMutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('asks for the time in plain words when it was left out', async () => {
+    renderWithProviders(<MedicationSetupScreen />);
+
+    pickMedication('Estradiol valerate');
+    fireEvent.press(screen.getByText('Daily'));
+    fireEvent.press(screen.getByText('Save medication'));
+
+    expect(await screen.findByText('Choose what time you take it.')).toBeTruthy();
+    expect(screen.queryByText(/Expected|received/)).toBeNull();
     expect(createMutateAsync).not.toHaveBeenCalled();
   });
 

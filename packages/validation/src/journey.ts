@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isoDateSchema, notesSchema, titleSchema } from './common';
+import { isoDateSchema, notesSchema, optionalIsoDateSchema, titleSchema } from './common';
 
 /** A journal entry or milestone holds at most this many photos. */
 export const MAX_ENTRY_PHOTOS = 5;
@@ -39,7 +39,7 @@ export type JournalEntryUpdateInput = z.infer<typeof journalEntryUpdateSchema>;
 export const memoryCreateSchema = z.object({
   title: titleSchema,
   description: notesSchema,
-  date: isoDateSchema.nullable().optional(),
+  date: optionalIsoDateSchema,
   media_id: z.string().uuid().nullable().optional(),
 });
 export type MemoryCreateInput = z.infer<typeof memoryCreateSchema>;

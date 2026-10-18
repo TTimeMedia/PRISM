@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { medicationCreateSchema, type MedicationCreateInput } from '@prism/validation';
+import type { MedicationCreateInput } from '@prism/validation';
 import {
   PRISMButton,
   PRISMDateInput,
@@ -16,7 +15,7 @@ import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
 import { KeyboardAwareScreen } from '../../../components/KeyboardAwareScreen';
 import { ChipField } from './ChipField';
 import { MedicationScheduleFields } from './MedicationScheduleFields';
-import { scheduleProblem, withScheduleDefaults } from '../medicationSchedule';
+import { medicationResolver, withScheduleDefaults } from '../medicationSchedule';
 import { MEDICATION_FORM_OPTIONS } from '../optionLabels';
 
 export interface MedicationFormProps {
@@ -33,8 +32,8 @@ export function MedicationForm({
   submitting = false,
   onSubmit,
 }: MedicationFormProps) {
-  const { control, handleSubmit, setError } = useForm<MedicationCreateInput>({
-    resolver: zodResolver(medicationCreateSchema),
+  const { control, handleSubmit } = useForm<MedicationCreateInput>({
+    resolver: medicationResolver,
     defaultValues: {
       name: '',
       form: null,
@@ -49,11 +48,6 @@ export function MedicationForm({
     },
   });
   const submitChecked = (values: MedicationCreateInput) => {
-    const problem = scheduleProblem(values);
-    if (problem) {
-      setError(problem.path, { type: 'validate', message: problem.message });
-      return;
-    }
     onSubmit(withScheduleDefaults(values));
   };
 
@@ -90,12 +84,13 @@ export function MedicationForm({
         <Controller
           control={control}
           name="dosage_text"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <PRISMInput
               label="Dosage"
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              error={fieldState.error?.message}
             />
           )}
         />
@@ -123,12 +118,13 @@ export function MedicationForm({
         <Controller
           control={control}
           name="notes"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <PRISMTextArea
               label="Notes"
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              error={fieldState.error?.message}
             />
           )}
         />

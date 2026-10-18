@@ -90,12 +90,13 @@ export function AppointmentForm({
         <Controller
           control={control}
           name="provider"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <PRISMInput
               label="Provider"
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              error={fieldState.error?.message}
             />
           )}
         />
@@ -127,23 +128,25 @@ export function AppointmentForm({
         <Controller
           control={control}
           name="time"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <PRISMTimeInput
               label="Time"
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              error={fieldState.error?.message}
             />
           )}
         />
         <Controller
           control={control}
           name="location"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <LocationSearchInput
               value={field.value ?? ''}
               onChangeText={field.onChange}
               onBlur={field.onBlur}
+              error={fieldState.error?.message}
             />
           )}
         />
@@ -157,8 +160,13 @@ export function AppointmentForm({
         <Controller
           control={control}
           name="notes"
-          render={({ field }) => (
-            <PRISMTextArea label="Notes" value={field.value ?? ''} onChangeText={field.onChange} />
+          render={({ field, fieldState }) => (
+            <PRISMTextArea
+              label="Notes"
+              value={field.value ?? ''}
+              onChangeText={field.onChange}
+              error={fieldState.error?.message}
+            />
           )}
         />
         <View style={styles.submit}>
