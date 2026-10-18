@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Appointment, AppointmentQuestion } from '@prism/types';
+import { refreshAfterSave } from '../refreshAfterSave';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';
@@ -72,7 +73,7 @@ export function useAddQuestion() {
       if (error) throw error;
       track('question_added');
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: questionsKey(userId) }),
+    onSuccess: () => refreshAfterSave(queryClient, userId),
   });
 }
 
@@ -120,6 +121,6 @@ export function useDeleteQuestion() {
         .eq('user_id', userId);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: questionsKey(userId) }),
+    onSuccess: () => refreshAfterSave(queryClient, userId),
   });
 }

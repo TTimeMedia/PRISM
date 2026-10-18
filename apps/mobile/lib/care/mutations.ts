@@ -10,6 +10,7 @@ import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';
 import { cancelDueNudges } from '../reminders/notificationScheduler';
+import { putInList, refreshAfterSave, removeFromList } from '../refreshAfterSave';
 import {
   appointmentKey,
   appointmentsKey,
@@ -17,6 +18,11 @@ import {
   medicationLogsKey,
   medicationsKey,
 } from './queries';
+
+const byName = (a: Medication, b: Medication) => a.name.localeCompare(b.name);
+const byStart = (a: Appointment, b: Appointment) => a.starts_at.localeCompare(b.starts_at);
+const newestDoseFirst = (a: MedicationLog, b: MedicationLog) =>
+  b.scheduled_at.localeCompare(a.scheduled_at);
 
 type MedicationUpdate = Database['public']['Tables']['medications']['Update'];
 type AppointmentUpdate = Database['public']['Tables']['appointments']['Update'];
@@ -43,9 +49,11 @@ export function useCreateMedication() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       track('medication_added');
-      queryClient.invalidateQueries({ queryKey: medicationsKey(userId) });
+      putInList(queryClient, medicationsKey(userId), data, byName);
+      // Today's Up next, the Timeline and the watch show medications too.
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -70,7 +78,8 @@ export function useUpdateMedication(id: string) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(medicationKey(userId, id), data);
-      queryClient.invalidateQueries({ queryKey: medicationsKey(userId) });
+      putInList(queryClient, medicationsKey(userId), data, byName);
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -107,8 +116,10 @@ export function useDeleteMedication() {
         .eq('user_id', userId);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: medicationsKey(userId) });
+    onSuccess: (_data, id) => {
+      removeFromList(queryClient, medicationsKey(userId), id);
+      queryClient.removeQueries({ queryKey: medicationKey(userId, id) });
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -131,13 +142,11 @@ export function useCreateMedicationLog() {
     },
     onSuccess: (data) => {
       track('dose_logged');
-      queryClient.invalidateQueries({
-        queryKey: medicationLogsKey(userId, data.medication_id),
-      });
-      // Today's logs, which tick doses off on the Apple Watch.
-      queryClient.invalidateQueries({ queryKey: ['medication-logs', userId, 'today'] });
-      // A linked supply was just counted down by the database.
-      queryClient.invalidateQueries({ queryKey: ['supplies', userId] });
+      putInList(queryClient, medicationLogsKey(userId, data.medication_id), data, newestDoseFirst);
+      // Everything else that counts doses (Today, the Timeline, stats, the
+      // Apple Watch's list of today's doses, a linked supply the database just
+      // counted down). Not waited for, so logging a dose and its Undo stay instant.
+      void refreshAfterSave(queryClient, userId);
       // A dose that's been logged no longer needs its follow-up reminder.
       void cancelDueNudges(data.medication_id).catch(() => undefined);
     },
@@ -161,8 +170,7 @@ export function useUndoMedicationLog() {
       if (error) throw error;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['medication-logs', userId] });
-      queryClient.invalidateQueries({ queryKey: ['supplies', userId] });
+      void refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -182,9 +190,9 @@ export function useDeleteMedicationLog(medicationId: string) {
         .eq('user_id', userId);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: medicationLogsKey(userId, medicationId) });
-      queryClient.invalidateQueries({ queryKey: ['supplies', userId] });
+    onSuccess: (_data, id) => {
+      removeFromList(queryClient, medicationLogsKey(userId, medicationId), id);
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -205,11 +213,11 @@ export function useCreateAppointment() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       track('appointment_added');
-      queryClient.invalidateQueries({ queryKey: appointmentsKey(userId) });
-      // TODAY classifies appointments — see services/personalization/engine.ts.
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+      putInList(queryClient, appointmentsKey(userId), data, byStart);
+      // Today, the Timeline, questions for the next appointment and the watch too.
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -234,8 +242,8 @@ export function useUpdateAppointment(id: string) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(appointmentKey(userId, id), data);
-      queryClient.invalidateQueries({ queryKey: appointmentsKey(userId) });
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+      putInList(queryClient, appointmentsKey(userId), data, byStart);
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -255,9 +263,10 @@ export function useDeleteAppointment() {
         .eq('user_id', userId);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: appointmentsKey(userId) });
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+    onSuccess: (_data, id) => {
+      removeFromList(queryClient, appointmentsKey(userId), id);
+      queryClient.removeQueries({ queryKey: appointmentKey(userId, id) });
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }

@@ -7,6 +7,12 @@ import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';
 import { journalEntriesKey, journalEntryKey, milestoneKey, milestonesKey } from './queries';
 import { removeEntryImages } from './entryImage';
+import {
+  byDateNewestFirst,
+  putInList,
+  refreshAfterSave,
+  removeFromList,
+} from '../refreshAfterSave';
 import { entryPhotos } from './entryPhotos';
 
 type MilestoneUpdate = Database['public']['Tables']['milestones']['Update'];
@@ -34,11 +40,11 @@ export function useCreateMilestone() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       track('milestone_added');
-      queryClient.invalidateQueries({ queryKey: milestonesKey(userId) });
-      // TODAY classifies milestones — see services/personalization/engine.ts.
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+      putInList(queryClient, milestonesKey(userId), data, byDateNewestFirst);
+      // Today, the Timeline and the You stats show milestones too.
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -63,8 +69,8 @@ export function useUpdateMilestone(id: string) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(milestoneKey(userId, id), data);
-      queryClient.invalidateQueries({ queryKey: milestonesKey(userId) });
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+      putInList(queryClient, milestonesKey(userId), data, byDateNewestFirst);
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -91,9 +97,10 @@ export function useDeleteMilestone() {
       if (error) throw error;
       await removeEntryImages(existing ? entryPhotos(existing) : []);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: milestonesKey(userId) });
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+    onSuccess: (_data, id) => {
+      removeFromList(queryClient, milestonesKey(userId), id);
+      queryClient.removeQueries({ queryKey: milestoneKey(userId, id) });
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -114,11 +121,11 @@ export function useCreateJournalEntry() {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       track('journal_entry_added');
-      queryClient.invalidateQueries({ queryKey: journalEntriesKey(userId) });
-      // TODAY classifies journal entries — see services/personalization/engine.ts.
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+      putInList(queryClient, journalEntriesKey(userId), data, byDateNewestFirst);
+      // Today, the Timeline and the You stats show journal entries too.
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -143,8 +150,8 @@ export function useUpdateJournalEntry(id: string) {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(journalEntryKey(userId, id), data);
-      queryClient.invalidateQueries({ queryKey: journalEntriesKey(userId) });
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+      putInList(queryClient, journalEntriesKey(userId), data, byDateNewestFirst);
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
@@ -171,9 +178,10 @@ export function useDeleteJournalEntry() {
       if (error) throw error;
       await removeEntryImages(existing ? entryPhotos(existing) : []);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: journalEntriesKey(userId) });
-      queryClient.invalidateQueries({ queryKey: ['today-items'] });
+    onSuccess: (_data, id) => {
+      removeFromList(queryClient, journalEntriesKey(userId), id);
+      queryClient.removeQueries({ queryKey: journalEntryKey(userId, id) });
+      return refreshAfterSave(queryClient, userId);
     },
   });
 }
