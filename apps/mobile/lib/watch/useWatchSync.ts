@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import type { MedicationLog } from '@prism/types';
 import {
   addWatchActionListener,
+  isWatchAppInstalled,
   isWatchSupported,
   takeWatchActions,
   updateWatchContext,
@@ -17,7 +18,9 @@ import {
   buildWatchContext,
   parseWatchAction,
   type WatchAction,
+  type WatchServer,
 } from './watchContext';
+import { getOrCreateWatchToken, replaceWatchToken, watchServerUrl } from './watchToken';
 import { supabase } from '../supabase/client';
 
 /** Today's dose logs, for ticking doses off on the watch. Invalidated when a dose is logged. */
@@ -76,17 +79,51 @@ export function useWatchSync(active: boolean): void {
   const medicationsOn = !!modules?.find((m) => m.module_key === 'medications')?.enabled;
   const appointmentsOn = !!modules?.find((m) => m.module_key === 'appointments')?.enabled;
 
+  // The watch's own key, so it can read and log doses without Prism open
+  // here. Made only once a watch has Prism on it. keyRequest bumps when the
+  // watch says its key stopped working.
+  const [server, setServer] = useState<WatchServer | null>(null);
+  const [keyRequest, setKeyRequest] = useState(0);
+  useEffect(() => {
+    if (!enabled || !userId || !isWatchAppInstalled()) return;
+    let cancelled = false;
+    const load = keyRequest > 0 ? replaceWatchToken : getOrCreateWatchToken;
+    void load(userId)
+      .then((token) => {
+        if (!cancelled && token) setServer({ url: watchServerUrl(), token });
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+    // tick retries after a failure, and notices a watch app installed since.
+  }, [enabled, userId, keyRequest, tick]);
+  useEffect(() => {
+    if (!userId) setServer(null);
+  }, [userId]);
+
   const context = useMemo(() => {
     if (!enabled || !medications || !appointments || !settings || !logs) return null;
-    return buildWatchContext({
+    const built = buildWatchContext({
       medications: medicationsOn ? medications : [],
       appointments: appointmentsOn ? appointments : [],
       logs,
       notificationPrivacy: settings.notification_privacy ?? true,
     });
+    return server ? { ...built, server } : built;
     // tick re-reads the clock after a day change.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enabled, medications, appointments, settings, logs, medicationsOn, appointmentsOn, tick]);
+  }, [
+    enabled,
+    medications,
+    appointments,
+    settings,
+    logs,
+    medicationsOn,
+    appointmentsOn,
+    server,
+    tick,
+  ]);
 
   const lastSent = useRef<string | null>(null);
   useEffect(() => {
@@ -101,7 +138,7 @@ export function useWatchSync(active: boolean): void {
   }, [context, userId]);
 
   // Doses logged on the watch. Kept in memory until saved, so a failed save is retried.
-  const queue = useRef<WatchAction[]>([]);
+  const queue = useRef<Extract<WatchAction, { type: 'logDose' }>[]>([]);
   // Every action id ever queued, so a repeat (the watch retrying) is saved once.
   const seen = useRef(new Set<string>());
   const saving = useRef(false);
@@ -110,6 +147,10 @@ export function useWatchSync(active: boolean): void {
     const drain = async () => {
       for (const json of takeWatchActions()) {
         const action = parseWatchAction(json);
+        if (action?.type === 'needKey') {
+          setKeyRequest((value) => value + 1);
+          continue;
+        }
         if (action && !seen.current.has(action.id)) {
           seen.current.add(action.id);
           queue.current.push(action);

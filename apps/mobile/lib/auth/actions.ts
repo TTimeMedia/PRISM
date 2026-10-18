@@ -1,5 +1,6 @@
 import { removeThisDevicePushToken } from '../push/pushToken';
 import { cancelEveryNotification } from '../reminders/notificationScheduler';
+import { revokeWatchToken } from '../watch/watchToken';
 import * as Linking from 'expo-linking';
 import { supabase } from '../supabase/client';
 
@@ -50,6 +51,8 @@ export async function resendVerificationEmail(email: string) {
 export async function signOut() {
   // While still signed in, so this phone stops getting server pushes for the account.
   await removeThisDevicePushToken();
+  // And the Apple Watch's key, so the watch can't read or log doses for the account.
+  await revokeWatchToken().catch(() => undefined);
   // Reminders belong to the account, so the next person to sign in doesn't get them.
   await cancelEveryNotification().catch(() => undefined);
   return supabase.auth.signOut();

@@ -4,6 +4,7 @@ import SwiftUI
 struct ContentView: View {
   @ObservedObject private var store = WatchStore.shared
   @State private var confirming: WatchDose?
+  @Environment(\.scenePhase) private var scenePhase
 
   var body: some View {
     NavigationStack {
@@ -15,6 +16,15 @@ struct ContentView: View {
         }
       }
       .navigationTitle("Prism")
+    }
+    // Ask the server what's taken whenever the app is opened or comes back,
+    // and move on to the new day at midnight.
+    .onAppear { store.refresh() }
+    .onChange(of: scenePhase) { _, phase in
+      if phase == .active { store.refresh() }
+    }
+    .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+      store.refresh()
     }
     .confirmationDialog(
       "Mark as taken?",
@@ -30,13 +40,14 @@ struct ContentView: View {
   }
 
   private func list(_ context: WatchContext) -> some View {
-    List {
+    let doses = store.todayDoses
+    return List {
       Section("Today") {
-        if context.doses.isEmpty {
+        if doses.isEmpty {
           Text("No doses today.")
             .foregroundStyle(.secondary)
         }
-        ForEach(context.doses) { dose in
+        ForEach(doses) { dose in
           let taken = store.isTaken(dose)
           Button {
             if !taken { confirming = dose }
@@ -61,7 +72,7 @@ struct ContentView: View {
       }
 
       Section("Next") {
-        if let next = context.next {
+        if let next = store.nextAppointment {
           VStack(alignment: .leading, spacing: 2) {
             Text(next.label)
               .font(.headline)
@@ -83,7 +94,7 @@ struct ContentView: View {
         }
       }
 
-      if let updated = parseISODate(context.updatedAt), !Calendar.current.isDateInToday(updated) {
+      if store.isOutOfDate {
         Text("Open Prism on your iPhone to bring this up to date.")
           .font(.footnote)
           .foregroundStyle(.secondary)

@@ -465,3 +465,9 @@ enabled = true
 # user JWT. See supabase/functions/send-push/index.ts.
 [functions.send-push]
 verify_jwt = false
+
+# watch is called by the Apple Watch app, which can't sign in. It
+# authenticates with a watch-only key (x-watch-token) instead of a user JWT.
+# See supabase/functions/watch/index.ts.
+[functions.watch]
+verify_jwt = false

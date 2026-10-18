@@ -7,9 +7,13 @@ const mockUpdate = jest.fn();
 let mockPending: string[] = [];
 const mockMutate = jest.fn();
 let mockSession: { user: { id: string } } | null = { user: { id: 'u1' } };
+let mockInstalled = false;
+const mockGetToken = jest.fn();
+const mockReplaceToken = jest.fn();
 
 jest.mock('../../../modules/prism-watch', () => ({
   isWatchSupported: true,
+  isWatchAppInstalled: () => mockInstalled,
   updateWatchContext: (json: string) => mockUpdate(json),
   takeWatchActions: () => {
     const taken = mockPending;
@@ -17,6 +21,12 @@ jest.mock('../../../modules/prism-watch', () => ({
     return taken;
   },
   addWatchActionListener: () => ({ remove: jest.fn() }),
+}));
+
+jest.mock('../watchToken', () => ({
+  getOrCreateWatchToken: (userId: string) => mockGetToken(userId),
+  replaceWatchToken: (userId: string) => mockReplaceToken(userId),
+  watchServerUrl: () => 'https://example.supabase.co/functions/v1/watch',
 }));
 
 jest.mock('../../auth/AuthProvider', () => ({
@@ -71,7 +81,10 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockPending = [];
   mockSession = { user: { id: 'u1' } };
+  mockInstalled = false;
   mockMutate.mockResolvedValue({});
+  mockGetToken.mockResolvedValue('key-1');
+  mockReplaceToken.mockResolvedValue('key-2');
 });
 
 describe('useWatchSync', () => {
@@ -104,6 +117,45 @@ describe('useWatchSync', () => {
       scheduled_at: '2026-10-05T17:00:00.000Z',
       status: 'completed',
     });
+  });
+
+  it('gives the watch its key once Prism is on the watch', async () => {
+    mockInstalled = true;
+    renderHook(() => useWatchSync(true), { wrapper });
+
+    await waitFor(() =>
+      expect(mockUpdate.mock.calls.some(([json]) => JSON.parse(json).server)).toBe(true),
+    );
+    const sent = JSON.parse(mockUpdate.mock.calls.at(-1)![0]);
+    expect(sent.server).toEqual({
+      url: 'https://example.supabase.co/functions/v1/watch',
+      token: 'key-1',
+    });
+    expect(mockGetToken).toHaveBeenCalledWith('u1');
+    // Two weeks ahead, so the watch moves on to a new day by itself.
+    expect(sent.schedule.length).toBeGreaterThanOrEqual(13);
+  });
+
+  it('makes no key when there is no watch app', async () => {
+    renderHook(() => useWatchSync(true), { wrapper });
+
+    await waitFor(() => expect(mockUpdate).toHaveBeenCalled());
+    expect(mockGetToken).not.toHaveBeenCalled();
+    expect(JSON.parse(mockUpdate.mock.calls[0][0]).server).toBeUndefined();
+  });
+
+  it('replaces the key when the watch says it stopped working', async () => {
+    mockInstalled = true;
+    mockPending = [JSON.stringify({ type: 'needKey' })];
+    renderHook(() => useWatchSync(true), { wrapper });
+
+    await waitFor(() =>
+      expect(
+        mockUpdate.mock.calls.some(([json]) => JSON.parse(json).server?.token === 'key-2'),
+      ).toBe(true),
+    );
+    expect(mockReplaceToken).toHaveBeenCalledWith('u1');
+    expect(mockMutate).not.toHaveBeenCalled();
   });
 
   it('clears the watch after signing out', async () => {

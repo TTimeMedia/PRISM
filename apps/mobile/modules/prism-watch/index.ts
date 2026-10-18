@@ -18,6 +18,11 @@ const NativeModule = requireOptionalNativeModule<PrismWatchNativeModule>('PrismW
 
 export const isWatchSupported = NativeModule?.isSupported() ?? false;
 
+/** Whether a paired Apple Watch has Prism's watch app on it. */
+export function isWatchAppInstalled(): boolean {
+  return NativeModule?.isWatchAppInstalled() ?? false;
+}
+
 export function updateWatchContext(json: string): void {
   NativeModule?.updateContext(json);
 }

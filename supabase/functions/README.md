@@ -66,3 +66,28 @@ but the function itself needs a real end-to-end test on a device.
 Server-side scheduled dose and appointment reminders (the `reminders`
 category) are not sent yet: nothing on the server decides *when* a reminder
 is due. Until that job exists, reminders keep running on the phone.
+
+## `watch`
+
+What the Apple Watch app calls, so it keeps working without Prism open on the
+iPhone. The watch can't sign in. Instead the phone makes it a watch-only key
+with the `create_watch_token()` database function (migration
+`20261018120000_watch_tokens.sql`), keeps a copy in the phone's Keychain
+(`apps/mobile/lib/watch/watchToken.ts`) and sends it to the watch. The watch
+sends the key as `x-watch-token`, so the function uses `verify_jwt = false`.
+
+```
+POST /functions/v1/watch
+x-watch-token: <key>
+{ "action": "taken", "from": "<ISO>", "to": "<ISO>" }   → which medications have a completed log in that range
+{ "action": "logDose", "medicationId": "...", "at": "<ISO>" }   → logs that dose (once)
+```
+
+That is all the key can do. Names and times reach the watch from the phone,
+worded the way Private notifications allows; this function never returns a
+name. Only a SHA-256 hash of the key is stored, and each account has at most
+one key. Signing out on the phone deletes it, deleting the account cascades
+to it, and a 401 makes the watch ask the phone for a new key.
+
+Deploy: `npx supabase db push` (for the migration), then
+`npx supabase functions deploy watch`.

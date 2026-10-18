@@ -140,6 +140,62 @@ describe('buildWatchContext', () => {
   });
 });
 
+describe('buildWatchContext schedule', () => {
+  it('lists two weeks of doses from the start of today, so the watch can roll over by itself', () => {
+    const context = buildWatchContext({
+      medications: [medication({ frequency_config: { time_of_day: '08:00' } })],
+      logs: [
+        {
+          medication_id: 'm1',
+          scheduled_at: new Date(2026, 9, 5, 8, 0).toISOString(),
+          status: 'completed',
+        },
+      ],
+      appointments: [],
+      notificationPrivacy: true,
+      now,
+    });
+
+    const schedule = context.schedule!;
+    expect(schedule).toHaveLength(14);
+    // Today's 8:00 dose is already past at 9:00 but still listed, and taken.
+    expect(schedule[0]).toMatchObject({
+      label: 'Dose',
+      at: new Date(2026, 9, 5, 8, 0).toISOString(),
+      taken: true,
+    });
+    expect(schedule[1]).toMatchObject({
+      at: new Date(2026, 9, 6, 8, 0).toISOString(),
+      taken: false,
+    });
+    expect(schedule.at(-1)!.at).toBe(new Date(2026, 9, 18, 8, 0).toISOString());
+    expect(context.until).toBe(new Date(2026, 9, 19).toISOString());
+    expect(context.doses).toEqual([schedule[0]]);
+    expect(JSON.stringify(context)).not.toContain('Testosterone');
+  });
+
+  it('lists the next few appointments, soonest first', () => {
+    const context = buildWatchContext({
+      medications: [],
+      logs: [],
+      appointments: [
+        appointment({
+          id: 'a2',
+          title: 'Later',
+          starts_at: new Date(2026, 9, 9, 10).toISOString(),
+        }),
+        appointment(),
+        appointment({ id: 'a0', title: 'Past', starts_at: new Date(2026, 9, 4, 10).toISOString() }),
+      ],
+      notificationPrivacy: false,
+      now,
+    });
+
+    expect(context.appointments!.map((a) => a.label)).toEqual(['Endocrinology', 'Later']);
+    expect(context.next?.label).toBe('Endocrinology');
+  });
+});
+
 describe('parseWatchAction', () => {
   it('reads a dose logged on the watch', () => {
     expect(
@@ -152,6 +208,10 @@ describe('parseWatchAction', () => {
         }),
       ),
     ).toEqual({ type: 'logDose', id: 'x', medicationId: 'm1', at: '2026-10-05T17:00:00Z' });
+  });
+
+  it('reads a request for a new watch key', () => {
+    expect(parseWatchAction(JSON.stringify({ type: 'needKey' }))).toEqual({ type: 'needKey' });
   });
 
   it('ignores anything else', () => {
