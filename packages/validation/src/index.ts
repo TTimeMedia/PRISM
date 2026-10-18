@@ -1,3 +1,9 @@
+import { z } from 'zod';
+import { prismErrorMap } from './common';
+
+// Every schema speaks plainly when something needs fixing (see prismErrorMap).
+z.setErrorMap(prismErrorMap);
+
 export * from './common';
 export * from './auth';
 export * from './profile';

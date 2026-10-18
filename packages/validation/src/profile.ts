@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isoDateSchema } from './common';
+import { optionalIsoDateSchema } from './common';
 
 /**
  * Every field here is optional except what account creation structurally
@@ -11,8 +11,8 @@ export const profileUpdateSchema = z.object({
   display_name: z.string().trim().max(200).nullable().optional(),
   pronouns: z.string().trim().max(100).nullable().optional(),
   gender: z.string().trim().max(100).nullable().optional(),
-  birthday: isoDateSchema.nullable().optional(),
-  journey_start_date: isoDateSchema.nullable().optional(),
+  birthday: optionalIsoDateSchema,
+  journey_start_date: optionalIsoDateSchema,
   /**
    * The `profile-photos` storage bucket is private (docs/SECURITY.md §5),
    * so this stores the bucket object path (e.g. "{user_id}/profile.jpg"),

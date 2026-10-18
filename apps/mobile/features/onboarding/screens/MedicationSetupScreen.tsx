@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { MEDICATION_FORMS, getNextOnboardingStep } from '@prism/types';
-import { medicationCreateSchema, type MedicationCreateInput } from '@prism/validation';
+import type { MedicationCreateInput } from '@prism/validation';
 import { PRISMDateInput, PRISMInput, PRISMSwitch, spacing } from '@prism/ui';
 import { StyleSheet, View } from 'react-native';
 import { ListPickerField } from '../../../components/ListPickerField';
 import { MEDICATION_OPTIONS } from '../../../lib/pickerOptions';
 import { MedicationScheduleFields } from '../../care/components/MedicationScheduleFields';
-import { scheduleProblem, withScheduleDefaults } from '../../care/medicationSchedule';
+import { medicationResolver, withScheduleDefaults } from '../../care/medicationSchedule';
 import { OnboardingScreenLayout } from '../components/OnboardingScreenLayout';
 import { ChipSelect } from '../components/ChipSelect';
 import { onboardingStepHref } from '../../../lib/onboarding/routes';
@@ -37,10 +36,9 @@ export function MedicationSetupScreen() {
   const {
     control,
     handleSubmit,
-    setError,
     formState: { isSubmitting: isFormSubmitting },
   } = useForm<MedicationCreateInput>({
-    resolver: zodResolver(medicationCreateSchema),
+    resolver: medicationResolver,
     defaultValues: {
       name: '',
       form: null,
@@ -60,11 +58,6 @@ export function MedicationSetupScreen() {
   };
 
   const submit = async (values: MedicationCreateInput) => {
-    const problem = scheduleProblem(values);
-    if (problem) {
-      setError(problem.path, { type: 'validate', message: problem.message });
-      return;
-    }
     setIsSubmitting(true);
     await createMedication.mutateAsync(withScheduleDefaults(values));
     await goNext();
@@ -119,12 +112,13 @@ export function MedicationSetupScreen() {
       <Controller
         control={control}
         name="dosage_text"
-        render={({ field }) => (
+        render={({ field, fieldState }) => (
           <PRISMInput
             label="Dosage"
             value={field.value ?? ''}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
+            error={fieldState.error?.message}
           />
         )}
       />

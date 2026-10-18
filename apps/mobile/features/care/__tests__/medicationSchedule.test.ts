@@ -1,47 +1,77 @@
 import type { MedicationCreateInput } from '@prism/validation';
-import { scheduleProblem, withScheduleDefaults } from '../medicationSchedule';
+import { medicationResolver, withScheduleDefaults } from '../medicationSchedule';
 
 const base: MedicationCreateInput = {
   name: 'Estradiol (pill)',
   reminder_enabled: true,
 };
 
-describe('scheduleProblem', () => {
-  it('has nothing to say when no frequency was chosen', () => {
-    expect(scheduleProblem({ frequency_type: null, frequency_config: null })).toBeNull();
+async function check(values: Partial<MedicationCreateInput>) {
+  const result = await medicationResolver(
+    { ...base, ...values } as MedicationCreateInput,
+    undefined,
+    { fields: {}, shouldUseNativeValidation: false },
+  );
+  return result.errors as Record<string, Record<string, { message?: string }> | undefined>;
+}
+
+describe('medicationResolver', () => {
+  it('has nothing to say when no frequency was chosen', async () => {
+    expect(await check({ frequency_type: null, frequency_config: null })).toEqual({});
   });
 
-  it('accepts a daily schedule with no extra details', () => {
-    expect(scheduleProblem({ frequency_type: 'daily', frequency_config: null })).toBeNull();
+  it('accepts a daily schedule with a time', async () => {
+    expect(
+      await check({ frequency_type: 'daily', frequency_config: { time_of_day: '09:00' } }),
+    ).toEqual({});
   });
 
-  it('asks for a day when weekly or custom has none', () => {
+  it('asks for the time in plain words when it was left out', async () => {
+    for (const time_of_day of [undefined, null, '']) {
+      const errors = await check({
+        frequency_type: 'daily',
+        frequency_config: { time_of_day } as MedicationCreateInput['frequency_config'],
+      });
+      expect(errors.frequency_config?.time_of_day?.message).toBe('Choose what time you take it.');
+    }
+  });
+
+  it('asks for a day when weekly or custom has none', async () => {
     for (const frequency_type of ['weekly', 'custom'] as const) {
-      expect(
-        scheduleProblem({ frequency_type, frequency_config: { days_of_week: [] } })?.path,
-      ).toBe('frequency_config.days_of_week');
-      expect(scheduleProblem({ frequency_type, frequency_config: null })?.path).toBe(
-        'frequency_config.days_of_week',
+      const errors = await check({
+        frequency_type,
+        frequency_config: { days_of_week: [], time_of_day: '09:00' },
+      });
+      expect(errors.frequency_config?.days_of_week?.message).toBe(
+        'Pick at least one day so your reminders can be set.',
       );
     }
   });
 
-  it('accepts weekly and custom once a day is picked', () => {
-    expect(
-      scheduleProblem({ frequency_type: 'weekly', frequency_config: { days_of_week: [1] } }),
-    ).toBeNull();
-    expect(
-      scheduleProblem({ frequency_type: 'custom', frequency_config: { days_of_week: [2, 5] } }),
-    ).toBeNull();
+  it('asks for the interval when every-X-days has none', async () => {
+    const errors = await check({
+      frequency_type: 'every_x_days',
+      frequency_config: { time_of_day: '09:00' },
+    });
+    expect(errors.frequency_config?.interval_days?.message).toBe(
+      'Enter how many days are between doses.',
+    );
   });
 
-  it('asks for the interval when every-X-days has none', () => {
-    expect(scheduleProblem({ frequency_type: 'every_x_days', frequency_config: null })?.path).toBe(
-      'frequency_config.interval_days',
-    );
-    expect(
-      scheduleProblem({ frequency_type: 'every_x_days', frequency_config: { interval_days: 3 } }),
-    ).toBeNull();
+  it('shows every missing piece at once, including the name', async () => {
+    const errors = (await check({
+      name: '',
+      frequency_type: 'weekly',
+      frequency_config: null,
+    })) as Record<string, unknown> & {
+      name?: { message?: string };
+      frequency_config?: Record<string, { message?: string }>;
+    };
+    expect(errors.name?.message).toBe('Please fill this in.');
+    expect(Object.keys(errors.frequency_config ?? {}).sort()).toEqual([
+      'days_of_week',
+      'time_of_day',
+    ]);
   });
 });
 

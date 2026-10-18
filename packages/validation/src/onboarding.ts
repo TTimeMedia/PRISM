@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { CARE_SETUP_OPTIONS, INTENT_OPTIONS, JOURNEY_STAGES } from '@prism/types';
-import { isoDateSchema, titleSchema } from './common';
+import { optionalIsoDateSchema, optionalTimeOfDaySchema, titleSchema } from './common';
 
 /** Screen 09 — What Brings You Here? Multi-select, entirely optional. */
 export const intentSchema = z.object({
@@ -37,12 +37,8 @@ export type CareSetupInput = z.infer<typeof careSetupSchema>;
 export const appointmentSetupSchema = z.object({
   provider: z.string().trim().max(200).nullable().optional(),
   category: z.string().trim().max(100).nullable().optional(),
-  date: isoDateSchema.nullable().optional(),
-  time: z
-    .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Expected HH:mm')
-    .nullable()
-    .optional(),
+  date: optionalIsoDateSchema,
+  time: optionalTimeOfDaySchema,
   location: z.string().trim().max(300).nullable().optional(),
   reminder_enabled: z.boolean().default(false),
 });
@@ -56,7 +52,7 @@ export function deriveAppointmentTitle(category: string | null | undefined): str
 
 /** Screen 16 — Journey Date. "Choose a date" / "I don't know" / "no specific start date" / "Skip" all resolve to a nullable date — no default is ever invented. */
 export const journeyDateSchema = z.object({
-  journey_start_date: isoDateSchema.nullable().optional(),
+  journey_start_date: optionalIsoDateSchema,
 });
 export type JourneyDateInput = z.infer<typeof journeyDateSchema>;
 

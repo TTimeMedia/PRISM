@@ -13,6 +13,8 @@ export interface LocationSearchInputProps {
   value: string;
   onChangeText: (value: string) => void;
   onBlur?: () => void;
+  /** Shown under the field, like every other form field's error. */
+  error?: string;
 }
 
 const MIN_QUERY_LENGTH = 3;
@@ -30,6 +32,7 @@ export function LocationSearchInput({
   value,
   onChangeText,
   onBlur,
+  error,
 }: LocationSearchInputProps) {
   const theme = useTheme();
   const [suggestions, setSuggestions] = useState<LocationSuggestion[]>([]);
@@ -86,6 +89,7 @@ export function LocationSearchInput({
           onBlur?.();
         }}
         autoCorrect={false}
+        error={error}
       />
       {focused && suggestions.length > 0 ? (
         <View
