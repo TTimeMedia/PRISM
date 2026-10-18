@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { Supply } from '@prism/types';
 import type { Database } from '@prism/database';
+import { refreshAfterSave } from '../refreshAfterSave';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { track } from '../analytics/events';
@@ -50,7 +51,7 @@ export function useSaveSupply() {
       if (error) throw error;
       track('supply_added');
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: suppliesKey(userId) }),
+    onSuccess: () => refreshAfterSave(queryClient, userId),
   });
 }
 
@@ -64,6 +65,6 @@ export function useDeleteSupply() {
       const { error } = await supabase.from('supplies').delete().eq('id', id).eq('user_id', userId);
       if (error) throw error;
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: suppliesKey(userId) }),
+    onSuccess: () => refreshAfterSave(queryClient, userId),
   });
 }
