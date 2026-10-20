@@ -156,7 +156,7 @@ describe('TodayScreen', () => {
     todayResult([item()]);
 
     renderWithProviders(<TodayScreen />);
-    fireEvent.press(screen.getByText('Log dose'));
+    fireEvent.press(screen.getByText('Log'));
 
     await waitFor(() =>
       expect(createLog).toHaveBeenCalledWith(
@@ -198,13 +198,13 @@ describe('TodayScreen', () => {
 
       renderWithProviders(<TodayScreen />);
 
-      expect(screen.getByText('3 doses to take')).toBeTruthy();
+      expect(screen.getByText('3 left for today')).toBeTruthy();
       for (const name of ['Estradiol valerate', 'Spironolactone', 'Testosterone']) {
         expect(screen.getByText(name)).toBeTruthy();
         expect(screen.getByLabelText(`Log ${name}`)).toBeTruthy();
       }
-      // The single-dose card isn't shown, and other things still come up below.
-      expect(screen.queryByText('Log dose')).toBeNull();
+      // The single-dose card (with its View button) isn't shown, and other things still come up below.
+      expect(screen.queryByText('View')).toBeNull();
       expect(screen.getByText('Coming up')).toBeTruthy();
       expect(screen.getByText('Endocrinology')).toBeTruthy();
     });
@@ -244,7 +244,7 @@ describe('TodayScreen', () => {
       renderWithProviders(<TodayScreen />);
 
       expect(screen.getByText('1 of 3 done')).toBeTruthy();
-      expect(screen.getByText('2 doses to take')).toBeTruthy();
+      expect(screen.getByText('2 left for today')).toBeTruthy();
       expect(screen.getByText('Estradiol valerate')).toBeTruthy();
       expect(screen.getByText(/logged 8:12/)).toBeTruthy();
       // Not offered again; the others still are.
@@ -258,7 +258,7 @@ describe('TodayScreen', () => {
 
       renderWithProviders(<TodayScreen />);
 
-      expect(screen.getByText('All 3 doses done')).toBeTruthy();
+      expect(screen.getByText('All done for today')).toBeTruthy();
       expect(screen.getByText('3 of 3 done')).toBeTruthy();
       expect(screen.queryByText('Log')).toBeNull();
     });
@@ -268,8 +268,8 @@ describe('TodayScreen', () => {
 
       renderWithProviders(<TodayScreen />);
 
-      expect(screen.getByText('Done for today')).toBeTruthy();
-      expect(screen.queryByText('Log dose')).toBeNull();
+      expect(screen.getByText('All done for today')).toBeTruthy();
+      expect(screen.queryByText('Log')).toBeNull();
     });
 
     it('shows them all, even past the five-item limit for Coming up', () => {
@@ -280,7 +280,7 @@ describe('TodayScreen', () => {
 
       renderWithProviders(<TodayScreen />);
 
-      expect(screen.getByText('7 doses to take')).toBeTruthy();
+      expect(screen.getByText('7 left for today')).toBeTruthy();
       expect(screen.getAllByText(/^Medication \d$/)).toHaveLength(7);
     });
   });
@@ -291,7 +291,7 @@ describe('TodayScreen', () => {
     renderWithProviders(<TodayScreen />);
 
     expect(screen.getByText('View')).toBeTruthy();
-    expect(screen.queryByText('Log dose')).toBeNull();
+    expect(screen.queryByText('Log')).toBeNull();
   });
 
   it("shows a milestone's photo under Lately, or the icon that fits it", () => {
@@ -336,7 +336,7 @@ describe('TodayScreen', () => {
 
     renderWithProviders(<TodayScreen />);
 
-    expect(screen.queryByText('Log dose')).toBeNull();
+    expect(screen.queryByText('Log')).toBeNull();
     fireEvent.press(screen.getByText('View'));
     expect(router.push).toHaveBeenCalledWith('/care/appointments/a1');
   });
