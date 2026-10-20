@@ -91,7 +91,7 @@ export function outlookLabel(
 ): string {
   const parts = [`${quantityLabel(supply)} left`];
   if (outlook.dosesLeft !== null) {
-    parts.push(outlook.dosesLeft === 1 ? '1 dose' : `${outlook.dosesLeft} doses`);
+    parts.push(`enough for ${outlook.dosesLeft} more`);
   }
   if (outlook.runsOutOn) {
     const days = Math.round((outlook.runsOutOn.getTime() - startOfDay(now).getTime()) / DAY_MS);

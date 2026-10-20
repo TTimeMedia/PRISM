@@ -16,7 +16,7 @@ export const MODULE_STYLE: Record<P0ModuleKey, ModuleStyle> = {
     label: 'Medications',
     icon: Pill,
     tint: 'cyan',
-    blurb: 'Doses, schedules and reminders, injections included.',
+    blurb: 'What you take, when, and reminders, injections included.',
   },
   appointments: {
     label: 'Appointments',

@@ -76,7 +76,7 @@ export function SupplyFormScreen() {
     if (!name.trim()) return setError('Give it a name, like "Testosterone vial" or "Syringes".');
     if (amount === null) return setError('Enter how many you have now (0 is fine).');
     if (linked && perDose.trim() && (per === null || per <= 0))
-      return setError('The amount per dose should be a number above 0.');
+      return setError('The amount used each time should be a number above 0.');
     setError(null);
     try {
       await save.mutateAsync({
@@ -163,8 +163,8 @@ export function SupplyFormScreen() {
             />
             {linked ? (
               <PRISMInput
-                label="Used per dose (optional)"
-                helperText="For example 0.25 for 0.25 mL per shot, or 1 for one syringe. Logging a dose then counts this down, and Undo puts it back."
+                label="Used each time (optional)"
+                helperText="For example 0.25 for 0.25 mL per shot, or 1 for one syringe. Each time you log the medication, this is counted down, and Undo puts it back."
                 keyboardType="decimal-pad"
                 defaultValue={perDose}
                 onChangeText={setPerDose}
