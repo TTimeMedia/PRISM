@@ -210,13 +210,19 @@ describe('calculateTodayItems — medications', () => {
     expect(items[0].bucket).toBe('upcoming');
   });
 
-  it("isn't due any more once today's dose is logged, from anywhere, and shows the next dose instead", () => {
+  it("marks today's dose done once it is logged, from anywhere, with when it was logged", () => {
     const daily = makeMedication({
       frequency_type: 'daily',
       frequency_config: { time_of_day: '09:00' },
     });
     const todayAt9 = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate(), 9, 0);
-    const tomorrowAt9 = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() + 1, 9, 0);
+    const loggedAt = new Date(
+      NOW.getFullYear(),
+      NOW.getMonth(),
+      NOW.getDate(),
+      9,
+      12,
+    ).toISOString();
 
     const items = calculateTodayItems(
       {
@@ -225,15 +231,23 @@ describe('calculateTodayItems — medications', () => {
         medications: [daily],
         // Logged on the Apple Watch: same medication, today, completed.
         doseLogs: [
-          { medication_id: 'med-1', scheduled_at: todayAt9.toISOString(), status: 'completed' },
+          {
+            medication_id: 'med-1',
+            scheduled_at: todayAt9.toISOString(),
+            status: 'completed',
+            completed_at: loggedAt,
+          },
         ],
       },
       NOW,
     );
 
     expect(items).toHaveLength(1);
-    expect(items[0].bucket).toBe('upcoming');
-    expect(items[0].at).toBe(tomorrowAt9.toISOString());
+    expect(items[0]).toMatchObject({
+      bucket: 'due_today',
+      at: todayAt9.toISOString(),
+      doneAt: loggedAt,
+    });
   });
 
   it("is still due when today's only log was skipped, or the log is from another day", () => {
@@ -250,14 +264,25 @@ describe('calculateTodayItems — medications', () => {
         milestones: [],
         medications: [daily],
         doseLogs: [
-          { medication_id: 'med-1', scheduled_at: yesterday.toISOString(), status: 'completed' },
-          { medication_id: 'med-1', scheduled_at: today.toISOString(), status: 'skipped' },
+          {
+            medication_id: 'med-1',
+            scheduled_at: yesterday.toISOString(),
+            status: 'completed',
+            completed_at: yesterday.toISOString(),
+          },
+          {
+            medication_id: 'med-1',
+            scheduled_at: today.toISOString(),
+            status: 'skipped',
+            completed_at: null,
+          },
         ],
       },
       NOW,
     );
 
     expect(items[0].bucket).toBe('due_today');
+    expect(items[0].doneAt).toBeUndefined();
   });
 
   it('never manufactures a medication card when there is no frequency set', () => {

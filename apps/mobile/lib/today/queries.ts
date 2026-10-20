@@ -68,9 +68,12 @@ async function fetchMedications(): Promise<Medication[]> {
   return data;
 }
 
-type TodayDoseLog = Pick<MedicationLog, 'medication_id' | 'scheduled_at' | 'status'>;
+type TodayDoseLog = Pick<
+  MedicationLog,
+  'medication_id' | 'scheduled_at' | 'status' | 'completed_at'
+>;
 
-/** Today's dose logs, however they were logged, so a dose already taken isn't shown as due. */
+/** Today's dose logs, however they were logged, so a dose already taken shows as done. */
 async function fetchTodaysDoseLogs(): Promise<TodayDoseLog[]> {
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -78,7 +81,7 @@ async function fetchTodaysDoseLogs(): Promise<TodayDoseLog[]> {
   end.setDate(end.getDate() + 1);
   const { data, error } = await supabase
     .from('medication_logs')
-    .select('medication_id, scheduled_at, status')
+    .select('medication_id, scheduled_at, status, completed_at')
     .gte('scheduled_at', start.toISOString())
     .lt('scheduled_at', end.toISOString());
   if (error) throw error;

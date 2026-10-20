@@ -52,9 +52,9 @@ export interface RelevantRecords {
   medications: Medication[];
   /**
    * Dose logs from today, from anywhere (Today, the medication page, the
-   * Apple Watch). A medication with a completed log today isn't due any more.
+   * Apple Watch). A medication with a completed log today is done for today.
    */
-  doseLogs?: Pick<MedicationLog, 'medication_id' | 'scheduled_at' | 'status'>[];
+  doseLogs?: Pick<MedicationLog, 'medication_id' | 'scheduled_at' | 'status' | 'completed_at'>[];
 }
 
 function startOfLocalDay(date: Date): Date {
@@ -72,20 +72,16 @@ function startOfLocalDay(date: Date): Date {
 function classifyMedications(
   medications: Medication[],
   now: Date,
-  takenToday: ReadonlySet<string>,
+  takenToday: ReadonlyMap<string, string>,
 ): TodayItem[] {
-  const tomorrow = startOfLocalDay(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
   return medications
     .map((medication): TodayItem | null => {
-      // Today's dose already logged: it's done, so show when the next one is.
-      const dueToday = isMedicationDueOn(medication, now) && !takenToday.has(medication.id);
+      const dueToday = isMedicationDueOn(medication, now);
+      // Today's dose already logged (anywhere): still today's, but done.
+      const doneAt = dueToday ? takenToday.get(medication.id) : undefined;
       const occurrence = dueToday
         ? resolveMedicationOccurrences(medication, startOfLocalDay(now), 1)[0]
-        : resolveNextMedicationOccurrence(
-            medication,
-            takenToday.has(medication.id) ? tomorrow : now,
-          );
+        : resolveNextMedicationOccurrence(medication, now);
       if (!occurrence) return null;
       if (!dueToday) {
         const daysUntil = daysBetween(now, occurrence);
@@ -99,6 +95,7 @@ function classifyMedications(
         title: medication.name,
         subtitle: medication.dosage_text ?? undefined,
         at: occurrence.toISOString(),
+        ...(doneAt ? { doneAt } : {}),
       };
     })
     .filter((item): item is TodayItem => item !== null);
@@ -157,11 +154,14 @@ function classifyMilestones(milestones: Milestone[], now: Date): TodayItem[] {
  * reachable via JOURNEY → Journal and Timeline instead.
  */
 export function calculateTodayItems(records: RelevantRecords, now: Date = new Date()): TodayItem[] {
-  const takenToday = new Set(
-    (records.doseLogs ?? [])
-      .filter((log) => log.status === 'completed' && isSameDay(new Date(log.scheduled_at), now))
-      .map((log) => log.medication_id),
-  );
+  // Medication id → when today's dose was logged (the first log wins).
+  const takenToday = new Map<string, string>();
+  for (const log of records.doseLogs ?? []) {
+    if (log.status !== 'completed' || !isSameDay(new Date(log.scheduled_at), now)) continue;
+    const at = log.completed_at ?? log.scheduled_at;
+    const seen = takenToday.get(log.medication_id);
+    if (!seen || at < seen) takenToday.set(log.medication_id, at);
+  }
   return [
     ...classifyMedications(records.medications, now, takenToday),
     ...classifyAppointments(records.appointments, now),

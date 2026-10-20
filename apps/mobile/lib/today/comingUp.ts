@@ -16,7 +16,8 @@ export function selectComingUpItems(
   items: TodayItem[],
   limit: number = DEFAULT_LIMIT,
 ): TodayItem[] {
-  return items.filter((item) => COMING_UP_BUCKETS.has(item.bucket)).slice(0, limit);
+  // A dose already logged today is done, not coming up.
+  return items.filter((item) => COMING_UP_BUCKETS.has(item.bucket) && !item.doneAt).slice(0, limit);
 }
 
 /** "Today, 9:00 AM" / "Tomorrow, 9:00 AM" / "Fri, Jun 20" — respects device locale via toLocaleString. */

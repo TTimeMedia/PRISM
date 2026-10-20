@@ -21,4 +21,9 @@ export interface TodayItem {
   imagePath?: string;
   /** Milestones: the icon the person picked (`milestones.icon`). */
   icon?: string;
+  /**
+   * Medications: when today's dose was logged, if it has been. A done dose
+   * stays on Today's checklist with a tick and is never offered again.
+   */
+  doneAt?: string;
 }

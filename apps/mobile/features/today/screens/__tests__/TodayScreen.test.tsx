@@ -172,6 +172,119 @@ describe('TodayScreen', () => {
     expect(mockUndo).toHaveBeenCalledWith('log-1', expect.any(Object));
   });
 
+  describe('with more than one medication due today', () => {
+    const three = () => [
+      item(),
+      item({ id: 'medication-m2', sourceId: 'm2', title: 'Spironolactone', subtitle: '50mg' }),
+      item({
+        id: 'medication-m3',
+        sourceId: 'm3',
+        title: 'Testosterone',
+        subtitle: undefined,
+        at: new Date(Date.now() + 8 * 3600000).toISOString(),
+      }),
+      item({
+        id: 'appointment-a1',
+        moduleKey: 'appointments',
+        bucket: 'upcoming',
+        sourceId: 'a1',
+        title: 'Endocrinology',
+        at: new Date(Date.now() + 26 * 3600000).toISOString(),
+      }),
+    ];
+
+    it('lists every one in the top card, each with its own Log button', () => {
+      todayResult(three());
+
+      renderWithProviders(<TodayScreen />);
+
+      expect(screen.getByText('3 doses to take')).toBeTruthy();
+      for (const name of ['Estradiol valerate', 'Spironolactone', 'Testosterone']) {
+        expect(screen.getByText(name)).toBeTruthy();
+        expect(screen.getByLabelText(`Log ${name}`)).toBeTruthy();
+      }
+      // The single-dose card isn't shown, and other things still come up below.
+      expect(screen.queryByText('Log dose')).toBeNull();
+      expect(screen.getByText('Coming up')).toBeTruthy();
+      expect(screen.getByText('Endocrinology')).toBeTruthy();
+    });
+
+    it('logs the one tapped, with Undo', async () => {
+      createLog.mockResolvedValue({ id: 'log-2' });
+      todayResult(three());
+
+      renderWithProviders(<TodayScreen />);
+      fireEvent.press(screen.getByLabelText('Log Spironolactone'));
+
+      await waitFor(() =>
+        expect(createLog).toHaveBeenCalledWith(
+          expect.objectContaining({ medication_id: 'm2', status: 'completed' }),
+        ),
+      );
+      expect(createLog).toHaveBeenCalledTimes(1);
+      fireEvent.press(await screen.findByText('Undo'));
+      expect(mockUndo).toHaveBeenCalledWith('log-2', expect.any(Object));
+    });
+
+    it('opens a medication from its name', () => {
+      todayResult(three());
+
+      renderWithProviders(<TodayScreen />);
+      fireEvent.press(screen.getByText('Testosterone'));
+
+      expect(router.push).toHaveBeenCalledWith('/care/medications/m3');
+    });
+
+    it('keeps a dose already logged on the list, ticked, with when it was logged', () => {
+      const loggedAt = new Date();
+      loggedAt.setHours(8, 12, 0, 0);
+      const [first, ...rest] = three();
+      todayResult([{ ...first, doneAt: loggedAt.toISOString() }, ...rest]);
+
+      renderWithProviders(<TodayScreen />);
+
+      expect(screen.getByText('1 of 3 done')).toBeTruthy();
+      expect(screen.getByText('2 doses to take')).toBeTruthy();
+      expect(screen.getByText('Estradiol valerate')).toBeTruthy();
+      expect(screen.getByText(/logged 8:12/)).toBeTruthy();
+      // Not offered again; the others still are.
+      expect(screen.queryByLabelText('Log Estradiol valerate')).toBeNull();
+      expect(screen.getByLabelText('Log Spironolactone')).toBeTruthy();
+    });
+
+    it('says so when every dose is done', () => {
+      const doneAt = new Date().toISOString();
+      todayResult(three().map((i) => (i.moduleKey === 'medications' ? { ...i, doneAt } : i)));
+
+      renderWithProviders(<TodayScreen />);
+
+      expect(screen.getByText('All 3 doses done')).toBeTruthy();
+      expect(screen.getByText('3 of 3 done')).toBeTruthy();
+      expect(screen.queryByText('Log')).toBeNull();
+    });
+
+    it('shows a single dose as done instead of offering it again', () => {
+      todayResult([item({ doneAt: new Date().toISOString() })]);
+
+      renderWithProviders(<TodayScreen />);
+
+      expect(screen.getByText('Done for today')).toBeTruthy();
+      expect(screen.queryByText('Log dose')).toBeNull();
+    });
+
+    it('shows them all, even past the five-item limit for Coming up', () => {
+      const many = Array.from({ length: 7 }, (_, i) =>
+        item({ id: `medication-m${i}`, sourceId: `m${i}`, title: `Medication ${i}` }),
+      );
+      todayResult(many);
+
+      renderWithProviders(<TodayScreen />);
+
+      expect(screen.getByText('7 doses to take')).toBeTruthy();
+      expect(screen.getAllByText(/^Medication \d$/)).toHaveLength(7);
+    });
+  });
+
   it("doesn't offer to log a dose that isn't due today", () => {
     todayResult([item({ bucket: 'upcoming' })]);
 
