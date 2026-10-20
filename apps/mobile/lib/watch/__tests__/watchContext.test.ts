@@ -81,7 +81,7 @@ describe('buildWatchContext', () => {
     expect(json).not.toContain('.3cc');
     expect(json).not.toContain('Endocrinology');
     expect(json).not.toContain('Fenway');
-    expect(context.doses[0]?.label).toBe('Dose');
+    expect(context.doses[0]?.label).toBe('Medication');
     expect(context.next?.label).toBe('Appointment');
   });
 
@@ -160,7 +160,7 @@ describe('buildWatchContext schedule', () => {
     expect(schedule).toHaveLength(14);
     // Today's 8:00 dose is already past at 9:00 but still listed, and taken.
     expect(schedule[0]).toMatchObject({
-      label: 'Dose',
+      label: 'Medication',
       at: new Date(2026, 9, 5, 8, 0).toISOString(),
       taken: true,
     });

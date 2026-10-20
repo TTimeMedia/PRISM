@@ -12,8 +12,8 @@ import { resolveMedicationOccurrences } from '../reminders/scheduleResolution';
  * watch keeps working without Prism open on the phone. The key can only read
  * which doses are taken and log a dose; names never go through the server.
  *
- * With Private notifications on, names never reach the watch: doses read
- * "Dose" and the appointment "Appointment", the same rule as reminders on
+ * With Private notifications on, names never reach the watch: medications
+ * read "Medication" and the appointment "Appointment", the same rule as reminders on
  * the lock screen. Change the shape only together with
  * targets/watch/WatchStore.swift, which decodes it. Fields are only ever
  * added, so a watch app from an older build still reads `doses` and `next`.
@@ -118,7 +118,7 @@ export function buildWatchContext({
         .filter((at) => at < until)
         .map((at): WatchDose => ({
           medicationId: medication.id,
-          label: notificationPrivacy ? 'Dose' : medication.name,
+          label: notificationPrivacy ? 'Medication' : medication.name,
           ...(!notificationPrivacy && medication.dosage_text
             ? { detail: medication.dosage_text }
             : {}),

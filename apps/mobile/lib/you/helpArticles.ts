@@ -157,26 +157,26 @@ export const HELP_ARTICLES: HelpArticle[] = [
     slug: 'apple-watch',
     title: 'Prism on Apple Watch',
     category: 'Reminders',
-    summary: "See today's doses and your next appointment, and log a dose from your wrist.",
+    summary: "See what's due today and your next appointment, and log it from your wrist.",
     blocks: [
       {
         type: 'p',
-        text: "Prism on Apple Watch shows today's doses and your next appointment. Tap a dose and choose Taken to log it, or press Done on a reminder.",
+        text: "Prism on Apple Watch shows what's due today and your next appointment. Tap a medication and choose Taken to log it, or press Done on a reminder.",
       },
       {
         type: 'steps',
         items: [
           'On your iPhone, open the Watch app, find Prism under Available Apps, and tap Install.',
-          'Open Prism on your iPhone once, so it can send your day to the watch.',
+          "Open Prism on your iPhone once. After that the watch keeps itself up to date, even when Prism isn't open on your phone.",
         ],
       },
       {
         type: 'p',
-        text: 'Your watch gets everything from your iPhone, never from the internet. With Private notifications on, it shows "Dose" and "Appointment" instead of names.',
+        text: 'Your iPhone sends the watch the next two weeks of what you take and your next few appointments. The watch also has its own key that can only check what you\'ve logged today and log what you tap; signing out on your iPhone cancels it. With Private notifications on, it shows "Medication" and "Appointment" instead of names.',
       },
       {
         type: 'tip',
-        text: 'A dose logged while your iPhone is out of reach shows as taken on the watch straight away, and is saved the next time you open Prism on your iPhone.',
+        text: 'Something you log on the watch shows as taken straight away. If the watch is offline, it is saved as soon as the watch is back online.',
       },
     ],
   },

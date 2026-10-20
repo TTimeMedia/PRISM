@@ -44,7 +44,7 @@ struct ContentView: View {
     return List {
       Section("Today") {
         if doses.isEmpty {
-          Text("No doses today.")
+          Text("Nothing due today.")
             .foregroundStyle(.secondary)
         }
         ForEach(doses) { dose in

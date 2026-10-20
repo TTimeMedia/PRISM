@@ -95,7 +95,7 @@ describe('useWatchSync', () => {
     const sent = JSON.parse(mockUpdate.mock.calls[0][0]);
     expect(sent).toMatchObject({ signedIn: true, private: true });
     expect(sent.doses).toHaveLength(1);
-    expect(sent.doses[0]).toMatchObject({ medicationId: 'm1', label: 'Dose', taken: false });
+    expect(sent.doses[0]).toMatchObject({ medicationId: 'm1', label: 'Medication', taken: false });
     expect(JSON.stringify(sent)).not.toContain('Estradiol');
   });
 
