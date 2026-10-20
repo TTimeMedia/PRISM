@@ -1,3 +1,4 @@
+import { AppState } from 'react-native';
 import { onlineManager, QueryClient } from '@tanstack/react-query';
 import NetInfo from '@react-native-community/netinfo';
 
@@ -30,5 +31,18 @@ export const queryClient = new QueryClient({
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
     setOnline(state.isConnected != null ? state.isConnected : true);
+  });
+});
+
+/**
+ * Coming back to Prism refreshes what's on screen. Things change while it's
+ * in the background (a dose logged on the Apple Watch, a new day), and React
+ * Query's own refetch-on-focus listens for browser events that don't fire on
+ * native. Signed photo links are left alone; they don't change.
+ */
+AppState.addEventListener('change', (state) => {
+  if (state !== 'active') return;
+  void queryClient.invalidateQueries({
+    predicate: (query) => !String(query.queryKey[0]).endsWith('signed-url'),
   });
 });

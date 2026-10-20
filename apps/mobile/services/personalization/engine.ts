@@ -1,6 +1,7 @@
 import type {
   Appointment,
   Medication,
+  MedicationLog,
   Milestone,
   ModuleKey,
   RelevanceBucket,
@@ -49,6 +50,11 @@ export interface RelevantRecords {
   appointments: Appointment[];
   milestones: Milestone[];
   medications: Medication[];
+  /**
+   * Dose logs from today, from anywhere (Today, the medication page, the
+   * Apple Watch). A medication with a completed log today isn't due any more.
+   */
+  doseLogs?: Pick<MedicationLog, 'medication_id' | 'scheduled_at' | 'status'>[];
 }
 
 function startOfLocalDay(date: Date): Date {
@@ -63,13 +69,23 @@ function startOfLocalDay(date: Date): Date {
  * whether the user wants a push notification about it are separate
  * concerns (see lib/reminders/scheduleResolution.ts's own header).
  */
-function classifyMedications(medications: Medication[], now: Date): TodayItem[] {
+function classifyMedications(
+  medications: Medication[],
+  now: Date,
+  takenToday: ReadonlySet<string>,
+): TodayItem[] {
+  const tomorrow = startOfLocalDay(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
   return medications
     .map((medication): TodayItem | null => {
-      const dueToday = isMedicationDueOn(medication, now);
+      // Today's dose already logged: it's done, so show when the next one is.
+      const dueToday = isMedicationDueOn(medication, now) && !takenToday.has(medication.id);
       const occurrence = dueToday
         ? resolveMedicationOccurrences(medication, startOfLocalDay(now), 1)[0]
-        : resolveNextMedicationOccurrence(medication, now);
+        : resolveNextMedicationOccurrence(
+            medication,
+            takenToday.has(medication.id) ? tomorrow : now,
+          );
       if (!occurrence) return null;
       if (!dueToday) {
         const daysUntil = daysBetween(now, occurrence);
@@ -141,8 +157,13 @@ function classifyMilestones(milestones: Milestone[], now: Date): TodayItem[] {
  * reachable via JOURNEY → Journal and Timeline instead.
  */
 export function calculateTodayItems(records: RelevantRecords, now: Date = new Date()): TodayItem[] {
+  const takenToday = new Set(
+    (records.doseLogs ?? [])
+      .filter((log) => log.status === 'completed' && isSameDay(new Date(log.scheduled_at), now))
+      .map((log) => log.medication_id),
+  );
   return [
-    ...classifyMedications(records.medications, now),
+    ...classifyMedications(records.medications, now, takenToday),
     ...classifyAppointments(records.appointments, now),
     ...classifyMilestones(records.milestones, now),
   ];

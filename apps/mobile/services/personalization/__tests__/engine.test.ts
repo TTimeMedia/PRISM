@@ -210,6 +210,56 @@ describe('calculateTodayItems — medications', () => {
     expect(items[0].bucket).toBe('upcoming');
   });
 
+  it("isn't due any more once today's dose is logged, from anywhere, and shows the next dose instead", () => {
+    const daily = makeMedication({
+      frequency_type: 'daily',
+      frequency_config: { time_of_day: '09:00' },
+    });
+    const todayAt9 = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate(), 9, 0);
+    const tomorrowAt9 = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() + 1, 9, 0);
+
+    const items = calculateTodayItems(
+      {
+        appointments: [],
+        milestones: [],
+        medications: [daily],
+        // Logged on the Apple Watch: same medication, today, completed.
+        doseLogs: [
+          { medication_id: 'med-1', scheduled_at: todayAt9.toISOString(), status: 'completed' },
+        ],
+      },
+      NOW,
+    );
+
+    expect(items).toHaveLength(1);
+    expect(items[0].bucket).toBe('upcoming');
+    expect(items[0].at).toBe(tomorrowAt9.toISOString());
+  });
+
+  it("is still due when today's only log was skipped, or the log is from another day", () => {
+    const daily = makeMedication({
+      frequency_type: 'daily',
+      frequency_config: { time_of_day: '09:00' },
+    });
+    const yesterday = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() - 1, 9, 0);
+    const today = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate(), 9, 0);
+
+    const items = calculateTodayItems(
+      {
+        appointments: [],
+        milestones: [],
+        medications: [daily],
+        doseLogs: [
+          { medication_id: 'med-1', scheduled_at: yesterday.toISOString(), status: 'completed' },
+          { medication_id: 'med-1', scheduled_at: today.toISOString(), status: 'skipped' },
+        ],
+      },
+      NOW,
+    );
+
+    expect(items[0].bucket).toBe('due_today');
+  });
+
   it('never manufactures a medication card when there is no frequency set', () => {
     const items = calculateTodayItems(
       { appointments: [], milestones: [], medications: [makeMedication()] },

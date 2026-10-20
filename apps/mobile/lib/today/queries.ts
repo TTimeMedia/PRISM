@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { Appointment, Medication, Milestone, TodayItem } from '@prism/types';
+import type { Appointment, Medication, MedicationLog, Milestone, TodayItem } from '@prism/types';
 import { supabase } from '../supabase/client';
 import { useSession } from '../auth/AuthProvider';
 import { useModules } from '../profile/queries';
@@ -38,12 +38,13 @@ export function useTodayItems() {
       modules?.map((m) => `${m.module_key}:${m.enabled}`).join(','),
     ],
     queryFn: async () => {
-      const [appointments, milestones, medications] = await Promise.all([
+      const [appointments, milestones, medications, doseLogs] = await Promise.all([
         enabled.has('appointments') ? fetchAppointments() : Promise.resolve<Appointment[]>([]),
         enabled.has('milestones') ? fetchMilestones() : Promise.resolve<Milestone[]>([]),
         enabled.has('medications') ? fetchMedications() : Promise.resolve<Medication[]>([]),
+        enabled.has('medications') ? fetchTodaysDoseLogs() : Promise.resolve<TodayDoseLog[]>([]),
       ]);
-      return buildTodayDashboard({ appointments, milestones, medications });
+      return buildTodayDashboard({ appointments, milestones, medications, doseLogs });
     },
     enabled: !!userId && !modulesLoading,
   });
@@ -65,4 +66,21 @@ async function fetchMedications(): Promise<Medication[]> {
   const { data, error } = await supabase.from('medications').select('*');
   if (error) throw error;
   return data;
+}
+
+type TodayDoseLog = Pick<MedicationLog, 'medication_id' | 'scheduled_at' | 'status'>;
+
+/** Today's dose logs, however they were logged, so a dose already taken isn't shown as due. */
+async function fetchTodaysDoseLogs(): Promise<TodayDoseLog[]> {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+  const { data, error } = await supabase
+    .from('medication_logs')
+    .select('medication_id, scheduled_at, status')
+    .gte('scheduled_at', start.toISOString())
+    .lt('scheduled_at', end.toISOString());
+  if (error) throw error;
+  return data as TodayDoseLog[];
 }
