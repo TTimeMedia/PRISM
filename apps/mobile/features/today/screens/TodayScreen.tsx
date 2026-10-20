@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, type Href } from 'expo-router';
 import type { P0ModuleKey, TodayItem } from '@prism/types';
-import type { LucideIcon } from 'lucide-react-native';
+import { Check, type LucideIcon } from 'lucide-react-native';
 import {
   PRISMButton,
   PRISMErrorState,
@@ -81,7 +81,8 @@ export function TodayScreen() {
   const { data: items, isLoading, isError, refetch } = useTodayItems();
   const createLog = useCreateMedicationLog();
   const undoLog = useUndoMedicationLog();
-  const [marking, setMarking] = useState(false);
+  // Which dose is being logged right now, so only its button spins.
+  const [loggingId, setLoggingId] = useState<string | null>(null);
 
   const name = profile?.display_name?.trim();
   const greeting = name ? `${timeOfDayGreeting()}, ${name}.` : `${timeOfDayGreeting()}.`;
@@ -89,15 +90,28 @@ export function TodayScreen() {
   const actions = ADD_ACTIONS.filter((action) => !action.module || enabled.has(action.module));
   const calendar = useCalendarSuggestions(enabled.has('appointments'));
 
-  const comingUp = selectComingUpItems(items ?? [], 5);
-  const [next, ...after] = comingUp;
+  // Every medication due today, done or not: with two or more, or once one is
+  // logged, they all go in the top card as today's checklist.
+  const dueMeds = (items ?? []).filter(
+    (item) => item.moduleKey === 'medications' && item.bucket === 'due_today',
+  );
+  const showDueList = dueMeds.length > 1 || dueMeds.some((item) => item.doneAt);
+  const comingUp = selectComingUpItems(
+    showDueList ? (items ?? []).filter((item) => !dueMeds.includes(item)) : (items ?? []),
+    5,
+  );
+  const next = showDueList ? undefined : comingUp[0];
+  const after = showDueList ? comingUp : comingUp.slice(1);
   const recent = (items ?? []).filter(
-    (item) => item.moduleKey !== 'medications' && !comingUp.some((c) => c.id === item.id),
+    (item) =>
+      item.moduleKey !== 'medications' &&
+      !comingUp.some((c) => c.id === item.id) &&
+      !dueMeds.some((d) => d.id === item.id),
   );
 
   // Logging from Today is one tap, so a mis-tap is one tap to reverse: Undo on the toast.
   const logDose = async (item: TodayItem) => {
-    setMarking(true);
+    setLoggingId(item.id);
     try {
       const log = await createLog.mutateAsync({
         medication_id: item.sourceId,
@@ -117,7 +131,7 @@ export function TodayScreen() {
     } catch {
       showToast("Couldn't log that. Open it to log it.", 'error');
     } finally {
-      setMarking(false);
+      setLoggingId(null);
     }
   };
 
@@ -154,8 +168,14 @@ export function TodayScreen() {
           <PRISMErrorState onRetry={() => refetch()} />
         ) : (
           <>
-            {next ? (
-              <NextUpCard item={next} logging={marking} onLogDose={() => logDose(next)} />
+            {showDueList ? (
+              <DueMedicationsCard items={dueMeds} loggingId={loggingId} onLogDose={logDose} />
+            ) : next ? (
+              <NextUpCard
+                item={next}
+                logging={loggingId === next.id}
+                onLogDose={() => logDose(next)}
+              />
             ) : (
               <HeroCard tint="mint" accentTint="cyan">
                 <Text
@@ -272,6 +292,133 @@ function TilePhoto({ path, label }: { path: string; label: string }) {
       accessibilityLabel={`Photo for ${label}`}
     />
   ) : null;
+}
+
+/**
+ * Today's checklist of doses: every medication due today, soonest first. One
+ * still to take has its own Log button; one already logged (here, on its
+ * page or on the Apple Watch) stays with a tick and the time it was logged,
+ * so the day's progress is plain at a glance.
+ */
+function DueMedicationsCard({
+  items,
+  loggingId,
+  onLogDose,
+}: {
+  items: TodayItem[];
+  loggingId: string | null;
+  onLogDose: (item: TodayItem) => void;
+}) {
+  const theme = useTheme();
+  const style = moduleStyle('medications');
+  const colors = useTint(style.tint);
+  const Icon = style.icon;
+  const done = items.filter((item) => item.doneAt).length;
+  const left = items.length - done;
+  const title =
+    left === 0
+      ? items.length === 1
+        ? 'Done for today'
+        : `All ${items.length} doses done`
+      : `${left} ${left === 1 ? 'dose' : 'doses'} to take`;
+  const timeOf = (iso: string) =>
+    new Date(iso).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+
+  return (
+    <HeroCard tint={style.tint} accentTint="violet">
+      <View style={styles.heroTop}>
+        <View style={[styles.badge, { backgroundColor: colors.tile }]}>
+          <Icon size={16} color={theme.colors.text.primary} strokeWidth={2.4} />
+          <Text style={[styles.badgeText, { color: theme.colors.text.primary }]}>
+            Today&apos;s doses
+          </Text>
+        </View>
+        <Text style={[styles.relative, { color: theme.colors.text.secondary }]}>
+          {done} of {items.length} done
+        </Text>
+      </View>
+      <Text
+        style={[
+          styles.heroTitle,
+          { fontFamily: theme.fonts.display },
+          { color: theme.colors.text.primary },
+        ]}
+      >
+        {title}
+      </Text>
+      <View
+        style={[styles.progressTrack, { backgroundColor: theme.colors.border.subtle }]}
+        accessibilityRole="progressbar"
+        accessibilityLabel={`${done} of ${items.length} doses done`}
+        accessibilityValue={{ min: 0, max: items.length, now: done }}
+      >
+        <View
+          style={[
+            styles.progressFill,
+            {
+              backgroundColor: theme.spectrum.mint,
+              width: `${Math.round((done / items.length) * 100)}%`,
+            },
+          ]}
+        />
+      </View>
+      <View style={styles.dueList}>
+        {items.map((item) => {
+          const detail = item.doneAt
+            ? [item.subtitle, `logged ${timeOf(item.doneAt)}`].filter(Boolean).join(' · ')
+            : item.subtitle
+              ? `${timeOf(item.at)} · ${item.subtitle}`
+              : timeOf(item.at);
+          return (
+            <View
+              key={item.id}
+              style={[styles.dueRow, { borderTopColor: theme.colors.border.subtle }]}
+            >
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={`${item.title}, ${item.doneAt ? 'done, ' : ''}${detail}`}
+                accessibilityHint="Opens this medication"
+                onPress={() => router.push(comingUpItemHref(item))}
+                style={({ pressed }) => [styles.dueText, { opacity: pressed ? 0.7 : 1 }]}
+              >
+                <Text
+                  style={[
+                    styles.dueTitle,
+                    {
+                      color: item.doneAt ? theme.colors.text.secondary : theme.colors.text.primary,
+                    },
+                  ]}
+                  numberOfLines={2}
+                >
+                  {item.title}
+                </Text>
+                <Text style={[styles.dueDetail, { color: theme.colors.text.secondary }]}>
+                  {detail}
+                </Text>
+              </Pressable>
+              {item.doneAt ? (
+                <View
+                  style={[styles.doneTick, { backgroundColor: theme.spectrum.mint }]}
+                  accessible={false}
+                >
+                  <Check size={18} color="#10302A" strokeWidth={3} />
+                </View>
+              ) : (
+                <PRISMButton
+                  label="Log"
+                  variant="secondary"
+                  accessibilityLabel={`Log ${item.title}`}
+                  loading={loggingId === item.id}
+                  disabled={loggingId !== null && loggingId !== item.id}
+                  onPress={() => onLogDose(item)}
+                />
+              )}
+            </View>
+          );
+        })}
+      </View>
+    </HeroCard>
+  );
 }
 
 /**
@@ -413,5 +560,45 @@ const styles = StyleSheet.create({
   },
   heroPrimary: {
     flex: 1,
+  },
+  dueList: {
+    marginTop: spacing.xs,
+  },
+  progressTrack: {
+    height: 6,
+    borderRadius: radius.pill,
+    overflow: 'hidden',
+    marginTop: spacing.sm,
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: radius.pill,
+  },
+  doneTick: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.smd,
+    paddingVertical: spacing.smd,
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  dueText: {
+    flex: 1,
+  },
+  dueTitle: {
+    fontSize: type.bodyL.fontSize,
+    lineHeight: type.bodyL.lineHeight,
+    fontWeight: fontWeight.semibold as '600',
+  },
+  dueDetail: {
+    fontSize: type.bodyS.fontSize,
+    lineHeight: type.bodyS.lineHeight,
+    marginTop: 2,
   },
 });
