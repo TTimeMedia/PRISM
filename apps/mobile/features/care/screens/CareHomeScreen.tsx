@@ -144,7 +144,7 @@ export function CareHomeScreen() {
                     icon={MODULE_STYLE.medications.icon}
                     tint="cyan"
                     title="No medications yet"
-                    body="Add what you take to see your doses on Today and get reminders when you want them."
+                    body="Add what you take to see it on Today and get reminders when you want them."
                     primaryLabel="Add medication"
                     onPrimary={() => router.push('/care/medications/add')}
                   />
@@ -234,7 +234,7 @@ export function CareHomeScreen() {
                     icon={Package}
                     tint="violet"
                     title="Keep track of supplies"
-                    body="Vials, syringes, pills, patches. Prism counts them down as you log doses and reminds you before you run out."
+                    body="Vials, syringes, pills, patches. Prism counts them down each time you log your medication and reminds you before you run out."
                     primaryLabel="Add a supply"
                     onPrimary={() => router.push('/care/supplies/add')}
                   />

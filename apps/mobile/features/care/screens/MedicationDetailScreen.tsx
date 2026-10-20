@@ -78,7 +78,7 @@ export function MedicationDetailScreen() {
               label="Schedule"
               value={describeFrequency(medication.frequency_type, medication.frequency_config)}
             />
-            <DetailRow label="Next dose" value={describeNextDose(medication)} />
+            <DetailRow label="Next due" value={describeNextDose(medication)} />
             <DetailRow label="Start date" value={medication.start_date} />
             <DetailRow label="Reminder" value={medication.reminder_enabled ? 'On' : 'Off'} />
             <DetailRow label="Notes" value={medication.notes} />

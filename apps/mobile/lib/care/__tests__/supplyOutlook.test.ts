@@ -93,7 +93,7 @@ describe('outlookLabel', () => {
   it('reads naturally', () => {
     const s = supply();
     expect(outlookLabel(s, supplyOutlook(s, medication(), now), now)).toBe(
-      '2 mL left · 8 doses · about 8 weeks',
+      '2 mL left · enough for 8 more · about 8 weeks',
     );
   });
 });

@@ -71,7 +71,7 @@ export function LogMedicationDoseScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <PRISMHeader
-        title="Log a dose."
+        title="Mark as taken."
         leading={
           <PRISMIconButton accessibilityLabel="Back" onPress={() => router.back()}>
             <ArrowLeft size={22} color={theme.colors.text.primary} />

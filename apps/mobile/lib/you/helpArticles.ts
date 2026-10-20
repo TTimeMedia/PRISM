@@ -155,15 +155,15 @@ export const HELP_ARTICLES: HelpArticle[] = [
   },
   {
     slug: 'medications-and-doses',
-    title: 'Medications and doses',
+    title: 'Medications',
     category: 'Care',
-    summary: 'Add a medication, log doses and injection sites, and pause one.',
+    summary: 'Add a medication, log it and injection sites, and pause one.',
     blocks: [
       {
         type: 'steps',
         items: [
           'Go to Care and tap Medications, then add one with its schedule and an optional reminder.',
-          'Log a dose from Today, from the medication, or with Done on its reminder. For injections you can note the site.',
+          'Log it from Today, from the medication, or with Done on its reminder. For injections you can note the site.',
           'Tap Pause on a medication you stop taking. Its reminders stop and its history stays.',
         ],
       },
