@@ -119,7 +119,7 @@ export function TodayScreen() {
         completed_at: new Date().toISOString(),
         status: 'completed',
       });
-      showToast('Dose logged.', 'success', {
+      showToast('Logged.', 'success', {
         label: 'Undo',
         onPress: () => {
           undoLog.mutate(log.id, {
@@ -315,12 +315,8 @@ function DueMedicationsCard({
   const Icon = style.icon;
   const done = items.filter((item) => item.doneAt).length;
   const left = items.length - done;
-  const title =
-    left === 0
-      ? items.length === 1
-        ? 'Done for today'
-        : `All ${items.length} doses done`
-      : `${left} ${left === 1 ? 'dose' : 'doses'} to take`;
+  // Worded around the day, not "doses": it fits pills, patches, gels and shots alike.
+  const title = left === 0 ? 'All done for today' : `${left} left for today`;
   const timeOf = (iso: string) =>
     new Date(iso).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
 
@@ -329,9 +325,7 @@ function DueMedicationsCard({
       <View style={styles.heroTop}>
         <View style={[styles.badge, { backgroundColor: colors.tile }]}>
           <Icon size={16} color={theme.colors.text.primary} strokeWidth={2.4} />
-          <Text style={[styles.badgeText, { color: theme.colors.text.primary }]}>
-            Today&apos;s doses
-          </Text>
+          <Text style={[styles.badgeText, { color: theme.colors.text.primary }]}>Today</Text>
         </View>
         <Text style={[styles.relative, { color: theme.colors.text.secondary }]}>
           {done} of {items.length} done
@@ -349,7 +343,7 @@ function DueMedicationsCard({
       <View
         style={[styles.progressTrack, { backgroundColor: theme.colors.border.subtle }]}
         accessibilityRole="progressbar"
-        accessibilityLabel={`${done} of ${items.length} doses done`}
+        accessibilityLabel={`${done} of ${items.length} done today`}
         accessibilityValue={{ min: 0, max: items.length, now: done }}
       >
         <View
@@ -472,7 +466,13 @@ function NextUpCard({
           <PRISMButton label="View" onPress={() => router.push(comingUpItemHref(item))} />
         </View>
         {canLog ? (
-          <PRISMButton label="Log dose" variant="secondary" loading={logging} onPress={onLogDose} />
+          <PRISMButton
+            label="Log"
+            variant="secondary"
+            accessibilityLabel={`Log ${item.title}`}
+            loading={logging}
+            onPress={onLogDose}
+          />
         ) : null}
       </View>
     </HeroCard>
