@@ -1,0 +1,89 @@
+# Prism's nightly backup.
+#
+# Copies the whole Supabase database (roles, structure, every row) and every
+# file in storage, checks the copy against the live database, locks it with
+# the owner's age key, and keeps it here for 7 days. Only the encrypted file
+# ever leaves the runner; opening it needs the private key, which only the
+# owner holds. See README.md for setup and for restoring.
+#
+# This repository must stay PRIVATE: its logs show table names and row counts.
+
+name: Nightly backup
+
+on:
+  schedule:
+    # 10:23 UTC: 3:23 AM in California in summer, 2:23 AM in winter.
+    - cron: '23 10 * * *'
+  # Lets you run it any time from the Actions tab.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_URL: https://flsoubaxeycffbdjgoyx.supabase.co
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      AGE_RECIPIENT: ${{ secrets.AGE_RECIPIENT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the secrets are set
+        run: |
+          for name in SUPABASE_DB_URL SUPABASE_SERVICE_ROLE_KEY AGE_RECIPIENT; do
+            if [ -z "${!name}" ]; then
+              echo "::error::The secret $name is missing. See README.md, step 3."
+              exit 1
+            fi
+          done
+          case "$AGE_RECIPIENT" in
+            age1*) ;;
+            *) echo "::error::AGE_RECIPIENT should be the public key starting with age1."; exit 1 ;;
+          esac
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Install age and the Postgres client
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq age postgresql-client > /dev/null
+
+      - name: Copy the database
+        run: |
+          mkdir -p backup/db
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/db/roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/db/schema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f backup/db/data.sql --use-copy --data-only
+
+      - name: Check the copy against the live database
+        run: bash scripts/check-counts.sh backup/db/data.sql
+
+      - name: Copy photos and files
+        run: node scripts/download-storage.mjs backup/storage
+
+      - name: Lock it with the owner's key
+        run: |
+          name="prism-backup-$(date -u +%Y-%m-%d)"
+          date -u +%Y-%m-%dT%H:%M:%SZ > backup/taken-at.txt
+          tar -czf - -C backup . | age -r "$AGE_RECIPIENT" -o "$name.tar.gz.age"
+          rm -rf backup
+          echo "BACKUP_NAME=$name" >> "$GITHUB_ENV"
+          ls -lh "$name.tar.gz.age"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BACKUP_NAME }}
+          path: ${{ env.BACKUP_NAME }}.tar.gz.age
+          retention-days: 7
+          compression-level: 0
+          if-no-files-found: error
